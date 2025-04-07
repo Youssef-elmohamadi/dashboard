@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Label from "../form/Label";
 import ImageUploader from "./ImageUploader";
 type Props = {

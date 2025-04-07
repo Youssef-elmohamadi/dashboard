@@ -16,7 +16,6 @@ type Props = {
 };
 function BasicInfoForm({ dataForm, handleChange }: Props) {
   const [showPassword, setShowPassword] = useState(false);
-  console.log(`from basicInfo`, dataForm);
 
   return (
     <div className="space-y-5">
