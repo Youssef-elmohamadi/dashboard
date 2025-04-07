@@ -7,20 +7,7 @@ import StoreInfoForm from "./StoreInfoForm";
 
 export default function SignUpForm() {
   const [step, setStep] = useState<number>(1);
-  const handleNextStep = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault(); // Prevent default button click behavior (if part of a form)
-
-    // You can perform validation for the current step here before advancing
-    if (step === 1) {
-      // Validate the first step before moving on
-      // if (!dataForm.store_name || !dataForm.store_email) {
-      //   alert("Please fill out all fields for step 1.");
-      //   return;
-      // }
-    }
-    setStep(step + 1);
-  };
-
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [dataForm, setDataForm] = useState({
     basicInfo: {
       first_name: "",
@@ -36,6 +23,66 @@ export default function SignUpForm() {
     commercialRegisterDoc: null as File | null,
     taxCardDoc: null as File | null,
   });
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    // First Name
+    if (!dataForm.basicInfo.first_name.trim()) {
+      setErrors({ first_name: "First name is required" });
+      return false;
+    }
+
+    // Last Name
+    if (!dataForm.basicInfo.last_name.trim()) {
+      setErrors({ last_name: "Last name is required" });
+      return false;
+    }
+
+    // Phone
+    if (!dataForm.basicInfo.phone.trim()) {
+      setErrors({ phone: "Phone number is required" });
+      return false;
+    }
+
+    // Email
+    if (!dataForm.basicInfo.email.trim()) {
+      setErrors({ email: "Email is required" });
+      return false;
+    } else if (!/\S+@\S+\.\S+/.test(dataForm.basicInfo.email)) {
+      setErrors({ email: "Email format is invalid" });
+      return false;
+    }
+
+    // Password
+    if (!dataForm.basicInfo.password) {
+      setErrors({ password: "Password is required" });
+      return false;
+    }
+    if (dataForm.basicInfo.password.length < 6) {
+      setErrors({ password: "Password must be at least 6 characters" });
+      return false;
+    }
+
+    // Confirm Password
+    if (dataForm.basicInfo.confirm_password !== dataForm.basicInfo.password) {
+      setErrors({ confirm_password: "Passwords do not match" });
+      return false;
+    }
+
+    // لو كل حاجة تمام
+    setErrors({});
+    return true;
+  };
+
+  const handleNextStep = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // Prevent default button click behavior (if part of a form)
+
+    // You can perform validation for the current step here before advancing
+    if (step === 1) {
+      if (!validateForm()) return;
+    }
+    setStep(step + 1);
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -82,6 +129,7 @@ export default function SignUpForm() {
                 <BasicInfoForm
                   dataForm={dataForm.basicInfo}
                   handleChange={(e) => handleChange(e, "basicInfo")}
+                  errors={errors}
                 />
               )}
               {step === 2 && (

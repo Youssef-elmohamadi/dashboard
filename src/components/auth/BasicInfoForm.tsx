@@ -13,8 +13,9 @@ type Props = {
     confirm_password: string;
   };
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  errors: { [key: string]: string };
 };
-function BasicInfoForm({ dataForm, handleChange }: Props) {
+function BasicInfoForm({ dataForm, handleChange, errors }: Props) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -38,6 +39,9 @@ function BasicInfoForm({ dataForm, handleChange }: Props) {
             value={dataForm.first_name}
             onChange={handleChange}
           />
+          {errors.first_name && (
+            <p className="text-error-500 text-xs mt-1">{errors.first_name}</p>
+          )}
         </div>
         {/* <!-- Last Name --> */}
         <div className="sm:col-span-1">
@@ -52,6 +56,9 @@ function BasicInfoForm({ dataForm, handleChange }: Props) {
             value={dataForm.last_name}
             onChange={handleChange}
           />
+          {errors.last_name && (
+            <p className="text-error-500 text-xs mt-1">{errors.last_name}</p>
+          )}
         </div>
       </div>
       <div className="">
@@ -66,6 +73,9 @@ function BasicInfoForm({ dataForm, handleChange }: Props) {
           value={dataForm.phone}
           onChange={handleChange}
         />
+        {errors.phone && (
+          <p className="text-error-500 text-xs mt-1">{errors.phone}</p>
+        )}
       </div>
       {/* <!-- Email --> */}
       <div>
@@ -80,6 +90,9 @@ function BasicInfoForm({ dataForm, handleChange }: Props) {
           value={dataForm.email}
           onChange={handleChange}
         />
+        {errors.email && (
+          <p className="text-error-500 text-xs mt-1">{errors.email}</p>
+        )}
       </div>
       <div>
         <Label>
@@ -93,6 +106,9 @@ function BasicInfoForm({ dataForm, handleChange }: Props) {
             value={dataForm.password}
             onChange={handleChange}
           />
+          {errors.password && (
+            <p className="text-error-500 text-xs mt-1">{errors.password}</p>
+          )}
           <span
             onClick={() => setShowPassword(!showPassword)}
             className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
@@ -118,6 +134,11 @@ function BasicInfoForm({ dataForm, handleChange }: Props) {
             name="confirm_password"
             onChange={handleChange}
           />
+          {errors.confirm_password && (
+            <p className="text-error-500 text-xs mt-1">
+              {errors.confirm_password}
+            </p>
+          )}
           <span
             onClick={() => setShowPassword(!showPassword)}
             className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
