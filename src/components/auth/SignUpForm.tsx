@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "../../icons";
-import Label from "../form/Label";
-import Input from "../form/input/InputField";
-import Checkbox from "../form/input/Checkbox";
-import { Data_Form } from "../../api/authApi/core/_modales";
-import StoreSignupForm from "./StoreSignupForm";
-import VendorSignupForm from "./VendorSignupForm";
+import BasicInfoForm from "./BasicInfoForm";
+import BreadCrump from "./BreadCrump";
+import BankInformation from "./BankInformation";
+import StoreInfoForm from "./StoreInfoForm";
 
 export default function SignUpForm() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<number>(1);
   const handleNextStep = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault(); // Prevent default button click behavior (if part of a form)
 
@@ -21,48 +18,139 @@ export default function SignUpForm() {
       //   return;
       // }
     }
-
     setStep(step + 1);
   };
-  const [dataForm, setDataForm] = useState<Data_Form>({
-    store_name: "",
-    store_email: "",
-    store_phone: "",
-    tax_registration_document: null,
-    category: "",
-    location: "",
-    website_url: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-    national_id_document: null,
+
+  const [dataForm, setDataForm] = useState({
+    basicInfo: {
+      first_name: "",
+      last_name: "",
+      phone: "",
+      email: "",
+      password: "",
+      confirm_password: "",
+    },
+    bankInfo: {
+      phone: "",
+    },
+    commercialRegisterDoc: null as File | null,
+    taxCardDoc: null as File | null,
   });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    section: "basicInfo" | "bankInfo"
+  ) => {
+    const { name, value } = e.target;
+    setDataForm((prev) => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [name]: value,
+      },
+    }));
+  };
+
+  const handleFileChange = (
+    file: File | null,
+    field: "commercialRegisterDoc" | "taxCardDoc"
+  ) => {
+    setDataForm((prev) => ({
+      ...prev,
+      [field]: file,
+    }));
+  };
+
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    console.log(dataForm);
+  };
+
   return (
     <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
-      {/* <div className="w-full max-w-md mx-auto mb-5 sm:pt-10">
-        <Link
-          to="/"
-          className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-        >
-          <ChevronLeftIcon className="size-5" />
-          Back to dashboard
-        </Link>
-      </div> */}
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div>
-          <div className="mb-5 sm:mb-8">
+          <div className="mb-5 sm:mb-8 flex flex-col items-center">
             <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
               Sign Up
             </h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Enter your email and password to sign up!
-            </p>
           </div>
           <div>
-            {/* <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
+            <BreadCrump step={step} setStep={setStep} />
+            <form>
+              {step === 1 && (
+                <BasicInfoForm
+                  dataForm={dataForm.basicInfo}
+                  handleChange={(e) => handleChange(e, "basicInfo")}
+                />
+              )}
+              {step === 2 && (
+                <BankInformation
+                  dataForm={dataForm}
+                  handleChange={(e) => handleChange(e, "bankInfo")}
+                />
+              )}
+              {step === 3 && (
+                <StoreInfoForm
+                  commercialDoc={dataForm.commercialRegisterDoc}
+                  taxCardDoc={dataForm.taxCardDoc}
+                  handleFileChange={(file, field) =>
+                    handleFileChange(file, field)
+                  }
+                />
+              )}
+              <div className="mt-5">
+                {step < 3 ? (
+                  <button
+                    type="button"
+                    onClick={handleNextStep}
+                    className="w-full bg-brand-500 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700 text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300"
+                  >
+                    Next
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    onClick={handleSubmit}
+                    className="w-full bg-brand-500 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700 text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300"
+                  >
+                    Sign Up
+                  </button>
+                )}
+              </div>
+            </form>
+
+            <div className="mt-5">
+              <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
+                Already have an account? {""}
+                <Link
+                  to="/signin"
+                  className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
+                >
+                  Sign In
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+{
+  /* <div className="w-full max-w-md mx-auto mb-5 sm:pt-10">
+  <Link
+    to="/"
+    className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+  >
+    <ChevronLeftIcon className="size-5" />
+    Back to dashboard
+  </Link>
+</div> */
+}
+
+{
+  /* <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
               <button className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
                 <svg
                   width="20"
@@ -113,34 +201,5 @@ export default function SignUpForm() {
                   Or
                 </span>
               </div>
-            </div> */}
-            <form>
-              {step === 1 && <StoreSignupForm />}
-              {step === 2 && <VendorSignupForm />}
-              <div className="mt-5">
-                <button
-                  onClick={handleNextStep}
-                  className="flex items-center justify-center w-1/6 px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
-                >
-                  Next
-                </button>
-              </div>
-            </form>
-
-            <div className="mt-5">
-              <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-                Already have an account? {""}
-                <Link
-                  to="/signin"
-                  className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                >
-                  Sign In
-                </Link>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+            </div> */
 }
