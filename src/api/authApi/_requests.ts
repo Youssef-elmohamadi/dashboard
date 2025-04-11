@@ -1,13 +1,11 @@
-import axios from "../axiosInstance";
-
+import axiosJson from "../axiosInstanceJson";
+import axiosFormData from "../axiosInstanceFormData";
 const login = async (email: string, password: string) => {
-    const res = await axios.post("/api/auth/login", { email, password });
-    return res.data;
+  return  await axiosJson.post("/api/vendor/login", { email, password });
 };
 
-const register = async (name: string, email: string, password: string) => {
-    const res = await axios.post("/api/auth/register", { name, email, password });
-    return res.data;
+const register = async (formData: {}) => {
+  return await axiosFormData.post("/api/vendor/register", formData); 
 };
 
 export { login, register };

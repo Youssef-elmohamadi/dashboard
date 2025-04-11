@@ -4,11 +4,35 @@ import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "../../icons";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
 import Checkbox from "../form/input/Checkbox";
-import Button from "../ui/button/Button";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../api/authApi/_requests";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === "email") setEmail(value);
+    if (name === "password") setPassword(value);
+  };
+
+  const navigate = useNavigate();
+  const { t } = useTranslation(["Signup", "SignErrors"]);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const res = await login(email, password);
+      if (res?.status === 200) {
+        localStorage.setItem("token", res.data.data.token);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
+  };
   return (
     <div className="flex flex-col flex-1">
       {/* <div className="w-full max-w-md pt-10 mx-auto">
@@ -83,13 +107,19 @@ export default function SignInForm() {
                 </span>
               </div>
             </div>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="space-y-6">
                 <div>
                   <Label>
                     Email <span className="text-error-500">*</span>{" "}
                   </Label>
-                  <Input placeholder="info@gmail.com" />
+                  <Input
+                    placeholder="info@gmail.com"
+                    type="email"
+                    name="email"
+                    onChange={handleChange}
+                    value={email}
+                  />
                 </div>
                 <div>
                   <Label>
@@ -99,6 +129,9 @@ export default function SignInForm() {
                     <Input
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
+                      name="password"
+                      onChange={handleChange}
+                      value={password}
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
@@ -127,9 +160,12 @@ export default function SignInForm() {
                   </Link>
                 </div>
                 <div>
-                  <Button className="w-full" size="sm">
+                  <button
+                    type="submit"
+                    className="w-full bg-brand-500 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700 text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300"
+                  >
                     Sign in
-                  </Button>
+                  </button>
                 </div>
               </div>
             </form>

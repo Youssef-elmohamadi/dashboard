@@ -31,7 +31,9 @@ export default function AuthLayout({
             </div>
           </div>
         </div>
-        <div className="fixed z-50 hidden bottom-6 right-6 sm:block">
+        <div className={`fixed z-50 hidden bottom-6 sm:block ${
+          document.documentElement.dir === "rtl" ? "left-6" : "right-6"
+        }`}>
           <ThemeTogglerTwo />
         </div>
       </div>

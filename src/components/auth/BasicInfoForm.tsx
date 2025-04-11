@@ -2,9 +2,9 @@ import { useState } from "react";
 import { EyeCloseIcon, EyeIcon } from "../../icons";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
-
+import { useTranslation } from "react-i18next";
 type Props = {
-  dataForm: {
+  adminInfo: {
     first_name: string;
     last_name: string;
     phone: string;
@@ -12,106 +12,118 @@ type Props = {
     password: string;
     confirm_password: string;
   };
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    section: string
+  ) => void;
   errors: { [key: string]: string };
 };
-function BasicInfoForm({ dataForm, handleChange, errors }: Props) {
+function BasicInfoForm({ adminInfo, handleChange, errors }: Props) {
   const [showPassword, setShowPassword] = useState(false);
+
+  const { t } = useTranslation("Signup");
 
   return (
     <div className="space-y-5">
       <div className="mb-5 sm:mb-8">
         <h1 className="mb-2 font-semibold text-sm text-gray-800 dark:text-white/90 sm:text-title-md">
-          Basic Information
+          {t("basicInformation.stepOneHeading")}
         </h1>
       </div>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         {/* <!-- First Name --> */}
         <div className="sm:col-span-1">
           <Label>
-            First Name<span className="text-error-500">*</span>
+            {t("basicInformation.firstName")}
+            <span className="text-error-500">*</span>
           </Label>
           <Input
             type="text"
             id="first_name"
             name="first_name"
-            placeholder="Enter your first name"
-            value={dataForm.first_name}
-            onChange={handleChange}
+            placeholder={t("basicInformation.placeholder.firstName")}
+            value={adminInfo.first_name}
+            onChange={(e) => handleChange(e, "adminInfo")}
           />
-          {errors.first_name && (
-            <p className="text-error-500 text-xs mt-1">{errors.first_name}</p>
+          {errors.firstName && (
+            <p className="text-error-500 text-xs mt-1">{errors.firstName}</p>
           )}
         </div>
         {/* <!-- Last Name --> */}
         <div className="sm:col-span-1">
           <Label>
-            Last Name<span className="text-error-500">*</span>
+            {t("basicInformation.lastName")}
+            <span className="text-error-500">*</span>
           </Label>
           <Input
             type="text"
             id="lname"
             name="last_name"
-            placeholder="Enter your last name"
-            value={dataForm.last_name}
-            onChange={handleChange}
+            placeholder={t("basicInformation.placeholder.lastName")}
+            value={adminInfo.last_name}
+            onChange={(e) => handleChange(e, "adminInfo")}
           />
-          {errors.last_name && (
-            <p className="text-error-500 text-xs mt-1">{errors.last_name}</p>
+          {errors.lastName && (
+            <p className="text-error-500 text-xs mt-1">{errors.lastName}</p>
           )}
         </div>
       </div>
       <div className="">
         <Label>
-          Phone<span className="text-error-500">*</span>
+          {t("basicInformation.phone")}
+          <span className="text-error-500">*</span>
         </Label>
         <Input
           type="text"
           id="phone"
           name="phone"
-          placeholder="Enter your phone"
-          value={dataForm.phone}
-          onChange={handleChange}
+          placeholder={t("basicInformation.placeholder.phone")}
+          value={adminInfo.phone}
+          onChange={(e) => handleChange(e, "adminInfo")}
         />
-        {errors.phone && (
-          <p className="text-error-500 text-xs mt-1">{errors.phone}</p>
+        {errors.phoneAdmin && (
+          <p className="text-error-500 text-xs mt-1">{errors.phoneAdmin}</p>
         )}
       </div>
       {/* <!-- Email --> */}
       <div>
         <Label>
-          Email<span className="text-error-500">*</span>
+          {t("basicInformation.email")}
+          <span className="text-error-500">*</span>
         </Label>
         <Input
           type="email"
           id="email"
           name="email"
-          placeholder="Enter your email"
-          value={dataForm.email}
-          onChange={handleChange}
+          placeholder={t("basicInformation.placeholder.email")}
+          value={adminInfo.email}
+          onChange={(e) => handleChange(e, "adminInfo")}
         />
-        {errors.email && (
-          <p className="text-error-500 text-xs mt-1">{errors.email}</p>
+        {errors.emailAdmin && (
+          <p className="text-error-500 text-xs mt-1">{errors.emailAdmin}</p>
         )}
       </div>
       <div>
         <Label>
-          Password<span className="text-error-500">*</span>
+          {t("basicInformation.password")}
+          <span className="text-error-500">*</span>
         </Label>
         <div className="relative">
           <Input
             type={showPassword ? "text" : "password"}
-            placeholder="Enter your password"
+            placeholder={t("basicInformation.placeholder.password")}
             name="password"
-            value={dataForm.password}
-            onChange={handleChange}
+            value={adminInfo.password}
+            onChange={(e) => handleChange(e, "adminInfo")}
           />
           {errors.password && (
             <p className="text-error-500 text-xs mt-1">{errors.password}</p>
           )}
           <span
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+            className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
+              document.documentElement.dir === "rtl" ? "left-4" : "right-4"
+            }`}
           >
             {showPassword ? (
               <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
@@ -124,15 +136,16 @@ function BasicInfoForm({ dataForm, handleChange, errors }: Props) {
 
       <div>
         <Label>
-          Confirm Password<span className="text-error-500">*</span>
+          {t("basicInformation.confirmPassword")}
+          <span className="text-error-500">*</span>
         </Label>
         <div className="relative">
           <Input
             type={showPassword ? "text" : "password"}
-            placeholder="Enter your password"
-            value={dataForm.confirm_password}
+            placeholder={t("basicInformation.placeholder.confirmPassword")}
+            value={adminInfo.confirm_password}
             name="confirm_password"
-            onChange={handleChange}
+            onChange={(e) => handleChange(e, "adminInfo")}
           />
           {errors.confirm_password && (
             <p className="text-error-500 text-xs mt-1">
@@ -141,7 +154,9 @@ function BasicInfoForm({ dataForm, handleChange, errors }: Props) {
           )}
           <span
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+            className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
+              document.documentElement.dir === "rtl" ? "left-4" : "right-4"
+            }`}
           >
             {showPassword ? (
               <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />

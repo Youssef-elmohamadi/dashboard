@@ -19,55 +19,68 @@ import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import ProtectLayout from "./layout/ProtectLayout";
+import "./i18n";
+import DirectionAndLanguageProvider from "./context/DirectionContext";
+import Admins from "./pages/Users/Admins";
+import Roles from "./pages/Users/Roles";
+import CreateAdmin from "./components/usersTable/CreateAdmin";
+import CreateRole from "./components/RolesTable/CreateRole";
 
 export default function App() {
   return (
     <>
       <Router>
-        <ScrollToTop />
-        <Routes>
-          {/* Dashboard Layout */}
+        <DirectionAndLanguageProvider>
+          <ScrollToTop />
+          <Routes>
+            {/* Dashboard Layout */}
 
-          <Route
-            element={
-              <ProtectLayout>
-                <AppLayout />
-              </ProtectLayout>
-            }
-          >
-            <Route index path="/" element={<Home />} />
+            <Route
+              element={
+                <ProtectLayout>
+                  <AppLayout />
+                </ProtectLayout>
+              }
+            >
+              <Route index path="/" element={<Home />} />
 
-            {/* Others Page */}
-            <Route path="/profile" element={<UserProfiles />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/blank" element={<Blank />} />
+              {/* Others Page */}
+              <Route path="/profile" element={<UserProfiles />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/admins" element={<Admins />} />
+              <Route path="/admins/create" element={<CreateAdmin />} />
 
-            {/* Forms */}
-            <Route path="/form-elements" element={<FormElements />} />
+              <Route path="/roles" element={<Roles />} />
+              <Route path="/roles/create" element={<CreateRole />} />
+              <Route path="/blank" element={<Blank />} />
 
-            {/* Tables */}
-            <Route path="/basic-tables" element={<BasicTables />} />
+              {/* Forms */}
+              <Route path="/form-elements" element={<FormElements />} />
 
-            {/* Ui Elements */}
-            <Route path="/alerts" element={<Alerts />} />
-            <Route path="/avatars" element={<Avatars />} />
-            <Route path="/badge" element={<Badges />} />
-            <Route path="/buttons" element={<Buttons />} />
-            <Route path="/images" element={<Images />} />
-            <Route path="/videos" element={<Videos />} />
+              {/* Tables */}
+              <Route path="/basic-tables" element={<BasicTables />} />
 
-            {/* Charts */}
-            <Route path="/line-chart" element={<LineChart />} />
-            <Route path="/bar-chart" element={<BarChart />} />
-          </Route>
+              {/* Ui Elements */}
+              <Route path="/alerts" element={<Alerts />} />
+              <Route path="/avatars" element={<Avatars />} />
+              <Route path="/badge" element={<Badges />} />
+              <Route path="/buttons" element={<Buttons />} />
+              <Route path="/images" element={<Images />} />
+              <Route path="/videos" element={<Videos />} />
 
-          {/* Auth Layout */}
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
+              {/* Charts */}
+              <Route path="/line-chart" element={<LineChart />} />
+              <Route path="/bar-chart" element={<BarChart />} />
+            </Route>
 
-          {/* Fallback Route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            {/* Auth Layout */}
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+
+            {/* Fallback Route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </DirectionAndLanguageProvider>
       </Router>
     </>
   );

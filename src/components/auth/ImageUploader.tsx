@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../form/input/InputField";
 
 type Props = {
   file: File | null;
-  setFile: (file: File | null, field: string) => void;
+  file_type: string;
   field: string;
+  onFileChange: (file: File | null, file_type: "1" | "2") => void;
 };
 
-function ImageUploader({ file, setFile, field }: Props) {
+function ImageUploader({ file, field, onFileChange }: Props) {
   const [image, setImage] = useState<string | null>(null);
 
   const handleFileChange = (
@@ -17,23 +18,21 @@ function ImageUploader({ file, setFile, field }: Props) {
     const files = e.target.files;
     if (files && files[0]) {
       const selectedFile = files[0];
-      console.log("Selected file:", selectedFile.name);
-      setFile(selectedFile, field); // مرر الحقل المناسب هنا
+      const type = field === "commercialRegisterDoc" ? "1" : "2";
+      onFileChange(selectedFile, type);
     }
   };
 
   const removeImage = () => {
-    setFile(null, field); // تمسح الملف عند النقر على الزر
+    const type = field === "commercialRegisterDoc" ? "1" : "2";
+    onFileChange(null, type);
   };
 
   useEffect(() => {
     if (file) {
       const objectUrl = URL.createObjectURL(file);
       setImage(objectUrl);
-
-      return () => {
-        URL.revokeObjectURL(objectUrl); // تنظيف الـ URL بعد الانتهاء
-      };
+      return () => URL.revokeObjectURL(objectUrl);
     } else {
       setImage(null);
     }
@@ -49,7 +48,6 @@ function ImageUploader({ file, setFile, field }: Props) {
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
             <svg
               className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 20 16"
@@ -91,7 +89,7 @@ function ImageUploader({ file, setFile, field }: Props) {
           id={`dropzone-file-${field}`}
           type="file"
           className="hidden"
-          onChange={(e) => handleFileChange(e, field)} // استخدم دالة مغلفة
+          onChange={(e) => handleFileChange(e, field)}
         />
       </label>
     </div>

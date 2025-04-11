@@ -2,7 +2,7 @@ import axios from "axios";
 import { Token } from "./_modales";
 
 const axiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    baseURL: "http://localhost:8000",
     headers: {
         "Content-Type": "application/json",
     },

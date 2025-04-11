@@ -1,0 +1,62 @@
+{
+  "title": "إنشاء حساب",
+  "basicInformation": {
+    "stepOneHeading": "المعلومات الأساسية",
+    "firstName": "الاسم الأول",
+    "lastName": "الاسم الأخير",
+    "phone": "رقم الهاتف",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "placeholder": {
+      "firstName": "أدخل اسمك الأول",
+      "lastName": "أدخل اسمك الأخير",
+      "phone": "أدخل رقم هاتفك",
+      "email": "أدخل بريدك الإلكتروني",
+      "password": "أنشئ كلمة مرور",
+      "confirmPassword": "تأكيد كلمة المرور"
+    }
+  },
+  "bankInformation": {
+    "stepTwoHeading": "معلومات البنك",
+    "bankName": "اسم البنك",
+    "accountNumber": "رقم الحساب",
+    "accountName": "اسم الحساب",
+    "phone": "رقم الهاتف",
+    "placeholder": {
+      "bankName": "أدخل اسم البنك",
+      "accountNumber": "أدخل رقم الحساب",
+      "accountName": "أدخل اسم الحساب",
+      "phone": "أدخل رقم هاتفك"
+    }
+  },
+  "storeInformation": {
+    "stepThreeHeading": "معلومات المتجر",
+    "commercialRegisterDoc": "السجل التجاري",
+    "taxRegisterDoc": "شهادة التسجيل الضريبي",
+    "storeName": "اسم المتجر",
+    "phone": "رقم الهاتف",
+    "store Email": "بريد المتجر الإلكتروني",
+    "placeholder": {
+      "storeName": "أدخل اسم المتجر",
+      "phone": "أدخل رقم هاتفك",
+      "storeEmail": "أدخل بريد المتجر الإلكتروني"
+    }
+  },
+  "next": "التالي",
+  "previous": "السابق",
+  "button": "إنشاء حساب",
+  "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
+  "login": "تسجيل الدخول",
+  "agreeTerms": "أوافق على الشروط والأحكام",
+  "signupErrors": {
+    "fistNameError": "الاسم الأول مطلوب",
+    "lastNameError": "الاسم الأخير مطلوب",
+    "phoneError": "رقم الهاتف مطلوب",
+    "emailError": "البريد الإلكتروني مطلوب",
+    "emailFormatError": "تنسيق البريد الإلكتروني غير صالح",
+    "passwordError": "كلمة المرور مطلوبة",
+    "confirmPasswordError": "تأكيد كلمة المرور مطلوب",
+    "passwordMatchError": "كلمات المرور غير متطابقة"
+  }
+}
