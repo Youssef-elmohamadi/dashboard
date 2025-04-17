@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import RolesTable from "../../../components/admin/RolesTable/RolesTable";
 const Roles = () => {
+  const [isModalOpenCreate, setIsModalOpenCreate] = useState(false);
   return (
     <>
       <PageMeta
@@ -15,9 +16,12 @@ const Roles = () => {
         <ComponentCard
           title="All Roles"
           headerAction="Add New Role"
-          href="create"
+          action={()=>setIsModalOpenCreate(true)}
         >
-          <RolesTable />
+          <RolesTable
+            isModalOpenCreate={isModalOpenCreate}
+            setIsModalOpenCreate={setIsModalOpenCreate}
+          />
         </ComponentCard>
       </div>
     </>

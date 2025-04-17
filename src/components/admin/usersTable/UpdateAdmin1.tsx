@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   getAdminById,
   getAllRoles,
   updateAdmin,
 } from "../../../api/usersApi/_requests";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
-const UpdateAdmin1 = () => {
+import { EyeCloseIcon, EyeIcon } from "../../../icons";
+
+const UpdateAdmin = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
   const [adminData, setAdminData] = useState({
     first_name: "",
     last_name: "",
@@ -30,44 +34,58 @@ const UpdateAdmin1 = () => {
     password: "",
     role: "",
   });
+
   const [options, setOptions] = useState<any[]>([]);
-  const navigate = useNavigate();
+  const [errors, setErrors] = useState<Record<string, string[]>>({
+    first_name: [],
+    last_name: [],
+    phone: [],
+    email: [],
+    password: [],
+    role: [],
+  });
+
+  // Fetch admin by ID
   useEffect(() => {
     const fetchAdmin = async () => {
       try {
         if (id) {
-          const response = await getAdminById(id);
-          const adminData = response.data.data;
-          setAdminData(adminData);
+          const res = await getAdminById(id);
+          const admin = res.data.data;
+
+          setAdminData(admin);
           setUpdateData({
-            first_name: adminData.first_name || "",
-            last_name: adminData.last_name || "",
-            phone: adminData.phone || "",
-            email: adminData.email || "",
+            first_name: admin.first_name || "",
+            last_name: admin.last_name || "",
+            phone: admin.phone || "",
+            email: admin.email || "",
             password: "",
-            role: adminData.roles[0]?.name || "",
+            role: admin.roles[0]?.name || "",
           });
         }
-      } catch (error) {
-        console.error("Error fetching admin:", error);
+      } catch (err) {
+        console.error("Error fetching admin:", err);
       }
     };
 
     fetchAdmin();
   }, [id]);
 
+  // Fetch roles
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchRoles = async () => {
       try {
-        const response = await getAllRoles();
-        setOptions(response.data.data);
-      } catch (error) {
-        console.error("Error fetching roles:", error);
+        const res = await getAllRoles();
+        setOptions(res.data.data);
+      } catch (err) {
+        console.error("Error fetching roles:", err);
       }
     };
-    fetchData();
+
+    fetchRoles();
   }, []);
 
+  // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUpdateData((prev) => ({
@@ -76,6 +94,7 @@ const UpdateAdmin1 = () => {
     }));
   };
 
+  // Handle role selection
   const handleSelectChange = (value: string) => {
     setUpdateData((prev) => ({
       ...prev,
@@ -83,35 +102,54 @@ const UpdateAdmin1 = () => {
     }));
   };
 
+  // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       if (id) {
-        const dataToSubmit = {
+        const dataToSend = {
           ...updateData,
           password: updateData.password || adminData.password,
         };
 
-        const response = await updateAdmin(id, dataToSubmit);
-        navigate("/admins", { state: { successUpdate: "Admin Created Successfully" } })
+        await updateAdmin(id, dataToSend);
+        navigate("/admin/admins", {
+          state: { successUpdate: "Admin Updated Successfully" },
+        });
       }
-    } catch (error) {
-      console.error("Error updating admin:", error);
+    } catch (err: any) {
+      const rawErrors = err?.response?.data?.errors;
+
+      if (Array.isArray(rawErrors)) {
+        const formattedErrors: Record<string, string[]> = {};
+        rawErrors.forEach((error: { code: string; message: string }) => {
+          if (!formattedErrors[error.code]) {
+            formattedErrors[error.code] = [];
+          }
+          formattedErrors[error.code].push(error.message);
+        });
+        setErrors(formattedErrors);
+      } else {
+        setErrors({ general: ["Something went wrong."] });
+      }
     }
   };
 
   return (
     <div>
-      <div className="p-4 border-b dark:border-gray-600 border-gray-200">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-600">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           Edit Admin
         </h3>
       </div>
+
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 w-full mt-10 flex justify-between items-center flex-col"
+        className="space-y-6 w-full mt-10 flex flex-col items-center"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+          {/* First Name */}
           <div className="col-span-1">
             <Label htmlFor="first_name">First Name</Label>
             <Input
@@ -119,11 +157,17 @@ const UpdateAdmin1 = () => {
               name="first_name"
               id="first_name"
               value={updateData.first_name}
-              placeholder="Edit the Name"
+              placeholder="Edit the First Name"
               onChange={handleChange}
             />
+            {errors.first_name?.[0] && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.first_name[0]}
+              </p>
+            )}
           </div>
 
+          {/* Last Name */}
           <div className="col-span-1">
             <Label htmlFor="last_name">Last Name</Label>
             <Input
@@ -134,8 +178,12 @@ const UpdateAdmin1 = () => {
               placeholder="Edit the Last Name"
               onChange={handleChange}
             />
+            {errors.last_name?.[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.last_name[0]}</p>
+            )}
           </div>
 
+          {/* Email */}
           <div className="col-span-1">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -146,20 +194,41 @@ const UpdateAdmin1 = () => {
               placeholder="Edit the Email"
               onChange={handleChange}
             />
+            {errors.email?.[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
+            )}
           </div>
 
+          {/* Password */}
           <div className="col-span-1">
             <Label htmlFor="password">Password</Label>
-            <Input
-              type="password"
-              name="password"
-              id="password"
-              value=""
-              placeholder="Edit the Password"
-              onChange={handleChange}
-            />
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                id="password"
+                value={updateData.password}
+                placeholder="Enter New Password"
+                onChange={handleChange}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2"
+              >
+                {showPassword ? (
+                  <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                ) : (
+                  <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                )}
+              </button>
+            </div>
+            {errors.password?.[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>
+            )}
           </div>
 
+          {/* Phone */}
           <div className="col-span-1">
             <Label htmlFor="phone">Phone</Label>
             <Input
@@ -170,10 +239,14 @@ const UpdateAdmin1 = () => {
               placeholder="Edit the Phone"
               onChange={handleChange}
             />
+            {errors.phone?.[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.phone[0]}</p>
+            )}
           </div>
 
+          {/* Role */}
           <div className="col-span-1">
-            <Label htmlFor="category">Role</Label>
+            <Label htmlFor="role">Role</Label>
             <Select
               options={options.map((role) => ({
                 value: role.name,
@@ -183,12 +256,16 @@ const UpdateAdmin1 = () => {
               defaultValue={updateData.role}
               placeholder="Select a Role"
             />
+            {errors.role?.[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.role[0]}</p>
+            )}
           </div>
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
-          className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
+          className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
         >
           <svg
             className="me-1 -ms-1 w-5 h-5"
@@ -208,4 +285,4 @@ const UpdateAdmin1 = () => {
   );
 };
 
-export default UpdateAdmin1;
+export default UpdateAdmin;

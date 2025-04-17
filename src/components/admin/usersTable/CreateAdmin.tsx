@@ -62,7 +62,7 @@ export default function CreateAdmin() {
     e.preventDefault();
     try {
       await createAdmin(adminData);
-      navigate("/admins", {
+      navigate("/admin/admins", {
         state: { successCreate: "Admin Created Successfully" },
       });
     } catch (error: any) {

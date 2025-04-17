@@ -9,28 +9,29 @@ import UpdateRole from "./UpdateRole";
 import Loading from "../../common/Loading";
 import { alertDelete } from "./Alert";
 import "./alert.css";
+import CreateRole from "./CreateRole";
 
 type Role = {};
-const RolesTable = () => {
+const RolesTable = ({ isModalOpenCreate, setIsModalOpenCreate }: any) => {
   const [rolesData, setRolesData] = useState<Role[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await getAllRoles();
-        if (response?.data?.data) {
-          setRolesData(response.data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching admins:", error);
-      } finally {
-        setLoading(false);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await getAllRoles();
+      if (response?.data?.data) {
+        setRolesData(response.data.data);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching admins:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -44,7 +45,7 @@ const RolesTable = () => {
     const role = rolesData.find((role: any) => role.id === id);
     if (role) {
       setSelectedRole(role);
-      setIsModalOpen(true);
+      setIsModalOpenEdit(true);
     }
   };
   const columns = useMemo(() => Columns(handleEdit, handleDelete), []);
@@ -112,11 +113,18 @@ const RolesTable = () => {
         pageSize={state.pageSize}
         totalCount={rolesData.length}
       />
-      {isModalOpen && selectedRole && (
+      {isModalOpenEdit && selectedRole && (
         <UpdateRole
           role={selectedRole}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setIsModalOpenEdit(false)}
           isModalOpen
+        />
+      )}
+      {isModalOpenCreate && (
+        <CreateRole
+          onClose={() => setIsModalOpenCreate(false)}
+          isModalOpen={isModalOpenCreate}
+          fetchData={fetchData}
         />
       )}
     </div>

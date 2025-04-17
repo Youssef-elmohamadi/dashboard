@@ -77,14 +77,11 @@ const UpdateAdmin: React.FC<UpdateAdminProps> = ({
       };
     });
   };
-  const navigate = useNavigate();
-  const location = useLocation();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await updateRole(updateData, role.id);
-      onClose();
-      window.location.reload();
+   onClose();   
     } catch (error) {
       console.error("Error updating admin:", error);
     }

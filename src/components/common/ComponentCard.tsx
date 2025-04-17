@@ -6,7 +6,8 @@ interface ComponentCardProps {
   className?: string; // Additional custom classes for styling
   desc?: string; // Description text
   headerAction?: string;
-  href?:string;
+  href?: string;
+  action?: () => void;
 }
 
 const ComponentCard: React.FC<ComponentCardProps> = ({
@@ -15,7 +16,8 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   className = "",
   desc = "",
   headerAction = "",
-  href ="",
+  href = "",
+  action,
 }) => {
   return (
     <div
@@ -28,7 +30,11 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
             {title}
           </h3>
 
-          <Link to={href} className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+          <Link
+            to={href}
+            onClick={action}
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+          >
             {headerAction}
             <FiUserPlus size={20} />
           </Link>

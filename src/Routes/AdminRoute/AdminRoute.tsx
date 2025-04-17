@@ -5,7 +5,7 @@ import UserProfiles from "../../pages/AdminPages/UserProfiles";
 import Calendar from "../../pages/AdminPages/Calendar";
 import Admins from "../../pages/AdminPages/Users/Admins";
 import CreateAdmin from "../../components/admin/usersTable/CreateAdmin";
-import UpdateAdmin1 from "../../components/usersTable/UpdateAdmin1";
+import UpdateAdmin1 from "../../components/admin/usersTable/UpdateAdmin1";
 import Roles from "../../pages/AdminPages/Users/Roles";
 import CreateRole from "../../components/admin/RolesTable/CreateRole";
 import Categories from "../../pages/Categories/Categories";

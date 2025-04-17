@@ -5,20 +5,27 @@ import { useNavigate } from "react-router-dom";
 import Checkbox from "../../form/input/Checkbox";
 import { createRole, getAllPermissions } from "../../../api/rolesApi/_requests";
 import Loading from "../../common/Loading";
+
+type CreateAdminProps = {
+  onClose: () => void;
+  fetchData: () => void;
+  isModalOpen: boolean;
+};
 type Permission = {
   id: number;
   name: string;
 };
-export default function CreateRole() {
+export default function CreateRole({
+  onClose,
+  isModalOpen,
+  fetchData,
+}: CreateAdminProps) {
   const [loading, setLoading] = useState(false);
-
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [roleData, setRoleData] = useState({
     name: "",
     permissions: [] as number[],
   });
-
-  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -57,53 +64,71 @@ export default function CreateRole() {
     });
   };
 
-  // تعديل handleSubmit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await createRole(roleData);
-      navigate("/roles");
-      window.location.reload();
+      onClose();
+      fetchData();
     } catch (error) {
       console.error("Error creating admin:", error);
     }
   };
 
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6 w-full flex justify-between items-center flex-col"
+    isModalOpen && (
+      <div
+        style={{ zIndex: 99999 }}
+        className="fixed top-0 left-0 right-0 flex justify-center items-center w-full h-screen bg-[#00000080]"
       >
-        <div className="grid grid-cols-1 gap-5  w-full">
-          <div>
-            <Label htmlFor="input">Name</Label>
-            <Input
-              type="text"
-              id="input"
-              name="name"
-              placeholder="Enter the Role Name"
-              value={roleData.name}
-              onChange={handleChange}
-            />
+        <div className="relative p-4 w-full max-w-1/2">
+          <div className="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+            <div className="flex items-center justify-between p-4 border-b dark:border-gray-600 border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Create Role
+              </h3>
+              <button
+                type="button"
+                onClick={onClose}
+                className="text-gray-400 hover:text-gray-900 hover:bg-gray-200 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+            <form onSubmit={handleSubmit} className="p-4 md:p-5">
+              <div className="grid gap-4 mb-4 grid-cols-2">
+                <div className="col-span-2 sm:col-span-1">
+                  <Label htmlFor="input">Name</Label>
+                  <Input
+                    type="text"
+                    id="input"
+                    name="name"
+                    placeholder="Enter the Role Name"
+                    value={roleData.name}
+                    onChange={handleChange}
+                  />
+                </div>
+                {loading && <Loading text="wait Getting Permissions" />}
+                {permissions.map((permission) => (
+                  <Checkbox
+                    key={permission.id}
+                    label={permission.name}
+                    checked={roleData.permissions.includes(permission.id)}
+                    onChange={() => handleCheckbox(permission.id)}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="submit"
+                className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
+              >
+                Save Changes
+              </button>
+            </form>
           </div>
-          {loading && <Loading text="wait for Getting permissions..." />}
-          {permissions.map((permission) => (
-            <Checkbox
-              key={permission.id}
-              label={permission.name}
-              checked={roleData.permissions.includes(permission.id)}
-              onChange={() => handleCheckbox(permission.id)}
-            />
-          ))}
         </div>
-        <button
-          type="submit"
-          className="items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 flex justify-center w-1/4"
-        >
-          Add Role
-        </button>
-      </form>
-    </div>
-  );
+      </div>
+    )
+  ); // <-- هذا القوس كان ناقص
 }
