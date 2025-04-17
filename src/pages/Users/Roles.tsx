@@ -4,7 +4,7 @@ import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import ComponentCard from "../../components/common/ComponentCard";
 import AdminsTable from "./AdminsTable";
 import UserTable from "../../components/usersTable/UserTable";
-import RolesTable from "../../components/RolesTable/RolesTable";
+import RolesTable from "../../components/admin/RolesTable/RolesTable";
 const Roles = () => {
   return (
     <>

@@ -12,3 +12,7 @@ export const updateRole = async (updateData: any, id: number) => {
 export const createRole = async (data: any) => {
   return await axiosJson.post(`/api/vendor/roles`, data);
 };
+
+export const deleteRole = async (id: number) => {
+  return await axiosJson.delete(`/api/vendor/roles/${id}`);
+};

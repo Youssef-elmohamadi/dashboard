@@ -1,0 +1,14 @@
+/* ترفع الـ container كله */
+.swal2-container {
+  z-index: 99999 !important;
+}
+
+/* ترفع الـ popup نفسه
+  .custom-popup {
+    z-index: 99999 !important;
+  }
+  
+  /* الـ backdrop لازم يكون تحته */
+/* .swal2-backdrop {
+    z-index: 99999 !important;
+  } */

@@ -1,0 +1,19 @@
+{
+  "title": "Login to your account",
+  "or": "or",
+  "button": "Login",
+  "paragraph": "Enter your email and password to sign in!",
+  "signinWithGoogle": "Sign in with Google",
+  "email": "Email",
+  "password": "Password",
+  "placeholder": {
+    "email": "Enter your email address",
+    "password": "Enter your password"
+  },
+  "forgotPassword": "Forgot Password?",
+  "signup": "Don't have an account?",
+  "signupLink": "Sign up",
+  "keepSignedIn": "Keep me signed in",
+  "emailError": "Email is Invalid",
+  "loginError": "Invalid email or password"
+}

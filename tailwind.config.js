@@ -1,13 +1,47 @@
 module.exports = {
-  content: [
-    "./src/**/*.{html,js,ts,jsx,tsx}",  // المسارات التي يجب أن يتصفحها Tailwind للبحث عن الـ classes
-  ],
+  content: ["./src/**/*.{html,js,ts,jsx,tsx}", "./index.html"],
   theme: {
-    extend: {},
+    extend: {
+      container: {
+        center: true,
+        padding: "1rem",
+        screens: {
+          sm: "640px",
+          md: "768px",
+          lg: "1024px",
+          xl: "1280px",
+          "2xl": "1400px",
+        },
+      },
+      colors: {
+        blue: "#3490f3",
+        "hov-blue": "#2e7fd6",
+        "soft-blue": "rgba(0, 123, 255, 0.15)",
+        "secondary-base": "#8826BD",
+        "hov-secondary-base": "#FFFFFF",
+        "soft-secondary-base": "rgba(136,38,189,0.15)",
+        gray: "#9d9da6",
+        "gray-dark": "#8d8d8d",
+        secondary: "#919199",
+        "soft-secondary": "rgba(145, 145, 153, 0.15)",
+        success: "#85b567",
+        "soft-success": "rgba(133, 181, 103, 0.15)",
+        warning: "#f3af3d",
+        "soft-warning": "rgba(243, 175, 61, 0.15)",
+        light: "#f5f5f5",
+        "soft-light": "#dfdfe6",
+        "soft-white": "#b5b5bf",
+        dark: "#292933",
+        "soft-dark": "#1b1b28",
+        primary: "#8826BD",
+        "hov-primary": "#FFFFFF",
+        "soft-primary": "rgba(136,38,189,0.15)",
+      },
+    },
   },
   plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/aspect-ratio'),
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/aspect-ratio"),
   ],
-}
+};

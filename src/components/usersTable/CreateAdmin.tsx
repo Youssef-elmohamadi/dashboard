@@ -53,8 +53,8 @@ export default function CreateAdmin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await createAdmin(adminData);
-      navigate("/admins");
+      await createAdmin(adminData);
+      navigate("/admins", { state: { successCreate: "Admin Created Successfully" } });
     } catch (error) {
       console.error("Error creating admin:", error);
     }

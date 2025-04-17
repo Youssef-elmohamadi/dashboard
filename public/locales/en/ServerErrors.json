@@ -1,0 +1,7 @@
+{
+  "vendorPhoneError": "this Vendor Phone number is already registered",
+  "vendorEmailError": "this Email is already registered",
+  "storePhoneError": "this Store Phone number is already registered",
+  "storeEmailError": "this Store Email is already registered",
+  "loginError": "Invalid email or password"
+}
