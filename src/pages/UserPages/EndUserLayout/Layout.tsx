@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import AppHeader from "../../../components/EndUser/Header/AppHeader";
 import NavBar from "../../../components/EndUser/NavBar/NavBar";
 import AppTopBar from "../../../components/EndUser/TopBar/AppTopBar";
+import Footer from "../../../components/EndUser/Footer/Footer";
 
 export default function EndUserLayout() {
   const [hidden, setHidden] = useState(false);
@@ -57,6 +58,9 @@ export default function EndUserLayout() {
       <main className="pt-[150px]">
         <Outlet />
       </main>
+      <footer>
+        <Footer />
+      </footer>
     </>
   );
 }

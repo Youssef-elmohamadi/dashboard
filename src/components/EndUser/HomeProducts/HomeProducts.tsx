@@ -41,10 +41,10 @@ const HomeProducts: React.FC<CategorySliderProps> = ({
           navigation
           modules={[Navigation]}
           breakpoints={{
-            768: {
-              slidesPerView: 4,
-              spaceBetween: 20,
-            },
+            1024: { slidesPerView: 4 },
+            768: { slidesPerView: 3 },
+            640: { slidesPerView: 2 },
+            0: { slidesPerView: 1 },
           }}
         >
           {products.map((product) => (
@@ -60,12 +60,11 @@ const HomeProducts: React.FC<CategorySliderProps> = ({
                 <div className="px-5 pb-5">
                   <a href="#">
                     <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                      {product.title}
+                      {product.name}
                     </h5>
                   </a>
                   <div className="flex items-center mt-2.5 mb-5">
                     <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                      {/* 4 نجوم من 5 + نجمة رمادية */}
                       {Array(4)
                         .fill(0)
                         .map((_, i) => (
