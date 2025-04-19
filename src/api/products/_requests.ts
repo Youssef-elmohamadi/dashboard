@@ -4,7 +4,16 @@ export const getAllProducts = async () => {
   return await axiosJson.get("/api/vendor/products");
 };
 
-export const showProduct = async (id: number) => {
+export const getProductsPaginate = async (
+  pageIndex: number | undefined,
+  pageSize?: number | undefined
+) => {
+  return await axiosJson.get("/api/vendor/products/withPaginate", {
+    params: { page: pageIndex, per_page: pageSize },
+  });
+};
+
+export const showProduct = async (id: number | string) => {
   return await axiosJson.get(`/api/vendor/products/${id}`);
 };
 

@@ -1,10 +1,14 @@
 import axiosJson from "../axiosInstanceJson";
 import axiosForm from "../axiosInstanceFormData";
-export const getCategoriesWithPaginate = async (pageIndex: number) => {
+export const getCategoriesPaginate = async (
+  pageIndex: number | undefined,
+  pageSize?: number | undefined
+) => {
   return await axiosJson.get("/api/superAdmin/categories/withPaginate", {
-    params: { page: pageIndex },
+    params: { page: pageIndex, per_page: pageSize },
   });
 };
+
 export const getAllCategories = async () => {
   return await axiosJson.get("/api/superAdmin/categories");
 };

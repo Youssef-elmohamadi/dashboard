@@ -13,11 +13,15 @@ export default function CreateBrand() {
     image: File | null;
   }>({
     name: "",
-    status: "",
+    status: "active",
     image: null,
   });
 
+  const [errors, setErrors] = useState<{ name?: string }>({});
+  const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const navigate = useNavigate();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setBrandData((prev) => ({
@@ -33,8 +37,6 @@ export default function CreateBrand() {
     }));
   };
 
-  console.log(brandData);
-
   const handleFileChange = (file: File | null) => {
     setBrandData((prev) => ({
       ...prev,
@@ -42,66 +44,101 @@ export default function CreateBrand() {
     }));
   };
 
-  // تعديل handleSubmit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const brandFormData = new FormData();
-    brandFormData.append("name", brandData.name);
-    brandFormData.append("status", brandData.status || "active");
+    setSubmitError("");
 
-    if (brandData.image) {
-      brandFormData.append("image", brandData.image);
+    let hasError = false;
+    let newErrors: { name?: string } = {};
+
+    if (!brandData.name.trim()) {
+      newErrors.name = "Brand name is required.";
+      hasError = true;
     }
+
+    if (hasError) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    setLoading(true);
+
     try {
-      const response = await createBrand(brandFormData);
-      navigate("/brands");
-    } catch (error) {
-      console.error("Error creating brand:", error);
+      const brandFormData = new FormData();
+      brandFormData.append("name", brandData.name);
+      brandFormData.append("status", brandData.status || "active");
+
+      if (brandData.image) {
+        brandFormData.append("image", brandData.image);
+      }
+
+      await createBrand(brandFormData);
+      navigate("/admin/brands", {
+        state: { successCreate: "Brand Created Successfully" },
+      });
+    } catch (error: any) {
+      setSubmitError(error.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6 w-full flex justify-between items-center flex-col"
-      >
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
-          <div>
-            <Label htmlFor="input">Brand Name</Label>
-            <Input
-              type="text"
-              id="input"
-              name="name"
-              placeholder="Enter the Admin First Name"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="w-full">
-            <Label>Select Role</Label>
-            <Select
-              options={[
-                { label: "Active", value: "active" },
-                { label: "Inactive", value: "inactive" },
-              ]}
-              onChange={handleSelectChange}
-              placeholder="Select a Status"
-              defaultValue="Active"
-              className="dark:bg-dark-900"
-            />
-          </div>
-          <div>
-            <BrandImageUpload
-              file={brandData.image}
-              onFileChange={handleFileChange}
-            />
-          </div>
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      <h1 className="text-gray-700 dark:text-gray-400 font-bold mb-4 text-xl">
+        Create Brand
+      </h1>
+
+      {submitError && (
+        <div className="mb-4 p-3 bg-red-100 text-red-800 border border-red-400 rounded">
+          {submitError}
         </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <Label htmlFor="name">Brand Name</Label>
+          <Input
+            type="text"
+            name="name"
+            id="name"
+            value={brandData.name}
+            onChange={handleChange}
+            placeholder="Enter the Brand Name"
+          />
+          {errors.name && (
+            <p className="text-red-600 text-sm mt-1">{errors.name}</p>
+          )}
+        </div>
+
+        <div>
+          <Label>Select Status</Label>
+          <Select
+            options={[
+              { label: "Active", value: "active" },
+              { label: "Inactive", value: "inactive" },
+            ]}
+            onChange={handleSelectChange}
+            placeholder="Select a Status"
+            defaultValue={brandData.status}
+          />
+        </div>
+
+        <div>
+          <Label>Brand Image</Label>
+          <BrandImageUpload
+            file={brandData.image}
+            onFileChange={handleFileChange}
+          />
+        </div>
+
         <button
           type="submit"
-          className="items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 flex justify-center w-1/4"
+          disabled={loading}
+          className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
-          Add Brand
+          {loading ? "Creating..." : "Add Brand"}
         </button>
       </form>
     </div>

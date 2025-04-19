@@ -1,39 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
 import BrandImageUpload from "./BrandImageUpload";
-import { updateRole } from "../../../api/rolesApi/_requests";
-import { updateBrand } from "../../../api/brandsApi/_requests";
-
-type UpdateBrandProps = {
-  brand: any;
-  onClose: () => void;
-  isModalOpen: boolean;
+import { updateBrand, getBrandById } from "../../../api/brandsApi/_requests";
+type Brand = {
+  name: string;
+  status: string;
+  image: string | File;
 };
-
-const UpdateBrand: React.FC<UpdateBrandProps> = ({
-  brand,
-  onClose,
-  isModalOpen,
-}) => {
+const UpdateBrandPage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [updateData, setUpdateData] = useState({
     name: "",
     status: "",
-    image: null,
+    image: "",
   });
-
+  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<{ name?: string }>({});
+  const [loading, setLoading] = useState(false);
+  // Fetch brand data when component mounts
   useEffect(() => {
-    setUpdateData({
-      name: brand.name || "",
-      status: brand.status || "",
-      image: null,
-    });
-  }, []);
+    const fetchBrand = async () => {
+      try {
+        const brandData = await getBrandById(id); // تأكد من وجود هذا الميثود
+        setUpdateData({
+          name: brandData.data.data.name || "",
+          status: brandData.data.data.status || "active",
+          image: brandData.data.data?.image,
+        });
+        console.log(brandData);
+      } catch (err) {
+        setError("Failed to load brand data.");
+      }
+    };
+    fetchBrand();
+  }, [id]);
 
-  const imageUrl: any = updateData.image;
-  console.log(updateData);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUpdateData((prev) => ({
@@ -43,7 +48,7 @@ const UpdateBrand: React.FC<UpdateBrandProps> = ({
   };
 
   const handleFileChange = (file: File | null) => {
-    setUpdateData((prev: any) => ({
+    setUpdateData((prev) => ({
       ...prev,
       image: file,
     }));
@@ -58,99 +63,123 @@ const UpdateBrand: React.FC<UpdateBrandProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    // تحقق من الأخطاء
+    let hasError = false;
+    let newErrors: { name?: string } = {};
+
     if (!updateData.name) {
-      alert("Brand name is required.");
+      newErrors.name = "Brand name is required.";
+      hasError = true;
+    }
+
+    if (hasError) {
+      setErrors(newErrors);
       return;
     }
+
+    setErrors({});
+    setLoading(true);
 
     try {
       const formData = new FormData();
       formData.append("name", updateData.name);
       formData.append("status", updateData.status);
 
-      if (updateData.image) {
+      // إرسال الصورة فقط لو كانت جديدة
+      if (updateData.image && typeof updateData.image !== "string") {
         formData.append("image", updateData.image);
       }
 
-      console.log(formData);
-
-      await updateBrand(formData, brand.id); // إرسال البيانات عبر FormData
-      onClose();
-      window.location.reload();
-    } catch (error) {
-      console.error("Error updating brand:", error);
+      await updateBrand(formData, id);
+      navigate("/admin/brands");
+    } catch (err: any) {
+      setError(err.message || "An error occurred while updating the brand.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <>
-      {isModalOpen && (
-        <div
-          style={{ zIndex: 99999 }}
-          className="fixed top-0 left-0 right-0 flex justify-center items-center w-full h-screen bg-[#00000080]"
-        >
-          <div className="relative p-4 w-full max-w-1/2">
-            <div className="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-              <div className="flex items-center justify-between p-4 border-b dark:border-gray-600 border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Edit Brand
-                </h3>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="text-gray-400 hover:text-gray-900 hover:bg-gray-200 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                >
-                  ✕
-                </button>
-              </div>
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      <h1 className="text-gray-700 dark:text-gray-400 font-bold mb-4 text-xl">
+        Update Brand
+      </h1>
 
-              <form onSubmit={handleSubmit} className="p-4 md:p-5">
-                <div className="grid gap-4 mb-4 grid-cols-2">
-                  <div className="col-span-2 sm:col-span-1">
-                    <Label htmlFor="name">Brand Name</Label>
-                    <Input
-                      type="text"
-                      name="name"
-                      id="name"
-                      value={updateData.name}
-                      onChange={handleChange}
-                      placeholder="Edit the Brand Name"
-                    />
-                  </div>
-                  <div className="w-full">
-                    <Label>Select Status</Label>
-                    <Select
-                      options={[
-                        { label: "Active", value: "active" },
-                        { label: "Inactive", value: "inactive" },
-                      ]}
-                      onChange={handleSelectChange}
-                      placeholder="Select a Status"
-                      defaultValue={updateData.status || "active"}
-                      className="dark:bg-dark-900"
-                    />
-                  </div>
-                  <div>
-                    <BrandImageUpload
-                      file={updateData.image}
-                      onFileChange={handleFileChange}
-                      endPointImage={imageUrl}
-                    />
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
-                >
-                  Save Changes
-                </button>
-              </form>
-            </div>
-          </div>
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-800 border border-red-400 rounded">
+          {error}
         </div>
       )}
-    </>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <Label htmlFor="name">Brand Name</Label>
+          <Input
+            type="text"
+            name="name"
+            id="name"
+            value={updateData.name}
+            onChange={handleChange}
+            placeholder="Edit the Brand Name"
+          />
+          {errors.name && (
+            <p className="text-red-600 text-sm mt-1">{errors.name}</p>
+          )}
+        </div>
+
+        <div>
+          <Label>Select Status</Label>
+          <Select
+            options={[
+              { label: "Active", value: "active" },
+              { label: "Inactive", value: "inactive" },
+            ]}
+            onChange={handleSelectChange}
+            placeholder="Select a Status"
+            defaultValue={updateData.status || "active"}
+          />
+          {errors.status && (
+            <p className="text-red-600 text-sm mt-1">{errors.status}</p>
+          )}
+        </div>
+
+        <div>
+          <Label>Brand Image</Label>
+          <BrandImageUpload
+            file={updateData.image}
+            onFileChange={handleFileChange}
+          />
+
+          {/* Preview for server image */}
+          {typeof updateData.image === "string" && updateData.image && (
+            <div className="mt-4">
+              <p className=" text-gray-700 dark:text-gray-400 font-medium mb-4 text-sm">
+                Current Brand Image:
+              </p>
+              <img
+                src={updateData.image}
+                alt="Brand Preview"
+                className="w-32 h-32 text-gray-700 dark:text-gray-400 object-cover rounded border dark:border-gray-700"
+              />
+              {errors.image && (
+                <p className="text-red-600 text-sm mt-1">{errors.image}</p>
+              )}
+            </div>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+        >
+          {loading ? "Updating..." : "Save Changes"}
+        </button>
+      </form>
+    </div>
   );
 };
 
-export default UpdateBrand;
+export default UpdateBrandPage;

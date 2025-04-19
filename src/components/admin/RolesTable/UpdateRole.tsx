@@ -1,62 +1,66 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Checkbox from "../../form/input/Checkbox";
-import { getAllPermissions, updateRole } from "../../../api/rolesApi/_requests";
+import {
+  getAllPermissions,
+  getRoleById,
+  updateRole,
+} from "../../../api/rolesApi/_requests";
 import Loading from "../../common/Loading";
-
-type UpdateAdminProps = {
-  role: any;
-  onClose: () => void;
-  isModalOpen: boolean;
-};
 
 type Permission = {
   id: number;
   name: string;
 };
 
-const UpdateAdmin: React.FC<UpdateAdminProps> = ({
-  role,
-  onClose,
-  isModalOpen,
-}) => {
+const UpdateRole: React.FC = () => {
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [loading, setLoading] = useState(false);
   const [updateData, setUpdateData] = useState({
     name: "",
     permissions: [] as number[],
   });
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({}); // إضافة حالة لتخزين الأخطاء
+
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // IDs from Role permissions
-    const permissionIds = role.permissions?.map((perm: any) =>
-      typeof perm === "object" ? perm.id : perm
-    );
-
-    setUpdateData({
-      name: role.name || "",
-      permissions: permissionIds || [],
-    });
-  }, [role]);
-
-  useEffect(() => {
-    const fetchPermissions = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await getAllPermissions();
-        if (response?.data?.data) {
-          setPermissions(response.data.data);
+        // جلب كل الصلاحيات
+        const permissionsRes = await getAllPermissions();
+        setPermissions(permissionsRes.data.data || []);
+
+        // جلب بيانات الرول
+        if (id) {
+          const roleRes = await getRoleById(id);
+          const roleData = roleRes.data.data;
+
+          const permissionIds = Array.isArray(roleData.permissions)
+            ? roleData.permissions.map((perm: any) => perm.id)
+            : [];
+
+          setUpdateData({
+            name: roleData.name || "",
+            permissions: permissionIds,
+          });
         }
-      } catch (error) {
-        console.error("Error fetching permissions:", error);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Something went wrong while loading data.");
       } finally {
         setLoading(false);
       }
     };
-    fetchPermissions();
-  }, []);
+
+    fetchData();
+  }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -77,52 +81,78 @@ const UpdateAdmin: React.FC<UpdateAdminProps> = ({
       };
     });
   };
+
+  const validateForm = () => {
+    const errors: { [key: string]: string } = {};
+    if (!updateData.name) {
+      errors.name = "Name is required.";
+    }
+    if (updateData.permissions.length === 0) {
+      errors.permissions = "At least one permission must be selected.";
+    }
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
+    if (!validateForm()) {
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      await updateRole(updateData, role.id);
-   onClose();   
+      await updateRole(updateData, id);
+      navigate("/admin/roles", {
+        state: { successCreate: "Roles Updated Successfully" },
+      });
     } catch (error) {
-      console.error("Error updating admin:", error);
+      console.error("Error updating role:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  return (
-    <>
-      {isModalOpen && (
-        <div
-          style={{ zIndex: 99999 }}
-          className="fixed top-0 left-0 right-0 flex justify-center items-center w-full h-screen bg-[#00000080]"
-        >
-          <div className="relative p-4 w-full max-w-1/2">
-            <div className="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-              <div className="flex items-center justify-between p-4 border-b dark:border-gray-600 border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Edit Admin
-                </h3>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="text-gray-400 hover:text-gray-900 hover:bg-gray-200 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                >
-                  ✕
-                </button>
-              </div>
+  // Handle invalid role ID
+  if (!id) {
+    return <p className="text-red-500 p-4">Invalid role ID</p>;
+  }
 
-              <form onSubmit={handleSubmit} className="p-4 md:p-5">
-                <div className="grid gap-4 mb-4 grid-cols-2">
-                  <div className="col-span-2 sm:col-span-1">
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      type="text"
-                      name="name"
-                      id="name"
-                      value={updateData.name}
-                      onChange={handleChange}
-                      placeholder="Edit the Name"
-                    />
-                  </div>
-                  {loading && <Loading text="wait Getting Permissions" />}
+  return (
+    <div className="container mx-auto p-6">
+      <header className="mb-6">
+        <h1 className="text-gray-700 dark:text-gray-400">Update Role</h1>
+      </header>
+
+      <div className="bg-white rounded-lg shadow-sm dark:bg-gray-700">
+        <form onSubmit={handleSubmit} className="p-4 md:p-5">
+          <div className="grid gap-4 mb-4 grid-cols-2">
+            <div className="col-span-2 sm:col-span-1">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                type="text"
+                name="name"
+                id="name"
+                value={updateData.name}
+                onChange={handleChange}
+                placeholder="Edit the Name"
+              />
+              {formErrors.name && (
+                <p className="text-red-500">{formErrors.name}</p>
+              )}{" "}
+              {/* عرض الخطأ في الـ Name */}
+            </div>
+
+            {loading ? (
+              <Loading text="Wait, getting permissions..." />
+            ) : (
+              <div className="col-span-2">
+                <h2 className="text-sm font-medium mb-4 text-gray-700 dark:text-gray-400">
+                  Permissions
+                </h2>
+                <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
                   {permissions.map((permission) => (
                     <Checkbox
                       key={permission.id}
@@ -132,23 +162,30 @@ const UpdateAdmin: React.FC<UpdateAdminProps> = ({
                     />
                   ))}
                 </div>
-
-                <button
-                  type="submit"
-                  className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
-                >
-                  Save Changes
-                </button>
-              </form>
-            </div>
+                {formErrors.permissions && (
+                  <p className="text-red-500 text-sm">
+                    {formErrors.permissions}
+                  </p> // عرض الخطأ في الصلاحيات
+                )}
+              </div>
+            )}
           </div>
-        </div>
-      )}
-    </>
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ${
+              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            {isSubmitting ? "Saving..." : "Save Changes"}
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 
-export default UpdateAdmin;
-/*
-
-*/
+export default UpdateRole;

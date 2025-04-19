@@ -1,20 +1,17 @@
+import React, { useEffect, useState } from "react";
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
+import CategoryTable from "../../../components/categories/Categories";
 import BasicTable from "../../../components/admin/Tables/BasicTable";
-import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
-import TableActions from "../../../components/admin/Tables/TablesActions";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import {
-  deleteBrand,
-  getBrandsPaginate,
-} from "../../../api/brandsApi/_requests";
+import { getCategoriesPaginate } from "../../../api/categoryApi/_requests";
+import { useLocation } from "react-router";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
-type Brand = {};
-const Brands = () => {
+import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
+type Category = {};
+const Categories = () => {
   const [reload, setReload] = useState(0);
-  const [data, setData] = useState<Brand[]>([]);
+  const [data, setData] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Brand | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -52,26 +49,25 @@ const Brands = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getBrandsPaginate(pageIndex + 1);
-      const responseData = response.data;
+      const response = await getCategoriesPaginate(pageIndex + 1);
+      const responseData = response.data.data;
 
-      const fetchedData = Array.isArray(responseData.data.data)
-        ? responseData.data.data
-        : [];
-      console.log(responseData.data.data);
+      const fetchedData = responseData.original?.data || [];
+
       setData(fetchedData);
-      const perPage = responseData.data.per_page || 0;
+
+      const perPage = responseData.original?.per_page || 0;
 
       return {
         data: fetchedData,
-        last_page: responseData.data.last_page || 0,
-        total: responseData.data.total || 0,
-        next_page_url: responseData.data.next_page_url,
-        prev_page_url: responseData.data.prev_page_url,
+        last_page: responseData.original?.last_page || 0,
+        total: responseData.original?.total || 0,
+        next_page_url: responseData.original?.next_page_url,
+        prev_page_url: responseData.original?.prev_page_url,
         perPage,
       };
     } catch (error) {
-      console.error("Error fetching Roles:", error);
+      console.error("Error fetching Categories:", error);
       return {
         data: [],
         last_page: 0,
@@ -85,25 +81,24 @@ const Brands = () => {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(
-      id,
-      deleteBrand,
-      () => fetchData(pageIndex),
-      {
-        confirmTitle: "Delete Role?",
-        confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, delete",
-        successTitle: "Deleted!",
-        successText: "Role has been deleted.",
-        errorTitle: "Error",
-        errorText: "Could not delete the Role.",
-      }
-    );
-    setReload((prev) => prev + 1);
-  };
-
-  const columns = buildColumns<Brand>({
+  // const handleDelete = async (id: number) => {
+  //   const confirmed = await alertDelete(
+  //     id,
+  //     deleteBrand,
+  //     () => fetchData(pageIndex),
+  //     {
+  //       confirmTitle: "Delete Role?",
+  //       confirmText: "This action cannot be undone!",
+  //       confirmButtonText: "Yes, delete",
+  //       successTitle: "Deleted!",
+  //       successText: "Role has been deleted.",
+  //       errorTitle: "Error",
+  //       errorText: "Could not delete the Role.",
+  //     }
+  //   );
+  //   setReload((prev) => prev + 1);
+  // };
+  const columns = buildColumns<Category>({
     includeBrandName: false,
     includeImageAndNameCell: true,
     includeEmail: false,
@@ -111,11 +106,8 @@ const Brands = () => {
     includeStatus: true,
     includeUpdatedAt: true,
     includeCreatedAt: true,
-    includeActions: true,
-    onDelete: (id) => console.log("delete", id),
-    customActionsRenderer: (row) => (
-      <TableActions id={row.id} rowData={row} onDelete={handleDelete} />
-    ),
+    includeActions: false,
+    includeCommissionRate: true,
   });
   return (
     <>
@@ -123,17 +115,12 @@ const Brands = () => {
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <PageBreadcrumb pageTitle="Brands" />
+      <PageBreadcrumb pageTitle="Categories" />
       <div className="space-y-6">
-        <ComponentCard
-          title="All Brands"
-          headerAction="Add New Brand"
-          href="/admin/brands/create"
-        >
+        <ComponentCard title="All Categories">
           <BasicTable
             columns={columns}
             fetchData={fetchData}
-            onDelete={handleDelete}
             onEdit={(id) => {
               const role = data.find((item) => item.id === id);
               if (role) {
@@ -143,8 +130,6 @@ const Brands = () => {
             }}
             isModalEdit={false}
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
-            trigger={reload}
-            onDataUpdate={(newData) => setData(newData)}
           />
         </ComponentCard>
       </div>
@@ -152,4 +137,4 @@ const Brands = () => {
   );
 };
 
-export default Brands;
+export default Categories;

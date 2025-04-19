@@ -1,7 +1,18 @@
 import axiosJson from "../axiosInstanceJson";
 import axiosForm from "../axiosInstanceFormData";
+export const getBrandsPaginate = async (
+  pageIndex: number | undefined,
+  pageSize?: number | undefined
+) => {
+  return await axiosJson.get("/api/vendor/brands/withPaginate", {
+    params: { page: pageIndex, per_page: pageSize },
+  });
+};
 export const getAllBrands = async () => {
   return await axiosJson.get("/api/vendor/brands");
+};
+export const getBrandById = async (id: any) => {
+  return await axiosJson.get(`/api/vendor/brands/${id}`);
 };
 
 export const deleteBrand = async (id: number) => {

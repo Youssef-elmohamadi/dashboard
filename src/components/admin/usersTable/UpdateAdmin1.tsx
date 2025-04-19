@@ -115,7 +115,7 @@ const UpdateAdmin = () => {
 
         await updateAdmin(id, dataToSend);
         navigate("/admin/admins", {
-          state: { successUpdate: "Admin Updated Successfully" },
+          state: { successEdit: "Admin Updated Successfully" },
         });
       }
     } catch (err: any) {

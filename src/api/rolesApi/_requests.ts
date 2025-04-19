@@ -3,6 +3,17 @@ import axiosJson from "../axiosInstanceJson";
 export const getAllRoles = async () => {
   return await axiosJson.get("/api/vendor/roles");
 };
+export const getRoleById = async (id: any) => {
+  return await axiosJson.get(`/api/vendor/roles/${id}`);
+};
+export const getAllRolesPaginate = async (
+  pageIndex: number | undefined,
+  pageSize?: number | undefined
+) => {
+  return await axiosJson.get("/api/vendor/roles/withPaginate", {
+    params: { page: pageIndex, per_page: pageSize },
+  });
+};
 export const getAllPermissions = async () => {
   return await axiosJson.get("/api/vendor/permissions");
 };

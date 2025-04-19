@@ -5,8 +5,8 @@ import Input from "../../form/input/InputField";
 import Label from "../../form/Label";
 import { showUser } from "../../../api/profileApi/_requests";
 import { useEffect, useState, useContext } from "react";
-import { UserContext } from "../../../context/AdminContext";
 import { handleLogout } from "../auth/Logout";
+import { UserContext } from "../../../context/AdminContext";
 import Avatar from "../../ui/avatar/Avatar";
 export default function UserMetaCard() {
   const { isOpen, openModal, closeModal } = useModal();

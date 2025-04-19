@@ -1,8 +1,11 @@
 import axiosForm from "../axiosInstanceFormData";
 import axiosJson from "../axiosInstanceJson";
 
-export const getAllAdmins = async (pageIndex: number, pageSize: number) => {
-  return await axiosJson.get("/api/vendor/admins", {
+export const getAllAdminsPaginate = async (
+  pageIndex: number | undefined,
+  pageSize?: number | undefined
+) => {
+  return await axiosJson.get("/api/vendor/admins/withPaginate", {
     params: { page: pageIndex, per_page: pageSize },
   });
 };
