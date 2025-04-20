@@ -96,12 +96,12 @@ export default function CreateRole() {
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <header className="mb-6">
-        <h1 className="text-3xl font-semibold text-gray-900">Create Role</h1>
-      </header>
-
-      <div className="bg-white rounded-lg shadow-sm dark:bg-gray-700">
+    <div className=" p-6">
+      <div className="p-4 border-b dark:border-gray-600 border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Create Role
+        </h3>
+      </div>
         <form onSubmit={handleSubmit} className="p-4 md:p-5">
           <div className="grid gap-4 mb-4 grid-cols-2">
             <div className="col-span-2 sm:col-span-1">
@@ -156,6 +156,5 @@ export default function CreateRole() {
           </button>
         </form>
       </div>
-    </div>
   );
 }

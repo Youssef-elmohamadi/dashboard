@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 export default function CreateAdmin() {
   const [showPassword, setShowPassword] = useState(false);
   const [options, setOptions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({
     first_name: [] as string[],
     last_name: [] as string[],
@@ -56,8 +57,6 @@ export default function CreateAdmin() {
     };
     fetchData();
   }, []);
-
-  // تعديل handleSubmit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -70,7 +69,6 @@ export default function CreateAdmin() {
       const rawErrors = error?.response?.data.errors;
 
       if (Array.isArray(rawErrors)) {
-        // نحول المصفوفة لكائن فيه كل خطأ حسب الكود
         const formattedErrors: Record<string, string[]> = {};
 
         rawErrors.forEach((err: { code: string; message: string }) => {
@@ -196,10 +194,11 @@ export default function CreateAdmin() {
         </div>
         <button
           type="submit"
-          className="items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 flex justify-center w-1/4"
+          disabled={loading}
+          className="bg-blue-600 flex gap-4 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
-          Add Admin
           <FiUserPlus size={20} />
+          {loading ? "Creating..." : "Add Admin"}
         </button>
       </form>
     </div>

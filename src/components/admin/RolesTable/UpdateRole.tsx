@@ -121,69 +121,66 @@ const UpdateRole: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <header className="mb-6">
-        <h1 className="text-gray-700 dark:text-gray-400">Update Role</h1>
-      </header>
+    <div className="p-6">
+      <div className="p-4 border-b dark:border-gray-600 border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Update Role
+        </h3>
+      </div>
 
-      <div className="bg-white rounded-lg shadow-sm dark:bg-gray-700">
-        <form onSubmit={handleSubmit} className="p-4 md:p-5">
-          <div className="grid gap-4 mb-4 grid-cols-2">
-            <div className="col-span-2 sm:col-span-1">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                type="text"
-                name="name"
-                id="name"
-                value={updateData.name}
-                onChange={handleChange}
-                placeholder="Edit the Name"
-              />
-              {formErrors.name && (
-                <p className="text-red-500">{formErrors.name}</p>
-              )}{" "}
-              {/* عرض الخطأ في الـ Name */}
-            </div>
-
-            {loading ? (
-              <Loading text="Wait, getting permissions..." />
-            ) : (
-              <div className="col-span-2">
-                <h2 className="text-sm font-medium mb-4 text-gray-700 dark:text-gray-400">
-                  Permissions
-                </h2>
-                <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
-                  {permissions.map((permission) => (
-                    <Checkbox
-                      key={permission.id}
-                      label={permission.name}
-                      checked={updateData.permissions.includes(permission.id)}
-                      onChange={() => handleCheckbox(permission.id)}
-                    />
-                  ))}
-                </div>
-                {formErrors.permissions && (
-                  <p className="text-red-500 text-sm">
-                    {formErrors.permissions}
-                  </p> // عرض الخطأ في الصلاحيات
-                )}
-              </div>
-            )}
+      <form onSubmit={handleSubmit} className="p-4 md:p-5">
+        <div className="grid gap-4 mb-4 grid-cols-2">
+          <div className="col-span-2 sm:col-span-1">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              type="text"
+              name="name"
+              id="name"
+              value={updateData.name}
+              onChange={handleChange}
+              placeholder="Edit the Name"
+            />
+            {formErrors.name && (
+              <p className="text-red-500">{formErrors.name}</p>
+            )}{" "}
           </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {loading ? (
+            <Loading text="Wait, getting permissions..." />
+          ) : (
+            <div className="col-span-2">
+              <h2 className="text-sm font-medium mb-4 text-gray-700 dark:text-gray-400">
+                Permissions
+              </h2>
+              <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
+                {permissions.map((permission) => (
+                  <Checkbox
+                    key={permission.id}
+                    label={permission.name}
+                    checked={updateData.permissions.includes(permission.id)}
+                    onChange={() => handleCheckbox(permission.id)}
+                  />
+                ))}
+              </div>
+              {formErrors.permissions && (
+                <p className="text-red-500 text-sm">{formErrors.permissions}</p>
+              )}
+            </div>
+          )}
+        </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ${
-              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-          >
-            {isSubmitting ? "Saving..." : "Save Changes"}
-          </button>
-        </form>
-      </div>
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ${
+            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          {isSubmitting ? "Saving..." : "Save Changes"}
+        </button>
+      </form>
     </div>
   );
 };

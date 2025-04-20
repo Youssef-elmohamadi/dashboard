@@ -85,10 +85,12 @@ export default function CreateBrand() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-gray-700 dark:text-gray-400 font-bold mb-4 text-xl">
-        Create Brand
-      </h1>
+    <div className="">
+      <div className="p-4 border-b dark:border-gray-600 border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Create Brand
+        </h3>
+      </div>
 
       {submitError && (
         <div className="mb-4 p-3 bg-red-100 text-red-800 border border-red-400 rounded">
@@ -96,33 +98,34 @@ export default function CreateBrand() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <Label htmlFor="name">Brand Name</Label>
-          <Input
-            type="text"
-            name="name"
-            id="name"
-            value={brandData.name}
-            onChange={handleChange}
-            placeholder="Enter the Brand Name"
-          />
-          {errors.name && (
-            <p className="text-red-600 text-sm mt-1">{errors.name}</p>
-          )}
-        </div>
-
-        <div>
-          <Label>Select Status</Label>
-          <Select
-            options={[
-              { label: "Active", value: "active" },
-              { label: "Inactive", value: "inactive" },
-            ]}
-            onChange={handleSelectChange}
-            placeholder="Select a Status"
-            defaultValue={brandData.status}
-          />
+      <form onSubmit={handleSubmit} className="space-y-6 pt-3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
+          <div>
+            <Label htmlFor="name">Brand Name</Label>
+            <Input
+              type="text"
+              name="name"
+              id="name"
+              value={brandData.name}
+              onChange={handleChange}
+              placeholder="Enter the Brand Name"
+            />
+            {errors.name && (
+              <p className="text-red-600 text-sm mt-1">{errors.name}</p>
+            )}
+          </div>
+          <div>
+            <Label>Select Status</Label>
+            <Select
+              options={[
+                { label: "Active", value: "active" },
+                { label: "Inactive", value: "inactive" },
+              ]}
+              onChange={handleSelectChange}
+              placeholder="Select a Status"
+              defaultValue={brandData.status}
+            />
+          </div>
         </div>
 
         <div>

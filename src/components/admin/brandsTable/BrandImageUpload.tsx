@@ -12,15 +12,14 @@ function BrandImageUpload({ file, onFileChange, endPointImage }: Props) {
 
   useEffect(() => {
     if (file && file instanceof File) {
-      // إذا كان هناك صورة تم تحميلها، استخدم URL لها
       const objectUrl = URL.createObjectURL(file);
       setImage(objectUrl);
-      return () => URL.revokeObjectURL(objectUrl); // تنظيف ال URL عند الخروج
+      return () => URL.revokeObjectURL(objectUrl);
     } //else {
     //   // إذا كان الملف null، استخدم المسار من السيرفر (endPointImage)
     //   setImage(endPointImage || null);
     // }
-  }, [file]); // تحديث عند تغيير الصورة أو المسار
+  }, [file]); 
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
@@ -34,7 +33,7 @@ function BrandImageUpload({ file, onFileChange, endPointImage }: Props) {
   };
 
   return (
-    <div className="flex items-center justify-center w-full">
+    <div className="flex items-center justify-center w-1/2">
       <label
         htmlFor="image"
         className="relative flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 overflow-hidden"

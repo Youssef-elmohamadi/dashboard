@@ -147,11 +147,13 @@ export default function CreateProducts() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6 bg-white dark:bg-dark-800 rounded-xl shadow dark:border-gray-400 dark:bg-gray-900">
-      <h2 className="text-gray-700 dark:text-gray-400 font-bold mb-4 text-xl">
-        Create Product
-      </h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="">
+      <div className="p-4 border-b dark:border-gray-600 border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Create Product
+        </h3>
+      </div>
+      <form onSubmit={handleSubmit} className="space-y-6 mt-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
             <Label htmlFor="name">Name</Label>

@@ -1,12 +1,15 @@
+import { useParams } from "react-router-dom";
 import axiosForm from "../axiosInstanceFormData";
 import axiosJson from "../axiosInstanceJson";
 
-export const getAllAdminsPaginate = async (
-  pageIndex: number | undefined,
-  pageSize?: number | undefined
-) => {
+export const getAllAdminsPaginate = async (params: {
+  page?: number;
+  name?: string;
+  email?: string;
+  phone?: string;
+}) => {
   return await axiosJson.get("/api/vendor/admins/withPaginate", {
-    params: { page: pageIndex, per_page: pageSize },
+    params,
   });
 };
 export const getAdminById = async (id: string) => {

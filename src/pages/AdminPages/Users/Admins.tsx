@@ -29,23 +29,39 @@ const Admins = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [successCreate, setSuccessCreate] = useState<"" | null>();
-  const [successUpdate, setSuccessUpdate] = useState<"" | null>();
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 5,
-  });
   const [pageIndex, setPageIndex] = useState(0);
   const [reload, setReload] = useState(0);
   const location = useLocation();
+  const [searchKey, setSearchKey] = useState<string>("");
+  const [searchValueName, setSearchValueName] = useState<string>("");
+  const [searchValueEmail, setSearchValueEmail] = useState<string>("");
+  const [searchValuePhone, setSearchValuePhone] = useState<string>("");
+
+  const handleSearch = (key: string, value: string) => {
+    if (key === "name") setSearchValueName(value);
+    else if (key === "email") setSearchValueEmail(value);
+    else if (key === "phone") setSearchValuePhone(value);
+    setPageIndex(0);
+  };
+
+  console.log(searchValueName);
+  console.log(searchValueEmail);
+  console.log(searchValuePhone);
 
   const fetchData = async (pageIndex: number = 0) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getAllAdminsPaginate(pageIndex + 1);
+      const params: any = {
+        page: pageIndex + 1,
+        email: searchValueEmail || undefined,
+        name: searchValueName || undefined,
+        phone: searchValuePhone || undefined,
+      };
 
+      const response = await getAllAdminsPaginate(params);
       const responseData = response.data.data;
+
       const fetchedData = Array.isArray(responseData.data)
         ? responseData.data
         : [];
@@ -88,7 +104,7 @@ const Admins = () => {
         title: "Admin Created Successfully",
         message: location.state.successCreate,
       });
-      window.history.replaceState({}, document.title); // إزالة الـ state
+      window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
@@ -153,6 +169,12 @@ const Admins = () => {
           title="All Admins"
           headerAction="Add New Admin"
           href="/admin/admins/create"
+          searchByEmail={true}
+          searchByName={true}
+          searchByPhone={true}
+          setSearchParam={handleSearch}
+          searchKey={searchKey}
+          setSearchKey={setSearchKey}
         >
           <BasicTable
             columns={columns}
@@ -168,6 +190,14 @@ const Admins = () => {
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
+            searchValue={{
+              name: searchValueName,
+              email: searchValueEmail,
+              phone: searchValuePhone,
+            }}
+            searchValueName={searchValueName}
+            searchValueEmail={searchValueEmail}
+            searchValuePhone={searchValuePhone}
           />
         </ComponentCard>
       </div>

@@ -193,14 +193,16 @@ const UpdateProductPage: React.FC = () => {
   if (!productData) return <div className="p-6">Loading...</div>;
 
   return (
-    <div className="p-6 max-w-5xl mx-auto dark:bg-gray-900">
-      <h2 className="text-gray-700 dark:text-gray-400 font-bold mb-4 text-xl">
-        Update Product
-      </h2>
+    <div className="">
+      <div className="p-4 border-b dark:border-gray-600 border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Update Product
+        </h3>
+      </div>
 
       {error && <div className="text-red-600 mb-4">{error}</div>}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 mt-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
             <Label htmlFor="name">Name</Label>

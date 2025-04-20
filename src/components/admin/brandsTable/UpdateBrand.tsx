@@ -102,10 +102,12 @@ const UpdateBrandPage = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-gray-700 dark:text-gray-400 font-bold mb-4 text-xl">
-        Update Brand
-      </h1>
+    <div className="">
+      <div className="p-4 border-b dark:border-gray-600 border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Update Brand
+        </h3>
+      </div>
 
       {error && (
         <div className="mb-4 p-3 bg-red-100 text-red-800 border border-red-400 rounded">
@@ -113,61 +115,67 @@ const UpdateBrandPage = () => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <Label htmlFor="name">Brand Name</Label>
-          <Input
-            type="text"
-            name="name"
-            id="name"
-            value={updateData.name}
-            onChange={handleChange}
-            placeholder="Edit the Brand Name"
-          />
-          {errors.name && (
-            <p className="text-red-600 text-sm mt-1">{errors.name}</p>
-          )}
+      <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
+          <div>
+            <Label htmlFor="name">Brand Name</Label>
+            <Input
+              type="text"
+              name="name"
+              id="name"
+              value={updateData.name}
+              onChange={handleChange}
+              placeholder="Edit the Brand Name"
+            />
+            {errors.name && (
+              <p className="text-red-600 text-sm mt-1">{errors.name}</p>
+            )}
+          </div>
+
+          <div>
+            <Label>Select Status</Label>
+            <Select
+              options={[
+                { label: "Active", value: "active" },
+                { label: "Inactive", value: "inactive" },
+              ]}
+              onChange={handleSelectChange}
+              placeholder="Select a Status"
+              defaultValue={updateData.status || "active"}
+            />
+            {errors.status && (
+              <p className="text-red-600 text-sm mt-1">{errors.status}</p>
+            )}
+          </div>
         </div>
 
-        <div>
-          <Label>Select Status</Label>
-          <Select
-            options={[
-              { label: "Active", value: "active" },
-              { label: "Inactive", value: "inactive" },
-            ]}
-            onChange={handleSelectChange}
-            placeholder="Select a Status"
-            defaultValue={updateData.status || "active"}
-          />
-          {errors.status && (
-            <p className="text-red-600 text-sm mt-1">{errors.status}</p>
-          )}
-        </div>
-
-        <div>
-          <Label>Brand Image</Label>
-          <BrandImageUpload
-            file={updateData.image}
-            onFileChange={handleFileChange}
-          />
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
+          <div className="w-full">
+            <Label>Brand Image</Label>
+            <BrandImageUpload
+              file={updateData.image}
+              onFileChange={handleFileChange}
+            />
+          </div>
 
           {/* Preview for server image */}
-          {typeof updateData.image === "string" && updateData.image && (
-            <div className="mt-4">
-              <p className=" text-gray-700 dark:text-gray-400 font-medium mb-4 text-sm">
-                Current Brand Image:
-              </p>
-              <img
-                src={updateData.image}
-                alt="Brand Preview"
-                className="w-32 h-32 text-gray-700 dark:text-gray-400 object-cover rounded border dark:border-gray-700"
-              />
-              {errors.image && (
-                <p className="text-red-600 text-sm mt-1">{errors.image}</p>
-              )}
-            </div>
-          )}
+          <div>
+            {typeof updateData.image === "string" && updateData.image && (
+              <div className="mt-4">
+                <p className=" text-gray-700 dark:text-gray-400 font-medium mb-4 text-sm">
+                  Current Brand Image:
+                </p>
+                <img
+                  src={updateData.image}
+                  alt="Brand Preview"
+                  className="w-32 h-32 text-gray-700 dark:text-gray-400 object-cover rounded border dark:border-gray-700"
+                />
+                {errors.image && (
+                  <p className="text-red-600 text-sm mt-1">{errors.image}</p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         <button

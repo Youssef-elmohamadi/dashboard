@@ -27,6 +27,11 @@ interface DataTableWrapperProps<T> {
     pageSize: number;
   }) => void;
   trigger?: number;
+  searchKey?: string;
+  searchValue?: {};
+  searchValueName?: string;
+  searchValueEmail?: string;
+  searchValuePhone?: string;
 }
 
 const BasicTable = <T extends { id: number }>({
@@ -42,6 +47,11 @@ const BasicTable = <T extends { id: number }>({
   isModalEdit = false,
   trigger,
   isShowMore,
+  searchValue,
+  searchKey,
+  searchValueName,
+  searchValueEmail,
+  searchValuePhone
 }: DataTableWrapperProps<T>) => {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
@@ -77,7 +87,14 @@ const BasicTable = <T extends { id: number }>({
     };
 
     loadData();
-  }, [pagination.pageIndex, pagination.pageSize, trigger]);
+  }, [
+    pagination.pageIndex,
+    pagination.pageSize,
+    trigger,
+    searchValueName,
+    searchValueEmail,
+    searchValuePhone
+  ]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < pageCount) {
