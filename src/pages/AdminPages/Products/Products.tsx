@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import ProductsTable from "../../../components/admin/Products/ProductsTable";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
 import TableActions from "../../../components/admin/Tables/TablesActions";
 import {
@@ -12,6 +11,9 @@ import {
 import { alertDelete } from "../../../components/admin/Tables/Alert";
 import BasicTable from "../../../components/admin/Tables/BasicTable";
 import { useLocation } from "react-router";
+import SearchTable from "../../../components/admin/Tables/SearchTable";
+import { getAllBrands } from "../../../api/brandsApi/_requests";
+import { getAllCategories } from "../../../api/categoryApi/_requests";
 type Product = {};
 const Products = () => {
   const [reload, setReload] = useState(0);
@@ -21,11 +23,25 @@ const Products = () => {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
+  const [searchValues, setSearchValues] = useState<{
+    category_id: string;
+    brand_id: string;
+    status: string;
+    name: string;
+  }>({
+    category_id: "",
+    brand_id: "",
+    status: "",
+    name: "",
+  });
+
   const [alertData, setAlertData] = useState<{
     variant: "success" | "error" | "info" | "warning";
     title: string;
     message: string;
   } | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
   const location = useLocation();
 
   useEffect(() => {
@@ -49,11 +65,48 @@ const Products = () => {
     return () => clearTimeout(timer);
   }, [location.state]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getAllCategories();
+        if (response.data) setCategories(response.data.data.original);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const response = await getAllBrands();
+        if (response.data) setBrands(response.data.data);
+      } catch (error) {
+        console.error("Error fetching brands:", error);
+      }
+    };
+    fetchBrands();
+  }, []);
+  const handleSearch = (key: string, value: string) => {
+    setSearchValues((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+    setPageIndex(0);
+  };
+
   const fetchData = async (pageIndex: number = 0) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getProductsPaginate(pageIndex + 1);
+      const params: any = {
+        page: pageIndex + 1,
+        ...Object.fromEntries(
+          Object.entries(searchValues).filter(([_, value]) => value !== "")
+        ),
+      };
+      const response = await getProductsPaginate(params);
       const responseData = response.data;
 
       const fetchedData = Array.isArray(responseData.data.data)
@@ -131,6 +184,41 @@ const Products = () => {
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
       <PageBreadcrumb pageTitle="Products" />
+      <div>
+        <SearchTable
+          fields={[
+            { key: "name", label: "Name", type: "input" },
+            {
+              key: "category_id",
+              label: "Category",
+              type: "select",
+              options: categories.map((category) => ({
+                label: category.name,
+                value: category.id,
+              })),
+            },
+            {
+              key: "brand_id",
+              label: "Brand",
+              type: "select",
+              options: brands.map((brand) => ({
+                label: brand.name,
+                value: brand.id,
+              })),
+            },
+            {
+              key: "status",
+              label: "Status",
+              type: "select",
+              options: [
+                { label: "Active", value: "active" },
+                { label: "Inactive", value: "inactive" },
+              ],
+            },
+          ]}
+          setSearchParam={handleSearch}
+        />
+      </div>
       <div className="space-y-6">
         <ComponentCard
           title="All Products"
@@ -153,6 +241,10 @@ const Products = () => {
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
+            searchValueName={searchValues.name}
+            searchValueCategoryId={searchValues.category_id}
+            searchValueBrandId={searchValues.brand_id}
+            searchValueStatus={searchValues.status}
           />
         </ComponentCard>
       </div>

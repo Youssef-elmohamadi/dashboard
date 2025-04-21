@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import CategoryTable from "../../../components/categories/Categories";
 import BasicTable from "../../../components/admin/Tables/BasicTable";
-import { getCategoriesPaginate } from "../../../api/categoryApi/_requests";
+import {
+  getAllCategories,
+  getCategoriesPaginate,
+} from "../../../api/categoryApi/_requests";
 import { useLocation } from "react-router";
-import { alertDelete } from "../../../components/admin/Tables/Alert";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
+import { getAllBrands } from "../../../api/brandsApi/_requests";
+import SearchTable from "../../../components/admin/Tables/SearchTable";
 type Category = {};
 const Categories = () => {
   const [reload, setReload] = useState(0);
@@ -22,6 +25,12 @@ const Categories = () => {
     title: string;
     message: string;
   } | null>(null);
+  const [searchValues, setSearchValues] = useState<{
+    name: string;
+  }>({
+    name: "",
+  });
+
   const location = useLocation();
 
   useEffect(() => {
@@ -49,7 +58,13 @@ const Categories = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getCategoriesPaginate(pageIndex + 1);
+      const params: any = {
+        page: pageIndex + 1,
+        ...Object.fromEntries(
+          Object.entries(searchValues).filter(([_, value]) => value !== "")
+        ),
+      };
+      const response = await getCategoriesPaginate(params);
       const responseData = response.data.data;
 
       const fetchedData = responseData.original?.data || [];
@@ -81,6 +96,14 @@ const Categories = () => {
     }
   };
 
+  const handleSearch = (key: string, value: string | number) => {
+    setSearchValues((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+    setPageIndex(0);
+  };
+
   // const handleDelete = async (id: number) => {
   //   const confirmed = await alertDelete(
   //     id,
@@ -109,6 +132,7 @@ const Categories = () => {
     includeActions: false,
     includeCommissionRate: true,
   });
+
   return (
     <>
       <PageMeta
@@ -116,6 +140,12 @@ const Categories = () => {
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
       <PageBreadcrumb pageTitle="Categories" />
+      <div>
+        <SearchTable
+          fields={[{ key: "name", label: "Name", type: "input" }]}
+          setSearchParam={handleSearch}
+        />
+      </div>
       <div className="space-y-6">
         <ComponentCard title="All Categories">
           <BasicTable
@@ -130,6 +160,7 @@ const Categories = () => {
             }}
             isModalEdit={false}
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
+            searchValueName={searchValues.name}
           />
         </ComponentCard>
       </div>

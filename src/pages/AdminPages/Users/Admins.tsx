@@ -10,6 +10,7 @@ import { alertDelete } from "../../../components/admin/Tables/Alert";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns"; // مكان الملف
 import TableActions from "../../../components/admin/Tables/TablesActions";
 import Alert from "../../../components/ui/alert/Alert";
+import SearchTable from "../../../components/admin/Tables/SearchTable";
 type User = {
   id: number;
   first_name: string;
@@ -32,21 +33,22 @@ const Admins = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [reload, setReload] = useState(0);
   const location = useLocation();
-  const [searchKey, setSearchKey] = useState<string>("");
-  const [searchValueName, setSearchValueName] = useState<string>("");
-  const [searchValueEmail, setSearchValueEmail] = useState<string>("");
-  const [searchValuePhone, setSearchValuePhone] = useState<string>("");
-
-  const handleSearch = (key: string, value: string) => {
-    if (key === "name") setSearchValueName(value);
-    else if (key === "email") setSearchValueEmail(value);
-    else if (key === "phone") setSearchValuePhone(value);
+  const [searchValues, setSearchValues] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+  }>({
+    name: "",
+    email: "",
+    phone: "",
+  });
+  const handleSearch = (key: string, value: string | number) => {
+    setSearchValues((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
     setPageIndex(0);
   };
-
-  console.log(searchValueName);
-  console.log(searchValueEmail);
-  console.log(searchValuePhone);
 
   const fetchData = async (pageIndex: number = 0) => {
     setLoading(true);
@@ -54,9 +56,9 @@ const Admins = () => {
     try {
       const params: any = {
         page: pageIndex + 1,
-        email: searchValueEmail || undefined,
-        name: searchValueName || undefined,
-        phone: searchValuePhone || undefined,
+        ...Object.fromEntries(
+          Object.entries(searchValues).filter(([_, value]) => value !== "")
+        ),
       };
 
       const response = await getAllAdminsPaginate(params);
@@ -164,17 +166,21 @@ const Admins = () => {
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
       <PageBreadcrumb pageTitle="Admins" />
+      <div>
+        <SearchTable
+          fields={[
+            { key: "name", label: "Name", type: "input" },
+            { key: "email", label: "Email", type: "input" },
+            { key: "phone", label: "Phone", type: "input" },
+          ]}
+          setSearchParam={handleSearch}
+        />
+      </div>
       <div className="space-y-6">
         <ComponentCard
           title="All Admins"
           headerAction="Add New Admin"
           href="/admin/admins/create"
-          searchByEmail={true}
-          searchByName={true}
-          searchByPhone={true}
-          setSearchParam={handleSearch}
-          searchKey={searchKey}
-          setSearchKey={setSearchKey}
         >
           <BasicTable
             columns={columns}
@@ -190,14 +196,9 @@ const Admins = () => {
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
-            searchValue={{
-              name: searchValueName,
-              email: searchValueEmail,
-              phone: searchValuePhone,
-            }}
-            searchValueName={searchValueName}
-            searchValueEmail={searchValueEmail}
-            searchValuePhone={searchValuePhone}
+            searchValueName={searchValues.name}
+            searchValueEmail={searchValues.email}
+            searchValuePhone={searchValues.phone}
           />
         </ComponentCard>
       </div>

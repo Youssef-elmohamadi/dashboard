@@ -1,6 +1,5 @@
 import { FiUserPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import SearchTable from "../admin/Tables/SearchTable";
 interface ComponentCardProps {
   title: string;
   children: React.ReactNode;
@@ -9,11 +8,6 @@ interface ComponentCardProps {
   headerAction?: string;
   href?: string;
   action?: () => void;
-  searchByName?: boolean;
-  searchByEmail?: boolean;
-  searchByPhone?: boolean;
-  setSearchParam?: ((key: string, value: string) => void) | undefined;
-  searchKey?: string;
 }
 
 const ComponentCard: React.FC<ComponentCardProps> = ({
@@ -24,11 +18,6 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   headerAction = "",
   href = "",
   action,
-  searchByEmail,
-  searchByName,
-  searchByPhone,
-  setSearchParam,
-  searchKey,
 }) => {
   return (
     <div
@@ -36,24 +25,14 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
     >
       {/* Card Header */}
       <div className="px-6 py-5">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex gap-4 flex-row items-center justify-between">
           {/* Title */}
-          <h3 className="text-base font-medium text-gray-800 dark:text-white/90 md:w-1/4">
+          <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
             {title}
           </h3>
 
           {/* Search + Action */}
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:flex-1">
-            {/* Search */}
-            <div className="w-full md:flex-1">
-              <SearchTable
-                name={searchByName}
-                email={searchByEmail}
-                phone={searchByPhone}
-                setSearchParam={setSearchParam}
-              />
-            </div>
-
+          <div className="flex flex-col gap-3 md:flex-row md:items-center">
             {/* Button */}
             {headerAction && (
               <Link

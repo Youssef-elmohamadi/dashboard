@@ -106,7 +106,7 @@ const UpdateRole: React.FC = () => {
     try {
       await updateRole(updateData, id);
       navigate("/admin/roles", {
-        state: { successCreate: "Roles Updated Successfully" },
+        state: { successUpdate: "Roles Updated Successfully" },
       });
     } catch (error) {
       console.error("Error updating role:", error);

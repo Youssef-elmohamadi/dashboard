@@ -28,10 +28,12 @@ interface DataTableWrapperProps<T> {
   }) => void;
   trigger?: number;
   searchKey?: string;
-  searchValue?: {};
   searchValueName?: string;
   searchValueEmail?: string;
   searchValuePhone?: string;
+  searchValueCategoryId?: string;
+  searchValueBrandId?: string;
+  searchValueStatus?: string;
 }
 
 const BasicTable = <T extends { id: number }>({
@@ -47,11 +49,12 @@ const BasicTable = <T extends { id: number }>({
   isModalEdit = false,
   trigger,
   isShowMore,
-  searchValue,
-  searchKey,
   searchValueName,
   searchValueEmail,
-  searchValuePhone
+  searchValuePhone,
+  searchValueStatus,
+  searchValueCategoryId,
+  searchValueBrandId,
 }: DataTableWrapperProps<T>) => {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
@@ -60,18 +63,30 @@ const BasicTable = <T extends { id: number }>({
   const [totalItems, setTotalItems] = useState(0);
   const [canNext, setCanNext] = useState(false);
   const [canPrev, setCanPrev] = useState(false);
+  const [noData, setNoData] = useState(false);
+  const [unauthorized, setUnauthorized] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
+      setNoData(false);
+      setUnauthorized(false);
+
       try {
-        const res = await fetchData(pagination.pageIndex, pagination.pageSize);
+        const res = await fetchData(pagination.pageIndex);
         const rows = res?.data || [];
+
+        if (Array.isArray(rows) && rows.length === 0) {
+          setNoData(true);
+          setData(rows);
+        } else {
+          setData(rows);
+        }
+
         const perPage = res?.perPage || 5;
-        setData(rows);
 
         if (onDataUpdate) {
-          onDataUpdate(rows); // ✅ دي اللي بتحدث الـ data في الأب
+          onDataUpdate(rows);
         }
 
         setTotalItems(res.total);
@@ -79,8 +94,12 @@ const BasicTable = <T extends { id: number }>({
         setCanNext(!!res?.next_page_url);
         setCanPrev(!!res?.prev_page_url);
         setPagination((prev) => ({ ...prev, pageSize: perPage }));
-      } catch (err) {
-        console.error("Fetching error:", err);
+      } catch (err: any) {
+        if (err?.response?.status === 401 || err?.response?.status === 403) {
+          setUnauthorized(true);
+        } else {
+          console.error("Fetching error:", err);
+        }
       } finally {
         setLoading(false);
       }
@@ -93,7 +112,10 @@ const BasicTable = <T extends { id: number }>({
     trigger,
     searchValueName,
     searchValueEmail,
-    searchValuePhone
+    searchValuePhone,
+    searchValueCategoryId,
+    searchValueBrandId,
+    searchValueStatus,
   ]);
 
   const handlePageChange = (newPage: number) => {
@@ -148,7 +170,15 @@ const BasicTable = <T extends { id: number }>({
             })}
           </tbody>
         </table>
-        {loading && <Loading text="Loading Admins Data..." />}
+        {loading && <Loading text="Loading Brands Data..." />}
+        {!loading && noData && (
+          <div className="p-4 text-center text-gray-500">No Data Found</div>
+        )}
+        {!loading && unauthorized && (
+          <div className="p-4 text-center text-red-500 font-semibold">
+            Sorry, You Don't Have Permission
+          </div>
+        )}
       </div>
 
       <Pagination

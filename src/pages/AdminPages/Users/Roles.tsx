@@ -12,6 +12,7 @@ import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
 import TableActions from "../../../components/admin/Tables/TablesActions";
 import BasicTable from "../../../components/admin/Tables/BasicTable";
 import Alert from "../../../components/ui/alert/Alert";
+import SearchTable from "../../../components/admin/Tables/SearchTable";
 
 type Role = {};
 
@@ -22,12 +23,25 @@ const Roles = () => {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
+  const [searchValues, setSearchValues] = useState<{
+    name: string;
+  }>({
+    name: "",
+  });
+
   const [alertData, setAlertData] = useState<{
     variant: "success" | "error" | "info" | "warning";
     title: string;
     message: string;
   } | null>(null);
   const [reload, setReload] = useState(0);
+  const handleSearch = (key: string, value: string) => {
+    setSearchValues((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+    setPageIndex(0);
+  };
   const location = useLocation();
 
   useEffect(() => {
@@ -37,7 +51,7 @@ const Roles = () => {
         title: "Role Created Successfully",
         message: location.state.successCreate,
       });
-    } else if (location.state?.successEdit) {
+    } else if (location.state?.successUpdate) {
       setAlertData({
         variant: "success",
         title: "Role Updated Successfully",
@@ -55,9 +69,14 @@ const Roles = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getAllRolesPaginate(pageIndex + 1);
+      const params: any = {
+        page: pageIndex + 1,
+        ...Object.fromEntries(
+          Object.entries(searchValues).filter(([_, value]) => value !== "")
+        ),
+      };
+      const response = await getAllRolesPaginate(params);
       const responseData = response.data.data;
-
       const fetchedData = Array.isArray(responseData.data)
         ? responseData.data
         : [];
@@ -133,6 +152,12 @@ const Roles = () => {
         description="This is the roles listing page."
       />
       <PageBreadcrumb pageTitle="Roles" />
+      <div>
+        <SearchTable
+          fields={[{ key: "name", label: "Name", type: "input" }]}
+          setSearchParam={handleSearch}
+        />
+      </div>
       <div className="space-y-6">
         <ComponentCard
           title="All Roles"
@@ -153,6 +178,7 @@ const Roles = () => {
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
+            searchValueName={searchValues.name}
           />
         </ComponentCard>
       </div>

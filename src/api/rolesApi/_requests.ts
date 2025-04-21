@@ -6,12 +6,13 @@ export const getAllRoles = async () => {
 export const getRoleById = async (id: any) => {
   return await axiosJson.get(`/api/vendor/roles/${id}`);
 };
-export const getAllRolesPaginate = async (
-  pageIndex: number | undefined,
-  pageSize?: number | undefined
-) => {
+export const getAllRolesPaginate = async (params: {
+  pageIndex: number | undefined;
+  pageSize?: number | undefined;
+  name?: string;
+}) => {
   return await axiosJson.get("/api/vendor/roles/withPaginate", {
-    params: { page: pageIndex, per_page: pageSize },
+    params,
   });
 };
 export const getAllPermissions = async () => {

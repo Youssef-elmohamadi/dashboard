@@ -1,11 +1,12 @@
 import axiosJson from "../axiosInstanceJson";
 import axiosForm from "../axiosInstanceFormData";
-export const getBrandsPaginate = async (
-  pageIndex: number | undefined,
-  pageSize?: number | undefined
-) => {
+export const getBrandsPaginate = async (params: {
+  pageIndex: number | undefined;
+  pageSize?: number | undefined;
+  name?: string;
+}) => {
   return await axiosJson.get("/api/vendor/brands/withPaginate", {
-    params: { page: pageIndex, per_page: pageSize },
+    params,
   });
 };
 export const getAllBrands = async () => {

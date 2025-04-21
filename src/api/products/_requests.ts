@@ -4,12 +4,13 @@ export const getAllProducts = async () => {
   return await axiosJson.get("/api/vendor/products");
 };
 
-export const getProductsPaginate = async (
-  pageIndex: number | undefined,
-  pageSize?: number | undefined
-) => {
+export const getProductsPaginate = async (params: {
+  pageIndex: number | undefined;
+  pageSize?: number | undefined;
+  name?: string;
+}) => {
   return await axiosJson.get("/api/vendor/products/withPaginate", {
-    params: { page: pageIndex, per_page: pageSize },
+    params,
   });
 };
 

@@ -11,6 +11,7 @@ import {
   getBrandsPaginate,
 } from "../../../api/brandsApi/_requests";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
+import SearchTable from "../../../components/admin/Tables/SearchTable";
 type Brand = {};
 const Brands = () => {
   const [reload, setReload] = useState(0);
@@ -25,8 +26,19 @@ const Brands = () => {
     title: string;
     message: string;
   } | null>(null);
+  const [searchValues, setSearchValues] = useState<{
+    name: string;
+  }>({
+    name: "",
+  });
   const location = useLocation();
-
+  const handleSearch = (key: string, value: string) => {
+    setSearchValues((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+    setPageIndex(0);
+  };
   useEffect(() => {
     if (location.state?.successCreate) {
       setAlertData({
@@ -52,13 +64,17 @@ const Brands = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getBrandsPaginate(pageIndex + 1);
+      const params: any = {
+        page: pageIndex + 1,
+        name: searchValues.name || undefined,
+      };
+      const response = await getBrandsPaginate(params);
       const responseData = response.data;
 
       const fetchedData = Array.isArray(responseData.data.data)
         ? responseData.data.data
         : [];
-      console.log(responseData.data.data);
+        
       setData(fetchedData);
       const perPage = responseData.data.per_page || 0;
 
@@ -124,6 +140,12 @@ const Brands = () => {
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
       <PageBreadcrumb pageTitle="Brands" />
+      <div>
+        <SearchTable
+          fields={[{ key: "name", label: "Name", type: "input" }]}
+          setSearchParam={handleSearch}
+        />
+      </div>
       <div className="space-y-6">
         <ComponentCard
           title="All Brands"
@@ -145,6 +167,7 @@ const Brands = () => {
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
+            searchValueName={searchValues.name}
           />
         </ComponentCard>
       </div>
