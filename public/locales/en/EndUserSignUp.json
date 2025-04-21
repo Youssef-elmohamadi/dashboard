@@ -1,0 +1,20 @@
+{
+  "title": "Create Account",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "phone": "Phone Number",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "alreadyHaveAccount": "Already have an account?",
+  "login": "Login",
+  "button": "Create Account",
+  "placeholder": {
+    "firstName": "Enter your first name",
+    "lastName": "Enter your last name",
+    "phone": "Enter your phone number",
+    "email": "Enter your email address",
+    "password": "Create a password",
+    "confirmPassword": "Confirm your password"
+  }
+}

@@ -16,7 +16,16 @@ i18n
     backend: {
       loadPath: "/locales/{{lng}}/{{ns}}.json",
     },
-    ns: ["Signin", "Signup", "BreadCrump", "SignErrors", "ServerErrors"],
+    ns: [
+      "Signin",
+      "Signup",
+      "BreadCrump",
+      "SignErrors",
+      "ServerErrors",
+      "EndUserSignUp",
+      "EndUserSignUpErrors",
+      "EndUserSignIn",
+    ],
     defaultNS: "Signup",
     interpolation: {
       escapeValue: false,

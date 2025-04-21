@@ -53,7 +53,7 @@ const AppHeader = () => {
         </div>
         <div className="flex items-center gap-2 ">
           <div className="text-secondary text-sm">
-            <Link to="/login">Login</Link>
+            <Link to="/signin">Login</Link>
           </div>
           <Separator />
         </div>
