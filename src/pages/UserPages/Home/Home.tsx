@@ -37,7 +37,7 @@ const Home = () => {
   }, []);
   return (
     <section className="">
-      <div className="container">
+      <div className="enduser_container">
         <AdBanner imageUrl="/images/banner.webp" linkUrl="/" />
         <FeaturesSection />
         <CircleSlider items={Categories} />
@@ -62,7 +62,7 @@ const Home = () => {
           },
         ]}
       />
-      <div className="container">
+      <div className="enduser_container">
         <AdBanner imageUrl="/images/ad2.webp" linkUrl="/" />
         {productCategories?.map((category: any) => (
           <HomeProducts

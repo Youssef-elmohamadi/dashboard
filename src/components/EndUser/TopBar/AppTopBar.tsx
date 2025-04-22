@@ -52,7 +52,7 @@ const TopBar = () => {
   }, []);
 
   return (
-    <div className="container px-3 py-2 flex items-center justify-between bg-white">
+    <div className="enduser_container px-3 py-2 flex items-center justify-between bg-white">
       {/* Language & Currency */}
       <div className="flex items-center justify-between lg:justify-start flex-[3]">
         {/* Language */}

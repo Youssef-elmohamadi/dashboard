@@ -1,5 +1,4 @@
 // components/FeaturesSection.jsx
-import React from "react";
 import FeatureItem from "./FeatureItem";
 import { FaShippingFast, FaUndo, FaMapMarkedAlt, FaTags } from "react-icons/fa";
 
@@ -29,7 +28,7 @@ const FeaturesSection = () => {
   
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 bg-white p-4 rounded-xl shadow">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 bg-white p-4 rounded-xl">
       {features.map((feature, index) => (
         <FeatureItem
           key={index}

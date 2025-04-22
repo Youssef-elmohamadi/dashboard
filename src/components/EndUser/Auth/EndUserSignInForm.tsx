@@ -52,7 +52,7 @@ const EndUserSignInForm = () => {
 
       if (res?.status === 200) {
         localStorage.setItem("uToken", res.data.data.token);
-        localStorage.setItem("userId", res.data.data.id);
+        localStorage.setItem("uId", res.data.data.id);
         navigate("/");
       }
     } catch (error: any) {
@@ -155,7 +155,6 @@ const EndUserSignInForm = () => {
                 </p>
               )}
               <div className="space-y-6">
-
                 <div>
                   <Label>
                     {t("email")} <span className="text-error-500">*</span>{" "}

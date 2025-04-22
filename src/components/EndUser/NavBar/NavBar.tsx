@@ -3,11 +3,39 @@ import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io";
 import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
-
+import { useSelector, useDispatch } from "react-redux";
+import { removeItem } from "../Redux/cartSlice/CartSlice";
 const NavBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [Categories, setCategories] = useState<any>();
+  const items = useSelector((state) => state.cart.items);
+  const totalPrice = useSelector((state) => state.cart.totalPrice);
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
   const dropdownRef = useRef(null);
+  const isOpenCartRef = useRef(null);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  const toggleCartPopup = () => {
+    setIsCartOpen((prev) => !prev);
+  };
+  console.log(items);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isOpenCartRef.current &&
+        !event.target.closest(".cart") &&
+        !isOpenCartRef.current.contains(event.target)
+      ) {
+        setIsCartOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -47,7 +75,7 @@ const NavBar = () => {
 
   return (
     <nav className="bg-primary w-full md:block hidden ">
-      <div className="flex container w-full justify-center lg:justify-baseline items-center relative">
+      <div className="flex enduser_container w-full justify-center lg:justify-baseline items-center relative">
         {/* Categories Button */}
         <div
           className="Categories flex-[1] lg:block hidden relative"
@@ -110,36 +138,102 @@ const NavBar = () => {
             </ul>
           </div>
         </div>
-
         {/* Links */}
         <ul className="flex justify-center lg:justify-start flex-[2] gap-5">
-          <li className="text-white py-3">
-            <Link to="" className="py-3 font-semibold">
-              Men Clothes
-            </Link>
-          </li>
-          <li className="text-white py-3">
-            <Link to="" className="py-3 font-semibold">
-              Women Clothes
-            </Link>
-          </li>
-          <li className="text-white py-3">
-            <Link to="" className="py-3 font-semibold">
-              Perfumes
-            </Link>
-          </li>
-          <li className="text-white py-3">
-            <Link to="" className="py-3 font-semibold">
-              MakeUp
-            </Link>
-          </li>
+          {Categories?.map((Category, i) =>
+            i < 4 ? (
+              <li className="text-white py-3">
+                <Link to="" className="py-3 font-semibold">
+                  {Category.name}
+                </Link>
+              </li>
+            ) : null
+          )}
         </ul>
+        {/* Cart */},
+        <div className="relative">
+          <div
+            className="lg:flex flex-[1] cart relative gap-3 cursor-pointer hidden items-center justify-end"
+            onClick={toggleCartPopup}
+          >
+            <FaShoppingCart className="text-white text-2xl" />
+            <div className="text-white">{totalPrice} EGP</div>
+            <div className="text-white">({totalQuantity}) Items</div>
+          </div>
+          {isCartOpen && (
+            <div
+              className="absolute top-10 right-0 min-w-[350px] bg-white shadow-lg rounded-lg p-4 z-50"
+              ref={isOpenCartRef}
+            >
+              <h3 className="text-lg font-bold mb-2">Your Cart</h3>
 
-        {/* Cart */}
-        <div className="lg:flex flex-[1] gap-3 cursor-pointer hidden items-center justify-end">
-          <FaShoppingCart className="text-white text-2xl" />
-          <div className="text-white">0.00 EGP</div>
-          <div className="text-white">(0 Items)</div>
+              {/* Cart Items */}
+              <ul className="divide-y max-h-[300px] overflow-y-auto">
+                {items.length > 0 ? (
+                  items.map((item) => (
+                    <li
+                      key={item.id}
+                      className="py-2 flex items-center justify-between gap-2"
+                    >
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-14 h-14 object-cover rounded"
+                      />
+                      <div className="flex-1">
+                        <div className="font-semibold">{item.name}</div>
+                        <div className="text-sm text-gray-500">
+                          Qty: {item.quantity}
+                        </div>
+                      </div>
+                      <div className="text-sm font-medium">
+                        {(item.price * item.quantity).toFixed(2)} EGP
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          dispatch(removeItem(item.id));
+                        }}
+                        className="text-red-500 text-lg font-bold ml-2"
+                      >
+                        ×
+                      </button>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-center text-gray-500 py-4">
+                    Cart is empty
+                  </li>
+                )}
+              </ul>
+
+              {/* Total */}
+              {items.length > 0 && (
+                <>
+                  <div className="mt-4 flex justify-between font-semibold">
+                    <span>Total:</span>
+                    <span>
+                      {items
+                        .reduce(
+                          (total, item) => total + item.price * item.quantity,
+                          0
+                        )
+                        .toFixed(2)}{" "}
+                      EGP
+                    </span>
+                  </div>
+
+                  {/* Checkout Button */}
+                  <Link
+                    to="/checkout"
+                    className="mt-4 w-full inline-block px-2 text-center bg-primary text-white py-2 rounded hover:bg-opacity-90 transition"
+                  >
+                    Continue to Checkout
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </nav>

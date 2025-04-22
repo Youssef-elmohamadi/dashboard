@@ -777,11 +777,68 @@ span.flatpickr-weekday,
 }
 /* ////////////// Custom CSS //////////////// */
 /* Container Padding */
-.container {
+/* .container {
   padding-left: 2rem;
   padding-right: 2rem;
   margin-left: auto;
   margin-right: auto;
+} */
+
+/* .container {
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+} */
+
+.enduser_container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* موبايلات صغيرة - أقل من 576px */
+@media (max-width: 575.98px) {
+  .enduser_container {
+    max-width: 100%;
+  }
+}
+
+/* موبايلات متوسطة - من 576px إلى 767px */
+@media (min-width: 576px) {
+  .enduser_container {
+    max-width: 540px;
+  }
+}
+
+/* تابلت - من 768px إلى 991px */
+@media (min-width: 768px) {
+  .enduser_container {
+    max-width: 720px;
+  }
+}
+
+/* لابتوب متوسط - من 992px إلى 1199px */
+@media (min-width: 992px) {
+  .enduser_container {
+    max-width: 960px;
+  }
+}
+
+/* شاشات كبيرة - من 1200px وأكبر */
+@media (min-width: 1200px) {
+  .enduser_container {
+    max-width: 1140px;
+  }
+}
+
+/* شاشات ضخمة جدًا - فوق 1400px */
+@media (min-width: 1400px) {
+  .enduser_container {
+    max-width: 1320px;
+  }
 }
 
 /* Custom Colors */

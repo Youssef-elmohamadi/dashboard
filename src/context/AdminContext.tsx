@@ -20,7 +20,7 @@ interface UserProviderProps {
 
 export const AdminProvider = ({ children }: UserProviderProps) => {
   useEffect(() => {
-    const storedUserId = localStorage.getItem("userId"); // Make sure 'userId' is a string key in localStorage
+    const storedUserId = localStorage.getItem("uId"); // Make sure 'userId' is a string key in localStorage
     if (storedUserId) {
       const fetchData = async (id: number) => {
         try {
@@ -41,7 +41,7 @@ export const AdminProvider = ({ children }: UserProviderProps) => {
   const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem("userId");
+    const storedUserId = localStorage.getItem("uId");
 
     console.log("Stored userId from localStorage:", storedUserId); // Debugging
 

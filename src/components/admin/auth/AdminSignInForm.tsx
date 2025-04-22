@@ -53,7 +53,7 @@ export default function AdminSignInForm() {
 
       if (res?.status === 200) {
         localStorage.setItem("aToken", res.data.data.token);
-        localStorage.setItem("userId", res.data.data.id);
+        localStorage.setItem("aId", res.data.data.id);
         navigate("/admin");
       }
     } catch (error: any) {

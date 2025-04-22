@@ -53,7 +53,7 @@ export default function UserInfoCard() {
   };
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem("userId"); // Make sure 'userId' is a string key in localStorage
+    const storedUserId = localStorage.getItem("aId"); // Make sure 'userId' is a string key in localStorage
     if (storedUserId) {
       const fetchData = async (id: any) => {
         try {
