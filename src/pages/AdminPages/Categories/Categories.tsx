@@ -161,6 +161,7 @@ const Categories = () => {
             isModalEdit={false}
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             searchValueName={searchValues.name}
+            loadingText="Categories data Loading"
           />
         </ComponentCard>
       </div>

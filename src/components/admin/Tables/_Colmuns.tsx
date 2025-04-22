@@ -41,10 +41,13 @@ export const buildColumns = <T extends BaseEntity>(
 
   if (options.includeImagesAndNameCell) {
     columns.push({
-      Header: "Brand",
+      Header: "Name",
       id: "name_and_image",
       Cell: ({ row }: any) => (
-        <BrandCell name={row.original?.name} image={row.original?.images[0]} />
+        <BrandCell
+          name={row.original?.name}
+          image={row.original?.images[0].image}
+        />
       ),
     });
   }

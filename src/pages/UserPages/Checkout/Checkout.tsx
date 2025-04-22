@@ -4,9 +4,9 @@ import CheckoutForm from "../../../components/EndUser/Checkout/CheckoutForm";
 
 const Checkout = () => {
   return (
-    <div>
-      <CartData />
+    <div className="flex">
       <CheckoutForm />
+      <CartData />
     </div>
   );
 };

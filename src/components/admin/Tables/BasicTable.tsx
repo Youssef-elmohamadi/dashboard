@@ -34,6 +34,7 @@ interface DataTableWrapperProps<T> {
   searchValueCategoryId?: string;
   searchValueBrandId?: string;
   searchValueStatus?: string;
+  loadingText?: string;
 }
 
 const BasicTable = <T extends { id: number }>({
@@ -55,6 +56,7 @@ const BasicTable = <T extends { id: number }>({
   searchValueStatus,
   searchValueCategoryId,
   searchValueBrandId,
+  loadingText,
 }: DataTableWrapperProps<T>) => {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
@@ -170,7 +172,7 @@ const BasicTable = <T extends { id: number }>({
             })}
           </tbody>
         </table>
-        {loading && <Loading text="Loading Brands Data..." />}
+        {loading && <Loading text={loadingText} />}
         {!loading && noData && (
           <div className="p-4 text-center text-gray-500">No Data Found</div>
         )}

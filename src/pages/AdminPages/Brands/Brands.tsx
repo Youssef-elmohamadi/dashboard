@@ -74,7 +74,7 @@ const Brands = () => {
       const fetchedData = Array.isArray(responseData.data.data)
         ? responseData.data.data
         : [];
-        
+
       setData(fetchedData);
       const perPage = responseData.data.per_page || 0;
 
@@ -168,6 +168,7 @@ const Brands = () => {
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
             searchValueName={searchValues.name}
+            loadingText="Brands data Loading"
           />
         </ComponentCard>
       </div>

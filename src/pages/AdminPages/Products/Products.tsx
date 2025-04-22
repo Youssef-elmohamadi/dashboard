@@ -245,6 +245,7 @@ const Products = () => {
             searchValueCategoryId={searchValues.category_id}
             searchValueBrandId={searchValues.brand_id}
             searchValueStatus={searchValues.status}
+            loadingText="Products data Loading"
           />
         </ComponentCard>
       </div>

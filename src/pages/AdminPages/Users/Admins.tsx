@@ -199,6 +199,7 @@ const Admins = () => {
             searchValueName={searchValues.name}
             searchValueEmail={searchValues.email}
             searchValuePhone={searchValues.phone}
+            loadingText="Admins data Loading"
           />
         </ComponentCard>
       </div>

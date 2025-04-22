@@ -179,6 +179,7 @@ const Roles = () => {
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
             searchValueName={searchValues.name}
+            loadingText="Roles data Loading"
           />
         </ComponentCard>
       </div>
