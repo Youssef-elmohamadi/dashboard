@@ -23,7 +23,12 @@ interface ColumnBuilderOptions<T extends BaseEntity> {
   includeUpdatedAt?: boolean;
   includeActions?: boolean;
   includeRoleName?: boolean;
+  includeFullName?: boolean;
   includeCommissionRate?: boolean;
+  includePaymentMethod?: boolean;
+  includeTotalPrice?: boolean;
+  includePhone?: boolean;
+  includeAddress?: boolean;
   onDelete?: (id: number) => void;
   onEdit?: (id: number) => void;
   customActionsRenderer?: (rowData: T) => React.ReactNode;
@@ -53,7 +58,7 @@ export const buildColumns = <T extends BaseEntity>(
   }
   if (options.includeImageAndNameCell) {
     columns.push({
-      Header: "Brand",
+      Header: "Name",
       id: "name_and_image",
       Cell: ({ row }: any) => (
         <BrandCell name={row.original.name} image={row.original.image} />
@@ -74,6 +79,14 @@ export const buildColumns = <T extends BaseEntity>(
       accessor: "name",
     });
   }
+  if (options.includeFullName) {
+    columns.push({
+      Header: "Customer",
+      accessor: (row: any) =>
+        `${row.order.user.first_name} ${row.order.user.last_name}`,
+      id: "customer_name",
+    });
+  }
 
   if (options.includeStatus) {
     columns.push({
@@ -87,6 +100,13 @@ export const buildColumns = <T extends BaseEntity>(
     columns.push({
       Header: "Email",
       accessor: "email" as keyof T,
+    });
+  }
+  if (options.includePhone) {
+    columns.push({
+      Header: "Phone",
+      accessor: (row: any) => row.order.location?.phone,
+      id: "phone",
     });
   }
   if (options.includeCommissionRate) {
@@ -130,6 +150,30 @@ export const buildColumns = <T extends BaseEntity>(
         options.customActionsRenderer
           ? options.customActionsRenderer(row.original)
           : null,
+    });
+  }
+
+  {
+    if (options.includeAddress) {
+      columns.push({
+        Header: "Address",
+        id: "full_address",
+        accessor: (row: any) =>
+          `${row.order.location?.city}, ${row.order.location?.area}, ${row.order.location?.street}`,
+      });
+    }
+  }
+
+  if (options.includeTotalPrice) {
+    columns.push({
+      Header: "Total Amount",
+      accessor: "total" as keyof T,
+    });
+  }
+  if (options.includePaymentMethod) {
+    columns.push({
+      Header: "Payment Method",
+      accessor: (row) => row.order.payment_method,
     });
   }
 

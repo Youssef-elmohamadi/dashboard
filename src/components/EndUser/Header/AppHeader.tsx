@@ -5,7 +5,17 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { IoIosMenu } from "react-icons/io";
 import { FaShoppingCart } from "react-icons/fa";
 import { Separator } from "../Separator/Separator";
-
+import { AiOutlineHome } from "react-icons/ai";
+import {
+  TiDocumentText,
+  TiDownload,
+  TiInfoLargeOutline,
+  TiSupport,
+} from "react-icons/ti";
+import { GrLogout } from "react-icons/gr";
+import { BsWechat } from "react-icons/bs";
+import { TfiDownload, TfiWallet } from "react-icons/tfi";
+import { LuWallet } from "react-icons/lu";
 const AppHeader = () => {
   const uToken = localStorage.getItem("uToken");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,7 +26,6 @@ const AppHeader = () => {
   return (
     <>
       <header className="enduser_container py-4 flex items-center justify-start gap-12 relative z-50">
-        {/* اليسار: المينيو واللوجو والموبايل سيرش */}
         <div className="flex justify-between w-full md:w-auto">
           <div className="flex gap-2 items-center w-full">
             {/* MenuIcon */}
@@ -58,7 +67,49 @@ const AppHeader = () => {
           {uToken ? (
             <>
               <div className="flex items-center gap-2">
-                <FaRegCircleUser className="text-2xl mt-1 text-secondary" />
+                <div className="relative group p-2 flex gap-2 items-center">
+                  <span className="cursor-pointer">Youssef</span>
+                  <FaRegCircleUser className="text-2xl mt-1 text-secondary cursor-pointer" />
+
+                  <div className="absolute right-0 top-[90%] mt-1 bg-white shadow-lg rounded-md w-60 py-2 z-50 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
+                    <ul className="space-y-1">
+                      <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+                        <AiOutlineHome className="text-xl text-secondary" />
+                        Dashboard
+                      </li>
+                      <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+                        <Link
+                          to="/u-orders"
+                          className="flex gap-2 items-center"
+                        >
+                          <TiDocumentText className="text-xl text-secondary" />
+                          Purchase History
+                        </Link>
+                      </li>
+                      <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+                        <TiDownload className="text-xl text-secondary" />
+                        Downloads
+                      </li>
+                      <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+                        <BsWechat className="text-xl text-secondary" />
+                        Conversation
+                      </li>
+                      <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+                        <TfiWallet className="text-xl text-secondary" />
+                        Wallet
+                      </li>
+                      <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+                        <TiSupport className="text-xl text-secondary" />
+                        Support Ticket
+                      </li>
+                      <li className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-100 cursor-pointer">
+                        <GrLogout className="text-xl" />
+                        Logout
+                      </li>
+                    </ul>
+                      
+                  </div>
+                </div>
                 <Separator />
               </div>
               <div className="flex items-center gap-2">

@@ -6,16 +6,18 @@ import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_req
 import { MultiImagesBanner } from "../../../components/EndUser/MultiImagesBanner/MulltiImagesBanner";
 import HomeProducts from "../../../components/EndUser/HomeProducts/HomeProducts";
 import { getProductCategories } from "../../../api/EndUserApi/ensUserProducts/_requests";
+import ProductModal from "../../../components/EndUser/ProductModal/ProductModal";
+import { useModal } from "../Context/ModalContext";
+import AddToCartModal from "../../../components/EndUser/AddedSuccess/AddToCartModal";
 
 const Home = () => {
   const [Categories, setCategories] = useState<any>();
   const [productCategories, setProductCategories] = useState<any>();
-
+  const { modalType } = useModal();
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await getAllCategories();
-        console.log(response.data.data);
         setCategories(response.data.data);
       } catch (error) {
         console.log(error);
@@ -27,7 +29,6 @@ const Home = () => {
     const fetchProducts = async () => {
       try {
         const response = await getProductCategories();
-        console.log(response.data.data);
         setProductCategories(response.data.data);
       } catch (error) {
         console.log(error);
@@ -37,6 +38,8 @@ const Home = () => {
   }, []);
   return (
     <section className="">
+      {modalType === "product" && <ProductModal  />}
+      {modalType === "addtocart" && <AddToCartModal  />}
       <div className="enduser_container">
         <AdBanner imageUrl="/images/banner.webp" linkUrl="/" />
         <FeaturesSection />

@@ -5,21 +5,23 @@ import { IoIosArrowDown } from "react-icons/io";
 import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
 import { useSelector, useDispatch } from "react-redux";
 import { removeItem } from "../Redux/cartSlice/CartSlice";
-const NavBar = () => {
+import { RiDashboard2Fill, RiDeleteBin4Fill } from "react-icons/ri";
+import { CiShoppingCart } from "react-icons/ci";
+
+const NavBar = React.memo(() => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [Categories, setCategories] = useState<any>();
   const items = useSelector((state) => state.cart.items);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
+  const dispatch = useDispatch();
   const dropdownRef = useRef(null);
   const isOpenCartRef = useRef(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const dispatch = useDispatch();
 
   const toggleCartPopup = () => {
     setIsCartOpen((prev) => !prev);
   };
-  console.log(items);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -41,7 +43,6 @@ const NavBar = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -64,7 +65,6 @@ const NavBar = () => {
     const fetchCategories = async () => {
       try {
         const response = await getAllCategories();
-        console.log(response.data.data);
         setCategories(response.data.data);
       } catch (error) {
         console.log(error);
@@ -74,9 +74,9 @@ const NavBar = () => {
   }, []);
 
   return (
-    <nav className="bg-primary w-full md:block hidden ">
+    <nav className="bg-primary w-full md:block hidden">
       <div className="flex enduser_container w-full justify-center lg:justify-baseline items-center relative">
-        {/* Categories Button */}
+        {/* Categories Dropdown */}
         <div
           className="Categories flex-[1] lg:block hidden relative"
           ref={dropdownRef}
@@ -92,8 +92,6 @@ const NavBar = () => {
               }`}
             />
           </button>
-
-          {/* Dropdown Menu */}
           <div
             className={`absolute top-full left-0 bg-white z-50 text-black shadow-lg rounded-md mt-1 w-48 transition-all duration-300 origin-top transform ${
               isDropdownOpen
@@ -114,10 +112,8 @@ const NavBar = () => {
                         <IoIosArrowDown className="transform rotate-[-90deg] group-hover:rotate-0 transition duration-300 ml-2" />
                       )}
                     </div>
-
-                    {/* Submenu */}
                     {category.childs && category.childs.length > 0 && (
-                      <ul className="fixed top-0 left-full  w-[400%] h-[calc(100vh-11em)] bg-white z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-y-auto py-8 px-12">
+                      <ul className="fixed top-0 left-full w-[400%] h-[calc(100vh-11em)] bg-white z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-y-auto py-8 px-12">
                         <div className="grid grid-cols-4 gap-6">
                           {category.childs.map((sub, subIndex) => (
                             <li
@@ -138,11 +134,12 @@ const NavBar = () => {
             </ul>
           </div>
         </div>
-        {/* Links */}
+
+        {/* Static Links */}
         <ul className="flex justify-center lg:justify-start flex-[2] gap-5">
           {Categories?.map((Category, i) =>
             i < 4 ? (
-              <li className="text-white py-3">
+              <li key={i} className="text-white py-3">
                 <Link to="" className="py-3 font-semibold">
                   {Category.name}
                 </Link>
@@ -150,7 +147,8 @@ const NavBar = () => {
             ) : null
           )}
         </ul>
-        {/* Cart */},
+
+        {/* Cart */}
         <div className="relative">
           <div
             className="lg:flex flex-[1] cart relative gap-3 cursor-pointer hidden items-center justify-end"
@@ -166,22 +164,20 @@ const NavBar = () => {
               ref={isOpenCartRef}
             >
               <h3 className="text-lg font-bold mb-2">Your Cart</h3>
-
-              {/* Cart Items */}
               <ul className="divide-y max-h-[300px] overflow-y-auto">
                 {items.length > 0 ? (
-                  items.map((item) => (
+                  items?.map((item) => (
                     <li
                       key={item.id}
                       className="py-2 flex items-center justify-between gap-2"
                     >
                       <img
-                        src={item.image}
-                        alt={item.name}
+                        src={item.images[0]?.image||""}
+                        alt={item.title}
                         className="w-14 h-14 object-cover rounded"
                       />
                       <div className="flex-1">
-                        <div className="font-semibold">{item.name}</div>
+                        <div className="font-semibold">{item.title}</div>
                         <div className="text-sm text-gray-500">
                           Qty: {item.quantity}
                         </div>
@@ -194,9 +190,9 @@ const NavBar = () => {
                           e.stopPropagation();
                           dispatch(removeItem(item.id));
                         }}
-                        className="text-red-500 text-lg font-bold ml-2"
+                        className=" ml-2"
                       >
-                        ×
+                        <RiDeleteBin4Fill className="text-xl text-error-500" />
                       </button>
                     </li>
                   ))
@@ -206,8 +202,6 @@ const NavBar = () => {
                   </li>
                 )}
               </ul>
-
-              {/* Total */}
               {items.length > 0 && (
                 <>
                   <div className="mt-4 flex justify-between font-semibold">
@@ -222,13 +216,12 @@ const NavBar = () => {
                       EGP
                     </span>
                   </div>
-
-                  {/* Checkout Button */}
                   <Link
-                    to="/checkout"
+                    to="/cart"
+                    onClick={toggleCartPopup}
                     className="mt-4 w-full inline-block px-2 text-center bg-primary text-white py-2 rounded hover:bg-opacity-90 transition"
                   >
-                    Continue to Checkout
+                    Go To Shoping Cart
                   </Link>
                 </>
               )}
@@ -238,6 +231,6 @@ const NavBar = () => {
       </div>
     </nav>
   );
-};
+});
 
 export default NavBar;

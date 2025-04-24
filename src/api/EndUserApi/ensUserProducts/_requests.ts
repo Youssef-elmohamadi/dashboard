@@ -1,6 +1,14 @@
+import { applyCo } from "./_requests";
 import axiosForm from "../../axiosInstanceFormData";
-import axiosJson from "../../axiosInstanceJson";
+import axiosInstanceEndUser from "../../userAxiosInstanceEndUser";
 
 export const getProductCategories = async () => {
-  return await axiosJson.get("/api/user/products/productCategories");
+  return await axiosInstanceEndUser.get("/api/user/products/productCategories");
+};
+export const applyCoupon = async (data) => {
+  return await axiosInstanceEndUser.post("/api/user/cupons/apply", data);
+};
+
+export const checkout = async (data: any) => {
+  return await axiosInstanceEndUser.post("/api/user/orders/checkout", data);
 };

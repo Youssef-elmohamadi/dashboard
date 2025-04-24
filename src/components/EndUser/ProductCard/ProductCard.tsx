@@ -6,8 +6,7 @@ import { MdOutlineStarBorder } from "react-icons/md";
 import { TbStarHalfFilled } from "react-icons/tb";
 import { BsFillStarFill } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
-import { useDispatch } from "react-redux";
-import { addItem } from "../Redux/cartSlice/CartSlice";
+import { useModal } from "../../../pages/UserPages/Context/ModalContext";
 // LazyImage داخل نفس الكارد
 const LazyImage = ({ src, alt, className }) => {
   const { ref, inView } = useInView({
@@ -37,15 +36,11 @@ const LazyImage = ({ src, alt, className }) => {
     </div>
   );
 };
-
-const ProductCard = ({ id, image, title, price, rating }) => {
-  const dispatch = useDispatch();
-  const handleAddToCart = (item) => {
-    dispatch(addItem({ item, quantity: 1 }));
-  };
+const ProductCard = ({ product }) => {
+  const { openModal } = useModal();
 
   const handleAddToWishlist = () => {
-    console.log(`Add to Wishlist: ${title}`);
+    console.log(`Add to Wishlist: ${product.title}`);
   };
 
   return (
@@ -61,29 +56,29 @@ const ProductCard = ({ id, image, title, price, rating }) => {
       {/* صورة المنتج */}
       <div className="w-full h-[300px]">
         <LazyImage
-          src={image}
-          alt={title}
+          src={product.images[0].image}
+          alt={product.name}
           className="w-full h-full object-cover rounded"
         />
       </div>
 
       {/* عنوان المنتج */}
       <Link
-        to={`/product/${id}`}
+        to={`/product/${product.id}`}
         className="text-base  my-2 px-1 block font-medium line-clamp-2"
       >
-        {title}
+        {product.name}
       </Link>
 
       {/* السعر والتقييم */}
       <div className="flex justify-between items-center gap-2 border-t py-3">
         <span className="text-primary font-semibold text-sm sm:text-base">
-          ${price}
+          ${product.price}
         </span>
 
         <div className="flex items-center gap-1">
           <StarRatings
-            rating={rating}
+            rating={product.rating || 0}
             starDimension="17px"
             starSpacing="1px"
             starRatedColor="#fbbf24"
@@ -98,9 +93,7 @@ const ProductCard = ({ id, image, title, price, rating }) => {
 
       {/* زر Add to Cart */}
       <button
-        onClick={() => {
-          handleAddToCart({ id, image, title, price, rating });
-        }}
+        onClick={() => openModal("product", product)}
         className="w-full bg-primary text-white rounded px-3 py-2 text-sm sm:text-base hover:bg-primary/90 transition"
       >
         Add to Cart

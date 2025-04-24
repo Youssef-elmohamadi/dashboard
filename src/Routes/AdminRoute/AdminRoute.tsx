@@ -25,6 +25,7 @@ import BarChart from "../../pages/AdminPages/Charts/BarChart";
 import AdminSignIn from "../../pages/AdminPages/AuthPages/AdminSignIn";
 import AdminSignUp from "../../pages/AdminPages/AuthPages/AdminSignUp";
 import ProtectedAdminRoute from "./ProtectedAdminRoute";
+import Orders from "../../pages/AdminPages/Orders/Orders";
 
 export const adminRoutes = (
   <>
@@ -53,6 +54,7 @@ export const adminRoutes = (
       <Route path="products/create" element={<CreateProducts />} />
       <Route path="products/update/:id" element={<UpdateProduct />} />
       <Route path="products/details/:id" element={<ProductDetails />} />
+      <Route path="orders" element={<Orders />} />
       <Route path="blank" element={<Blank />} />
       <Route path="form-elements" element={<FormElements />} />
       <Route path="basic-tables" element={<BasicTables />} />

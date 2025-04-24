@@ -46,7 +46,7 @@ export const AdminProvider = ({ children }: UserProviderProps) => {
     console.log("Stored userId from localStorage:", storedUserId); // Debugging
 
     if (storedUserId) {
-      setUserId(Number(storedUserId)); // تحويل القيمة إلى رقم
+      setUserId(Number(storedUserId)); 
     } else {
       console.log("No userId found in localStorage.");
     }
