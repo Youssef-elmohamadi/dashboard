@@ -53,7 +53,6 @@ const ProductCard = ({ product }) => {
         <FaHeart className="text-xl" />
       </button>
 
-      {/* صورة المنتج */}
       <div className="w-full h-[300px]">
         <LazyImage
           src={product.images[0]?.image}
@@ -62,15 +61,13 @@ const ProductCard = ({ product }) => {
         />
       </div>
 
-      {/* عنوان المنتج */}
+
       <Link
         to={`/product/${product.id}`}
         className="text-base  my-2 px-1 block font-medium line-clamp-2"
       >
         {product.name}
       </Link>
-
-      {/* السعر والتقييم */}
       <div className="flex justify-between items-center gap-2 border-t py-3">
         <span className="text-primary font-semibold text-sm sm:text-base">
           ${product.price}

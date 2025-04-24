@@ -15,7 +15,7 @@ const ProductModal = () => {
   };
   useEffect(() => {
     if (modalProps?.images) {
-      setSelectedImage(modalProps.images[0].image);
+      setSelectedImage(modalProps.images[0]?.image || null);
     }
   }, [modalProps]);
 
