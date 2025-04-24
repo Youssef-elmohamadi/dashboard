@@ -19,7 +19,7 @@ export default function Footer() {
     <footer className="bg-gray-900 text-white px-6 py-10">
       <div className="max-w-7xl mx-auto">
         {/* Top Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           <div className="mb-6 md:mb-0">
             <img
               src="/images/logo.webp"
@@ -29,7 +29,7 @@ export default function Footer() {
             <p className="max-w-md text-sm">Best Choice for E-Commerce</p>
           </div>
         </div>
-        <div className="flex flex-col lg:flex-row justify-center lg:items-center lg:justify-between my-5">
+        <div className="flex flex-col lg:flex-row justify-center lg:items-center lg:justify-between my-2">
           <div>
             <p className="my-6">
               Subscribe to our newsletter to get the latest updates on offers
@@ -47,8 +47,8 @@ export default function Footer() {
             </div>
           </div>
           {/* Social + Apps */}
-          <div className="flex flex-col justify-between my-10 gap-6">
-            <div className="my-4">
+          <div className="flex flex-col justify-between gap-6">
+            <div className="my-2">
               <p className="my-2">Follow us</p>
               <div className="flex gap-4 text-2xl">
                 <FaLinkedin />
