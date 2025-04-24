@@ -51,7 +51,7 @@ export const buildColumns = <T extends BaseEntity>(
       Cell: ({ row }: any) => (
         <BrandCell
           name={row.original?.name}
-          image={row.original?.images[0].image}
+          image={row.original?.images[0]?.image}
         />
       ),
     });
@@ -61,7 +61,7 @@ export const buildColumns = <T extends BaseEntity>(
       Header: "Name",
       id: "name_and_image",
       Cell: ({ row }: any) => (
-        <BrandCell name={row.original.name} image={row.original.image} />
+        <BrandCell name={row.original.name} image={row.original?.image||null} />
       ),
     });
   }
