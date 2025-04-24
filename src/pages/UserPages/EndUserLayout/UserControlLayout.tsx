@@ -27,60 +27,52 @@ export default function UserControlLayout() {
           </div>
           <nav className="space-y-2 mt-6">
             <Link
-              to="/dashboard"
+              to="/u-dashboard"
               className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
             >
-              <AiOutlineHome className="text-lg" />
+              <AiOutlineHome className="text-lg text-gray-500" />
               Dashboard
             </Link>
             <Link
-              to="/dashboard"
+              to="/u-orders"
               className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
             >
-              {" "}
-              <TiDocumentText className="text-lg" />
+              <TiDocumentText className="text-lg text-gray-500" />
               Purchase History
             </Link>
             <Link
-              to="/dashboard"
+              to="/u-downloads"
               className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
             >
-              {" "}
-              <TiDocumentText className="text-lg" />
+              <TiDownload className="text-lg text-gray-500" />
               Downloads
             </Link>
             <Link
-              to="/dashboard"
+              to="/u-conversation"
               className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
             >
-              {" "}
-              <TiDocumentText className="text-lg" />
+              <TiDocumentText className="text-lg text-gray-500" />
               Conversation
             </Link>
             <Link
-              to="/dashboard"
+              to="/u-wallet"
               className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
             >
-              {" "}
-              <TiDocumentText className="text-lg" />
+              <TfiWallet className="text-lg text-gray-500" />
               Wallet
             </Link>
             <Link
-              to="/dashboard"
+              to="/u-support-ticket"
               className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
             >
-              {" "}
-              <TiDocumentText className="text-lg" />
+              <TiSupport className="text-lg text-gray-500" />
               Support Ticket
             </Link>
-            <Link
-              to="/dashboard"
-              className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
-            >
+            <button className="p-2 w-full rounded hover:bg-gray-100 flex items-center gap-2">
               {" "}
-              <TiDocumentText className="text-lg" />
+              <TiInfoLargeOutline className="text-lg text-error-500" />
               Logout
-            </Link>
+            </button>
           </nav>
         </div>
       </aside>

@@ -9,6 +9,11 @@ import Cart from "../../pages/UserPages/Cart/Cart";
 import UserControlLayout from "../../pages/UserPages/EndUserLayout/UserControlLayout";
 import UserOrders from "../../pages/UserPages/UserOrders/UserOrders";
 import UserDashboard from "../../pages/UserPages/UserDashboard/UserDashboard";
+import CategoriesLayout from "../../pages/UserPages/EndUserLayout/CategoriesLayout";
+import UserDownloads from "../../pages/UserPages/UserDownloads/UserDownloads";
+import UserConversation from "../../pages/UserPages/UserConversation/UserConversation";
+import UserWallet from "../../pages/UserPages/UserWallet/UserWallet";
+import UserSupportTicket from "../../pages/UserPages/SupportTicket/UserSupportTicket";
 export const EndUserRoutes = (
   <>
     <Route element={<EndUserWrapper />}>
@@ -16,8 +21,15 @@ export const EndUserRoutes = (
         <Route index element={<Home />} />
         <Route path="/cart" element={<Cart />} />
         <Route element={<UserControlLayout />}>
+          <Route path="/u-dashboard" element={<UserDashboard />} />
           <Route path="/u-orders" element={<UserOrders />} />
-          <Route path="/dashboard" element={<UserDashboard />} />
+          <Route path="/u-downloads" element={<UserDownloads />} />
+          <Route path="/u-conversation" element={<UserConversation />} />
+          <Route path="/u-wallet" element={<UserWallet />} />
+          <Route path="/u-Support-ticket" element={<UserSupportTicket />} />
+        </Route>
+        <Route path="/category" element={<CategoriesLayout />}>
+          <Route path=":category-id" element={<UserOrders />} />
         </Route>
       </Route>
       <Route path="/checkout" element={<Checkout />} />

@@ -73,41 +73,47 @@ const AppHeader = () => {
 
                   <div className="absolute right-0 top-[90%] mt-1 bg-white shadow-lg rounded-md w-60 py-2 z-50 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
                     <ul className="space-y-1">
-                      <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
-                        <AiOutlineHome className="text-xl text-secondary" />
-                        Dashboard
-                      </li>
-                      <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
-                        <Link
-                          to="/u-orders"
-                          className="flex gap-2 items-center"
-                        >
+                      <Link to="/u-dashboard">
+                        <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+                          <AiOutlineHome className="text-xl text-secondary" />
+                          Dashboard
+                        </li>
+                      </Link>
+                      <Link to="/u-orders">
+                        <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
                           <TiDocumentText className="text-xl text-secondary" />
                           Purchase History
-                        </Link>
-                      </li>
-                      <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
-                        <TiDownload className="text-xl text-secondary" />
-                        Downloads
-                      </li>
-                      <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
-                        <BsWechat className="text-xl text-secondary" />
-                        Conversation
-                      </li>
-                      <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
-                        <TfiWallet className="text-xl text-secondary" />
-                        Wallet
-                      </li>
-                      <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
-                        <TiSupport className="text-xl text-secondary" />
-                        Support Ticket
-                      </li>
+                        </li>
+                      </Link>
+                      <Link to="/u-downloads">
+                        <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+                          <TiDownload className="text-xl text-secondary" />
+                          Downloads
+                        </li>
+                      </Link>
+                      <Link to="/u-conversation">
+                        <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+                          <BsWechat className="text-xl text-secondary" />
+                          Conversation
+                        </li>
+                      </Link>
+                      <Link to="/u-wallet">
+                        <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+                          <TfiWallet className="text-xl text-secondary" />
+                          Wallet
+                        </li>
+                      </Link>
+                      <Link to="/u-support-ticket">
+                        <li className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+                          <TiSupport className="text-xl text-secondary" />
+                          Support Ticket
+                        </li>
+                      </Link>
                       <li className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-100 cursor-pointer">
                         <GrLogout className="text-xl" />
                         Logout
                       </li>
                     </ul>
-                      
                   </div>
                 </div>
                 <Separator />

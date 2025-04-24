@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 const CheckoutForm: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isSubmittedSuccess, setIsSubmittedSuccess] = useState(false);
   const [checkoutForm, setCheckoutForm] = useState({
     items: [],
     payment_method: "",
@@ -231,7 +230,7 @@ const CheckoutForm: React.FC = () => {
             name="notes"
             placeholder="Any Extra Notes"
             value={checkoutForm.location.notes}
-            onChange={handleChangeLocation}
+            onChange={(e) => handleChangeLocation}
           />
         </div>
 

@@ -106,22 +106,27 @@ const NavBar = React.memo(() => {
                     key={index}
                     className="group relative px-4 py-2 hover:bg-gray-100 cursor-pointer"
                   >
-                    <div className="flex justify-between items-center">
-                      <Link to="">{category.name}</Link>
+                    <Link
+                      to={`/category/${category.id}`}
+                      className="flex justify-between items-center"
+                    >
+                      <div className="">{category.name}</div>
                       {category.childs && category.childs.length > 0 && (
                         <IoIosArrowDown className="transform rotate-[-90deg] group-hover:rotate-0 transition duration-300 ml-2" />
                       )}
-                    </div>
+                    </Link>
                     {category.childs && category.childs.length > 0 && (
                       <ul className="fixed top-0 left-full w-[400%] h-[calc(100vh-11em)] bg-white z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-y-auto py-8 px-12">
                         <div className="grid grid-cols-4 gap-6">
                           {category.childs.map((sub, subIndex) => (
-                            <li
-                              key={subIndex}
-                              className="hover:bg-gray-100 p-2 rounded cursor-pointer whitespace-nowrap"
-                            >
-                              <Link to="">{sub.name}</Link>
-                            </li>
+                            <Link to={`/category/${category.id}/${sub.id}`}>
+                              <li
+                                key={subIndex}
+                                className="hover:bg-gray-100 p-2 rounded cursor-pointer whitespace-nowrap"
+                              >
+                                {sub.name}
+                              </li>
+                            </Link>
                           ))}
                         </div>
                       </ul>
@@ -140,7 +145,10 @@ const NavBar = React.memo(() => {
           {Categories?.map((Category, i) =>
             i < 4 ? (
               <li key={i} className="text-white py-3">
-                <Link to="" className="py-3 font-semibold">
+                <Link
+                  to={`/category/${Category.id}`}
+                  className="py-3 font-semibold"
+                >
                   {Category.name}
                 </Link>
               </li>
@@ -172,7 +180,7 @@ const NavBar = React.memo(() => {
                       className="py-2 flex items-center justify-between gap-2"
                     >
                       <img
-                        src={item.images[0]?.image||""}
+                        src={item.images[0]?.image || ""}
                         alt={item.title}
                         className="w-14 h-14 object-cover rounded"
                       />
