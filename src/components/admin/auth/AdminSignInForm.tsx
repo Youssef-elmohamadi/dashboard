@@ -6,7 +6,7 @@ import Input from "../../form/input/InputField";
 import Checkbox from "../../form/input/Checkbox";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../../api/authApi/_requests";
+import { login } from "../../../api/AdminApi/authApi/_requests";
 
 export default function AdminSignInForm() {
   const [showPassword, setShowPassword] = useState(false);

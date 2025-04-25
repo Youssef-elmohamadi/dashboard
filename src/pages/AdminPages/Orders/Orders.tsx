@@ -5,7 +5,7 @@ import BasicTable from "../../../components/admin/Tables/BasicTable";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getAllAdminsPaginate } from "../../../api/usersApi/_requests";
-import { deleteAdmin } from "../../../api/usersApi/_requests";
+import { deleteAdmin } from "../../../api/AdminApi/usersApi/_requests";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns"; // مكان الملف
 import TableActions from "../../../components/admin/Tables/TablesActions";
@@ -14,7 +14,7 @@ import SearchTable from "../../../components/admin/Tables/SearchTable";
 import {
   getOrdersWithPaginate,
   shipmentOrder,
-} from "../../../api/ordersApi/_requests";
+} from "../../../api/AdminApi/ordersApi/_requests";
 import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
 type User = {
   id: number;

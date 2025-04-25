@@ -4,8 +4,8 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/admin/Tables/BasicTable";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { getAllAdminsPaginate } from "../../../api/usersApi/_requests";
-import { deleteAdmin } from "../../../api/usersApi/_requests";
+import { getAllAdminsPaginate } from "../../../api/AdminApi/usersApi/_requests";
+import { deleteAdmin } from "../../../api/AdminApi/usersApi/_requests";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns"; // مكان الملف
 import TableActions from "../../../components/admin/Tables/TablesActions";

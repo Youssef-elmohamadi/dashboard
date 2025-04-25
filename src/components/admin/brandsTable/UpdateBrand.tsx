@@ -4,7 +4,10 @@ import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
 import BrandImageUpload from "./BrandImageUpload";
-import { updateBrand, getBrandById } from "../../../api/brandsApi/_requests";
+import {
+  updateBrand,
+  getBrandById,
+} from "../../../api/AdminApi/brandsApi/_requests";
 type Brand = {
   name: string;
   status: string;

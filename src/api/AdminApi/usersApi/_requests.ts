@@ -1,6 +1,5 @@
-import { useParams } from "react-router-dom";
-import axiosForm from "../axiosInstanceFormData";
-import axiosJson from "../axiosInstanceJson";
+import axiosForm from "../../axiosInstanceFormData";
+import axiosJson from "../../axiosInstanceJson";
 
 export const getAllAdminsPaginate = async (params: {
   page?: number;

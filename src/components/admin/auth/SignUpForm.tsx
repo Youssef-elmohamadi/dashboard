@@ -7,7 +7,7 @@ import BankInformation from "./BankInformation";
 import StoreInfoForm from "./StoreInfoForm";
 
 import { useTranslation } from "react-i18next";
-import { register } from "../../../api/authApi/_requests";
+import { register } from "../../../api/AdminApi/authApi/_requests";
 import { validateAdminForm, validateVendorForm } from "./ValidateForm";
 import convertToFormData from "./convertToFormData";
 

@@ -4,7 +4,7 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/EndUser/Table/BasicTable";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { deleteAdmin } from "../../../api/usersApi/_requests";
+import { deleteAdmin } from "../../../api/AdminApi/usersApi/_requests";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
 import { buildOrderColumns } from "../../../components/EndUser/Table/_Colmuns"; // مكان الملف
 import Alert from "../../../components/ui/alert/Alert";

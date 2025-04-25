@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 import {
   deleteBrand,
   getBrandsPaginate,
-} from "../../../api/brandsApi/_requests";
+} from "../../../api/AdminApi/brandsApi/_requests";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 type Brand = {};

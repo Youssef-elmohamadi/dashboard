@@ -1,4 +1,4 @@
-import axiosJson from "../axiosInstanceJson";
+import axiosJson from "../../axiosInstanceJson";
 
 export const getAllRoles = async () => {
   return await axiosJson.get("/api/vendor/roles");

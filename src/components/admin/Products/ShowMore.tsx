@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { showProduct } from "../../../api/products/_requests";
+import { showProduct } from "../../../api/AdminApi/products/_requests";
 
 type Category = {
   id: number;

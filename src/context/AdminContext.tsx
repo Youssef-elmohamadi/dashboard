@@ -1,5 +1,5 @@
 import React, { createContext, useState, ReactNode, useEffect } from "react";
-import { showUser } from "../api/profileApi/_requests";
+import { showUser } from "../api/AdminApi/profileApi/_requests";
 import { handleLogout } from "../components/admin/auth/Logout";
 
 // Define the shape of the context
@@ -46,7 +46,7 @@ export const AdminProvider = ({ children }: UserProviderProps) => {
     console.log("Stored userId from localStorage:", storedUserId); // Debugging
 
     if (storedUserId) {
-      setUserId(Number(storedUserId)); 
+      setUserId(Number(storedUserId));
     } else {
       console.log("No userId found in localStorage.");
     }

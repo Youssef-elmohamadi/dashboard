@@ -7,7 +7,7 @@ import {
   getAllPermissions,
   getRoleById,
   updateRole,
-} from "../../../api/rolesApi/_requests";
+} from "../../../api/AdminApi/rolesApi/_requests";
 import Loading from "../../common/Loading";
 
 type Permission = {

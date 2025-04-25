@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Checkbox from "../../form/input/Checkbox";
-import { getAllCategories } from "../../../api/categoryApi/_requests";
+import { getAllCategories } from "../../../api/AdminApi/categoryApi/_requests";
 import FileInput from "../../form/input/FileInput";
-import { createProduct } from "../../../api/products/_requests";
-import { getAllBrands } from "../../../api/brandsApi/_requests";
+import { createProduct } from "../../../api/AdminApi/products/_requests";
+import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
 import TextArea from "../../form/input/TextArea";
 
 // Types

@@ -4,7 +4,7 @@ import {
   getAdminById,
   getAllRoles,
   updateAdmin,
-} from "../../../api/usersApi/_requests";
+} from "../../../api/AdminApi/usersApi/_requests";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";

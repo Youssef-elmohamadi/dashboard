@@ -1,4 +1,4 @@
-import { logout } from "../../../api/authApi/_requests";
+import { logout } from "../../../api/AdminApi/authApi/_requests";
 
 export const handleLogout = () => {
   console.log("Logging out...");

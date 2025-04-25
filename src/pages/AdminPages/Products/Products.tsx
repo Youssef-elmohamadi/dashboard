@@ -7,13 +7,13 @@ import TableActions from "../../../components/admin/Tables/TablesActions";
 import {
   deleteProduct,
   getProductsPaginate,
-} from "../../../api/products/_requests";
+} from "../../../api/AdminApi/products/_requests";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
 import BasicTable from "../../../components/admin/Tables/BasicTable";
 import { useLocation } from "react-router";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
-import { getAllBrands } from "../../../api/brandsApi/_requests";
-import { getAllCategories } from "../../../api/categoryApi/_requests";
+import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
+import { getAllCategories } from "../../../api/AdminApi/categoryApi/_requests";
 type Product = {};
 const Products = () => {
   const [reload, setReload] = useState(0);

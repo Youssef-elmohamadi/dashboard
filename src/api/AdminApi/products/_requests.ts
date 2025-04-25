@@ -1,5 +1,5 @@
-import axiosJson from "../axiosInstanceJson";
-import axiosForm from "../axiosInstanceFormData";
+import axiosJson from "../../axiosInstanceJson";
+import axiosForm from "../../axiosInstanceFormData";
 export const getAllProducts = async () => {
   return await axiosJson.get("/api/vendor/products");
 };

@@ -4,7 +4,7 @@ import withReactContent from "sweetalert2-react-content";
 import {
   getOrdersWithPaginate,
   shipmentOrder,
-} from "../../../api/ordersApi/_requests";
+} from "../../../api/AdminApi/ordersApi/_requests";
 
 const MySwal = withReactContent(Swal);
 

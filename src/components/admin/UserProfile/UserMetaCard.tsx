@@ -3,7 +3,7 @@ import { Modal } from "../../ui/modal";
 import Button from "../../ui/button/Button";
 import Input from "../../form/input/InputField";
 import Label from "../../form/Label";
-import { showUser } from "../../../api/profileApi/_requests";
+import { showUser } from "../../../api/AdminApi/profileApi/_requests";
 import { useEffect, useState, useContext } from "react";
 import { handleLogout } from "../auth/Logout";
 import { UserContext } from "../../../context/AdminContext";

@@ -4,9 +4,12 @@ import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Checkbox from "../../../components/form/input/Checkbox";
 import FileInput from "../../../components/form/input/FileInput";
-import { getAllCategories } from "../../../api/categoryApi/_requests";
-import { showProduct, updateProduct } from "../../../api/products/_requests";
-import { getAllBrands } from "../../../api/brandsApi/_requests";
+import { getAllCategories } from "../../../api/AdminApi/categoryApi/_requests";
+import {
+  showProduct,
+  updateProduct,
+} from "../../../api/AdminApi/products/_requests";
+import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
 
 type Category = {
   id: number;

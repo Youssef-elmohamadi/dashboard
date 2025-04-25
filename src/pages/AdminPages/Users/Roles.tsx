@@ -7,7 +7,7 @@ import { alertDelete } from "../../../components/admin/Tables/Alert";
 import {
   deleteRole,
   getAllRolesPaginate,
-} from "../../../api/rolesApi/_requests";
+} from "../../../api/AdminApi/rolesApi/_requests";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
 import TableActions from "../../../components/admin/Tables/TablesActions";
 import BasicTable from "../../../components/admin/Tables/BasicTable";

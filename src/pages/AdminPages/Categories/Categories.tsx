@@ -6,10 +6,10 @@ import BasicTable from "../../../components/admin/Tables/BasicTable";
 import {
   getAllCategories,
   getCategoriesPaginate,
-} from "../../../api/categoryApi/_requests";
+} from "../../../api/AdminApi/categoryApi/_requests";
 import { useLocation } from "react-router";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
-import { getAllBrands } from "../../../api/brandsApi/_requests";
+import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 type Category = {};
 const Categories = () => {

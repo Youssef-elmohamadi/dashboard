@@ -4,7 +4,7 @@ import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
 import { useNavigate } from "react-router-dom";
 import BrandImageUpload from "./BrandImageUpload";
-import { createBrand } from "../../../api/brandsApi/_requests";
+import { createBrand } from "../../../api/AdminApi/brandsApi/_requests";
 
 export default function CreateBrand() {
   const [brandData, setBrandData] = useState<{

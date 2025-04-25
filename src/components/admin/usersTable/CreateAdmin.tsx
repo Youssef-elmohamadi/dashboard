@@ -1,303 +1,209 @@
-import React, { useEffect, useState } from "react";
-import Input from "../../form/input/InputField";
-import Label from "../../form/Label";
-import Select from "../../form/Select";
-import Radio from "../../form/input/Radio";
-import { SlWallet } from "react-icons/sl";
-import Checkbox from "../../form/input/Checkbox";
-import { useSelector, useDispatch } from "react-redux";
-import { checkout } from "../../../api/EndUserApi/ensUserProducts/_requests";
-import TextArea from "../../form/input/TextArea";
+import { useEffect, useState } from "react";
+import ComponentCard from "../../../components/common/ComponentCard";
+import Label from "../../../components/form/Label";
+import Input from "../../../components/form/input/InputField";
+import Select from "../../../components/form/Select";
+import { EyeCloseIcon, EyeIcon } from "../../../icons";
+import {
+  getAllRoles,
+  createAdmin,
+} from "../../../api/AdminApi/usersApi/_requests";
+import { FiUserPlus } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
-const CheckoutForm: React.FC = () => {
+export default function CreateAdmin() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [options, setOptions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({
-    full_name: [] as string[],
+    first_name: [] as string[],
+    last_name: [] as string[],
     phone: [] as string[],
     email: [] as string[],
     password: [] as string[],
     role: [] as string[],
   });
-
-  const [checkoutForm, setCheckoutForm] = useState({
-    items: [],
-    payment_method: "",
-    location: {
-      full_name: "",
-      phone: "",
-      city: "",
-      area: "",
-      street: "",
-      building_number: "",
-      floor_number: "",
-      apartment_number: "",
-      landmark: "",
-      notes: "",
-    },
-    save_info: false,
-    newsletter: false,
+  const [adminData, setAdminData] = useState({
+    first_name: "",
+    last_name: "",
+    phone: "",
+    email: "",
+    password: "",
+    role: "",
   });
 
-  const items = useSelector((state) => state.cart.items);
+  const navigate = useNavigate();
 
-  const handleChangeLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCheckoutForm((prev) => ({
-      ...prev,
-      location: {
-        ...prev.location,
-        [name]: value,
-      },
-    }));
-  };
-
-  const handleRadio = (name: string, value: string) => {
-    setCheckoutForm((prev) => ({
+    setAdminData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleCheckBox = (id: string, checked: boolean) => {
-    setCheckoutForm((prev) => ({ ...prev, [id]: checked }));
+  const handleSelectChange = (value: string) => {
+    setAdminData((prev) => ({
+      ...prev,
+      role: value,
+    }));
   };
 
   useEffect(() => {
-    const updatedItems = items.map((item) => ({
-      product_id: item.id,
-      quantity: item.quantity,
-    }));
-    setCheckoutForm((prev) => ({
-      ...prev,
-      items: updatedItems,
-    }));
-  }, [items]);
-
+    const fetchData = async () => {
+      try {
+        const response = await getAllRoles();
+        setOptions(response.data.data);
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      }
+    };
+    fetchData();
+  }, []);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await checkout(checkoutForm);
-    } catch (error) {
-      const rawErrors = error.response?.data?.errors || [];
-      const formattedErrors: Record<string, string[]> = {};
-
-      rawErrors.forEach((err: { code: string; message: string }) => {
-        if (!formattedErrors[err.code]) {
-          formattedErrors[err.code] = [];
-        }
-        formattedErrors[err.code].push(err.message);
+      await createAdmin(adminData);
+      navigate("/admin/admins", {
+        state: { successCreate: "Admin Created Successfully" },
       });
+    } catch (error: any) {
+      console.error("Error creating admin:", error);
+      const rawErrors = error?.response?.data.errors;
 
-      setErrors(formattedErrors);
+      if (Array.isArray(rawErrors)) {
+        const formattedErrors: Record<string, string[]> = {};
+
+        rawErrors.forEach((err: { code: string; message: string }) => {
+          if (!formattedErrors[err.code]) {
+            formattedErrors[err.code] = [];
+          }
+          formattedErrors[err.code].push(err.message);
+        });
+
+        setErrors(formattedErrors);
+      } else {
+        setErrors({ general: ["Something went wrong."] });
+      }
     }
   };
-
   return (
-    <div className="w-1/2 enduser_container">
+    <div>
+      <div className="p-4 border-b dark:border-gray-600 border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Create Admin
+        </h3>
+      </div>
       <form
         onSubmit={handleSubmit}
-        className="max-w-2xl mx-auto p-4 bg-transparent rounded-xl space-y-4"
+        className="space-y-6 w-full mt-8 flex justify-between items-center flex-col"
       >
-        <h2 className="text-xl font-bold">Delivery</h2>
-
-        <div className="space-y-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
-            <Label>Full Name</Label>
+            <Label htmlFor="input">First Name</Label>
             <Input
               type="text"
-              placeholder="Full Name"
-              name="full_name"
-              className="p-2 border rounded-md"
-              onChange={handleChangeLocation}
-              value={checkoutForm.location.full_name}
-              error={errors.full_name?.length}
-              hint={errors.full_name?.[0] || "Please enter your full name."}
+              id="input"
+              name="first_name"
+              placeholder="Enter the Admin First Name"
+              onChange={handleChange}
             />
+            {errors.first_name && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.first_name[0]}
+              </p>
+            )}
           </div>
           <div>
-            <Label>Phone</Label>
+            <Label htmlFor="inputTwo">Last Name</Label>
             <Input
               type="text"
-              placeholder="Phone"
-              name="phone"
-              className="p-2 border rounded-md"
-              onChange={handleChangeLocation}
-              value={checkoutForm.location.phone}
-              error={!!errors.phone?.length}
-              hint={errors.phone?.[0] || "Enter a valid phone number to reach you."}
+              id="inputTwo"
+              name="last_name"
+              placeholder="Enter the Admin Last Name"
+              onChange={handleChange}
             />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label>City</Label>
-            <Input
-              type="text"
-              placeholder="City"
-              name="city"
-              className="p-2 border rounded-md"
-              onChange={handleChangeLocation}
-              value={checkoutForm.location.city}
-              hint="Mention your current city."
-            />
-          </div>
-          <div>
-            <Label>Area</Label>
-            <Input
-              type="text"
-              placeholder="Area"
-              name="area"
-              className="p-2 border rounded-md"
-              onChange={handleChangeLocation}
-              value={checkoutForm.location.area}
-              hint="Provide your local area or neighborhood."
-            />
+            {errors.last_name && (
+              <p className="text-red-500 text-sm mt-1">{errors.last_name[0]}</p>
+            )}
           </div>
         </div>
-
-        <div>
-          <Label>Street</Label>
+        <div className="w-full">
+          <Label>Select Role</Label>
+          <Select
+            options={options.map((role) => ({
+              value: role.name,
+              label: role.name,
+            }))}
+            defaultValue={adminData.role}
+            onChange={handleSelectChange}
+            placeholder="Select a Role"
+            className="dark:bg-dark-900"
+          />
+          {errors.role && (
+            <p className="text-red-500 text-sm mt-1">{errors.role[0]}</p>
+          )}
+        </div>
+        <div className="w-full">
+          <Label htmlFor="inputTwo">Email</Label>
+          <Input
+            type="email"
+            id="inputTwo"
+            name="email"
+            placeholder="Enter the Admin Email"
+            onChange={handleChange}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
+          )}
+        </div>
+        <div className="w-full">
+          <Label htmlFor="inputTwo">Phone</Label>
           <Input
             type="text"
-            placeholder="Street"
-            name="street"
-            className="p-2 border rounded-md"
-            onChange={handleChangeLocation}
-            value={checkoutForm.location.street}
-            hint="Street name for accurate delivery."
+            id="inputTwo"
+            name="phone"
+            placeholder="Enter the Admin Phone"
+            onChange={handleChange}
           />
+          {errors.phone && (
+            <p className="text-red-500 text-sm mt-1">{errors.phone[0]}</p>
+          )}
         </div>
-
-        <div className="grid grid-cols-3 gap-4">
-          <div>
-            <Label>Home Number</Label>
+        <div className="w-full">
+          <Label>Password</Label>
+          <div className="relative">
             <Input
-              type="text"
-              placeholder="Home Number"
-              name="building_number"
-              className="p-2 border rounded-md"
-              onChange={handleChangeLocation}
-              value={checkoutForm.location.building_number}
-              hint="Building number or house identifier."
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Enter The Admin password"
+              onChange={handleChange}
             />
-          </div>
-          <div>
-            <Label>Floor Number</Label>
-            <Input
-              type="text"
-              placeholder="Floor Number"
-              name="floor_number"
-              className="p-2 border rounded-md"
-              onChange={handleChangeLocation}
-              value={checkoutForm.location.floor_number}
-              hint="Mention which floor your apartment is on."
-            />
-          </div>
-          <div>
-            <Label>Apartment Number</Label>
-            <Input
-              type="text"
-              placeholder="Apartment Number"
-              name="apartment_number"
-              className="w-full p-2 border rounded-md"
-              onChange={handleChangeLocation}
-              value={checkoutForm.location.apartment_number}
-              hint="Your specific apartment or flat number."
-            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>
+            )}
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+            >
+              {showPassword ? (
+                <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+              ) : (
+                <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+              )}
+            </button>
           </div>
         </div>
-
-        <div>
-          <Label>Landmark</Label>
-          <Input
-            type="text"
-            placeholder="Landmark"
-            name="landmark"
-            className="w-full p-2 border rounded-md"
-            onChange={handleChangeLocation}
-            value={checkoutForm.location.landmark}
-            hint="Optional: A nearby place to help locate you."
-          />
-        </div>
-
-        <div>
-          <Label>Notes</Label>
-          <TextArea
-            placeholder="Any Extra Notes"
-            onChange={(val) =>
-              setCheckoutForm((prev) => ({
-                ...prev,
-                location: { ...prev.location, notes: val },
-              }))
-            }
-            name="notes"
-            value={checkoutForm.location.notes}
-          />
-        </div>
-
-        <Checkbox
-          label="Keep Information for next time"
-          id="save_info"
-          checked={checkoutForm.save_info}
-          onChange={(checked) => {
-            handleCheckBox("save_info", checked);
-          }}
-        />
-
-        <Checkbox
-          label="Send me News and Offers"
-          checked={checkoutForm.newsletter}
-          id="newsletter"
-          onChange={(checked) => {
-            handleCheckBox("newsletter", checked);
-          }}
-        />
-
-        <h2 className="text-xl font-semibold mb-4">Payment</h2>
-        <p className="text-sm text-gray-500 mb-2">
-          All payments are secure and encrypted.
-        </p>
-
-        <div className="border rounded-md p-4 mb-6">
-          <Radio
-            onChange={(value) => handleRadio("payment_method", value)}
-            value="online"
-            name="payment_method"
-            id="wallet"
-            label="Pay via (Debit/Credit cards / Wallets / Installments)"
-            checked={checkoutForm.payment_method === "ًWallet"}
-          />
-
-          <div className="flex justify-center my-3">
-            <SlWallet className="text-black text-9xl" />
-          </div>
-
-          <div className="border border-dashed p-6 text-center text-gray-500">
-            After clicking "Pay Now", you'll be redirected to complete the
-            purchase securely.
-          </div>
-        </div>
-
-        <div className="mb-6">
-          <Radio
-            onChange={(value) => handleRadio("payment_method", value)}
-            checked={checkoutForm.payment_method === "cash"}
-            value="cash"
-            label="Cash on Delivery"
-            name="payment_method"
-            id="cash"
-          />
-        </div>
-
         <button
           type="submit"
-          className="w-full bg-purple-700 hover:bg-purple-800 text-white py-3 rounded-lg font-medium transition"
+          disabled={loading}
+          className="bg-blue-600 flex gap-4 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
-          Pay Now
+          <FiUserPlus size={20} />
+          {loading ? "Creating..." : "Add Admin"}
         </button>
       </form>
     </div>
   );
-};
-
-export default CheckoutForm;
+}

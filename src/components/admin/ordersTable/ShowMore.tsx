@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getOrderById } from "../../../api/ordersApi/_requests";
+import { getOrderById } from "../../../api/AdminApi/ordersApi/_requests";
 interface Product {
   id: number;
   vendor_id: number;

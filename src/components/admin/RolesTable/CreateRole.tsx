@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Checkbox from "../../form/input/Checkbox";
-import { createRole, getAllPermissions } from "../../../api/rolesApi/_requests";
+import { createRole, getAllPermissions } from "../../../api/AdminApi/rolesApi/_requests";
 import Loading from "../../common/Loading";
 import { useNavigate } from "react-router-dom";
 
