@@ -10,3 +10,9 @@ export const getOrdersWithPaginate = async (params: {
     params,
   });
 };
+export const getOrderById = async (id) => {
+  return await axiosJson.get(`/api/vendor/orders/${id}`);
+};
+export const shipmentOrder = async (data, id) => {
+  return await axiosJson.post(`/api/vendor/orders/ship/${id}`, data);
+};

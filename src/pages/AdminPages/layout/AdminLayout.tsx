@@ -3,6 +3,7 @@ import { Outlet } from "react-router";
 import AppHeader from "./AppHeader";
 import Backdrop from "./Backdrop";
 import AppSidebar from "./AppSidebar";
+import { ToastContainer } from "react-toastify";
 
 const LayoutContent: React.FC = () => {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
@@ -29,9 +30,16 @@ const LayoutContent: React.FC = () => {
 
 const AdminLayout: React.FC = () => {
   return (
-    <SidebarProvider>
-      <LayoutContent />
-    </SidebarProvider>
+    <>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        className="custom-toast-container"
+      />
+      <SidebarProvider>
+        <LayoutContent />
+      </SidebarProvider>
+    </>
   );
 };
 

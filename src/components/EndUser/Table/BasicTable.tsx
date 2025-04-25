@@ -9,18 +9,11 @@ import Loading from "../../common/Loading";
 interface DataTableWrapperProps<T> {
   columns: any;
   fetchData: (pageIndex?: number, pageSize?: number) => Promise<any>;
-  onEdit?: (id: number) => void;
   onDelete?: (id: number) => void;
-  onShip?: (id: number) => void;
   onCancel?: (id: number) => void;
   isCancel?: boolean;
   isShipped?: boolean;
-  manualPagination?: boolean;
-  isModalEdit?: boolean;
   isShowMore?: boolean;
-  modalCreateComponent?: React.ReactNode;
-  modalUpdateComponent?: React.ReactNode;
-  dataKey?: string; // default "data"
   initialPagination?: {
     pageIndex: number;
     pageSize: number;
@@ -31,40 +24,20 @@ interface DataTableWrapperProps<T> {
     pageSize: number;
   }) => void;
   trigger?: number;
-  searchKey?: string;
-  searchValueName?: string;
-  searchValueEmail?: string;
-  searchValuePhone?: string;
-  searchValueCategoryId?: string;
-  searchValueBrandId?: string;
-  searchValueStatus?: string;
   loadingText?: string;
 }
 
 const BasicTable = <T extends { id: number }>({
   columns,
   fetchData,
-  onEdit,
   onDelete,
-  isShipped,
   isCancel,
-  onShip,
   onCancel,
-  initialPagination = { pageIndex: 0, pageSize: 5 },
   onPaginationChange,
-  modalUpdateComponent,
-  modalCreateComponent,
+  initialPagination = { pageIndex: 0, pageSize: 5 },
   onDataUpdate,
-
-  isModalEdit = false,
   trigger,
   isShowMore,
-  searchValueName,
-  searchValueEmail,
-  searchValuePhone,
-  searchValueStatus,
-  searchValueCategoryId,
-  searchValueBrandId,
   loadingText,
 }: DataTableWrapperProps<T>) => {
   const [data, setData] = useState<T[]>([]);
@@ -84,7 +57,7 @@ const BasicTable = <T extends { id: number }>({
       setUnauthorized(false);
 
       try {
-        const res = await fetchData(pagination.pageIndex);
+        const res = await fetchData(pagination?.pageIndex);
         const rows = res?.data || [];
 
         if (Array.isArray(rows) && rows.length === 0) {
@@ -117,17 +90,7 @@ const BasicTable = <T extends { id: number }>({
     };
 
     loadData();
-  }, [
-    pagination.pageIndex,
-    pagination.pageSize,
-    trigger,
-    searchValueName,
-    searchValueEmail,
-    searchValuePhone,
-    searchValueCategoryId,
-    searchValueBrandId,
-    searchValueStatus,
-  ]);
+  }, [pagination?.pageIndex, pagination?.pageSize, trigger]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 0 && newPage < pageCount) {
@@ -172,14 +135,10 @@ const BasicTable = <T extends { id: number }>({
                 <TableRow
                   key={i}
                   row={row}
-                  onEdit={onEdit}
                   onDelete={onDelete}
                   onCancel={onCancel}
-                  onShip={onShip}
-                  isModalEdit={isModalEdit}
                   isShowMore={isShowMore}
                   isCancel={isCancel}
-                  isShipped={isShipped}
                 />
               );
             })}
@@ -199,14 +158,12 @@ const BasicTable = <T extends { id: number }>({
       <Pagination
         canNextPage={canNext}
         canPreviousPage={canPrev}
-        pageIndex={pagination.pageIndex}
-        pageSize={pagination.pageSize}
+        pageIndex={pagination?.pageIndex}
+        pageSize={pagination?.pageSize}
         totalItems={totalItems}
         handlePageChange={handlePageChange}
         pageCount={pageCount}
       />
-      {modalUpdateComponent}
-      {modalCreateComponent}
     </div>
   );
 };

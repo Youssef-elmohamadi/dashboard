@@ -11,7 +11,11 @@ import { buildColumns } from "../../../components/admin/Tables/_Colmuns"; // م�
 import TableActions from "../../../components/admin/Tables/TablesActions";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
-import { getOrdersWithPaginate } from "../../../api/ordersApi/_requests";
+import {
+  getOrdersWithPaginate,
+  shipmentOrder,
+} from "../../../api/ordersApi/_requests";
+import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
 type User = {
   id: number;
   first_name: string;
@@ -65,7 +69,7 @@ const Orders = () => {
       const response = await getOrdersWithPaginate(params);
       const responseData = response.data.data;
       console.log(responseData);
-      
+
       const fetchedData = Array.isArray(responseData.data)
         ? responseData.data
         : [];
@@ -142,18 +146,25 @@ const Orders = () => {
     );
     setReload((prev) => prev + 1);
   };
+  const handlecancel = async (id: number) => {
+    console.log("canceled");
+
+    setReload((prev) => prev + 1);
+  };
+
+  const handleShip = async (id: number) => {
+    await openShipmentModal(id); // فتح نافذة الشحن
+    setReload((prev) => prev + 1); // تحديث البيانات في الجدول
+  };
 
   const columns = buildColumns<User>({
     includeFullName: true,
-    includePhone: true,
     includeCreatedAt: true,
-    includeAddress: true,
+    includeOrderStatus: true,
+    includeShippedStatus: true,
     includeTotalPrice: true,
     includePaymentMethod: true,
-    onDelete: (id) => console.log("delete", id),
-    customActionsRenderer: (row) => (
-      <TableActions id={row.id} rowData={row} onDelete={handleDelete} />
-    ),
+    includeActions: true,
   });
   return (
     <>
@@ -184,21 +195,19 @@ const Orders = () => {
           <BasicTable
             columns={columns}
             fetchData={fetchData}
-            onDelete={handleDelete}
-            onEdit={(id) => {
-              const admin = data.find((item) => item.id === id);
-              if (admin) {
-                setSelectedUser(admin);
-              }
-            }}
             isModalEdit={false}
+            isShowMore={true}
+            onCancel={handlecancel}
+            isCancel={true}
+            onShip={handleShip}
+            isShipped={true}
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
             searchValueName={searchValues.name}
             searchValueEmail={searchValues.email}
             searchValuePhone={searchValues.phone}
-            loadingText="Admins data Loading"
+            loadingText="Orders data Loading"
           />
         </ComponentCard>
       </div>

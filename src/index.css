@@ -841,6 +841,14 @@ span.flatpickr-weekday,
   }
 }
 
+.custom-toast-container {
+  z-index: 99999999 !important;
+  position: fixed !important;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 /* Custom Colors */
 .bg-blue {
   background-color: #3490f3;

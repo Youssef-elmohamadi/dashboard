@@ -29,6 +29,8 @@ interface ColumnBuilderOptions<T extends BaseEntity> {
   includeTotalPrice?: boolean;
   includePhone?: boolean;
   includeAddress?: boolean;
+  includeOrderStatus?: boolean;
+  includeShippedStatus?: boolean;
   onDelete?: (id: number) => void;
   onEdit?: (id: number) => void;
   customActionsRenderer?: (rowData: T) => React.ReactNode;
@@ -61,7 +63,10 @@ export const buildColumns = <T extends BaseEntity>(
       Header: "Name",
       id: "name_and_image",
       Cell: ({ row }: any) => (
-        <BrandCell name={row.original.name} image={row.original?.image||null} />
+        <BrandCell
+          name={row.original.name}
+          image={row.original?.image || null}
+        />
       ),
     });
   }
@@ -95,6 +100,25 @@ export const buildColumns = <T extends BaseEntity>(
       Cell: ({ row }: any) => <BrandStatus status={row.original.status} />,
     });
   }
+  if (options.includeOrderStatus) {
+    columns.push({
+      Header: "Order Status",
+      id: "order_status",
+      Cell: ({ row }: any) => (
+        <BrandStatus status={row.original.order.status} />
+      ),
+    });
+  }
+
+  if (options.includeShippedStatus) {
+    columns.push({
+      Header: "Shipping Status",
+      id: "shipping_status",
+      Cell: ({ row }: any) => (
+        <BrandStatus status={row.original.shipping_status} />
+      ),
+    });
+  }
 
   if (options.includeEmail) {
     columns.push({
@@ -124,6 +148,18 @@ export const buildColumns = <T extends BaseEntity>(
         const roles = cell.value as Role[];
         return roles?.map((role) => role.name).join(", ");
       },
+    });
+  }
+  if (options.includeTotalPrice) {
+    columns.push({
+      Header: "Total Amount",
+      accessor: "total" as keyof T,
+    });
+  }
+  if (options.includePaymentMethod) {
+    columns.push({
+      Header: "Payment Method",
+      accessor: (row) => row.order.payment_method,
     });
   }
 
@@ -162,19 +198,6 @@ export const buildColumns = <T extends BaseEntity>(
           `${row.order.location?.city}, ${row.order.location?.area}, ${row.order.location?.street}`,
       });
     }
-  }
-
-  if (options.includeTotalPrice) {
-    columns.push({
-      Header: "Total Amount",
-      accessor: "total" as keyof T,
-    });
-  }
-  if (options.includePaymentMethod) {
-    columns.push({
-      Header: "Payment Method",
-      accessor: (row) => row.order.payment_method,
-    });
   }
 
   return columns;

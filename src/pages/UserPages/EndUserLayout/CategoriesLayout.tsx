@@ -37,7 +37,7 @@ export default function CategoriesLayout() {
           <ul className="mt-4 space-y-2 ">
             {categories.map((category) => (
               <li key={category.id}>
-                <Link to="/">{category.name}</Link>
+                <Link to={`/category/${category.id}`}>{category.name}</Link>
               </li>
             ))}
           </ul>

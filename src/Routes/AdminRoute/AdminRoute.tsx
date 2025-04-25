@@ -1,4 +1,5 @@
 import { Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import AdminLayout from "../../pages/AdminPages/layout/AdminLayout";
 import Home from "../../pages/AdminPages/Dashboard/Home";
 import UserProfiles from "../../pages/AdminPages/UserProfile/UserProfiles";
@@ -26,6 +27,7 @@ import AdminSignIn from "../../pages/AdminPages/AuthPages/AdminSignIn";
 import AdminSignUp from "../../pages/AdminPages/AuthPages/AdminSignUp";
 import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import Orders from "../../pages/AdminPages/Orders/Orders";
+import OrderDetails from "../../components/admin/ordersTable/ShowMore";
 
 export const adminRoutes = (
   <>
@@ -55,6 +57,7 @@ export const adminRoutes = (
       <Route path="products/update/:id" element={<UpdateProduct />} />
       <Route path="products/details/:id" element={<ProductDetails />} />
       <Route path="orders" element={<Orders />} />
+      <Route path="orders/details/:id" element={<OrderDetails />} />
       <Route path="blank" element={<Blank />} />
       <Route path="form-elements" element={<FormElements />} />
       <Route path="basic-tables" element={<BasicTables />} />

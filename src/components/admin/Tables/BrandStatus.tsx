@@ -9,11 +9,19 @@ const BrandStatus = ({ status }: Props) => {
       <Badge
         size="sm"
         color={
-          status === "active"
+          status === "active" || status === "delivered"
             ? "success"
-            : status === "inactive"
+            : status === "inactive" ||
+              status === "pending" ||
+              status === "unpaid"
             ? "warning"
-            : "error"
+            : status === "shipped" || status === "paid"
+            ? "info"
+            : status === "canceled"
+            ? "error"
+            : status === "processing"
+            ? "primary"
+            : "info"
         }
       >
         {status}
