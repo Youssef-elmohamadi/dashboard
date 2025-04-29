@@ -21,7 +21,7 @@ export default function AuthLayout({
                 <img
                   width={231}
                   height={48}
-                  src="/images/logo/logo.jpg"
+                  src="/images/logo/logo.png"
                   alt="Logo"
                 />
               </Link>
@@ -31,9 +31,11 @@ export default function AuthLayout({
             </div>
           </div>
         </div>
-        <div className={`fixed z-50 hidden bottom-6 sm:block ${
-          document.documentElement.dir === "rtl" ? "left-6" : "right-6"
-        }`}>
+        <div
+          className={`fixed z-50 hidden bottom-6 sm:block ${
+            document.documentElement.dir === "rtl" ? "left-6" : "right-6"
+          }`}
+        >
           <ThemeTogglerTwo />
         </div>
       </div>

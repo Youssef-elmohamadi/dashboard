@@ -31,6 +31,46 @@ export default function CreateAdmin() {
     password: "",
     role: "",
   });
+  const [clientSideErrors, setClientSideErrors] = useState({
+    first_name: "",
+    last_name: "",
+    phone: "",
+    email: "",
+    password: "",
+    role: "",
+  });
+
+  const validate = () => {
+    const newErrors = {
+      first_name: "",
+      last_name: "",
+      phone: "",
+      email: "",
+      password: "",
+      role: "",
+    };
+    if (!adminData.first_name) {
+      newErrors.first_name = "First Name is Required";
+    } else if (!adminData.last_name) {
+      newErrors.last_name = "Last Name is Required";
+    } else if (!adminData.email) {
+      newErrors.email = "The Email Required";
+    } else if (
+      /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(newErrors.email)
+    ) {
+      newErrors.email = "InValid Email";
+    } else if (!adminData.phone) {
+      newErrors.phone = "The Phone Number is Required";
+    } else if (!/^01[0125][0-9]{8}$/.test(adminData.phone)) {
+      newErrors.phone = "Please Enter Valid Phone Number";
+    } else if (!adminData.password) {
+      newErrors.password = "The Password is Required";
+    } else if (!adminData.role) {
+      newErrors.role = "The Role is Required";
+    }
+    setClientSideErrors(newErrors);
+    return Object.values(newErrors).every((error) => error === "");
+  };
 
   const navigate = useNavigate();
 
@@ -62,6 +102,8 @@ export default function CreateAdmin() {
   }, []);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
+
     try {
       await createAdmin(adminData);
       navigate("/admin/admins", {
@@ -113,6 +155,11 @@ export default function CreateAdmin() {
                 {errors.first_name[0]}
               </p>
             )}
+            {clientSideErrors.first_name && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.first_name}
+              </p>
+            )}
           </div>
           <div>
             <Label htmlFor="inputTwo">Last Name</Label>
@@ -125,6 +172,11 @@ export default function CreateAdmin() {
             />
             {errors.last_name && (
               <p className="text-red-500 text-sm mt-1">{errors.last_name[0]}</p>
+            )}
+            {clientSideErrors.last_name && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.last_name}
+              </p>
             )}
           </div>
         </div>
@@ -143,6 +195,9 @@ export default function CreateAdmin() {
           {errors.role && (
             <p className="text-red-500 text-sm mt-1">{errors.role[0]}</p>
           )}
+          {clientSideErrors.role && (
+            <p className="text-red-500 text-sm mt-1">{clientSideErrors.role}</p>
+          )}
         </div>
         <div className="w-full">
           <Label htmlFor="inputTwo">Email</Label>
@@ -155,6 +210,11 @@ export default function CreateAdmin() {
           />
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
+          )}
+          {clientSideErrors.email && (
+            <p className="text-red-500 text-sm mt-1">
+              {clientSideErrors.email}
+            </p>
           )}
         </div>
         <div className="w-full">
@@ -169,6 +229,11 @@ export default function CreateAdmin() {
           {errors.phone && (
             <p className="text-red-500 text-sm mt-1">{errors.phone[0]}</p>
           )}
+          {clientSideErrors.phone && (
+            <p className="text-red-500 text-sm mt-1">
+              {clientSideErrors.phone}
+            </p>
+          )}
         </div>
         <div className="w-full">
           <Label>Password</Label>
@@ -181,6 +246,11 @@ export default function CreateAdmin() {
             />
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>
+            )}
+            {clientSideErrors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.password}
+              </p>
             )}
             <button
               type="button"

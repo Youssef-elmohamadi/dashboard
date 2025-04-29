@@ -7,7 +7,6 @@ import { TbStarHalfFilled } from "react-icons/tb";
 import { BsFillStarFill } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
 import { useModal } from "../../../pages/UserPages/Context/ModalContext";
-// LazyImage داخل نفس الكارد
 const LazyImage = ({ src, alt, className }) => {
   const { ref, inView } = useInView({
     threshold: 0.1,
@@ -48,7 +47,7 @@ const ProductCard = ({ product }) => {
       {/* أيقونة الـ Wishlist */}
       <button
         onClick={handleAddToWishlist}
-        className="absolute top-2 left-2 bg-transparent text-gray-300 p-2 rounded-full z-50  hover:text-red-500 transition"
+        className="absolute top-2 left-2 bg-transparent text-gray-300 p-2 rounded-full z-10  hover:text-red-500 transition"
       >
         <FaHeart className="text-xl" />
       </button>
@@ -60,7 +59,6 @@ const ProductCard = ({ product }) => {
           className="w-full h-full object-cover rounded"
         />
       </div>
-
 
       <Link
         to={`/product/${product.id}`}

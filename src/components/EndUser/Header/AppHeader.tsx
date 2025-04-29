@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { FaRegCircleUser } from "react-icons/fa6";
@@ -14,15 +14,26 @@ import {
 } from "react-icons/ti";
 import { GrLogout } from "react-icons/gr";
 import { BsWechat } from "react-icons/bs";
-import { TfiDownload, TfiWallet } from "react-icons/tfi";
+import { TfiClose, TfiDownload, TfiWallet } from "react-icons/tfi";
 import { LuWallet } from "react-icons/lu";
+import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
 const AppHeader = () => {
   const uToken = localStorage.getItem("uToken");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [Categories, setCategories] = useState<any>();
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
-
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getAllCategories();
+        setCategories(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchCategories();
+  }, []);
   return (
     <>
       <header className="enduser_container py-4 flex items-center justify-start gap-12 relative z-50">
@@ -37,7 +48,7 @@ const AppHeader = () => {
             {/* logo */}
             <div className="flex items-center gap-2 cursor-pointer flex-[1]">
               <Link to="/">
-                <img src="/images/logo.webp" className="w-32" alt="Logo" />
+                <img src="/images/logo/logo.png" className="w-32" alt="Logo" />
               </Link>
             </div>
           </div>
@@ -62,7 +73,6 @@ const AppHeader = () => {
           </div>
         </div>
 
-        {/* الحالة حسب وجود التوكن */}
         <div className="hidden lg:flex items-center justify-end gap-2 flex-[1]">
           {uToken ? (
             <>
@@ -127,6 +137,9 @@ const AppHeader = () => {
           ) : (
             <>
               <div className="flex items-center gap-2">
+                <FaRegCircleUser className="text-2xl mt-1 text-secondary cursor-pointer" />
+
+                <Separator />
                 <Link to="/signin" className="text-secondary text-sm">
                   Login
                 </Link>
@@ -152,31 +165,91 @@ const AppHeader = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-white z-50 shadow-lg transform transition-transform duration-300 ${
+        className={`fixed top-0 left-0 z-999999 h-full w-72 bg-white shadow-lg transform transition-transform duration-300 ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="p-4 flex flex-col gap-4">
-          <button onClick={closeMenu} className="text-left text-red-500">
-            Close
-          </button>
-          <Link to="/" onClick={closeMenu}>
-            Home
-          </Link>
-          <Link to="/products" onClick={closeMenu}>
-            Products
-          </Link>
-          <Link to="/contact" onClick={closeMenu}>
-            Contact
-          </Link>
-          {uToken ? (
-            <Link to="/profile" onClick={closeMenu}>
-              Profile
-            </Link>
-          ) : (
-            <Link to="/signin" onClick={closeMenu}>
-              Login
-            </Link>
+        <div className="flex flex-col gap-1 ">
+          <div className="text-right p-4">
+            <button onClick={closeMenu} className="text-right text-red-500">
+              <TfiClose />
+            </button>
+          </div>
+          <div>
+            {uToken ? (
+              <>
+                <div className="text-center flex items-center gap-2.5 p-4 border-b">
+                  <div className="w-10 h-10 rounded-full p-1 flex items-center gap-2.5">
+                    <img
+                      src="/images/cards/card-01.jpg"
+                      className="w-full h-full rounded-full"
+                      alt="User Avatar"
+                    />
+                    <div className="font-semibold">Youssef</div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="flex border-b">
+                <div className="p-4 flex items-center gap-2">
+                  <FaRegCircleUser className="text-2xl mt-1 text-secondary cursor-pointer" />
+
+                  <Separator />
+                  <Link to="/signin" className="text-secondary text-sm">
+                    Login
+                  </Link>
+                  <Separator />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Link to="/signup" className="text-secondary text-sm">
+                    Signup
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+          <ul className="flex flex-col justify-center border-b">
+            {Categories?.map((Category, i) =>
+              i < 4 ? (
+                <li key={i} className="text-gray-500 py-3">
+                  <Link to={`/category/${Category.id}`} className="py-3 px-2">
+                    {Category.name}
+                  </Link>
+                </li>
+              ) : null
+            )}
+          </ul>
+          {uToken && (
+            <>
+              <ul className="flex flex-col justify-center border-b">
+                <li className="text-gray-500 py-3">
+                  <Link to="/" className="py-3 px-2">
+                    Profile
+                  </Link>
+                </li>
+                <li className="text-gray-500 py-3">
+                  <Link to="/" className="py-3 px-2">
+                    Notifications
+                  </Link>
+                </li>
+                <li className="text-gray-500 py-3">
+                  <Link to="/" className="py-3 px-2">
+                    Favorite
+                  </Link>
+                </li>
+                <li className="text-gray-500 py-3">
+                  <Link to="/" className="py-3 px-2">
+                    Compare
+                  </Link>
+                </li>
+              </ul>
+              <ul className="flex flex-col justify-center">
+                <li className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-100 cursor-pointer">
+                  <GrLogout className="text-xl" />
+                  Logout
+                </li>
+              </ul>
+            </>
           )}
         </div>
       </div>

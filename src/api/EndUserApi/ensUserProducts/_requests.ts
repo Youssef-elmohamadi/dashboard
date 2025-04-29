@@ -5,6 +5,21 @@ import axiosInstanceEndUser from "../../userAxiosInstanceEndUser";
 export const getProductCategories = async () => {
   return await axiosInstanceEndUser.get("/api/user/products/productCategories");
 };
+export const getProductCategoriesById = async (id, page = 1) => {
+  return await axiosInstanceEndUser.get("/api/user/products", {
+    params: {
+      category_id: id,
+      page,
+    },
+  });
+};
+export const getAllProducts = async (page = 1) => {
+  return await axiosInstanceEndUser.get("/api/user/products", {
+    params: {
+      page,
+    },
+  });
+};
 export const applyCoupon = async (data) => {
   return await axiosInstanceEndUser.post("/api/user/cupons/apply", data);
 };

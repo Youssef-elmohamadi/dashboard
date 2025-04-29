@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Dropdown } from "../ui/dropdown/Dropdown";
-import { Link } from "react-router";
 import { showUser } from "../../api/AdminApi/profileApi/_requests";
-import { logout } from "../../api/AdminApi/authApi/_requests";
 import { handleLogout } from "../admin/auth/Logout";
 
 export default function UserDropdown() {

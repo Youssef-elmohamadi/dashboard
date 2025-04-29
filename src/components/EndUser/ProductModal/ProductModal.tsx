@@ -26,48 +26,55 @@ const ProductModal = () => {
   return (
     <div
       onClick={closeModal}
-      className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center z-50"
+      className="fixed inset-0 bg-[rgba(0,0,0,0.5)]  flex items-center justify-center z-50"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white p-6 rounded-xl shadow-lg md:w-1/2 w-[calc(100%-30px)]  relative max-h-[80vh] overflow-y-auto"
+        className="bg-white p-6 rounded-xl shadow-lg md:w-1/2 w-[calc(100%-30px)]  relative min-h-[60vh] overflow-y-auto"
       >
-        <button
-          className="absolute top-3 right-3 bg-gray-500 w-8 h-8 rounded-full text-white text-lg"
-          onClick={closeModal}
-        >
-          ✕
-        </button>
+        <div>
+          {" "}
+          <button
+            className="absolute top-3 right-3 z-999 bg-gray-500 w-8 h-8 rounded-full text-white text-lg"
+            onClick={closeModal}
+          >
+            ✕
+          </button>
+        </div>
 
         <div className="grid grid-cols-6 gap-4">
-          <div className="lg:col-span-1 col-span-2 flex flex-col gap-2 overflow-y-auto max-h-[400px]">
-            {images?.map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                onClick={() => setSelectedImage(img)}
-                className={`w-full h-20 object-cover border-2 cursor-pointer rounded ${
-                  selectedImage === img ? "border-blue-500" : "border-gray-300"
-                }`}
-              />
-            ))}
-          </div>
-          <div className="lg:col-span-2 col-span-4 flex justify-center items-center">
-            <div className="max-h-[500px] w-full flex justify-center">
-              <InnerImageZoom
-                src={selectedImage}
-                zoomSrc={selectedImage}
-                zoomType="hover"
-                zoomPreload={false}
-                className="object-contain h-full rounded"
-              />
+          <div className="lg:col-span-3 col-span-6 grid grid-cols-4 gap-2   ">
+            <div className="flex lg:col-span-1 col-span-1 flex-col gap-2 overflow-y-auto max-h-[400px]">
+              {images?.map((img, index) => (
+                <img
+                  key={index}
+                  src={img}
+                  onClick={() => setSelectedImage(img)}
+                  className={`w-full h-20 object-cover border-2 cursor-pointer rounded ${
+                    selectedImage === img
+                      ? "border-blue-500"
+                      : "border-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
+            <div className="lg:col-span-3 col-span-3 flex justify-between items-center">
+              <div className="max-h-[500px] w-full flex justify-center">
+                <InnerImageZoom
+                  src={selectedImage}
+                  zoomSrc={selectedImage}
+                  zoomType="hover"
+                  zoomPreload={false}
+                  className="object-contain h-full rounded"
+                />
+              </div>
             </div>
           </div>
-          <div className="mt-6 lg:col-span-3 col-span-6 px-2">
+          <div className="mt-6 lg:col-span-3 col-span-6 px-2 ml-8">
             <h2 className="text-2xl font-bold mb-2">
               {modalProps?.name || "Product Name"}
             </h2>
-            <p className="text-sm text-black mb-2">
+            <p className="text-sm text-black mb-3">
               {modalProps?.description || "Product Description"}
             </p>
             <div className="flex gap-10 mb-2">
@@ -77,10 +84,10 @@ const ProductModal = () => {
               </span>
             </div>
 
-            <div className="flex gap-5 items-center mb-2">
+            <div className="flex gap-5 items-center mb-3">
               <span className="font-medium text-gray-600">Quantity </span>
               <button
-                className="bg-gray-400 text-white text-base p-2"
+                className="bg-gray-400 text-white text-base py-0 p-2"
                 onClick={() => setQuantity((prev) => Math.min(prev + 1, 99))} // تحديد أعلى قيمة لو حبيت
               >
                 +
@@ -98,7 +105,7 @@ const ProductModal = () => {
                 min={1}
               />
               <button
-                className="bg-gray-400 text-white text-base p-2"
+                className="bg-gray-400 text-white text-base py-0 p-2"
                 onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}
               >
                 -

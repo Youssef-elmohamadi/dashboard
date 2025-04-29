@@ -1,0 +1,53 @@
+// PriceRangeFilter.tsx
+import React, { useState } from "react";
+import { Range, getTrackBackground } from "react-range";
+
+const PriceRangeFilter: React.FC = () => {
+  const [values, setValues] = useState<[number, number]>([44, 8681]);
+  const STEP = 1;
+  const MIN = 0;
+  const MAX = 10000;
+
+  return (
+    <div className="w-full mx-auto p-5 bg-white border mt-6">
+      <h2 className="text-lg font-bold mb-4">Price Filter</h2>
+      <Range
+        values={values}
+        step={STEP}
+        min={MIN}
+        max={MAX}
+        onChange={(vals) => setValues(vals as [number, number])}
+        renderTrack={({ props, children }) => (
+          <div
+            {...props}
+            style={{
+              ...props.style,
+              height: "8px",
+              borderRadius: "4px",
+              background: getTrackBackground({
+                values,
+                colors: ["#e5e7eb", "#8b5cf6", "#e5e7eb"],
+                min: MIN,
+                max: MAX,
+              }),
+            }}
+          >
+            {children}
+          </div>
+        )}
+        renderThumb={({ props }) => (
+          <div
+            {...props}
+            className="h-4 w-4 rounded-full border-2 border-purple-600 bg-white flex items-center justify-center"
+          />
+        )}
+      />
+      <div className="flex justify-between text-sm text-gray-600 mt-3">
+        <span>{values[0]} EGP</span>
+        <span>{values[1]} EGP</span>
+      </div>
+    </div>
+  );
+};
+
+export default PriceRangeFilter;
