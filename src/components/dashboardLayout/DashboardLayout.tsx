@@ -2,7 +2,7 @@ import { SidebarProvider, useSidebar } from "../../../context/SidebarContext";
 import { Outlet } from "react-router";
 import AppHeader from "./AppHeader";
 import Backdrop from "./Backdrop";
-import AppSidebar from "./AppSidebar";
+import AppSidebar from "./DashboardSidebar";
 import { ToastContainer } from "react-toastify";
 
 const LayoutContent: React.FC = () => {
@@ -28,7 +28,7 @@ const LayoutContent: React.FC = () => {
   );
 };
 
-const AdminLayout: React.FC = () => {
+const DashboardLayout: React.FC = () => {
   return (
     <>
       <ToastContainer
@@ -43,4 +43,4 @@ const AdminLayout: React.FC = () => {
   );
 };
 
-export default AdminLayout;
+export default DashboardLayout;

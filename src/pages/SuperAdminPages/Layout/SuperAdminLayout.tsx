@@ -1,8 +1,8 @@
 import { SidebarProvider, useSidebar } from "../../../context/SidebarContext";
 import { Outlet } from "react-router";
-import AppHeader from "./AppHeader";
-import Backdrop from "./Backdrop";
-import AppSidebar from "./AppSidebar";
+import AppHeader from "../../../components/dashboardLayout/AppHeader";
+import Backdrop from "../../../components/dashboardLayout/Backdrop";
+import AppSidebar from "../../../components/dashboardLayout/DashboardSidebar";
 import { ToastContainer } from "react-toastify";
 
 const LayoutContent: React.FC = () => {
@@ -11,7 +11,7 @@ const LayoutContent: React.FC = () => {
   return (
     <div className="min-h-screen xl:flex">
       <div>
-        <AppSidebar />
+        <AppSidebar adminType="superAdmin" />
         <Backdrop />
       </div>
       <div

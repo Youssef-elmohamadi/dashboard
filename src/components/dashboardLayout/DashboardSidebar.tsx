@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
-import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { useDirectionAndLanguage } from "../../context/DirectionContext";
 import {
   BoxCubeIcon,
   CalenderIcon,
@@ -14,11 +14,10 @@ import {
   PlugInIcon,
   TableIcon,
   UserCircleIcon,
-} from "../../../icons";
-import { useSidebar } from "../../../context/SidebarContext";
+} from "../../icons";
+import { useSidebar } from "../../context/SidebarContext";
 import { PiSignOut } from "react-icons/pi";
-import { handleLogout } from "../../../components/admin/auth/Logout";
-//import SidebarWidget from "./SidebarWidget";
+import { handleLogout } from "../../components/admin/auth/Logout";
 
 type NavItem = {
   name: string;
@@ -27,8 +26,10 @@ type NavItem = {
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
   action?: any;
 };
-
-const navItems: NavItem[] = [
+type DashboardSidebarProps = {
+  adminType: "admin" | "superAdmin";
+};
+const AdminNavItems: NavItem[] = [
   {
     icon: <BoxCubeIcon />,
     name: "Home",
@@ -72,63 +73,18 @@ const navItems: NavItem[] = [
     name: "Logout",
     action: handleLogout,
   },
-  // {
-  //   icon: <CalenderIcon />,
-  //   name: "Calendar",
-  //   path: "/calendar",
-  // },
-  // {
-  //   name: "Forms",
-  //   icon: <ListIcon />,
-  //   subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
-  // },
-  // {
-  //   name: "Tables",
-  //   icon: <TableIcon />,
-  //   subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-  // },
-  // {
-  //   name: "Pages",
-  //   icon: <PageIcon />,
-  //   subItems: [
-  //     { name: "Blank Page", path: "/blank", pro: false },
-  //     { name: "404 Error", path: "/error-404", pro: false },
-  //   ],
-  // },
 ];
 
-// const othersItems: NavItem[] = [
-//   {
-//     icon: <PieChartIcon />,
-//     name: "Charts",
-//     subItems: [
-//       { name: "Line Chart", path: "/line-chart", pro: false },
-//       { name: "Bar Chart", path: "/bar-chart", pro: false },
-//     ],
-//   },
-//   {
-//     icon: <BoxCubeIcon />,
-//     name: "UI Elements",
-//     subItems: [
-//       { name: "Alerts", path: "/alerts", pro: false },
-//       { name: "Avatar", path: "/avatars", pro: false },
-//       { name: "Badge", path: "/badge", pro: false },
-//       { name: "Buttons", path: "/buttons", pro: false },
-//       { name: "Images", path: "/images", pro: false },
-//       { name: "Videos", path: "/videos", pro: false },
-//     ],
-//   },
-//   {
-//     icon: <PlugInIcon />,
-//     name: "Authentication",
-//     subItems: [
-//       { name: "Sign In", path: "/signin", pro: false },
-//       { name: "Sign Up", path: "/signup", pro: false },
-//     ],
-//   },
-// ];
-
-const AppSidebar: React.FC = () => {
+const SuperAdminNavItems: NavItem[] = [
+  {
+    icon: <BoxCubeIcon />,
+    name: "Home",
+    path: "/admin",
+  },
+];
+const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ adminType }) => {
+  const currentNavItems =
+    adminType === "superAdmin" ? SuperAdminNavItems : AdminNavItems;
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
   const { dir } = useDirectionAndLanguage();
@@ -147,30 +103,6 @@ const AppSidebar: React.FC = () => {
     (path: string) => location.pathname === path,
     [location.pathname]
   );
-
-  // useEffect(() => {
-  //   let submenuMatched = false;
-  //   ["main", "others"].forEach((menuType) => {
-  //     const items = menuType === "main" ? navItems : othersItems;
-  //     items.forEach((nav, index) => {
-  //       if (nav.subItems) {
-  //         nav.subItems.forEach((subItem) => {
-  //           if (isActive(subItem.path)) {
-  //             setOpenSubmenu({
-  //               type: menuType as "main" | "others",
-  //               index,
-  //             });
-  //             submenuMatched = true;
-  //           }
-  //         });
-  //       }
-  //     });
-  //   });
-
-  //   if (!submenuMatched) {
-  //     setOpenSubmenu(null);
-  //   }
-  // }, [location, isActive]);
 
   useEffect(() => {
     if (openSubmenu !== null) {
@@ -406,30 +338,13 @@ const AppSidebar: React.FC = () => {
                   <HorizontaLDots className="size-6" />
                 )}
               </h2>
-              {renderMenuItems(navItems, "main")}
+              {renderMenuItems(currentNavItems, "main")}
             </div>
-            {/* <div className="">
-              <h2
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                  !isExpanded && !isHovered
-                    ? "lg:justify-center"
-                    : "justify-start"
-                }`}
-              >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  "Others"
-                ) : (
-                  <HorizontaLDots />
-                )}
-              </h2>
-              {renderMenuItems(othersItems, "others")}
-            </div> */}
           </div>
         </nav>
-        {/* {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null} */}
       </div>
     </aside>
   );
 };
 
-export default AppSidebar;
+export default DashboardSidebar;

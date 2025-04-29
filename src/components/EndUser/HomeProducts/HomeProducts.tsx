@@ -31,7 +31,10 @@ const HomeProducts: React.FC<CategorySliderProps> = ({
             <h2 className="text-lg md:text-xl font-semibold text-gray-800">
               {title}
             </h2>
-            <Link to="/" className="text-sm text-purple-600 hover:underline">
+            <Link
+              to={viewAllLink}
+              className="text-sm text-purple-600 hover:underline"
+            >
               Show All
             </Link>
           </div>

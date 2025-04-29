@@ -20,7 +20,6 @@ export default function CategoriesLayout() {
 
   const toggleMenu = () => setIsFilterOpen(!isFilterOpen);
   const { category_id } = useParams();
-  console.log(category_id);
 
   useEffect(() => {
     const fetchCategories = async () => {

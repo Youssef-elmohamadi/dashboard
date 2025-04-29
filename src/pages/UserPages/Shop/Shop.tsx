@@ -12,7 +12,9 @@ const Shop = () => {
     const fetchProducts = async () => {
       try {
         const response = await getProductCategoriesById(category_id);
-        const productsData = response.data.data.data || [];
+        const productsData = response.data.data || [];
+        console.log(productsData);
+
         setProducts(productsData);
         console.log(productsData);
       } catch (error) {
@@ -28,7 +30,7 @@ const Shop = () => {
   return (
     <div>
       <div className="w-full grid gap-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {products.map((product) => (
+        {products?.map((product) => (
           <div key={product.id}>
             <ProductCard product={product} />
           </div>

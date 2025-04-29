@@ -1,5 +1,4 @@
 import { Route } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import AdminLayout from "../../pages/AdminPages/layout/AdminLayout";
 import Home from "../../pages/AdminPages/Dashboard/Home";
 import UserProfiles from "../../pages/AdminPages/UserProfile/UserProfiles";

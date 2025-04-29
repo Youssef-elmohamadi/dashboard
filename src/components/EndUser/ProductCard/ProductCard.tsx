@@ -54,8 +54,8 @@ const ProductCard = ({ product }) => {
 
       <div className="w-full h-[300px]">
         <LazyImage
-          src={product.images[0]?.image}
-          alt={product.name}
+          src={product?.images[0]?.image}
+          alt={product?.name}
           className="w-full h-full object-cover rounded"
         />
       </div>

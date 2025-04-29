@@ -38,8 +38,8 @@ const Home = () => {
   }, []);
   return (
     <section className="">
-      {modalType === "product" && <ProductModal  />}
-      {modalType === "addtocart" && <AddToCartModal  />}
+      {modalType === "product" && <ProductModal />}
+      {modalType === "addtocart" && <AddToCartModal />}
       <div className="enduser_container">
         <AdBanner imageUrl="/images/banner.webp" linkUrl="/" />
         <FeaturesSection />
@@ -72,6 +72,7 @@ const Home = () => {
             key={category.id}
             title={category.name}
             products={category.products}
+            viewAllLink={`/category/${category.id}`}
           />
         ))}
       </div>

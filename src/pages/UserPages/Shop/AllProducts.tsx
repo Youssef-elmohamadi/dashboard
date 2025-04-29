@@ -12,14 +12,13 @@ const AllProducts = () => {
   const fetchProducts = async (pageNumber = 1) => {
     try {
       const response = await getAllProducts(pageNumber);
-      const newProducts = response.data.data.data;
+      const newProducts = response.data.data;
 
-      // إذا كانت أول صفحة، نبدأ من الصفر، غير كده ندمج
       setProducts((prev) =>
         pageNumber === 1 ? newProducts : [...prev, ...newProducts]
       );
 
-      // تحديث حالة زر "Show More"
+
       if (response.data.data.current_page >= response.data.data.last_page) {
         setHasMore(false);
       }
