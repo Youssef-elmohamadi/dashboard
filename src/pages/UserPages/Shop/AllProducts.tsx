@@ -12,7 +12,7 @@ const AllProducts = () => {
   const fetchProducts = async (pageNumber = 1) => {
     try {
       const response = await getAllProducts(pageNumber);
-      const newProducts = response.data.data;
+      const newProducts = response.data.data.data;
 
       setProducts((prev) =>
         pageNumber === 1 ? newProducts : [...prev, ...newProducts]

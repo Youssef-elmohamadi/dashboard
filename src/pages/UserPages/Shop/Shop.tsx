@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
-import CategoryBreadCrump from "../../../components/EndUser/BreadCrump/CategoryBreadCrump";
 import { getProductCategoriesById } from "../../../api/EndUserApi/ensUserProducts/_requests";
 import ProductCard from "../../../components/EndUser/ProductCard/ProductCard";
 
@@ -12,7 +11,7 @@ const Shop = () => {
     const fetchProducts = async () => {
       try {
         const response = await getProductCategoriesById(category_id);
-        const productsData = response.data.data || [];
+        const productsData = response.data.data.data || [];
         console.log(productsData);
 
         setProducts(productsData);
