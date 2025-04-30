@@ -1,9 +1,15 @@
-// PriceRangeFilter.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Range, getTrackBackground } from "react-range";
 
-const PriceRangeFilter: React.FC = () => {
-  const [values, setValues] = useState<[number, number]>([44, 8681]);
+interface PriceRangeFilterProps {
+  setValuesProp: (range: { min: number; max: number }) => void;
+}
+
+const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
+  setValuesProp,
+}) => {
+  const [values, setValues] = useState<[number, number]>([0, 1000]);
+
   const STEP = 1;
   const MIN = 0;
   const MAX = 10000;
@@ -17,6 +23,7 @@ const PriceRangeFilter: React.FC = () => {
         min={MIN}
         max={MAX}
         onChange={(vals) => setValues(vals as [number, number])}
+        onFinalChange={(vals) => setValuesProp({ min: vals[0], max: vals[1] })}
         renderTrack={({ props, children }) => (
           <div
             {...props}

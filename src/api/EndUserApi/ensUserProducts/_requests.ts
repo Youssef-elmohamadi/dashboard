@@ -1,4 +1,3 @@
-import { applyCo } from "./_requests";
 import axiosForm from "../../axiosInstanceFormData";
 import axiosInstanceEndUser from "../../userAxiosInstanceEndUser";
 
@@ -8,21 +7,22 @@ export const getProductCategories = async () => {
 export const showProduct = async (id) => {
   return await axiosInstanceEndUser.get(`/api/user/products/${id}`);
 };
-export const getProductCategoriesById = async (id, page = 1) => {
+// الحصول على جميع المنتجات مع إمكانية تمرير باراميترز ديناميكيًا
+export const getAllProducts = async (params: Record<string, any> = {}) => {
   return await axiosInstanceEndUser.get("/api/user/products", {
-    params: {
-      category_id: id,
-      page,
-    },
+    params,
   });
 };
-export const getAllProducts = async (page = 1) => {
-  return await axiosInstanceEndUser.get("/api/user/products", {
-    params: {
-      page,
-    },
+
+// الحصول على المنتجات حسب التصنيف مع باراميترز ديناميكيًا
+export const getProductCategoriesById = async (
+  params: Record<string, any> = {}
+) => {
+  return await axiosInstanceEndUser.get(`/api/user/products`, {
+    params,
   });
 };
+
 export const applyCoupon = async (data) => {
   return await axiosInstanceEndUser.post("/api/user/cupons/apply", data);
 };

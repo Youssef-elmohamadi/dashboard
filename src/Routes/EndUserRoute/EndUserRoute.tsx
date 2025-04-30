@@ -17,6 +17,7 @@ import UserSupportTicket from "../../pages/UserPages/SupportTicket/UserSupportTi
 import Shop from "../../pages/UserPages/Shop/Shop";
 import AllProducts from "../../pages/UserPages/Shop/AllProducts";
 import ProductDetails from "../../pages/UserPages/ProductDetails/ProductDetails";
+import OrderDetailsPage from "../../pages/UserPages/UserOrders/OrderDetails";
 
 export const EndUserRoutes = (
   <>
@@ -32,6 +33,7 @@ export const EndUserRoutes = (
           <Route path="/u-conversation" element={<UserConversation />} />
           <Route path="/u-wallet" element={<UserWallet />} />
           <Route path="/u-Support-ticket" element={<UserSupportTicket />} />
+          <Route path="u-orders/details/:id" element={<OrderDetailsPage />} />
         </Route>
         <Route path="/category" element={<CategoriesLayout />}>
           <Route index element={<AllProducts />} />
