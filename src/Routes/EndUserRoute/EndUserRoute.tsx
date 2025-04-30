@@ -16,11 +16,14 @@ import UserWallet from "../../pages/UserPages/UserWallet/UserWallet";
 import UserSupportTicket from "../../pages/UserPages/SupportTicket/UserSupportTicket";
 import Shop from "../../pages/UserPages/Shop/Shop";
 import AllProducts from "../../pages/UserPages/Shop/AllProducts";
+import ProductDetails from "../../pages/UserPages/ProductDetails/ProductDetails";
+
 export const EndUserRoutes = (
   <>
     <Route element={<EndUserWrapper />}>
       <Route element={<EndUserLayout />}>
         <Route index element={<Home />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
         <Route element={<UserControlLayout />}>
           <Route path="/u-dashboard" element={<UserDashboard />} />

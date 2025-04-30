@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { showProduct } from "../../../api/EndUserApi/ensUserProducts/_requests";
 
 type Product = {
   id: number;
@@ -14,31 +16,59 @@ type Product = {
   images: string[];
 };
 
-type Props = {
-  product: Product;
-};
+const ProductDetails: React.FC = () => {
+  const [product, setProduct] = useState<Product | null>(null);
+  const { id } = useParams();
 
-const ProductPage: React.FC<Props> = ({ product }) => {
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        if (!id) return;
+        const response = await showProduct(id);
+        console.log(response.data.data);
+        setProduct(response?.data?.data); // تأكد أن البيانات في response.data
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (!product) {
+    return <div className="text-center py-10">جاري تحميل المنتج...</div>;
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="lg:w-1/2">
           <div className="border rounded-lg overflow-hidden">
             <img
-              src={product.images[0] || "/placeholder.png"}
+              src={
+                product.images.length > 0
+                  ? product.images[0]
+                  : "/placeholder.png"
+              }
               alt={product.name}
               className="w-full h-[400px] object-cover"
             />
           </div>
           <div className="flex gap-2 mt-4">
-            {product.images.slice(0, 5).map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                alt={`preview-${index}`}
-                className="w-16 h-16 object-cover border rounded cursor-pointer"
-              />
-            ))}
+            {product.images.length > 0 ? (
+              product.images
+                .slice(0, 5)
+                .map((img, index) => (
+                  <img
+                    key={index}
+                    src={img}
+                    alt={`preview-${index}`}
+                    className="w-16 h-16 object-cover border rounded cursor-pointer"
+                  />
+                ))
+            ) : (
+              <span className="text-gray-400 text-sm">لا توجد صور إضافية</span>
+            )}
           </div>
         </div>
         <div className="lg:w-1/2 space-y-4">
@@ -59,11 +89,10 @@ const ProductPage: React.FC<Props> = ({ product }) => {
               className="w-16 border rounded text-center"
             />
             <span className="text-sm text-gray-500">
-              ({product.stock_quantity} Avilable)
+              ({product.stock_quantity} متوفر)
             </span>
           </div>
 
-          {/* الأزرار */}
           <div className="flex gap-4 mt-4">
             <button className="bg-purple-700 text-white px-6 py-2 rounded hover:bg-purple-800 transition">
               Add To Cart
@@ -73,14 +102,13 @@ const ProductPage: React.FC<Props> = ({ product }) => {
             </button>
           </div>
 
-          {/* الماركة */}
           <div className="flex items-center gap-3 mt-6">
             <img
-              src={product.brand.image}
-              alt={product.brand.name}
+              src={product.brand?.image}
+              alt={product.brand?.name}
               className="w-12 h-12 object-contain"
             />
-            <span className="text-sm text-gray-600">{product.brand.name}</span>
+            <span className="text-sm text-gray-600">{product.brand?.name}</span>
           </div>
         </div>
       </div>
@@ -88,4 +116,4 @@ const ProductPage: React.FC<Props> = ({ product }) => {
   );
 };
 
-export default ProductPage;
+export default ProductDetails;

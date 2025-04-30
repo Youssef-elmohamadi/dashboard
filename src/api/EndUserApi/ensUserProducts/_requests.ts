@@ -5,6 +5,9 @@ import axiosInstanceEndUser from "../../userAxiosInstanceEndUser";
 export const getProductCategories = async () => {
   return await axiosInstanceEndUser.get("/api/user/products/productCategories");
 };
+export const showProduct = async (id) => {
+  return await axiosInstanceEndUser.get(`/api/user/products/${id}`);
+};
 export const getProductCategoriesById = async (id, page = 1) => {
   return await axiosInstanceEndUser.get("/api/user/products", {
     params: {
