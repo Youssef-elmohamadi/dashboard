@@ -36,7 +36,7 @@ const ProductDetails: React.FC = () => {
   }, [id]);
 
   if (!product) {
-    return <div className="text-center py-10">جاري تحميل المنتج...</div>;
+    return <div className="text-center py-10">Loading Product Details...</div>;
   }
 
   return (
@@ -67,7 +67,7 @@ const ProductDetails: React.FC = () => {
                   />
                 ))
             ) : (
-              <span className="text-gray-400 text-sm">لا توجد صور إضافية</span>
+              <span className="text-gray-400 text-sm">No Extra Images</span>
             )}
           </div>
         </div>
@@ -76,7 +76,7 @@ const ProductDetails: React.FC = () => {
           <p className="text-gray-500">{product.description}</p>
 
           <div className="text-xl text-purple-600 font-semibold">
-            {product.price.toFixed(2)} ريال
+            {product.price.toFixed(2)} EGP
           </div>
 
           <div className="flex items-center gap-2">
@@ -89,7 +89,7 @@ const ProductDetails: React.FC = () => {
               className="w-16 border rounded text-center"
             />
             <span className="text-sm text-gray-500">
-              ({product.stock_quantity} متوفر)
+              ({product.stock_quantity} Avilable)
             </span>
           </div>
 
