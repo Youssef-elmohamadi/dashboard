@@ -7,10 +7,7 @@ type BaseEntity = {
   created_at?: string;
 };
 
-// نوع الـ Role لو موجود
 type Role = { name: string };
-
-// Props لتكوين الأعمدة الديناميكية
 interface ColumnBuilderOptions<T extends BaseEntity> {
   includeName?: boolean;
   includeBrandName?: boolean;
@@ -31,6 +28,15 @@ interface ColumnBuilderOptions<T extends BaseEntity> {
   includeAddress?: boolean;
   includeOrderStatus?: boolean;
   includeShippedStatus?: boolean;
+  includeCode?: boolean;
+  includeType?: boolean;
+  includeValue?: boolean;
+  includeLimit?: boolean;
+  includeUsedCount?: boolean;
+  includeStartAt?: boolean;
+  includeExpiresAt?: boolean;
+  includeIsActive?: boolean;
+
   onDelete?: (id: number) => void;
   onEdit?: (id: number) => void;
   customActionsRenderer?: (rowData: T) => React.ReactNode;
@@ -178,17 +184,6 @@ export const buildColumns = <T extends BaseEntity>(
     });
   }
 
-  if (options.includeActions) {
-    columns.push({
-      Header: "Actions",
-      id: "actions",
-      Cell: ({ row }: any) =>
-        options.customActionsRenderer
-          ? options.customActionsRenderer(row.original)
-          : null,
-    });
-  }
-
   {
     if (options.includeAddress) {
       columns.push({
@@ -198,6 +193,74 @@ export const buildColumns = <T extends BaseEntity>(
           `${row.order.location?.city}, ${row.order.location?.area}, ${row.order.location?.street}`,
       });
     }
+  }
+
+  if (options.includeCode) {
+    columns.push({
+      Header: "Code",
+      accessor: "code" as keyof T,
+    });
+  }
+  if (options.includeType) {
+    columns.push({
+      Header: "Type",
+      accessor: "type" as keyof T,
+    });
+  }
+
+  if (options.includeValue) {
+    columns.push({
+      Header: "Value",
+      accessor: "value" as keyof T,
+    });
+  }
+
+  if (options.includeLimit) {
+    columns.push({
+      Header: "Usage Limit",
+      accessor: "usage_limit" as keyof T,
+    });
+  }
+
+  if (options.includeUsedCount) {
+    columns.push({
+      Header: "Used Count",
+      accessor: "used_count" as keyof T,
+    });
+  }
+
+  if (options.includeStartAt) {
+    columns.push({
+      Header: "Start Date",
+      accessor: "start_at" as keyof T,
+      Cell: ({ value }: any) => format(new Date(value), "dd/MM/yyyy"),
+    });
+  }
+
+  if (options.includeExpiresAt) {
+    columns.push({
+      Header: "Expires At",
+      accessor: "expires_at" as keyof T,
+      Cell: ({ value }: any) => format(new Date(value), "dd/MM/yyyy"),
+    });
+  }
+
+  if (options.includeIsActive) {
+    columns.push({
+      Header: "Active",
+      accessor: "active" as keyof T,
+      Cell: ({ value }: any) => (value ? "✅" : "❌"),
+    });
+  }
+  if (options.includeActions) {
+    columns.push({
+      Header: "Actions",
+      id: "actions",
+      Cell: ({ row }: any) =>
+        options.customActionsRenderer
+          ? options.customActionsRenderer(row.original)
+          : null,
+    });
   }
 
   return columns;

@@ -1,18 +1,33 @@
-import { Outlet, Link } from "react-router-dom";
-import {
-  TiDocumentText,
-  TiDownload,
-  TiInfoLargeOutline,
-  TiSupport,
-} from "react-icons/ti";
-import { GrLogout } from "react-icons/gr";
-import { BsWechat } from "react-icons/bs";
-import { TfiDownload, TfiWallet } from "react-icons/tfi";
-import { AiOutlineHome } from "react-icons/ai";
-export default function UserControlLayout() {
+import React from "react";
+import { BiLogOut } from "react-icons/bi";
+import { MdCompareArrows, MdDelete, MdFavorite } from "react-icons/md";
+import { RiProfileFill } from "react-icons/ri";
+import { TfiClose } from "react-icons/tfi";
+import { TiDocumentText } from "react-icons/ti";
+import { Link } from "react-router-dom";
+
+const MenuSidebar = ({ isMenuOpen, setIsMenuOpen }) => {
+  const closeMenu = () => setIsMenuOpen(false);
   return (
-    <div className="flex flex-row min-h-screen">
-      <aside className="w-64 bg-white p-4 border-r shadow hidden lg:block ">
+    <>
+      {isMenuOpen && (
+        <div
+          onClick={closeMenu}
+          className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-999999 overflow-auto"
+        />
+      )}
+      <div
+        className={`fixed top-0 left-0 overflow-auto z-999999 h-full w-72 bg-white shadow-lg transform transition-transform duration-300 ${
+          isMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex flex-col gap-1 mb-2 ">
+          <div className="text-right p-4">
+            <button onClick={closeMenu} className="text-right text-red-500">
+              <TfiClose />
+            </button>
+          </div>
+        </div>
         <div className="space-y-4 ">
           <div className="text-center flex flex-col items-center">
             <div className="w-20 h-20 rounded-full  ">
@@ -37,7 +52,7 @@ export default function UserControlLayout() {
               to="/u-profile"
               className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
             >
-              <TiSupport className="text-lg text-gray-500" />
+              <RiProfileFill className="text-lg text-gray-500" />
               Profile Management
             </Link>
             <Link
@@ -80,30 +95,29 @@ export default function UserControlLayout() {
               to="/u-compare"
               className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
             >
-              <TiSupport className="text-lg text-gray-500" />
+              <MdCompareArrows className="text-lg text-gray-500" />
               Compare Product
             </Link>
             <Link
-              to="/u-favorite"
+              to="/u-Profile"
               className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
             >
-              <TiSupport className="text-lg text-gray-500" />
+              <MdFavorite className="text-lg text-gray-500" />
               Favorite Products
             </Link>
             <button className="p-2 w-full rounded hover:bg-gray-100 flex items-center gap-2">
-              <TiInfoLargeOutline className="text-lg text-error-500" />
+              <MdDelete className="text-lg text-error-500" />
               Delete Account
             </button>
             <button className="p-2 w-full rounded hover:bg-gray-100 flex items-center gap-2">
-              <TiInfoLargeOutline className="text-lg text-error-500" />
+              <BiLogOut className="text-lg text-error-500" />
               Logout
             </button>
           </nav>
         </div>
-      </aside>
-      <main className="flex-1 p-6 bg-gray-50 overflow-auto">
-        <Outlet />
-      </main>
-    </div>
+      </div>
+    </>
   );
-}
+};
+
+export default MenuSidebar;

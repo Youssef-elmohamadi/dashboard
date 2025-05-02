@@ -16,3 +16,7 @@ export const getOrderById = async (id) => {
 export const shipmentOrder = async (data, id) => {
   return await axiosJson.post(`/api/vendor/orders/ship/${id}`, data);
 };
+
+export const cancelOrder = async (id) => {
+  return await axiosJson.get(`/api/vendor/orders/cancel/${id}`);
+};

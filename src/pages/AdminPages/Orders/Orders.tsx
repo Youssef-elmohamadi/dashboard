@@ -12,6 +12,7 @@ import TableActions from "../../../components/admin/Tables/TablesActions";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 import {
+  cancelOrder,
   getOrdersWithPaginate,
   shipmentOrder,
 } from "../../../api/AdminApi/ordersApi/_requests";
@@ -129,39 +130,34 @@ const Orders = () => {
     return () => clearTimeout(timer);
   }, [location.state]);
 
-  const handleDelete = async (id: number) => {
+  const handleCancel = async (id: number) => {
     const confirmed = await alertDelete(
       id,
-      deleteAdmin,
+      cancelOrder,
       () => fetchData(pageIndex),
       {
-        confirmTitle: "Delete Role?",
+        confirmTitle: "Cancel Order?",
         confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, delete",
-        successTitle: "Deleted!",
-        successText: "Role has been deleted.",
+        confirmButtonText: "Yes, Cancel",
+        successTitle: "Canceled!",
+        successText: "Order has been Canceled.",
         errorTitle: "Error",
-        errorText: "Could not delete the Role.",
+        errorText: "Could not Cancel The Order.",
       }
     );
     setReload((prev) => prev + 1);
   };
-  const handlecancel = async (id: number) => {
-    console.log("canceled");
-
-    setReload((prev) => prev + 1);
-  };
 
   const handleShip = async (id: number) => {
-    await openShipmentModal(id); // فتح نافذة الشحن
-    setReload((prev) => prev + 1); // تحديث البيانات في الجدول
+    await openShipmentModal(id);
+    setReload((prev) => prev + 1);
   };
 
   const columns = buildColumns<User>({
     includeFullName: true,
     includeCreatedAt: true,
     includeOrderStatus: true,
-    includeShippedStatus: true,
+    includeStatus: true,
     includeTotalPrice: true,
     includePaymentMethod: true,
     includeActions: true,
@@ -197,7 +193,7 @@ const Orders = () => {
             fetchData={fetchData}
             isModalEdit={false}
             isShowMore={true}
-            onCancel={handlecancel}
+            onCancel={handleCancel}
             isCancel={true}
             onShip={handleShip}
             isShipped={true}

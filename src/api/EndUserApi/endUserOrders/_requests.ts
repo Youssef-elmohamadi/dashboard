@@ -13,3 +13,6 @@ export const getOrdersWithPaginate = async (params: {
 export const getOrderById = async (id) => {
   return await axiosJson.get(`/api/user/orders/${id}`);
 };
+export const cancelOrder = async (id) => {
+  return await axiosJson.get(`/api/user/orders/cancel/${id}`);
+};

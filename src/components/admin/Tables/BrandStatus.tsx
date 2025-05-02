@@ -17,7 +17,7 @@ const BrandStatus = ({ status }: Props) => {
             ? "warning"
             : status === "shipped" || status === "paid"
             ? "info"
-            : status === "canceled"
+            : status === "cancelled"
             ? "error"
             : status === "processing"
             ? "primary"

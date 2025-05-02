@@ -9,7 +9,7 @@ interface AddToCartModalProps {
   modalProps: { name: string; images: { image: string }[]; price: string };
 }
 
-const AddToCartModal: React.FC<AddToCartModalProps> = () => {
+const AddToCartModal: React.FC = () => {
   const { modalType, modalProps, closeModal }: any = useModal();
   if (modalType !== "addtocart") return null;
 

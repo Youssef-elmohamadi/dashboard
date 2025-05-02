@@ -119,7 +119,7 @@ const BasicTable = <T extends { id: number }>({
   return (
     <div>
       <div className="max-w-full overflow-x-auto border dark:border-gray-700 m-0.5 rounded">
-        <table {...getTableProps()} className="min-w-full">
+        <table {...getTableProps()} className="min-w-full  overflow-auto">
           <thead className="border-b border-gray-100 dark:border-white/[0.05]">
             {headerGroups.map((headerGroup: any) => (
               <TableHeader key={headerGroup.id} headerGroup={headerGroup} />

@@ -14,7 +14,6 @@ const FilterSidebar = ({
   handlePriceChange,
 }) => {
   const closeMenu = () => setIsMenuOpen(false);
-  const [values, setValues] = useState({ min: 0, max: 10000 });
 
   return (
     <>

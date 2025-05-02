@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Range, getTrackBackground } from "react-range";
-
+import { useSearchParams } from "react-router-dom";
 interface PriceRangeFilterProps {
   setValuesProp: (range: { min: number; max: number }) => void;
 }
@@ -8,11 +8,14 @@ interface PriceRangeFilterProps {
 const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
   setValuesProp,
 }) => {
-  const [values, setValues] = useState<[number, number]>([0, 1000]);
+  const [searchParams] = useSearchParams();
+  const min = Number(searchParams.get("min")) || 0;
+  const max = Number(searchParams.get("max")) || 100000;
+  const [values, setValues] = useState<[number, number]>([min, max]);
 
   const STEP = 1;
   const MIN = 0;
-  const MAX = 10000;
+  const MAX = 100000;
 
   return (
     <div className="w-full mx-auto p-5 bg-white border mt-6">

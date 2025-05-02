@@ -7,6 +7,8 @@ import { TbStarHalfFilled } from "react-icons/tb";
 import { BsFillStarFill } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
 import { useModal } from "../../../pages/UserPages/Context/ModalContext";
+import { useDispatch } from "react-redux";
+import { addItemToWishList } from "../Redux/wishListSlice/WishListSlice";
 const LazyImage = ({ src, alt, className }) => {
   const { ref, inView } = useInView({
     threshold: 0.1,
@@ -38,15 +40,20 @@ const LazyImage = ({ src, alt, className }) => {
 const ProductCard = ({ product }) => {
   const { openModal } = useModal();
 
-  const handleAddToWishlist = () => {
+  const dispatch = useDispatch();
+
+  const handleAddToWishlist = (product) => {
     console.log(`Add to Wishlist: ${product.title}`);
+    dispatch(addItemToWishList(product));
   };
 
   return (
     <div className="w-full border rounded p-3 relative">
       {/* أيقونة الـ Wishlist */}
       <button
-        onClick={handleAddToWishlist}
+        onClick={() => {
+          handleAddToWishlist(product);
+        }}
         className="absolute top-2 left-2 bg-transparent text-gray-300 p-2 rounded-full z-10  hover:text-red-500 transition"
       >
         <FaHeart className="text-xl" />
@@ -59,7 +66,6 @@ const ProductCard = ({ product }) => {
           className="w-full h-full object-cover rounded"
         />
       </div>
-
       <Link
         to={`/product/${product.id}`}
         className="text-base  my-2 px-1 block font-medium line-clamp-2"

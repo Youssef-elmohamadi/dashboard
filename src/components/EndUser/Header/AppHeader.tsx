@@ -17,6 +17,16 @@ import { BsWechat } from "react-icons/bs";
 import { TfiClose, TfiDownload, TfiWallet } from "react-icons/tfi";
 import { LuWallet } from "react-icons/lu";
 import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
+import {
+  MdCompare,
+  MdCompareArrows,
+  MdCompassCalibration,
+  MdFavorite,
+  MdNotificationAdd,
+  MdNotifications,
+  MdOutlineCompare,
+  MdOutlineCompareArrows,
+} from "react-icons/md";
 const AppHeader = () => {
   const uToken = localStorage.getItem("uToken");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -129,8 +139,18 @@ const AppHeader = () => {
                 <Separator />
               </div>
               <div className="flex items-center gap-2">
-                <Link to="/cart">
-                  <FaShoppingCart className="text-2xl text-secondary" />
+                <Link to="/u-notification">
+                  <MdNotifications className="text-2xl text-secondary" />
+                </Link>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link to="/u-favorite">
+                  <MdFavorite className="text-2xl text-secondary" />
+                </Link>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link to="/u-compare">
+                  <MdOutlineCompareArrows className="text-2xl text-secondary" />
                 </Link>
               </div>
             </>

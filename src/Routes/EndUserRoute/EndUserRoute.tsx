@@ -18,6 +18,10 @@ import Shop from "../../pages/UserPages/Shop/Shop";
 import AllProducts from "../../pages/UserPages/Shop/AllProducts";
 import ProductDetails from "../../pages/UserPages/ProductDetails/ProductDetails";
 import OrderDetailsPage from "../../pages/UserPages/UserOrders/OrderDetails";
+import UserProfile from "../../pages/UserPages/UserProfile/UserProfile";
+import UserNotifications from "../../pages/UserPages/UserNotifications/UserNotifications";
+import ProductsCompare from "../../pages/UserPages/ProductsCompare/ProductsCompare";
+import ProductsFavorite from "../../pages/UserPages/ProductsFavorite/ProductsFavorite";
 
 export const EndUserRoutes = (
   <>
@@ -28,12 +32,17 @@ export const EndUserRoutes = (
         <Route path="/cart" element={<Cart />} />
         <Route element={<UserControlLayout />}>
           <Route path="/u-dashboard" element={<UserDashboard />} />
+          <Route path="/u-profile" element={<UserProfile />} />
+
           <Route path="/u-orders" element={<UserOrders />} />
           <Route path="/u-downloads" element={<UserDownloads />} />
           <Route path="/u-conversation" element={<UserConversation />} />
           <Route path="/u-wallet" element={<UserWallet />} />
           <Route path="/u-Support-ticket" element={<UserSupportTicket />} />
           <Route path="u-orders/details/:id" element={<OrderDetailsPage />} />
+          <Route path="u-notification" element={<UserNotifications />} />
+          <Route path="u-compare" element={<ProductsCompare />} />
+          <Route path="u-favorite" element={<ProductsFavorite />} />
         </Route>
         <Route path="/category" element={<CategoriesLayout />}>
           <Route index element={<AllProducts />} />

@@ -27,6 +27,11 @@ import AdminSignUp from "../../pages/AdminPages/AuthPages/AdminSignUp";
 import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import Orders from "../../pages/AdminPages/Orders/Orders";
 import OrderDetails from "../../components/admin/ordersTable/ShowMore";
+import Coupons from "../../pages/AdminPages/Coupons/Coupons";
+import CreateCoupon from "../../components/admin/couponsTable/CreateCoupon";
+import UpdateCoupon from "../../components/admin/couponsTable/UpdateCoupon";
+import ShowMore from "../../components/admin/couponsTable/ShowMore";
+import CouponDetails from "../../components/admin/couponsTable/ShowMore";
 
 export const adminRoutes = (
   <>
@@ -57,6 +62,10 @@ export const adminRoutes = (
       <Route path="products/details/:id" element={<ProductDetails />} />
       <Route path="orders" element={<Orders />} />
       <Route path="orders/details/:id" element={<OrderDetails />} />
+      <Route path="coupons" element={<Coupons />} />
+      <Route path="coupons/create" element={<CreateCoupon />} />
+      <Route path="coupons/update/:id" element={<UpdateCoupon />} />
+      <Route path="coupons/details/:id" element={<CouponDetails />} />
       <Route path="blank" element={<Blank />} />
       <Route path="form-elements" element={<FormElements />} />
       <Route path="basic-tables" element={<BasicTables />} />

@@ -1,19 +1,26 @@
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import BasicTable from "../../../components/EndUser/Table/BasicTable";
+import BasicTable from "../../../components/admin/Tables/BasicTable";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { getAllAdminsPaginate } from "../../../api/usersApi/_requests";
 import { deleteAdmin } from "../../../api/AdminApi/usersApi/_requests";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
-import { buildOrderColumns } from "../../../components/EndUser/Table/_Colmuns"; // مكان الملف
+import { buildColumns } from "../../../components/admin/Tables/_Colmuns"; // مكان الملف
+import TableActions from "../../../components/admin/Tables/TablesActions";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 import {
   cancelOrder,
   getOrdersWithPaginate,
-} from "../../../api/EndUserApi/endUserOrders/_requests";
+  shipmentOrder,
+} from "../../../api/AdminApi/ordersApi/_requests";
 import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
+import {
+  deleteCoupon,
+  getCouponsWithPaginate,
+} from "../../../api/AdminApi/couponsApi/_requests";
 type User = {
   id: number;
   first_name: string;
@@ -28,9 +35,8 @@ type User = {
   roles: { id: number; name: string }[];
 };
 
-const Orders = () => {
+const Coupons = () => {
   const [data, setData] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
@@ -64,7 +70,7 @@ const Orders = () => {
         ),
       };
 
-      const response = await getOrdersWithPaginate(params);
+      const response = await getCouponsWithPaginate(params);
       const responseData = response.data.data;
       console.log(responseData);
 
@@ -103,19 +109,43 @@ const Orders = () => {
     message: string;
   } | null>(null);
 
-  const handleCancel = async (id: number) => {
+  useEffect(() => {
+    if (location.state?.successCreate) {
+      setAlertData({
+        variant: "success",
+        title: "Admin Created Successfully",
+        message: location.state.successCreate,
+      });
+      window.history.replaceState({}, document.title);
+    } else if (location.state?.successEdit) {
+      setAlertData({
+        variant: "success",
+        title: "Admin Updated Successfully",
+        message: location.state.successEdit,
+      });
+      window.history.replaceState({}, document.title);
+    }
+
+    const timer = setTimeout(() => {
+      setAlertData(null);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [location.state]);
+
+  const handleDelete = async (id: number) => {
     const confirmed = await alertDelete(
       id,
-      cancelOrder,
+      deleteCoupon,
       () => fetchData(pageIndex),
       {
-        confirmTitle: "Cancel Order?",
+        confirmTitle: "Delete Coupons?",
         confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, Cancel",
-        successTitle: "Canceled!",
-        successText: "Order has been Canceled.",
+        confirmButtonText: "Yes, delete",
+        successTitle: "Deleted!",
+        successText: "Coupon has been deleted.",
         errorTitle: "Error",
-        errorText: "Could not Cancel The Order.",
+        errorText: "Could not delete the Coupon.",
       }
     );
     setReload((prev) => prev + 1);
@@ -126,12 +156,15 @@ const Orders = () => {
     setReload((prev) => prev + 1);
   };
 
-  const columns = buildOrderColumns<User>({
-    includeOrderStatus: true, // Enable the Order Status column
-    includeActions: true, // Optionally include actions
-    includeCreatedAt: true,
-    includeShippedStatus: true,
-    includeTotalPrice: true,
+  const columns = buildColumns<User>({
+    includeCode: true,
+    includeType: true,
+    includeValue: true,
+    includeLimit: true,
+    includeUsedCount: true,
+    includeExpiresAt: true,
+    includeIsActive: true,
+    includeActions: true,
   });
   return (
     <>
@@ -146,18 +179,36 @@ const Orders = () => {
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
+      <PageBreadcrumb pageTitle="Orders" />
+      <div>
+        <SearchTable
+          fields={[
+            { key: "name", label: "Name", type: "input" },
+            { key: "email", label: "Email", type: "input" },
+            { key: "phone", label: "Phone", type: "input" },
+          ]}
+          setSearchParam={handleSearch}
+        />
+      </div>
       <div className="space-y-6">
-        <ComponentCard title="All Orders">
+        <ComponentCard
+          title="All Coupons"
+          headerAction="Add New coupon"
+          href="/admin/coupons/create"
+        >
           <BasicTable
             columns={columns}
             fetchData={fetchData}
+            isModalEdit={false}
             isShowMore={true}
-            onCancel={handleCancel}
-            isCancel={true}
-            isShipped={true}
+            onDelete={handleDelete}
+            onEdit={(id) => {}}
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
+            searchValueName={searchValues.name}
+            searchValueEmail={searchValues.email}
+            searchValuePhone={searchValues.phone}
             loadingText="Orders data Loading"
           />
         </ComponentCard>
@@ -166,4 +217,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default Coupons;

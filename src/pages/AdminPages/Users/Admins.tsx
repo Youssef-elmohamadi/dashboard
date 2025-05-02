@@ -186,12 +186,7 @@ const Admins = () => {
             columns={columns}
             fetchData={fetchData}
             onDelete={handleDelete}
-            onEdit={(id) => {
-              const admin = data.find((item) => item.id === id);
-              if (admin) {
-                setSelectedUser(admin);
-              }
-            }}
+            onEdit={(id)=>{}}
             isModalEdit={false}
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
