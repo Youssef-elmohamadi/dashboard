@@ -119,7 +119,7 @@ const NavBar = React.memo(() => {
                       <ul className="fixed top-0 left-full w-[400%] h-[calc(100vh-11em)] bg-white z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-y-auto py-8 px-12">
                         <div className="grid grid-cols-4 gap-6">
                           {category.childs.map((sub, subIndex) => (
-                            <Link to={`/category/${category.id}/${sub.id}`}>
+                            <Link to={`/category/${sub.id}`}>
                               <li
                                 key={subIndex}
                                 className="hover:bg-gray-100 p-2 rounded cursor-pointer whitespace-nowrap"
