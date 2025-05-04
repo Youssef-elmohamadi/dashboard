@@ -1,6 +1,6 @@
 import React, { createContext, useState, ReactNode, useEffect } from "react";
-import { showUser } from "../api/AdminApi/profileApi/_requests";
-import { handleLogout } from "../components/admin/auth/Logout";
+import { showUser } from "../../../api/AdminApi/profileApi/_requests";
+import { handleLogout } from "../../admin/auth/Logout";
 
 interface UserContextType {
   userId: number | null;
@@ -16,12 +16,12 @@ interface UserProviderProps {
   children: ReactNode;
 }
 
-export const AdminProvider = ({ children }: UserProviderProps) => {
+export const SuperAdminProvider = ({ children }: UserProviderProps) => {
   useEffect(() => {
-    const storedAdminId = localStorage.getItem("aId");
-    console.log(storedAdminId);
+    const storedSuperAdminId = localStorage.getItem("sId");
+    console.log(storedSuperAdminId);
 
-    if (storedAdminId) {
+    if (storedSuperAdminId) {
       const fetchData = async (id: number) => {
         try {
           const res = await showUser(id);
@@ -35,18 +35,18 @@ export const AdminProvider = ({ children }: UserProviderProps) => {
           console.log(error);
         }
       };
-      fetchData(Number(storedAdminId));
+      fetchData(Number(storedSuperAdminId));
     }
   }, []);
   const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
-    const storedAdminId = localStorage.getItem("aId");
+    const storedSuperAdminId = localStorage.getItem("sId");
 
-    console.log("Stored userId from localStorage:", storedAdminId); // Debugging
+    console.log("Stored userId from localStorage:", storedSuperAdminId);
 
-    if (storedAdminId) {
-      setUserId(Number(storedAdminId));
+    if (storedSuperAdminId) {
+      setUserId(Number(storedSuperAdminId));
     } else {
       console.log("No userId found in localStorage.");
     }

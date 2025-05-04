@@ -3,8 +3,10 @@ import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { showUser } from "../../api/AdminApi/profileApi/_requests";
 import { handleLogout } from "../admin/auth/Logout";
-
-export default function UserDropdown() {
+interface UserDropDownProps {
+  userType: "admin" | "super_admin";
+}
+export default function UserDropdown({ userType }) {
   const [isOpen, setIsOpen] = useState(false);
 
   function toggleDropdown() {
@@ -18,24 +20,37 @@ export default function UserDropdown() {
   const [dataUser, setDataUser] = useState({
     first_name: "",
     last_name: "",
+    email: "",
     roles: [],
     avatar: "",
   });
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem("aId"); // Make sure 'userId' is a string key in localStorage
-    if (storedUserId) {
-      const fetchData = async (id: any) => {
-        try {
+    const storedUserId = localStorage.getItem("aId");
+    if (!storedUserId) return;
+
+    const fetchData = async (id: string) => {
+      try {
+        if (userType === "admin") {
           const res = await showUser(id);
           setDataUser(res.data.data);
-        } catch (error) {
-          console.log("Failed to get data", error);
+        } else {
+          // بيانات ثابتة لـ super_admin
+          setDataUser({
+            first_name: "Mariam",
+            last_name: "Darouch",
+            roles: [],
+            avatar: "",
+            email: "Mariam@SuperAdmin.Tash",
+          });
         }
-      };
-      fetchData(storedUserId); // Make sure it's converted to a number if needed
-    }
-  }, []);
+      } catch (error) {
+        console.log("Failed to get data", error);
+      }
+    };
+
+    fetchData(storedUserId);
+  }, [userType]);
   return (
     <div className="relative">
       <button

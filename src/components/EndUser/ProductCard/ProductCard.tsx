@@ -9,6 +9,7 @@ import { FaHeart } from "react-icons/fa";
 import { useModal } from "../../../pages/UserPages/Context/ModalContext";
 import { useDispatch } from "react-redux";
 import { addItemToWishList } from "../Redux/wishListSlice/WishListSlice";
+import { toast } from "react-toastify";
 const LazyImage = ({ src, alt, className }) => {
   const { ref, inView } = useInView({
     threshold: 0.1,
@@ -43,8 +44,8 @@ const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
 
   const handleAddToWishlist = (product) => {
-    console.log(`Add to Wishlist: ${product.title}`);
     dispatch(addItemToWishList(product));
+    toast.success("The Product has been added to WishList");
   };
 
   return (

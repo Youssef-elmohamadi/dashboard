@@ -5,8 +5,10 @@ import { ThemeToggleButton } from "../../components/common/ThemeToggleButton";
 import NotificationDropdown from "../../components/header/NotificationDropdown";
 import UserDropdown from "../../components/header/UserDropdown";
 import LanguageToggle from "../../components/common/LanguageToggle";
-
-const AppHeader: React.FC = () => {
+interface AppHeaderProps {
+  userType: "admin" | "super_admin";
+}
+const AppHeader: React.FC<AppHeaderProps> = ({ userType }) => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
 
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
@@ -83,18 +85,33 @@ const AppHeader: React.FC = () => {
             {/* Cross Icon */}
           </button>
 
-          <Link to="/admin" className="lg:hidden">
-            <img
-              className="dark:hidden"
-              src="./images/logo/logo.svg"
-              alt="Logo"
-            />
-            <img
-              className="hidden dark:block"
-              src="./images/logo/logo-dark.svg"
-              alt="Logo"
-            />
-          </Link>
+          {userType === "admin" ? (
+            <Link to="/admin" className="lg:hidden">
+              <img
+                className="dark:hidden"
+                src="./images/logo/logo.svg"
+                alt="Logo"
+              />
+              <img
+                className="hidden dark:block"
+                src="./images/logo/logo-dark.svg"
+                alt="Logo"
+              />
+            </Link>
+          ) : (
+            <Link to="/super_admin" className="lg:hidden">
+              <img
+                className="dark:hidden"
+                src="./images/logo/logo.svg"
+                alt="Logo"
+              />
+              <img
+                className="hidden dark:block"
+                src="./images/logo/logo-dark.svg"
+                alt="Logo"
+              />
+            </Link>
+          )}
 
           <button
             onClick={toggleApplicationMenu}

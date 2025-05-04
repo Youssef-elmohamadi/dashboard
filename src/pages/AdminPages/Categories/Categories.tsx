@@ -122,10 +122,7 @@ const Categories = () => {
   //   setReload((prev) => prev + 1);
   // };
   const columns = buildColumns<Category>({
-    includeBrandName: false,
     includeImageAndNameCell: true,
-    includeEmail: false,
-    includeRoles: false,
     includeStatus: true,
     includeUpdatedAt: true,
     includeCreatedAt: true,

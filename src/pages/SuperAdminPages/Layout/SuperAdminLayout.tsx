@@ -11,7 +11,7 @@ const LayoutContent: React.FC = () => {
   return (
     <div className="min-h-screen xl:flex">
       <div>
-        <AppSidebar adminType="superAdmin" />
+        <AppSidebar userType="super_admin" />
         <Backdrop />
       </div>
       <div
@@ -19,7 +19,7 @@ const LayoutContent: React.FC = () => {
           isExpanded || isHovered ? "lg:ms-[290px]" : "lg:ms-[90px]"
         } ${isMobileOpen ? "ms-0" : ""}`}
       >
-        <AppHeader />
+        <AppHeader userType="super_admin" />
         <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
           <Outlet />
         </div>

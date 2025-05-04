@@ -27,7 +27,7 @@ type NavItem = {
   action?: any;
 };
 type DashboardSidebarProps = {
-  adminType: "admin" | "superAdmin";
+  userType: "admin" | "super_admin";
 };
 const AdminNavItems: NavItem[] = [
   {
@@ -79,12 +79,47 @@ const SuperAdminNavItems: NavItem[] = [
   {
     icon: <BoxCubeIcon />,
     name: "Home",
-    path: "/admin",
+    path: "/super_admin",
+  },
+  {
+    icon: <GroupIcon />,
+    name: "Super Admins Management",
+    path: "/super_admin/admins",
+  },
+  {
+    icon: <GroupIcon />,
+    name: "Vendors Management",
+    path: "/super_admin/vendors",
+  },
+  {
+    icon: <BoxCubeIcon />,
+    name: "Categories Management",
+    path: "/super_admin/categories",
+  },
+  {
+    icon: <BoxCubeIcon />,
+    name: "Brands",
+    path: "/super_admin/brands",
+  },
+  {
+    icon: <BoxCubeIcon />,
+    name: "Products",
+    path: "/super_admin/products",
+  },
+  {
+    icon: <UserCircleIcon />,
+    name: "User Profile",
+    path: "/super_admin/profile",
+  },
+  {
+    icon: <PiSignOut />,
+    name: "Logout",
+    action: handleLogout,
   },
 ];
-const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ adminType }) => {
+const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
   const currentNavItems =
-    adminType === "superAdmin" ? SuperAdminNavItems : AdminNavItems;
+    userType === "super_admin" ? SuperAdminNavItems : AdminNavItems;
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
   const { dir } = useDirectionAndLanguage();
@@ -293,33 +328,63 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ adminType }) => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
-        <Link to="/">
-          {isExpanded || isHovered || isMobileOpen ? (
-            <>
+        {userType === "admin" ? (
+          <Link to="/admin">
+            {isExpanded || isHovered || isMobileOpen ? (
+              <>
+                <img
+                  className="dark:hidden"
+                  src="/images/logo/logo.jpg"
+                  alt="Logo"
+                  width={150}
+                  height={40}
+                />
+                <img
+                  className="hidden dark:block"
+                  src="/images/logo/logo-dark.svg"
+                  alt="Logo"
+                  width={150}
+                  height={40}
+                />
+              </>
+            ) : (
               <img
-                className="dark:hidden"
-                src="/images/logo/logo.jpg"
+                src="/images/logo/logo-icon.svg"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={32}
+                height={32}
               />
+            )}
+          </Link>
+        ) : (
+          <Link to="/super_admin">
+            {isExpanded || isHovered || isMobileOpen ? (
+              <>
+                <img
+                  className="dark:hidden"
+                  src="/images/logo/logo.svg"
+                  alt="Logo"
+                  width={150}
+                  height={40}
+                />
+                <img
+                  className="hidden dark:block"
+                  src="/images/logo/logo-dark.svg"
+                  alt="Logo"
+                  width={150}
+                  height={40}
+                />
+              </>
+            ) : (
               <img
-                className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
+                src="/images/logo/logo-icon.svg"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={32}
+                height={32}
               />
-            </>
-          ) : (
-            <img
-              src="/images/logo/logo-icon.svg"
-              alt="Logo"
-              width={32}
-              height={32}
-            />
-          )}
-        </Link>
+            )}
+          </Link>
+        )}
       </div>
       <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
         <nav className="mb-6">
