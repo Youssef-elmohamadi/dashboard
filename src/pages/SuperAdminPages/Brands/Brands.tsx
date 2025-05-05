@@ -13,7 +13,7 @@ import {
   getBrandById,
   getBrandsWithPaginate,
   changeStatus,
-} from "../../../api/SuperAdminApi/brands/_requests";
+} from "../../../api/SuperAdminApi/Brands/_requests";
 import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
 type User = {
