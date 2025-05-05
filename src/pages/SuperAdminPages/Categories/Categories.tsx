@@ -7,7 +7,7 @@ import TableActions from "../../../components/SuperAdmin/Tables/TablesActions";
 import {
   deleteCategory,
   getCategoriesPaginate,
-} from "../../../api/SuperAdminApi/categories/_requests";
+} from "../../../api/SuperAdminApi/Categories/_requests";
 import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTable";
 import { useLocation } from "react-router";
