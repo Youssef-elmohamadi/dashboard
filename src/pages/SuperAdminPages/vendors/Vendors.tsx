@@ -172,6 +172,7 @@ const Vendors = () => {
     includeVendorEmail: true,
     includeVendorName: true,
     includeVendorPhone: true,
+    includeStatus: true,
     includeActions: true,
   });
   return (
