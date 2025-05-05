@@ -14,7 +14,6 @@ import {
   changeStatus,
   getVendorById,
 } from "../../../api/SuperAdminApi/Vendors/_requests";
-import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
 type User = {
   id: number;

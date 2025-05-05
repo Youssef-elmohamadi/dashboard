@@ -20,6 +20,12 @@ export const changeStatus = async (id, data) => {
     data
   );
 };
+export const changeDocumentStatus = async (id, data) => {
+  return await SuperAdminAxiosInstanceJson.post(
+    `/api/superAdmin/vendors/changeDocumentStatus/${id}`,
+    data
+  );
+};
 export const getVendorById = async (id) => {
   return await SuperAdminAxiosInstanceJson.get(`/api/superAdmin/vendors/${id}`);
 };

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getCategoryById } from "../../../api/SuperAdminApi/Categories/_requests";
+import {
+  getAllCategories,
+  getCategoryById,
+} from "../../../api/SuperAdminApi/Categories/_requests";
 
 interface Category {
   id: number;
@@ -20,6 +23,7 @@ interface Category {
 const CategoryDetails: React.FC = () => {
   const { id } = useParams();
   const [category, setCategory] = useState<Category | null>(null);
+  const [categories, setCategories] = useState<Category | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,6 +40,20 @@ const CategoryDetails: React.FC = () => {
 
     if (id) fetchCategory();
   }, [id]);
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const res = await getAllCategories();
+        setCategories(res.data.data.original);
+      } catch (error) {
+        console.error("Error fetching category:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategory();
+  }, []);
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return "N/A";
@@ -98,7 +116,10 @@ const CategoryDetails: React.FC = () => {
           </p>
           <p>
             <strong>Parent ID:</strong>{" "}
-            {category.parent_id ? category.parent_id : "None"}
+            {category.parent_id
+              ? categories?.find((cat) => cat.id === category.parent_id)
+                  ?.name || "Unknown"
+              : "None"}
           </p>
         </div>
       </section>

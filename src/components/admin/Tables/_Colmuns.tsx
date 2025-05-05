@@ -81,7 +81,7 @@ export const buildColumns = <T extends BaseEntity>(
     columns.push({
       Header: "Name",
       id: "full_name",
-      accessor: (row: any) => `${row.first_name} ${row.last_name}`,
+      accessor: (row: any) => `${row?.first_name} ${row?.last_name}`,
     });
   }
   if (options.includeRoleName) {
@@ -94,7 +94,7 @@ export const buildColumns = <T extends BaseEntity>(
     columns.push({
       Header: "Customer",
       accessor: (row: any) =>
-        `${row.order.user.first_name} ${row.order.user.last_name}`,
+        `${row.order?.user?.first_name} ${row.order?.user?.last_name}`,
       id: "customer_name",
     });
   }
@@ -103,7 +103,7 @@ export const buildColumns = <T extends BaseEntity>(
     columns.push({
       Header: "Status",
       id: "status",
-      Cell: ({ row }: any) => <BrandStatus status={row.original.status} />,
+      Cell: ({ row }: any) => <BrandStatus status={row.original?.status} />,
     });
   }
   if (options.includeOrderStatus) {
@@ -111,7 +111,7 @@ export const buildColumns = <T extends BaseEntity>(
       Header: "Order Status",
       id: "order_status",
       Cell: ({ row }: any) => (
-        <BrandStatus status={row.original.order.status} />
+        <BrandStatus status={row.original?.order?.status} />
       ),
     });
   }
@@ -121,7 +121,7 @@ export const buildColumns = <T extends BaseEntity>(
       Header: "Shipping Status",
       id: "shipping_status",
       Cell: ({ row }: any) => (
-        <BrandStatus status={row.original.shipping_status} />
+        <BrandStatus status={row.original?.shipping_status} />
       ),
     });
   }
@@ -152,7 +152,7 @@ export const buildColumns = <T extends BaseEntity>(
       accessor: "roles" as keyof T,
       Cell: ({ cell }: any) => {
         const roles = cell.value as Role[];
-        return roles?.map((role) => role.name).join(", ");
+        return roles?.map((role) => role?.name).join(", ");
       },
     });
   }
@@ -165,7 +165,7 @@ export const buildColumns = <T extends BaseEntity>(
   if (options.includePaymentMethod) {
     columns.push({
       Header: "Payment Method",
-      accessor: (row) => row.order.payment_method,
+      accessor: (row) => row.order?.payment_method,
     });
   }
 
@@ -190,7 +190,7 @@ export const buildColumns = <T extends BaseEntity>(
         Header: "Address",
         id: "full_address",
         accessor: (row: any) =>
-          `${row.order.location?.city}, ${row.order.location?.area}, ${row.order.location?.street}`,
+          `${row.order?.location?.city}, ${row.order?.location?.area}, ${row.order?.location?.street}`,
       });
     }
   }
@@ -258,7 +258,7 @@ export const buildColumns = <T extends BaseEntity>(
       id: "actions",
       Cell: ({ row }: any) =>
         options.customActionsRenderer
-          ? options.customActionsRenderer(row.original)
+          ? options.customActionsRenderer(row?.original)
           : null,
     });
   }

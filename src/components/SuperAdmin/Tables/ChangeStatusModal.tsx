@@ -24,7 +24,7 @@ export const openChangeStatusModal = async ({
       title: "Change Status",
       input: "select",
       inputOptions: options,
-      inputValue: matchedKey, // ← ده المفتاح اللي بيعمل pre-fill
+      inputValue: matchedKey, 
       inputPlaceholder: "Select a status",
       showCancelButton: true,
       inputValidator: (value) =>
@@ -47,7 +47,7 @@ export const openChangeStatusModal = async ({
     console.error(error);
     Swal.fire(
       "Something went wrong",
-      error.response.data.message || "",
+      error.response?.data?.message || "",
       "error"
     );
   }
