@@ -5,7 +5,7 @@ import Checkbox from "../../form/input/Checkbox";
 import {
   createRole,
   getAllPermissions,
-} from "../../../api/AdminApi/rolesApi/_requests";
+} from "../../../api/SuperAdminApi/Roles/_requests";
 import Loading from "../../common/Loading";
 import { useNavigate } from "react-router-dom";
 
@@ -22,10 +22,6 @@ export default function CreateRole() {
     permissions: [] as number[],
   });
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
-  const [errors, setErrors] = useState({
-    name: [] as string[],
-    permissions: [] as string[],
-  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
@@ -91,37 +87,12 @@ export default function CreateRole() {
     try {
       const response = await createRole(roleData);
       if (response?.status === 200 || response?.status === 201) {
-        navigate("/admin/roles", {
+        navigate("/super_admin/roles", {
           state: { successCreate: "Role Created Successfully" },
         });
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error creating role:", error);
-
-      const status = error?.response?.status;
-
-      if (status === 403 || status === 401) {
-        setFormErrors({
-          ...formErrors,
-          global: "You don't have permission to perform this action.",
-        });
-        return;
-      }
-
-      const rawErrors = error?.response?.data.errors;
-
-      if (Array.isArray(rawErrors)) {
-        const formattedErrors: Record<string, string[]> = {};
-
-        rawErrors.forEach((err: { code: string; message: string }) => {
-          if (!formattedErrors[err.code]) {
-            formattedErrors[err.code] = [];
-          }
-          formattedErrors[err.code].push(err.message);
-        });
-
-        setErrors(formattedErrors);
-      }
     } finally {
       setIsSubmitting(false);
     }
@@ -149,9 +120,6 @@ export default function CreateRole() {
             {formErrors.name && (
               <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
             )}
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
-            )}
           </div>
 
           {loading ? (
@@ -164,9 +132,9 @@ export default function CreateRole() {
               <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
                 {permissions.map((permission) => (
                   <Checkbox
-                    key={permission.id}
-                    label={permission.name}
-                    checked={roleData.permissions.includes(permission.id)}
+                    key={permission?.id}
+                    label={permission?.name}
+                    checked={roleData.permissions?.includes(permission.id)}
                     onChange={() => handleCheckbox(permission.id)}
                   />
                 ))}
@@ -176,18 +144,10 @@ export default function CreateRole() {
                   {formErrors.permissions}
                 </p>
               )}
-              {errors.permissions && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.permissions[0]}
-                </p>
-              )}
             </div>
           )}
         </div>
 
-        {formErrors.global && (
-          <p className="text-red-500 text-sm mt-4">{formErrors.global}</p>
-        )}
         <button
           type="submit"
           disabled={isSubmitting}

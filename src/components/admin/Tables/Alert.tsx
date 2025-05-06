@@ -45,9 +45,27 @@ export const alertDelete = async (
       const updated = await refetchFn();
       Swal.fire({ title: successTitle, text: successText, icon: "success" });
       return updated;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting item:", error);
-      Swal.fire({ title: errorTitle, text: errorText, icon: "error" });
+      const status = error?.response?.status;
+      let globalError = "";
+
+      if (status === 401 || status === 403) {
+        globalError = "You don't have permission to delete.";
+      } else if (status === 422) {
+        // جلب أول رسالة خطأ من الرسائل لو كانت موجودة
+        const validationErrors = error?.response?.data?.errors;
+        globalError =
+          validationErrors && typeof validationErrors === "object"
+            ? Object.values(validationErrors)[0][0]
+            : "Invalid input.";
+      } else if (status === 500) {
+        globalError = "Something went wrong on the server.";
+      } else {
+        globalError = errorText;
+      }
+
+      Swal.fire({ title: errorTitle, text: globalError, icon: "error" });
     }
   }
 };

@@ -8,10 +8,21 @@ import FileInput from "../../form/input/FileInput";
 import { createProduct } from "../../../api/AdminApi/products/_requests";
 import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
 import TextArea from "../../form/input/TextArea";
+import { FiDelete } from "react-icons/fi";
 
-// Types
-
-// (ProductFormData, Attribute, Category, Brand types unchanged)
+type Attribute = { label: string; value: string };
+type Category = { id: string; name: string };
+type Brand = { id: string; name: string };
+type ProductFormData = {
+  name: string;
+  description: string;
+  price: string;
+  stock_quantity: string;
+  category_id: string;
+  brand_id: string;
+  status: string;
+  is_featured: boolean;
+};
 
 export default function CreateProducts() {
   const [loading, setLoading] = useState(false);
@@ -97,6 +108,18 @@ export default function CreateProducts() {
     setTags(updated);
   };
 
+  const removeAttribute = (index: number) => {
+    const updated = [...attributes];
+    updated.splice(index, 1);
+    setAttributes(updated);
+  };
+
+  const removeTag = (index: number) => {
+    const updated = [...tags];
+    updated.splice(index, 1);
+    setTags(updated);
+  };
+
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!productData.name) newErrors.name = "Name is required";
@@ -160,6 +183,7 @@ export default function CreateProducts() {
             <Input
               name="name"
               value={productData.name}
+              placeholder="Enter product name"
               onChange={handleChange}
             />
             {errors.name && (
@@ -171,6 +195,7 @@ export default function CreateProducts() {
             <Input
               type="text"
               name="price"
+              placeholder="Enter price"
               value={productData.price}
               onChange={handleChange}
             />
@@ -183,6 +208,7 @@ export default function CreateProducts() {
             <Input
               type="text"
               name="stock_quantity"
+              placeholder="Enter quantity in stock"
               value={productData.stock_quantity}
               onChange={handleChange}
             />
@@ -272,6 +298,7 @@ export default function CreateProducts() {
           <Label htmlFor="description">Description</Label>
           <TextArea
             name="description"
+            placeholder="Enter product description"
             value={productData.description}
             onChange={(value) =>
               setProductData((prev) => ({ ...prev, description: value }))
@@ -285,7 +312,14 @@ export default function CreateProducts() {
         <div>
           <Label>Attributes</Label>
           {attributes.map((attr, index) => (
-            <div key={index} className="flex gap-2 mb-2">
+            <div key={index} className="flex gap-2 mb-2 items-center">
+              <button
+                type="button"
+                onClick={() => removeAttribute(index)}
+                className="text-red-600 text-xl"
+              >
+                <FiDelete className="text-red-600 text-xl" />
+              </button>
               <Input
                 placeholder="Label"
                 value={attr.label}
@@ -318,7 +352,14 @@ export default function CreateProducts() {
             <div>
               <Label>Tags</Label>
               {tags.map((tag, index) => (
-                <div key={index} className="mb-2">
+                <div key={index} className="mb-2 flex gap-2 items-center">
+                  <button
+                    type="button"
+                    onClick={() => removeTag(index)}
+                    className="text-red-600 text-xl"
+                  >
+                    <FiDelete className="text-red-600 text-xl" />
+                  </button>
                   <Input
                     placeholder="Tag"
                     value={tag}

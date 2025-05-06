@@ -12,6 +12,12 @@ import Brands from "../../pages/SuperAdminPages/Brands/Brands";
 import BrandDetails from "../../components/SuperAdmin/Brands/ShowMore";
 import Products from "../../pages/SuperAdminPages/Products/Products";
 import ProductDetails from "../../components/SuperAdmin/Products/ShowMore";
+import Admins from "../../pages/SuperAdminPages/Users/Admis";
+import CreateAdmin from "../../components/SuperAdmin/AdminsTable/CreateAdmin";
+import UpdateAdmin from "../../components/SuperAdmin/AdminsTable/UpdateAdmin";
+import Roles from "../../pages/SuperAdminPages/Users/Roles";
+import CreateRole from "../../components/SuperAdmin/RolesTable/CreateRole";
+import UpdateRole from "../../components/SuperAdmin/RolesTable/UpdateRole";
 export const SuperAdminRoutes = (
   <>
     <Route
@@ -24,6 +30,12 @@ export const SuperAdminRoutes = (
     >
       <Route path="vendors" element={<Vendors />} />
       <Route path="vendors/details/:id" element={<VendorDetails />} />
+      <Route path="admins" element={<Admins />} />
+      <Route path="admins/create" element={<CreateAdmin />} />
+      <Route path="admins/update/:id" element={<UpdateAdmin />} />
+      <Route path="roles" element={<Roles />} />
+      <Route path="roles/create" element={<CreateRole />} />
+      <Route path="roles/update/:id" element={<UpdateRole />} />
       <Route path="categories" element={<Categories />} />
       <Route path="categories/update/:id" element={<UpdateCategory />} />
       <Route path="categories/details/:id" element={<CategoryDetails />} />

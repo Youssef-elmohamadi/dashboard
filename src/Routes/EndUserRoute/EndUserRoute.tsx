@@ -22,6 +22,7 @@ import UserProfile from "../../pages/UserPages/UserProfile/UserProfile";
 import UserNotifications from "../../pages/UserPages/UserNotifications/UserNotifications";
 import ProductsCompare from "../../pages/UserPages/ProductsCompare/ProductsCompare";
 import ProductsFavorite from "../../pages/UserPages/ProductsFavorite/ProductsFavorite";
+import { useEffect } from "react";
 
 export const EndUserRoutes = (
   <>

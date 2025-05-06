@@ -24,10 +24,10 @@ export const deleteCategory = async (id: number) => {
   return await axiosJson.delete(`/api/superAdmin/categories/${id}`);
 };
 
-export const createCategory = async (productData: any) => {
-  return await axiosForm.post(`/api/superAdmin/categories`, productData);
+export const createCategory = async (categoryData: any) => {
+  return await axiosForm.post(`/api/superAdmin/categories`, categoryData);
 };
 
-export const updateCategory = async (productData: any, id: number) => {
-  return await axiosForm.post(`/api/superAdmin/categories/${id}`, productData);
+export const updateCategory = async (categoryData: any, id: number) => {
+  return await axiosForm.post(`/api/superAdmin/categories/${id}`, categoryData);
 };

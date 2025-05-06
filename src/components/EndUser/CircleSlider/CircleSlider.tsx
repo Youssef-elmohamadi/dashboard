@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "./customSwiper.css";
+import { Link } from "react-router-dom";
 interface CategoryItem {
   image: string;
   name: string;
@@ -36,7 +37,7 @@ const CircleSlider: FC<CategorySliderProps> = ({ items, rtl = false }) => {
               className="w-40 h-40 rounded-full object-cover"
             />
             <span className="text-center text-xl font-medium text-purple-600">
-              {item.name}
+              <Link to={`category/${item.id}`}>{item.name}</Link>
             </span>
           </a>
         </SwiperSlide>

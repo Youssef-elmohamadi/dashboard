@@ -88,7 +88,7 @@ export default function CreateCategory() {
     try {
       setLoading(true);
       await createCategory(formData);
-      navigate("/admin/categories", {
+      navigate("/super_admin/categories", {
         state: { successCreate: "Category Created Successfully" },
       });
     } catch (error: any) {

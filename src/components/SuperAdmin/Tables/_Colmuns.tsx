@@ -9,6 +9,10 @@ type BaseEntity = {
 
 type Role = { name: string };
 interface ColumnBuilderOptions<T extends BaseEntity> {
+  includeName?: boolean;
+  includeEmail?: boolean;
+  includeRoles?: boolean;
+  includeRoleName?: boolean;
   includeVendorName?: boolean;
   includeVendorEmail?: boolean;
   includeVendorPhone?: boolean;
@@ -42,13 +46,20 @@ export const buildColumns = <T extends BaseEntity>(
     });
   }
 
-  // if (options.includeName) {
-  //   columns.push({
-  //     Header: "Name",
-  //     id: "full_name",
-  //     accessor: (row: any) => `${row.first_name} ${row.last_name}`,
-  //   });
-  // }
+  if (options.includeRoleName) {
+    columns.push({
+      Header: "Name",
+      accessor: "name",
+    });
+  }
+
+  if (options.includeName) {
+    columns.push({
+      Header: "Name",
+      id: "full_name",
+      accessor: (row: any) => `${row.first_name} ${row.last_name}`,
+    });
+  }
   if (options.includeVendorName) {
     columns.push({
       Header: "Name",

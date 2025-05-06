@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import ComponentCard from "../../../components/common/ComponentCard";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";
@@ -7,7 +6,7 @@ import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import {
   getAllRoles,
   createAdmin,
-} from "../../../api/AdminApi/usersApi/_requests";
+} from "../../../api/SuperAdminApi/Admins/_requests";
 import { FiUserPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
@@ -56,7 +55,7 @@ export default function CreateAdmin() {
     } else if (!adminData.email) {
       newErrors.email = "The Email Required";
     } else if (
-      !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(adminData.email)
+      /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(newErrors.email)
     ) {
       newErrors.email = "InValid Email";
     } else if (!adminData.phone) {
@@ -93,7 +92,7 @@ export default function CreateAdmin() {
     const fetchData = async () => {
       try {
         const response = await getAllRoles();
-        setOptions(response.data.data);
+        setOptions(response?.data?.data);
       } catch (error) {
         console.error("Error fetching roles:", error);
       }
@@ -106,19 +105,11 @@ export default function CreateAdmin() {
 
     try {
       await createAdmin(adminData);
-      navigate("/admin/admins", {
+      navigate("/super_admin/admins", {
         state: { successCreate: "Admin Created Successfully" },
       });
     } catch (error: any) {
       console.error("Error creating admin:", error);
-      const status = error?.response?.status;
-      if (status === 403 || status === 401) {
-        setErrors({
-          ...errors,
-          global: "You don't have permission to perform this action.",
-        });
-        return;
-      }
       const rawErrors = error?.response?.data.errors;
 
       if (Array.isArray(rawErrors)) {
@@ -191,11 +182,11 @@ export default function CreateAdmin() {
         <div className="w-full">
           <Label>Select Role</Label>
           <Select
-            options={options.map((role) => ({
-              value: role.name,
-              label: role.name,
+            options={options?.map((role) => ({
+              value: role?.name,
+              label: role?.name,
             }))}
-            defaultValue={adminData.role}
+            defaultValue={adminData?.role}
             onChange={handleSelectChange}
             placeholder="Select a Role"
             className="dark:bg-dark-900"
@@ -273,9 +264,6 @@ export default function CreateAdmin() {
             </button>
           </div>
         </div>
-        {errors.global && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
-        )}
         <button
           type="submit"
           disabled={loading}

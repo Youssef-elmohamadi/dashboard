@@ -1,15 +1,25 @@
-import { Outlet, Link } from "react-router-dom";
-import {
-  TiDocumentText,
-  TiDownload,
-  TiInfoLargeOutline,
-  TiSupport,
-} from "react-icons/ti";
-import { GrLogout } from "react-icons/gr";
-import { BsWechat } from "react-icons/bs";
-import { TfiDownload, TfiWallet } from "react-icons/tfi";
-import { AiOutlineHome } from "react-icons/ai";
+import { Outlet, Link, NavLink } from "react-router-dom";
+import { TiDocumentText, TiInfoLargeOutline, TiSupport } from "react-icons/ti";
+import { getProfile } from "../../../api/EndUserApi/endUserAuth/_requests";
+import { useEffect, useState } from "react";
+import { handleLogout } from "../../../components/EndUser/Auth/Logout";
+import { handleDeleteAccount } from "../../../components/EndUser/Auth/DeleteAccount";
+import { RiProfileFill } from "react-icons/ri";
+import { MdCompareArrows, MdDelete, MdFavorite } from "react-icons/md";
+import { BiLogOut } from "react-icons/bi";
 export default function UserControlLayout() {
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+        setUser(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchProfile();
+  }, []);
   return (
     <div className="flex flex-row min-h-screen">
       <aside className="w-64 bg-white p-4 border-r shadow hidden lg:block ">
@@ -17,13 +27,15 @@ export default function UserControlLayout() {
           <div className="text-center flex flex-col items-center">
             <div className="w-20 h-20 rounded-full  ">
               <img
-                src="/images/cards/card-01.jpg"
+                src={user?.avatar || "/images/default-avatar.jpg"}
                 className="w-full h-full rounded-full"
                 alt="User Avatar"
               />
             </div>
-            <div className="font-semibold">Youssef</div>
-            <div className="text-sm text-gray-500">youssef@yahoo.com</div>
+            <div className="font-semibold">
+              {user?.first_name} {user?.last_name}
+            </div>
+            <div className="text-sm text-gray-500">{user?.email}</div>
           </div>
           <nav className="space-y-2 mt-6">
             {/* <Link
@@ -33,20 +45,32 @@ export default function UserControlLayout() {
               <AiOutlineHome className="text-lg text-gray-500" />
               Dashboard
             </Link> */}
-            <Link
+            <NavLink
               to="/u-profile"
-              className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
+              className={({ isActive }) =>
+                `p-2 rounded flex items-center gap-2 ${
+                  isActive
+                    ? "bg-gray-100 text-purple-700 font-semibold"
+                    : "hover:bg-gray-100"
+                }`
+              }
             >
-              <TiSupport className="text-lg text-gray-500" />
+              <RiProfileFill className="text-lg text-gray-500" />
               Profile Management
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/u-orders"
-              className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
+              className={({ isActive }) =>
+                `p-2 rounded flex items-center gap-2 ${
+                  isActive
+                    ? "bg-gray-100 text-purple-700 font-semibold"
+                    : "hover:bg-gray-100"
+                }`
+              }
             >
               <TiDocumentText className="text-lg text-gray-500" />
               Orders History
-            </Link>
+            </NavLink>
             {/* <Link
               to="/u-downloads"
               className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
@@ -76,26 +100,44 @@ export default function UserControlLayout() {
               Support Ticket
             </Link> */}
 
-            <Link
+            <NavLink
               to="/u-compare"
-              className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
+              className={({ isActive }) =>
+                `p-2 rounded flex items-center gap-2 ${
+                  isActive
+                    ? "bg-gray-100 text-purple-700 font-semibold"
+                    : "hover:bg-gray-100"
+                }`
+              }
             >
-              <TiSupport className="text-lg text-gray-500" />
+              <MdCompareArrows className="text-lg text-gray-500" />
               Compare Product
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/u-favorite"
-              className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
+              className={({ isActive }) =>
+                `p-2 rounded flex items-center gap-2 ${
+                  isActive
+                    ? "bg-gray-100 text-purple-700 font-semibold"
+                    : "hover:bg-gray-100"
+                }`
+              }
             >
-              <TiSupport className="text-lg text-gray-500" />
+              <MdFavorite className="text-lg text-gray-500" />
               Favorite Products
-            </Link>
-            <button className="p-2 w-full rounded hover:bg-gray-100 flex items-center gap-2">
-              <TiInfoLargeOutline className="text-lg text-error-500" />
+            </NavLink>
+            <button
+              onClick={handleDeleteAccount}
+              className="p-2 w-full rounded hover:bg-gray-100 flex items-center gap-2"
+            >
+              <MdDelete className="text-lg text-error-500" />
               Delete Account
             </button>
-            <button className="p-2 w-full rounded hover:bg-gray-100 flex items-center gap-2">
-              <TiInfoLargeOutline className="text-lg text-error-500" />
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-100 cursor-pointer w-full"
+            >
+              <BiLogOut className="text-lg text-error-500" />
               Logout
             </button>
           </nav>

@@ -33,6 +33,7 @@ const Admins = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [reload, setReload] = useState(0);
   const location = useLocation();
+  const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     name: string;
     email: string;
@@ -79,7 +80,13 @@ const Admins = () => {
         perPage,
       };
     } catch (error) {
-      console.error("Error fetching admins:", error);
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        setUnauthorized(true);
+        setData([]); 
+      } else {
+        console.error("Fetching error:", error);
+      }
+
       return {
         data: [],
         last_page: 0,
@@ -129,13 +136,13 @@ const Admins = () => {
       deleteAdmin,
       () => fetchData(pageIndex),
       {
-        confirmTitle: "Delete Role?",
+        confirmTitle: "Delete Admin?",
         confirmText: "This action cannot be undone!",
         confirmButtonText: "Yes, delete",
         successTitle: "Deleted!",
-        successText: "Role has been deleted.",
+        successText: "Admin has been deleted.",
         errorTitle: "Error",
-        errorText: "Could not delete the Role.",
+        errorText: "Could not delete the Admin.",
       }
     );
     setReload((prev) => prev + 1);
@@ -186,10 +193,12 @@ const Admins = () => {
             columns={columns}
             fetchData={fetchData}
             onDelete={handleDelete}
-            onEdit={(id)=>{}}
+            onEdit={(id) => {}}
             isModalEdit={false}
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
+            unauthorized={unauthorized}
+            setUnauthorized={setUnauthorized}
             onDataUpdate={(newData) => setData(newData)}
             searchValueName={searchValues.name}
             searchValueEmail={searchValues.email}

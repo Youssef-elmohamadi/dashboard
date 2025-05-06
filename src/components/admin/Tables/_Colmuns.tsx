@@ -10,12 +10,12 @@ type BaseEntity = {
 type Role = { name: string };
 interface ColumnBuilderOptions<T extends BaseEntity> {
   includeName?: boolean;
+  includeEmail?: boolean;
+  includeRoles?: boolean;
   includeBrandName?: boolean;
   includeImageAndNameCell?: boolean;
   includeImagesAndNameCell?: boolean;
   includeStatus?: boolean;
-  includeEmail?: boolean;
-  includeRoles?: boolean;
   includeCreatedAt?: boolean;
   includeUpdatedAt?: boolean;
   includeActions?: boolean;

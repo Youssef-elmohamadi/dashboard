@@ -6,11 +6,11 @@ import { SuperAdminRoutes } from "./SuperAdminRoute/SuperAdminRoutes";
 
 export default function AppRoutes() {
   return (
-      <Routes>
-        {adminRoutes}
-        {EndUserRoutes}
-        {SuperAdminRoutes}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+    <Routes>
+      {adminRoutes}
+      {EndUserRoutes}
+      {SuperAdminRoutes}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }

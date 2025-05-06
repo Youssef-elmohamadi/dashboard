@@ -15,7 +15,7 @@ export default function CreateCoupon() {
     max_discount: "",
     min_order_amount: "",
     usage_limit: "",
-    used_count: "",
+    //used_count: "",
     active: "1",
     start_at: "",
     expires_at: "",
@@ -45,6 +45,7 @@ export default function CreateCoupon() {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
+
     if (!couponData.code) newErrors.code = "Code is required";
     if (!couponData.value) newErrors.value = "Value is required";
     if (!couponData.min_order_amount)
@@ -53,6 +54,16 @@ export default function CreateCoupon() {
       newErrors.usage_limit = "Usage limit is required";
     if (!couponData.start_at) newErrors.start_at = "Start date is required";
     if (!couponData.expires_at) newErrors.expires_at = "End date is required";
+
+    // ✅ التحقق من أن نهاية الكوبون بعد بدايته
+    if (
+      couponData.start_at &&
+      couponData.expires_at &&
+      new Date(couponData.expires_at) <= new Date(couponData.start_at)
+    ) {
+      newErrors.expires_at = "End date must be after start date";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -66,8 +77,12 @@ export default function CreateCoupon() {
       navigate("/admin/coupons", {
         state: { successCreate: "Coupon Created Successfully" },
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to create coupon", error);
+
+      if (error.response?.data?.errors) {
+        setErrors(error.response.data.errors);
+      }
     }
   };
 
@@ -156,7 +171,7 @@ export default function CreateCoupon() {
               <p className="text-red-500 text-sm">{errors.usage_limit}</p>
             )}
           </div>
-
+          {/* 
           <div>
             <Label>Used Count</Label>
             <Input
@@ -165,7 +180,7 @@ export default function CreateCoupon() {
               placeholder="Enter used count"
               onChange={handleChange}
             />
-          </div>
+          </div> */}
 
           <div>
             <Label>Status</Label>

@@ -3,16 +3,15 @@ import { useLocation } from "react-router-dom";
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import { alertDelete } from "../../../components/admin/Tables/Alert";
+import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
 import {
   deleteRole,
   getAllRolesPaginate,
-} from "../../../api/AdminApi/rolesApi/_requests";
-import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
-import TableActions from "../../../components/admin/Tables/TablesActions";
-import BasicTable from "../../../components/admin/Tables/BasicTable";
+} from "../../../api/SuperAdminApi/Roles/_requests";
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
+import BasicTable from "../../../components/SuperAdmin/Tables/BasicTable";
 import Alert from "../../../components/ui/alert/Alert";
-import SearchTable from "../../../components/admin/Tables/SearchTable";
+import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 
 type Role = {};
 
@@ -99,7 +98,6 @@ const Roles = () => {
       } else {
         console.error("Fetching error:", error);
       }
-      console.error("Error fetching Roles:", error);
       return {
         data: [],
         last_page: 0,
@@ -137,7 +135,7 @@ const Roles = () => {
     includeEmail: false,
     includeRoles: false,
     includeUpdatedAt: true,
-    includeCreatedAt: true,
+    includeDateOfCreation: true,
     includeActions: true,
     onDelete: (id) => console.log("delete", id),
   });
@@ -166,14 +164,12 @@ const Roles = () => {
         <ComponentCard
           title="All Roles"
           headerAction="Add New Role"
-          href="/admin/roles/create"
+          href="/super_admin/roles/create"
         >
           <BasicTable
             columns={columns}
             fetchData={fetchData}
             onDelete={handleDelete}
-            unauthorized={unauthorized}
-            setUnauthorized={setUnauthorized}
             onEdit={(id) => {
               const role = data.find((item) => item.id === id);
               if (role) {
@@ -181,6 +177,8 @@ const Roles = () => {
                 setIsModalOpenEdit(true);
               }
             }}
+            unauthorized={unauthorized}
+            setUnauthorized={setUnauthorized}
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}

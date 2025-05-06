@@ -14,7 +14,6 @@ import {
   changeStatus,
   getProductById,
 } from "../../../api/SuperAdminApi/Products/_requests";
-import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
 type User = {
   id: number;
@@ -38,6 +37,7 @@ const Products = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [reload, setReload] = useState(0);
   const location = useLocation();
+  const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     name: string;
     email: string;
@@ -85,7 +85,12 @@ const Products = () => {
         perPage,
       };
     } catch (error) {
-      console.error("Error fetching admins:", error);
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        setUnauthorized(true);
+        setData([]);
+      } else {
+        console.error("Fetching error:", error);
+      }
       return {
         data: [],
         last_page: 0,
@@ -207,6 +212,8 @@ const Products = () => {
             isShowMore={true}
             onChangeStatus={handleChangeStatus}
             isChangeStatus={true}
+            unauthorized={unauthorized}
+            setUnauthorized={setUnauthorized}
             onDataUpdate={(newData) => setData(newData)}
             searchValueName={searchValues.name}
             searchValueEmail={searchValues.email}

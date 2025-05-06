@@ -18,5 +18,8 @@ const register = async (formData: {}) => {
 const logout = async () => {
   return await axiosJson.post("/api/user/logout");
 };
+const deleteAccount = async () => {
+  return await axiosJson.post("/api/user/profile/delete");
+};
 
-export { login, register, logout, getProfile, updateProfile };
+export { login, register, logout, getProfile, updateProfile, deleteAccount };

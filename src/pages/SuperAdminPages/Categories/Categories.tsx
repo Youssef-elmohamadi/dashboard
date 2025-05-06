@@ -21,6 +21,7 @@ const Categories = () => {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
+  const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     category_id: string;
     brand_id: string;
@@ -124,7 +125,12 @@ const Categories = () => {
         perPage,
       };
     } catch (error) {
-      console.error("Error fetching Roles:", error);
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        setUnauthorized(true);
+        setData([]); 
+      } else {
+        console.error("Fetching error:", error);
+      };
       return {
         data: [],
         last_page: 0,
@@ -205,6 +211,8 @@ const Categories = () => {
             }}
             isShowMore={true}
             isModalEdit={false}
+            unauthorized={unauthorized}
+            setUnauthorized={setUnauthorized}
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}

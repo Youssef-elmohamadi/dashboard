@@ -1,22 +1,15 @@
+import { useEffect, useState } from "react";
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import BasicTable from "../../../components/admin/Tables/BasicTable";
-import { useEffect, useState } from "react";
+import BasicTable from "../../../components/SuperAdmin/Tables/BasicTable";
 import { useLocation } from "react-router-dom";
-import { getAllAdminsPaginate } from "../../../api/usersApi/_requests";
-import { deleteAdmin } from "../../../api/AdminApi/usersApi/_requests";
-import { alertDelete } from "../../../components/admin/Tables/Alert";
-import { buildColumns } from "../../../components/admin/Tables/_Colmuns"; // مكان الملف
-import TableActions from "../../../components/admin/Tables/TablesActions";
+import { getAllAdminsPaginate } from "../../../api/SuperAdminApi/Admins/_requests";
+import { deleteAdmin } from "../../../api/SuperAdminApi/Admins/_requests";
+import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
 import Alert from "../../../components/ui/alert/Alert";
-import SearchTable from "../../../components/admin/Tables/SearchTable";
-import {
-  cancelOrder,
-  getOrdersWithPaginate,
-  shipmentOrder,
-} from "../../../api/AdminApi/ordersApi/_requests";
-import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
+import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 type User = {
   id: number;
   first_name: string;
@@ -31,7 +24,7 @@ type User = {
   roles: { id: number; name: string }[];
 };
 
-const Orders = () => {
+const Admins = () => {
   const [data, setData] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
@@ -68,9 +61,8 @@ const Orders = () => {
         ),
       };
 
-      const response = await getOrdersWithPaginate(params);
+      const response = await getAllAdminsPaginate(params);
       const responseData = response.data.data;
-      console.log(responseData);
 
       const fetchedData = Array.isArray(responseData.data)
         ? responseData.data
@@ -136,37 +128,31 @@ const Orders = () => {
     return () => clearTimeout(timer);
   }, [location.state]);
 
-  const handleCancel = async (id: number) => {
+  const handleDelete = async (id: number) => {
     const confirmed = await alertDelete(
       id,
-      cancelOrder,
+      deleteAdmin,
       () => fetchData(pageIndex),
       {
-        confirmTitle: "Cancel Order?",
+        confirmTitle: "Delete Admin?",
         confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, Cancel",
-        successTitle: "Canceled!",
-        successText: "Order has been Canceled.",
+        confirmButtonText: "Yes, delete",
+        successTitle: "Deleted!",
+        successText: "Admin has been deleted.",
         errorTitle: "Error",
-        errorText: "Could not Cancel The Order.",
+        errorText: "Could not delete the Admin.",
       }
     );
     setReload((prev) => prev + 1);
   };
 
-  const handleShip = async (id: number) => {
-    await openShipmentModal(id);
-    setReload((prev) => prev + 1);
-  };
-
   const columns = buildColumns<User>({
-    includeFullName: true,
-    includeCreatedAt: true,
-    includeOrderStatus: true,
-    includeStatus: true,
-    includeTotalPrice: true,
-    includePaymentMethod: true,
+    includeName: true,
+    includeVendorEmail: true,
+    includeRoles: true,
+    includeDateOfCreation: true,
     includeActions: true,
+    onDelete: (id) => console.log("delete", id),
   });
   return (
     <>
@@ -181,7 +167,7 @@ const Orders = () => {
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <PageBreadcrumb pageTitle="Orders" />
+      <PageBreadcrumb pageTitle="Admins" />
       <div>
         <SearchTable
           fields={[
@@ -193,16 +179,17 @@ const Orders = () => {
         />
       </div>
       <div className="space-y-6">
-        <ComponentCard title="All Orders">
+        <ComponentCard
+          title="All Admins"
+          headerAction="Add New Admin"
+          href="/super_admin/admins/create"
+        >
           <BasicTable
             columns={columns}
             fetchData={fetchData}
+            onDelete={handleDelete}
+            onEdit={(id) => {}}
             isModalEdit={false}
-            isShowMore={true}
-            onCancel={handleCancel}
-            isCancel={true}
-            onShip={handleShip}
-            isShipped={true}
             unauthorized={unauthorized}
             setUnauthorized={setUnauthorized}
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
@@ -211,7 +198,7 @@ const Orders = () => {
             searchValueName={searchValues.name}
             searchValueEmail={searchValues.email}
             searchValuePhone={searchValues.phone}
-            loadingText="Orders data Loading"
+            loadingText="Admins data Loading"
           />
         </ComponentCard>
       </div>
@@ -219,4 +206,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default Admins;

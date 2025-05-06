@@ -38,6 +38,7 @@ const Brands = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [reload, setReload] = useState(0);
   const location = useLocation();
+  const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     name: string;
     email: string;
@@ -85,7 +86,12 @@ const Brands = () => {
         perPage,
       };
     } catch (error) {
-      console.error("Error fetching admins:", error);
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        setUnauthorized(true);
+        setData([]);
+      } else {
+        console.error("Fetching error:", error);
+      }
       return {
         data: [],
         last_page: 0,
@@ -209,6 +215,8 @@ const Brands = () => {
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
             isShowMore={true}
+            unauthorized={unauthorized}
+            setUnauthorized={setUnauthorized}
             onDataUpdate={(newData) => setData(newData)}
             onChangeStatus={handleChangeStatus}
             isChangeStatus={true}

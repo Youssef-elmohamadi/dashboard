@@ -83,8 +83,11 @@ const SuperAdminNavItems: NavItem[] = [
   },
   {
     icon: <GroupIcon />,
-    name: "Super Admins Management",
-    path: "/super_admin/admins",
+    name: "Admins Management",
+    subItems: [
+      { name: "Admins", path: "/super_admin/admins", pro: false },
+      { name: "Roles", path: "/super_admin/roles", pro: false },
+    ],
   },
   {
     icon: <GroupIcon />,

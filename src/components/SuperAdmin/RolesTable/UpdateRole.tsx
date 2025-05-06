@@ -1,62 +1,77 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Checkbox from "../../form/input/Checkbox";
 import {
-  createRole,
   getAllPermissions,
-} from "../../../api/AdminApi/rolesApi/_requests";
+  getRoleById,
+  updateRole,
+} from "../../../api/SuperAdminApi/Roles/_requests";
 import Loading from "../../common/Loading";
-import { useNavigate } from "react-router-dom";
 
 type Permission = {
   id: number;
   name: string;
 };
 
-export default function CreateRole() {
-  const [loading, setLoading] = useState(false);
+const UpdateRole: React.FC = () => {
   const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [roleData, setRoleData] = useState({
+  const [loading, setLoading] = useState(false);
+  const [updateData, setUpdateData] = useState({
     name: "",
     permissions: [] as number[],
   });
-  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
-  const [errors, setErrors] = useState({
-    name: [] as string[],
-    permissions: [] as string[],
-  });
+  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({}); // إضافة حالة لتخزين الأخطاء
 
+  const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPermissions = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await getAllPermissions();
-        if (response?.data?.data) {
-          setPermissions(response.data.data);
+        // جلب كل الصلاحيات
+        const permissionsRes = await getAllPermissions();
+        setPermissions(permissionsRes.data.data || []);
+
+        // جلب بيانات الرول
+        if (id) {
+          const roleRes = await getRoleById(id);
+          const roleData = roleRes.data.data;
+
+          const permissionIds = Array.isArray(roleData.permissions)
+            ? roleData.permissions.map((perm: any) => perm.id)
+            : [];
+
+          setUpdateData({
+            name: roleData.name || "",
+            permissions: permissionIds,
+          });
         }
-      } catch (error) {
-        console.error("Error fetching permissions:", error);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Something went wrong while loading data.");
       } finally {
         setLoading(false);
       }
     };
-    fetchPermissions();
-  }, []);
+
+    fetchData();
+  }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setRoleData((prev) => ({
+    setUpdateData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
   const handleCheckbox = (permissionId: number) => {
-    setRoleData((prev) => {
+    setUpdateData((prev) => {
       const isChecked = prev.permissions.includes(permissionId);
       return {
         ...prev,
@@ -69,10 +84,10 @@ export default function CreateRole() {
 
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
-    if (!roleData.name.trim()) {
+    if (!updateData.name) {
       errors.name = "Name is required.";
     }
-    if (roleData.permissions.length === 0) {
+    if (updateData.permissions.length === 0) {
       errors.permissions = "At least one permission must be selected.";
     }
     setFormErrors(errors);
@@ -89,51 +104,30 @@ export default function CreateRole() {
     }
 
     try {
-      const response = await createRole(roleData);
-      if (response?.status === 200 || response?.status === 201) {
-        navigate("/admin/roles", {
-          state: { successCreate: "Role Created Successfully" },
-        });
-      }
-    } catch (error: any) {
-      console.error("Error creating role:", error);
-
-      const status = error?.response?.status;
-
-      if (status === 403 || status === 401) {
-        setFormErrors({
-          ...formErrors,
-          global: "You don't have permission to perform this action.",
-        });
-        return;
-      }
-
-      const rawErrors = error?.response?.data.errors;
-
-      if (Array.isArray(rawErrors)) {
-        const formattedErrors: Record<string, string[]> = {};
-
-        rawErrors.forEach((err: { code: string; message: string }) => {
-          if (!formattedErrors[err.code]) {
-            formattedErrors[err.code] = [];
-          }
-          formattedErrors[err.code].push(err.message);
-        });
-
-        setErrors(formattedErrors);
-      }
+      await updateRole(updateData, id);
+      navigate("/super_admin/roles", {
+        state: { successUpdate: "Roles Updated Successfully" },
+      });
+    } catch (error) {
+      console.error("Error updating role:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // Handle invalid role ID
+  if (!id) {
+    return <p className="text-red-500 p-4">Invalid role ID</p>;
+  }
+
   return (
-    <div className=" p-6">
+    <div className="p-6">
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Create Role
+          Update Role
         </h3>
       </div>
+
       <form onSubmit={handleSubmit} className="p-4 md:p-5">
         <div className="grid gap-4 mb-4 grid-cols-2">
           <div className="col-span-2 sm:col-span-1">
@@ -142,16 +136,13 @@ export default function CreateRole() {
               type="text"
               name="name"
               id="name"
-              value={roleData.name}
+              value={updateData.name}
               onChange={handleChange}
-              placeholder="Enter the Role Name"
+              placeholder="Edit the Name"
             />
             {formErrors.name && (
-              <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
-            )}
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
-            )}
+              <p className="text-red-500">{formErrors.name}</p>
+            )}{" "}
           </div>
 
           {loading ? (
@@ -166,28 +157,20 @@ export default function CreateRole() {
                   <Checkbox
                     key={permission.id}
                     label={permission.name}
-                    checked={roleData.permissions.includes(permission.id)}
+                    checked={updateData.permissions.includes(permission.id)}
                     onChange={() => handleCheckbox(permission.id)}
                   />
                 ))}
               </div>
               {formErrors.permissions && (
-                <p className="text-red-500 text-sm mt-1">
-                  {formErrors.permissions}
-                </p>
-              )}
-              {errors.permissions && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.permissions[0]}
-                </p>
+                <p className="text-red-500 text-sm">{formErrors.permissions}</p>
               )}
             </div>
           )}
         </div>
 
-        {formErrors.global && (
-          <p className="text-red-500 text-sm mt-4">{formErrors.global}</p>
-        )}
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
         <button
           type="submit"
           disabled={isSubmitting}
@@ -200,4 +183,6 @@ export default function CreateRole() {
       </form>
     </div>
   );
-}
+};
+
+export default UpdateRole;

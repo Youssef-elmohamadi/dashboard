@@ -70,7 +70,8 @@ const ModalShowImage = ({ showImageModal, setShowImageModal, doc }) => {
                 <strong>Vendor Name:</strong> {vendor.name}
               </p>
               <p>
-                <strong>Type:</strong> {documentTypeLabel(doc.document_type)}
+                <strong>Document Type:</strong>{" "}
+                {documentTypeLabel(doc.document_type)}
               </p>
               <p>
                 <strong>Status:</strong>{" "}

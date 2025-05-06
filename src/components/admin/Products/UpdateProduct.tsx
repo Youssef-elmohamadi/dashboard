@@ -10,6 +10,7 @@ import {
   updateProduct,
 } from "../../../api/AdminApi/products/_requests";
 import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
+import { FiDelete } from "react-icons/fi";
 
 type Category = {
   id: number;
@@ -133,6 +134,18 @@ const UpdateProductPage: React.FC = () => {
   const handleTagChange = (index: number, value: string) => {
     const updated = [...tags];
     updated[index] = value;
+    setTags(updated);
+  };
+
+  const removeAttribute = (index: number) => {
+    const updated = [...attributes];
+    updated.splice(index, 1);
+    setAttributes(updated);
+  };
+
+  const removeTag = (index: number) => {
+    const updated = [...tags];
+    updated.splice(index, 1);
     setTags(updated);
   };
 
@@ -378,7 +391,14 @@ const UpdateProductPage: React.FC = () => {
         <div>
           <Label>Attributes</Label>
           {attributes.map((attr, i) => (
-            <div key={i} className="flex gap-2 mb-2">
+            <div key={i} className="flex gap-2 mb-2 items-center">
+              <button
+                type="button"
+                onClick={() => removeAttribute(i)}
+                className="text-red-600 text-xl"
+              >
+                <FiDelete className="text-red-600 text-xl" />
+              </button>
               <Input
                 placeholder="Label"
                 value={attr.label}
@@ -411,7 +431,14 @@ const UpdateProductPage: React.FC = () => {
         <div>
           <Label>Tags</Label>
           {tags.map((tag, i) => (
-            <div key={i} className="mb-2">
+            <div key={i} className="mb-2 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => removeTag(i)}
+                className="text-red-600 text-xl"
+              >
+                <FiDelete className="text-red-600 text-xl" />
+              </button>
               <Input
                 value={tag}
                 onChange={(e) => handleTagChange(i, e.target.value)}

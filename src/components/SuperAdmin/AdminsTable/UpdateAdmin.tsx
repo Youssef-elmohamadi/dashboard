@@ -4,7 +4,7 @@ import {
   getAdminById,
   getAllRoles,
   updateAdmin,
-} from "../../../api/AdminApi/usersApi/_requests";
+} from "../../../api/SuperAdminApi/Admins/_requests";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
@@ -45,47 +45,6 @@ const UpdateAdmin = () => {
     role: [],
   });
 
-  const [clientSideErrors, setClientSideErrors] = useState({
-    first_name: "",
-    last_name: "",
-    phone: "",
-    email: "",
-    password: "",
-    role: "",
-  });
-
-  const validate = () => {
-    const newErrors = {
-      first_name: "",
-      last_name: "",
-      phone: "",
-      email: "",
-      password: "",
-      role: "",
-    };
-    if (!updateData.first_name) {
-      newErrors.first_name = "First Name is Required";
-    } else if (!updateData.last_name) {
-      newErrors.last_name = "Last Name is Required";
-    } else if (!updateData.email) {
-      newErrors.email = "The Email Required";
-    } else if (
-      !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
-        updateData.email
-      )
-    ) {
-      newErrors.email = "InValid Email";
-    } else if (!updateData.phone) {
-      newErrors.phone = "The Phone Number is Required";
-    } else if (!/^01[0125][0-9]{8}$/.test(updateData.phone)) {
-      newErrors.phone = "Please Enter Valid Phone Number";
-    } else if (!updateData.role) {
-      newErrors.role = "The Role is Required";
-    }
-    setClientSideErrors(newErrors);
-    return Object.values(newErrors).every((error) => error === "");
-  };
-
   // Fetch admin by ID
   useEffect(() => {
     const fetchAdmin = async () => {
@@ -106,13 +65,6 @@ const UpdateAdmin = () => {
         }
       } catch (err) {
         console.error("Error fetching admin:", err);
-        const status = err?.response?.status;
-        if (status === 403 || status === 401) {
-          setErrors({
-            ...errors,
-            global: "You don't have permission to perform this action.",
-          });
-        }
       }
     };
 
@@ -152,10 +104,8 @@ const UpdateAdmin = () => {
 
   // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("supmit");
-
     e.preventDefault();
-    if (!validate()) return;
+
     try {
       if (id) {
         const dataToSend = {
@@ -164,7 +114,7 @@ const UpdateAdmin = () => {
         };
 
         await updateAdmin(id, dataToSend);
-        navigate("/admin/admins", {
+        navigate("/super_admin/admins", {
           state: { successEdit: "Admin Updated Successfully" },
         });
       }
@@ -198,9 +148,6 @@ const UpdateAdmin = () => {
         onSubmit={handleSubmit}
         className="space-y-6 w-full mt-10 flex flex-col items-center"
       >
-        {errors.global && (
-          <p className="text-error-500 text-sm mt-1">{errors.global}</p>
-        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
           {/* First Name */}
           <div className="col-span-1">
@@ -213,15 +160,9 @@ const UpdateAdmin = () => {
               placeholder="Edit the First Name"
               onChange={handleChange}
             />
-
             {errors.first_name?.[0] && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.first_name[0]}
-              </p>
-            )}
-            {clientSideErrors.first_name && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.first_name}
               </p>
             )}
           </div>
@@ -240,11 +181,6 @@ const UpdateAdmin = () => {
             {errors.last_name?.[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.last_name[0]}</p>
             )}
-            {clientSideErrors.last_name && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.last_name}
-              </p>
-            )}
           </div>
 
           {/* Email */}
@@ -260,11 +196,6 @@ const UpdateAdmin = () => {
             />
             {errors.email?.[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
-            )}
-            {clientSideErrors.email && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.email}
-              </p>
             )}
           </div>
 
@@ -295,11 +226,6 @@ const UpdateAdmin = () => {
             {errors.password?.[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>
             )}
-            {clientSideErrors.password && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.password}
-              </p>
-            )}
           </div>
 
           {/* Phone */}
@@ -315,11 +241,6 @@ const UpdateAdmin = () => {
             />
             {errors.phone?.[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.phone[0]}</p>
-            )}
-            {clientSideErrors.phone && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.phone}
-              </p>
             )}
           </div>
 
@@ -337,11 +258,6 @@ const UpdateAdmin = () => {
             />
             {errors.role?.[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.role[0]}</p>
-            )}
-            {clientSideErrors.role && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.role}
-              </p>
             )}
           </div>
         </div>

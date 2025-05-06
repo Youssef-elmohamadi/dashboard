@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTable, usePagination } from "react-table";
 import TableHeader from "./TableHeader";
 //import TableRow from "../usersTable/TableRow";
@@ -14,7 +14,8 @@ interface DataTableWrapperProps<T> {
   onShip?: (id: number) => void;
   onCancel?: (id: number) => void;
   onChangeStatus?: (id: number) => void;
-
+  setUnauthorized?: any;
+  unauthorized?: boolean;
   isCancel?: boolean;
   isShipped?: boolean;
   isChangeStatus?: boolean;
@@ -58,6 +59,8 @@ const BasicTable = <T extends { id: number }>({
   onCancel,
   initialPagination = { pageIndex: 0, pageSize: 5 },
   onPaginationChange,
+  unauthorized,
+  setUnauthorized,
   modalUpdateComponent,
   modalCreateComponent,
   onDataUpdate,
@@ -80,7 +83,6 @@ const BasicTable = <T extends { id: number }>({
   const [canNext, setCanNext] = useState(false);
   const [canPrev, setCanPrev] = useState(false);
   const [noData, setNoData] = useState(false);
-  const [unauthorized, setUnauthorized] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -193,7 +195,7 @@ const BasicTable = <T extends { id: number }>({
           </tbody>
         </table>
         {loading && <Loading text={loadingText} />}
-        {!loading && noData && (
+        {!loading && !unauthorized && noData && (
           <div className="p-4 text-center text-gray-500">No Data Found</div>
         )}
         {!loading && unauthorized && (

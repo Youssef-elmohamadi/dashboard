@@ -11,11 +11,6 @@ import { buildColumns } from "../../../components/admin/Tables/_Colmuns"; // Ù…Ù
 import TableActions from "../../../components/admin/Tables/TablesActions";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
-import {
-  cancelOrder,
-  getOrdersWithPaginate,
-  shipmentOrder,
-} from "../../../api/AdminApi/ordersApi/_requests";
 import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
 import {
   deleteCoupon,
@@ -42,6 +37,7 @@ const Coupons = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [reload, setReload] = useState(0);
   const location = useLocation();
+  const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     name: string;
     email: string;
@@ -89,7 +85,12 @@ const Coupons = () => {
         perPage,
       };
     } catch (error) {
-      console.error("Error fetching admins:", error);
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        setUnauthorized(true);
+        setData([]);
+      } else {
+        console.error("Fetching error:", error);
+      }
       return {
         data: [],
         last_page: 0,
@@ -202,6 +203,8 @@ const Coupons = () => {
             isModalEdit={false}
             isShowMore={true}
             onDelete={handleDelete}
+            unauthorized={unauthorized}
+            setUnauthorized={setUnauthorized}
             onEdit={(id) => {}}
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}

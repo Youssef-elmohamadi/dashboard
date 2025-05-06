@@ -20,6 +20,7 @@ const Categories = () => {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
+  const [unauthorized, setUnauthorized] = useState(false);
   const [alertData, setAlertData] = useState<{
     variant: "success" | "error" | "info" | "warning";
     title: string;
@@ -82,7 +83,12 @@ const Categories = () => {
         perPage,
       };
     } catch (error) {
-      console.error("Error fetching Categories:", error);
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        setUnauthorized(true);
+        setData([]);
+      } else {
+        console.error("Fetching error:", error);
+      }
       return {
         data: [],
         last_page: 0,
@@ -148,6 +154,8 @@ const Categories = () => {
           <BasicTable
             columns={columns}
             fetchData={fetchData}
+            unauthorized={unauthorized}
+            setUnauthorized={setUnauthorized}
             onEdit={(id) => {
               const role = data.find((item) => item.id === id);
               if (role) {

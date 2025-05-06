@@ -46,7 +46,7 @@ export default function UpdateCategory() {
           image: null,
         });
 
-        setPreviewImage(data.image); 
+        setPreviewImage(data.image);
         setCategories(allCategoriesRes.data.data.original);
       } catch (err) {
         console.error("Error fetching category data", err);
@@ -68,7 +68,7 @@ export default function UpdateCategory() {
       ...prev,
       image: file,
     }));
-    if (file) setPreviewImage(null); 
+    if (file) setPreviewImage(null);
   };
 
   const handleSelectChange = (value: string) => {
@@ -100,12 +100,11 @@ export default function UpdateCategory() {
     if (categoryData.parent_id)
       formData.append("parent_id", categoryData.parent_id);
     if (categoryData.image) formData.append("image", categoryData.image);
-    formData.append("_method", "PUT"); // If using Laravel
 
     try {
       setLoading(true);
       await updateCategory(formData, id);
-      navigate("/admin/categories", {
+      navigate("/super_admin/categories", {
         state: { successUpdate: "Category Updated Successfully" },
       });
     } catch (error: any) {
