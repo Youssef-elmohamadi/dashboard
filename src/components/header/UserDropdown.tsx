@@ -3,10 +3,12 @@ import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { showUser } from "../../api/AdminApi/profileApi/_requests";
 import { handleLogout } from "../admin/auth/Logout";
+import { useTranslation } from "react-i18next";
 interface UserDropDownProps {
   userType: "admin" | "super_admin";
 }
-export default function UserDropdown({ userType }) {
+export default function UserDropdown({ userType }: UserDropDownProps) {
+  const { t } = useTranslation(["UserDropdown"]);
   const [isOpen, setIsOpen] = useState(false);
 
   function toggleDropdown() {
@@ -35,7 +37,6 @@ export default function UserDropdown({ userType }) {
           const res = await showUser(id);
           setDataUser(res.data.data);
         } else {
-          // بيانات ثابتة لـ super_admin
           setDataUser({
             first_name: "Mariam",
             last_name: "Darouch",
@@ -58,7 +59,7 @@ export default function UserDropdown({ userType }) {
         className="flex items-center text-gray-700 dropdown-toggle dark:text-gray-400"
       >
         <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-          <img src={dataUser.avatar} alt="User" />
+          <img src={dataUser.avatar} alt="User Avatar" />
         </span>
 
         <span className="block mr-1 font-medium text-theme-sm">
@@ -121,7 +122,7 @@ export default function UserDropdown({ userType }) {
                   fill=""
                 />
               </svg>
-              Edit profile
+              {t("editProfile")}
             </DropdownItem>
           </li>
           <li>
@@ -146,7 +147,7 @@ export default function UserDropdown({ userType }) {
                   fill=""
                 />
               </svg>
-              Account settings
+              {t("accountSettings")}
             </DropdownItem>
           </li>
           <li>
@@ -171,7 +172,7 @@ export default function UserDropdown({ userType }) {
                   fill=""
                 />
               </svg>
-              Support
+              {t("support")}
             </DropdownItem>
           </li>
         </ul>
@@ -194,7 +195,7 @@ export default function UserDropdown({ userType }) {
               fill=""
             />
           </svg>
-          Sign out
+          {t("logout")}
         </button>
       </Dropdown>
     </div>

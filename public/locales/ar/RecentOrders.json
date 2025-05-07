@@ -1,0 +1,21 @@
+{
+  "recentOrders": {
+    "title": "الطلبات الأخيرة",
+    "filter": "تصفية",
+    "seeAll": "عرض الكل",
+    "product": "المنتج",
+    "category": "الفئة",
+    "price": "السعر",
+    "status": "الحالة",
+    "na": "غير متوفر",
+    "unknown": "غير معروف",
+    "egp": "ج.م",
+    "statuses": {
+      "delivered": "تم التوصيل",
+      "shipped": "تم الشحن",
+      "pending": "قيد الانتظار",
+      "cancelled": "أُلغيت",
+      "returned": "تم الإرجاع"
+    }
+  }
+}

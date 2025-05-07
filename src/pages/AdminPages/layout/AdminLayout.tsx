@@ -1,8 +1,8 @@
 import { SidebarProvider, useSidebar } from "../../../context/SidebarContext";
 import { Outlet } from "react-router";
-import AppHeader from "./AppHeader";
+import AppHeader from "../../../components/dashboardLayout/AppHeader";
 import Backdrop from "./Backdrop";
-import AppSidebar from "./AppSidebar";
+import AppSidebar from "../../../components/dashboardLayout/DashboardSidebar";
 import { ToastContainer } from "react-toastify";
 
 const LayoutContent: React.FC = () => {
@@ -11,7 +11,7 @@ const LayoutContent: React.FC = () => {
   return (
     <div className="min-h-screen xl:flex">
       <div>
-        <AppSidebar />
+        <AppSidebar userType="admin" />
         <Backdrop />
       </div>
       <div
@@ -19,7 +19,7 @@ const LayoutContent: React.FC = () => {
           isExpanded || isHovered ? "lg:ms-[290px]" : "lg:ms-[90px]"
         } ${isMobileOpen ? "ms-0" : ""}`}
       >
-        <AppHeader />
+        <AppHeader userType="admin" />
         <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
           <Outlet />
         </div>

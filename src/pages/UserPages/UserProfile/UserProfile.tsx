@@ -15,7 +15,7 @@ const UserProfile = () => {
     phone: "",
     password: "",
     password_confirmation: "",
-    image: null as File | null,
+    avatar: null as File | null,
   });
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -35,7 +35,7 @@ const UserProfile = () => {
           phone: data.phone,
           password: "",
           password_confirmation: "",
-          image: null,
+          avatar: null,
         });
         setImageUrl(data.image);
       } catch (error) {

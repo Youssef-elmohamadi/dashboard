@@ -20,6 +20,7 @@ import {
   Category,
   Brand,
 } from "../../../icons";
+import { useTranslation } from "react-i18next";
 import { useSidebar } from "../../../context/SidebarContext";
 import { PiSignOut } from "react-icons/pi";
 import { handleLogout } from "../../../components/admin/auth/Logout";
@@ -32,88 +33,6 @@ type NavItem = {
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
   action?: any;
 };
-
-const navItems: NavItem[] = [
-  {
-    icon: <BoxCubeIcon />,
-    name: "Home",
-    path: "/admin",
-  },
-  {
-    icon: <GroupIcon />,
-    name: "User Management",
-    subItems: [
-      { name: "Users", path: "/admin/admins", pro: false },
-      { name: "Roles", path: "/admin/roles", pro: false },
-    ],
-  },
-  {
-    icon: <BoxCubeIcon />,
-    name: "Products",
-    path: "/admin/products",
-  },
-  {
-    icon: <Category />,
-    name: "Categories",
-    path: "/admin/categories",
-  },
-  {
-    icon: <Order />,
-    name: "Orders",
-    path: "/admin/orders",
-  },
-  {
-    icon: <TicketsIcon />,
-    name: "Coupons",
-    path: "/admin/coupons",
-  },
-  {
-    icon: <Brand />,
-    name: "Brands",
-    path: "/admin/brands",
-  },
-  {
-    icon: <DocsIcon />,
-    name: "Reports",
-    subItems: [
-      { name: "Orders Report", path: "/admin/orders_report", pro: false },
-      { name: "Products Report", path: "/admin/products_report", pro: false },
-    ],
-  },
-  {
-    icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: "/admin/profile",
-  },
-  {
-    icon: <PiSignOut />,
-    name: "Logout",
-    action: handleLogout,
-  },
-  // {
-  //   icon: <CalenderIcon />,
-  //   name: "Calendar",
-  //   path: "/calendar",
-  // },
-  // {
-  //   name: "Forms",
-  //   icon: <ListIcon />,
-  //   subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
-  // },
-  // {
-  //   name: "Tables",
-  //   icon: <TableIcon />,
-  //   subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-  // },
-  // {
-  //   name: "Pages",
-  //   icon: <PageIcon />,
-  //   subItems: [
-  //     { name: "Blank Page", path: "/blank", pro: false },
-  //     { name: "404 Error", path: "/error-404", pro: false },
-  //   ],
-  // },
-];
 
 // const othersItems: NavItem[] = [
 //   {
@@ -147,6 +66,92 @@ const navItems: NavItem[] = [
 // ];
 
 const AppSidebar: React.FC = () => {
+  const { t } = useTranslation(["DashboardSidebar"]);
+  const navItems: NavItem[] = [
+    {
+      icon: <BoxCubeIcon />,
+      name: t("Home"),
+      path: "/admin",
+    },
+    {
+      icon: <GroupIcon />,
+      name: t("User Management"),
+      subItems: [
+        { name: t("Users"), path: "/admin/admins", pro: false },
+        { name: t("Roles"), path: "/admin/roles", pro: false },
+      ],
+    },
+    {
+      icon: <BoxCubeIcon />,
+      name: t("Products"),
+      path: "/admin/products",
+    },
+    {
+      icon: <Category />,
+      name: t("Categories"),
+      path: "/admin/categories",
+    },
+    {
+      icon: <Order />,
+      name: t("Orders"),
+      path: "/admin/orders",
+    },
+    {
+      icon: <TicketsIcon />,
+      name: t("Coupons"),
+      path: "/admin/coupons",
+    },
+    {
+      icon: <Brand />,
+      name: t("Brands"),
+      path: "/admin/brands",
+    },
+    {
+      icon: <DocsIcon />,
+      name: t("Reports"),
+      subItems: [
+        { name: t("Orders Report"), path: "/admin/orders_report", pro: false },
+        {
+          name: t("Products Report"),
+          path: "/admin/products_report",
+          pro: false,
+        },
+      ],
+    },
+    {
+      icon: <UserCircleIcon />,
+      name: t("User Profile"),
+      path: "/admin/profile",
+    },
+    {
+      icon: <PiSignOut />,
+      name: t("Logout"),
+      action: handleLogout,
+    },
+    // {
+    //   icon: <CalenderIcon />,
+    //   name: "Calendar",
+    //   path: "/calendar",
+    // },
+    // {
+    //   name: "Forms",
+    //   icon: <ListIcon />,
+    //   subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
+    // },
+    // {
+    //   name: "Tables",
+    //   icon: <TableIcon />,
+    //   subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
+    // },
+    // {
+    //   name: "Pages",
+    //   icon: <PageIcon />,
+    //   subItems: [
+    //     { name: "Blank Page", path: "/blank", pro: false },
+    //     { name: "404 Error", path: "/error-404", pro: false },
+    //   ],
+    // },
+  ];
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
   const { dir } = useDirectionAndLanguage();
@@ -170,29 +175,29 @@ const AppSidebar: React.FC = () => {
     [location.pathname]
   );
 
-  // useEffect(() => {
-  //   let submenuMatched = false;
-  //   ["main", "others"].forEach((menuType) => {
-  //     const items = menuType === "main" ? navItems : othersItems;
-  //     items.forEach((nav, index) => {
-  //       if (nav.subItems) {
-  //         nav.subItems.forEach((subItem) => {
-  //           if (isActive(subItem.path)) {
-  //             setOpenSubmenu({
-  //               type: menuType as "main" | "others",
-  //               index,
-  //             });
-  //             submenuMatched = true;
-  //           }
-  //         });
-  //       }
-  //     });
-  //   });
+  useEffect(() => {
+    let submenuMatched = false;
+    ["main", "others"].forEach((menuType) => {
+      const items = menuType === "main" ? navItems : othersItems;
+      items.forEach((nav, index) => {
+        if (nav.subItems) {
+          nav.subItems.forEach((subItem) => {
+            if (isActive(subItem.path)) {
+              setOpenSubmenu({
+                type: menuType as "main" | "others",
+                index,
+              });
+              submenuMatched = true;
+            }
+          });
+        }
+      });
+    });
 
-  //   if (!submenuMatched) {
-  //     setOpenSubmenu(null);
-  //   }
-  // }, [location, isActive]);
+    if (!submenuMatched) {
+      setOpenSubmenu(null);
+    }
+  }, [location, isActive]);
 
   useEffect(() => {
     if (openSubmenu !== null) {
@@ -395,7 +400,7 @@ const AppSidebar: React.FC = () => {
               />
               <img
                 className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
+                src="/images/logo/logo-hite.png"
                 alt="Logo"
                 width={150}
                 height={40}
@@ -423,7 +428,7 @@ const AppSidebar: React.FC = () => {
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Menu"
+                  t("Menu")
                 ) : (
                   <HorizontaLDots className="size-6" />
                 )}

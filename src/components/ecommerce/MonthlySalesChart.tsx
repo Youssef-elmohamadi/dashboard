@@ -4,39 +4,22 @@ import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { MoreDotIcon } from "../../icons";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function MonthlySalesChart({ OrdersData }) {
   const [isOpen, setIsOpen] = useState(false);
-
-  // بيانات الطلبات
+  const { t } = useTranslation(["MonthlySalesChart"]);
   const order_count_per_month = {
     ...OrdersData.orderPerMonth,
   };
 
-  // تحويل البيانات إلى تنسيق مناسب للرسم البياني
-  const monthsMap = {
-    "01": "Jan",
-    "02": "Feb",
-    "03": "Mar",
-    "04": "Apr",
-    "05": "May",
-    "06": "Jun",
-    "07": "Jul",
-    "08": "Aug",
-    "09": "Sep",
-    "10": "Oct",
-    "11": "Nov",
-    "12": "Dec",
-  };
+  const monthsMap = t("monthlySalesChart.months", { returnObjects: true });
 
   const sortedEntries = Object.entries(order_count_per_month).sort(([a], [b]) =>
     a.localeCompare(b)
   );
 
-  console.log(sortedEntries);
-
   const categories = sortedEntries.map(([key]) => monthsMap[key.split("-")[1]]);
-
   const data = sortedEntries.map(([, value]) => value);
 
   const options: ApexOptions = {
@@ -101,13 +84,16 @@ export default function MonthlySalesChart({ OrdersData }) {
       },
       y: {
         formatter: (val: number) => `${val}`,
+        title: {
+          formatter: () => t("monthlySalesChart.tooltipLabel"),
+        },
       },
     },
   };
 
   const series = [
     {
-      name: "order",
+      name: t("monthlySalesChart.tooltipLabel"),
       data,
     },
   ];
@@ -124,7 +110,7 @@ export default function MonthlySalesChart({ OrdersData }) {
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Monthly Orders
+          {t("monthlySalesChart.title")}
         </h3>
         {/* <div className="relative inline-block">
           <button className="dropdown-toggle" onClick={toggleDropdown}>
@@ -139,13 +125,13 @@ export default function MonthlySalesChart({ OrdersData }) {
               onItemClick={closeDropdown}
               className="flex w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
-              View More
+              {t("monthlySalesChart.dropdown.viewMore")}
             </DropdownItem>
             <DropdownItem
               onItemClick={closeDropdown}
               className="flex w-full font-normal text-left text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
-              Delete
+              {t("monthlySalesChart.dropdown.delete")}
             </DropdownItem>
           </Dropdown>
         </div> */}

@@ -8,6 +8,8 @@ import {
 import Badge from "../ui/badge/Badge";
 import { useEffect, useState } from "react";
 import { getAllCategories } from "../../api/AdminApi/categoryApi/_requests";
+import { useTranslation } from "react-i18next";
+
 interface Order {
   productName: string;
   productCategory: string;
@@ -18,6 +20,8 @@ interface Order {
 
 export default function RecentOrders({ orders }: { orders: Order[] }) {
   const [categories, setCategories] = useState([]);
+  const { t } = useTranslation(["RecentOrders"]);
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -30,19 +34,26 @@ export default function RecentOrders({ orders }: { orders: Order[] }) {
     fetchCategories();
   }, []);
 
+  const getStatusColor = (status: string) => {
+    const s = status.toLowerCase();
+    if (s === "delivered" || s === "shipped") return "success";
+    if (s === "pending") return "warning";
+    return "error";
+  };
+
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
       <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Recent Orders
+          {t("recentOrders.title")}
         </h3>
 
         <div className="flex items-center gap-3">
           <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
-            Filter
+            {t("recentOrders.filter")}
           </button>
           <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
-            See all
+            {t("recentOrders.seeAll")}
           </button>
         </div>
       </div>
@@ -55,25 +66,25 @@ export default function RecentOrders({ orders }: { orders: Order[] }) {
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                Product
+                {t("recentOrders.product")}
               </TableCell>
               <TableCell
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                Category
+                {t("recentOrders.category")}
               </TableCell>
               <TableCell
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                Price
+                {t("recentOrders.price")}
               </TableCell>
               <TableCell
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                Status
+                {t("recentOrders.status")}
               </TableCell>
             </TableRow>
           </TableHeader>
@@ -93,7 +104,7 @@ export default function RecentOrders({ orders }: { orders: Order[] }) {
                       </div>
                     ) : (
                       <div className="h-[50px] w-[50px] flex items-center justify-center rounded-md bg-gray-100 text-gray-400">
-                        N/A
+                        {t("recentOrders.na")}
                       </div>
                     )}
                     <div>
@@ -105,26 +116,18 @@ export default function RecentOrders({ orders }: { orders: Order[] }) {
                 </TableCell>
                 <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   {categories.find((cat) => cat.id === order.productCategory)
-                    ?.name || "Unknown"}
+                    ?.name || t("recentOrders.unknown")}
                 </TableCell>
                 <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   {typeof order.productPrice === "number"
-                    ? `${order.productPrice} EGP`
+                    ? `${order.productPrice} ${t("recentOrders.egp")}`
                     : order.productPrice}
                 </TableCell>
                 <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  <Badge
-                    size="sm"
-                    color={
-                      order.productStatus.toLowerCase() === "delivered" ||
-                      order.productStatus.toLowerCase() === "shipped"
-                        ? "success"
-                        : order.productStatus.toLowerCase() === "pending"
-                        ? "warning"
-                        : "error"
-                    }
-                  >
-                    {order.productStatus}
+                  <Badge size="sm" color={getStatusColor(order.productStatus)}>
+                    {t(
+                      `recentOrders.statuses.${order.productStatus.toLowerCase()}`
+                    )}
                   </Badge>
                 </TableCell>
               </TableRow>

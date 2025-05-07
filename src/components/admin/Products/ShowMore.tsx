@@ -58,7 +58,12 @@ const ProductDetails: React.FC = () => {
     };
     fetchProduct();
   }, [id]);
-
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   if (!id) {
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-300">
@@ -82,27 +87,17 @@ const ProductDetails: React.FC = () => {
     );
   }
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-          Product Details
-        </h1>
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-blue-700 hover:bg-blue-800 text-white font-semibold rounded-lg px-5 py-2 text-sm"
-        >
-          Back
-        </button>
-      </div>
+    <div className="product-details p-6 max-w-6xl mx-auto space-y-10">
+      <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">
+        Product Details
+      </h1>
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 space-y-6">
-        <div className="grid grid-cols-2 gap-4 text-sm text-gray-800 dark:text-gray-200">
-          <p>
-            <strong>ID:</strong> {product.id}
-          </p>
-          <p>
-            <strong>Vendor ID:</strong> {product.vendor_id}
-          </p>
+      {/* Section 1: Basic Info */}
+      <section className="bg-white p-6 rounded-xl shadow-md">
+        <h2 className="text-xl font-semibold mb-4 text-blue-700">
+          Basic Information
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
           <p>
             <strong>Name:</strong> {product.name}
           </p>
@@ -110,13 +105,7 @@ const ProductDetails: React.FC = () => {
             <strong>Slug:</strong> {product.slug}
           </p>
           <p>
-            <strong>Price:</strong> {product.price} EGP
-          </p>
-          <p>
-            <strong>Discount:</strong> {product.discount_price ?? "N/A"}
-          </p>
-          <p>
-            <strong>Stock:</strong> {product.stock_quantity}
+            <strong>Description:</strong> {product.description}
           </p>
           <p>
             <strong>Status:</strong> {product.status}
@@ -124,83 +113,122 @@ const ProductDetails: React.FC = () => {
           <p>
             <strong>Featured:</strong> {product.is_featured ? "Yes" : "No"}
           </p>
+        </div>
+      </section>
+
+      {/* Section 2: Pricing & Stock */}
+      <section className="bg-white p-6 rounded-xl shadow-md">
+        <h2 className="text-xl font-semibold mb-4 text-green-700">
+          Pricing & Stock
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
           <p>
-            <strong>Rating:</strong> {product.rating ?? "N/A"}
+            <strong>Price:</strong> {product.price} EGP
           </p>
           <p>
-            <strong>Views:</strong> {product.views_count ?? "N/A"}
+            <strong>Discount Price:</strong> {product.discount_price} EGP
           </p>
+          <p>
+            <strong>Stock Quantity:</strong> {product.stock_quantity}
+          </p>
+        </div>
+      </section>
+
+      {/* Section 3: Category & Brand */}
+      <section className="bg-white p-6 rounded-xl shadow-md">
+        <h2 className="text-xl font-semibold mb-4 text-purple-700">
+          Category & Brand
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
           <p>
             <strong>Category:</strong> {product.category?.name}
           </p>
           <p>
             <strong>Brand:</strong> {product.brand?.name}
           </p>
+        </div>
+      </section>
+
+      {/* Section 4: Vendor */}
+      <section className="bg-white p-6 rounded-xl shadow-md">
+        <h2 className="text-xl font-semibold mb-4 text-yellow-700">
+          Vendor Information
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
           <p>
-            <strong>Created:</strong>{" "}
-            {new Date(product.created_at).toLocaleString()}
+            <strong>Name:</strong> {product.vendor?.name}
           </p>
           <p>
-            <strong>Updated:</strong>{" "}
-            {new Date(product.updated_at).toLocaleString()}
+            <strong>Email:</strong> {product.vendor?.email}
+          </p>
+          <p>
+            <strong>Phone:</strong> {product.vendor?.phone}
           </p>
         </div>
+      </section>
 
-        <div>
-          <strong className="text-gray-700 dark:text-gray-300">
-            Description:
-          </strong>
-          <p className="mt-1 text-gray-600 dark:text-gray-400">
-            {product.description || "No description"}
-          </p>
-        </div>
-
-        <div>
-          <strong className="text-gray-700 dark:text-gray-300">Tags:</strong>
-          <ul className="list-disc pl-6 mt-1 text-gray-600 dark:text-gray-400">
-            {product.tags.length > 0 ? (
-              product.tags.map((tag, i) => <li key={i}>{tag.name}</li>)
-            ) : (
-              <li>No tags</li>
-            )}
+      {/* Section 5: Attributes */}
+      {product.attributes?.length > 0 && (
+        <section className="bg-white p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-indigo-700">
+            Attributes
+          </h2>
+          <ul className="list-disc list-inside text-gray-700">
+            {product.attributes.map((attr: any) => (
+              <li key={attr.id}>
+                <strong>{attr.attribute_name}:</strong> {attr.attribute_value}
+              </li>
+            ))}
           </ul>
-        </div>
+        </section>
+      )}
 
-        <div>
-          <strong className="text-gray-700 dark:text-gray-300">
-            Attributes:
-          </strong>
-          <ul className="list-disc pl-6 mt-1 text-gray-600 dark:text-gray-400">
-            {product.attributes.length > 0 ? (
-              product.attributes.map((attr, i) => (
-                <li key={i}>
-                  {attr.attribute_name}: {attr.attribute_value}
-                </li>
-              ))
-            ) : (
-              <li>No attributes</li>
-            )}
-          </ul>
-        </div>
-
-        <div>
-          <strong className="text-gray-700 dark:text-gray-300">Images:</strong>
-          <div className="flex flex-wrap gap-3 mt-2">
-            {product.images.length > 0 ? (
-              product.images.map((img, i) => (
-                <img
-                  key={i}
-                  src={img}
-                  alt={`Product ${i + 1}`}
-                  className="w-24 h-24 object-cover rounded border"
-                />
-              ))
-            ) : (
-              <p>No images available</p>
-            )}
+      {/* Section 6: Tags */}
+      {product.tags?.length > 0 && (
+        <section className="bg-white p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-pink-700">Tags</h2>
+          <div className="flex flex-wrap gap-2">
+            {product.tags.map((tag: any) => (
+              <span
+                key={tag.id}
+                className="bg-gray-200 text-sm px-3 py-1 rounded-full"
+              >
+                {tag.name}
+              </span>
+            ))}
           </div>
+        </section>
+      )}
+
+      {/* Section 7: Images */}
+      {product.images?.length > 0 && (
+        <section className="bg-white p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-red-700">Images</h2>
+          <div className="flex flex-wrap gap-4">
+            {product.images.map((img: any) => (
+              <img
+                key={img.id}
+                src={img.image}
+                alt="Product Image"
+                className="w-32 h-32 object-cover rounded-md border"
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Section 8: Dates */}
+      <section className="bg-white p-6 rounded-xl shadow-md">
+        <h2 className="text-xl font-semibold mb-4 text-gray-700">Timestamps</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+          <p>
+            <strong>Created At:</strong> {formatDate(product.created_at)}
+          </p>
+          <p>
+            <strong>Updated At:</strong> {formatDate(product.updated_at)}
+          </p>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

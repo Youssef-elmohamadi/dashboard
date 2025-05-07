@@ -25,8 +25,6 @@ export const SuperAdminProvider = ({ children }: UserProviderProps) => {
       const fetchData = async (id: number) => {
         try {
           const res = await showUser(id);
-          const role = res.data.data.roles[0].name;
-          localStorage.setItem("aRole", role);
         } catch (error: any) {
           console.log("Failed to get data", error);
           if (error.response && error.response.status === 401) {

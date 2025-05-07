@@ -9,8 +9,10 @@ import { useEffect, useState } from "react";
 import { home } from "../../../api/AdminApi/homeApi/_requests";
 import { GroupIcon } from "../../../icons";
 import { BoxIconLine } from "../../../icons";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
+  const { t } = useTranslation(["Home"]);
   const [numbersData, setNumbersData] = useState({
     customerCount: 0,
     ordersCount: 0,
@@ -62,16 +64,16 @@ export default function Home() {
       <div className="grid grid-cols-12 gap-4 md:gap-6">
         <div className="col-span-12 space-y-6 xl:col-span-7">
           <EcommerceMetrics
-          parentClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6"
+            parentClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6"
             metrics={[
               {
-                label: "Customers",
+                label: t("customers"),
                 value: numbersData.customerCount,
                 percentage: 11.01,
                 icon: GroupIcon,
               },
               {
-                label: "Orders",
+                label: t("orders"),
                 value: numbersData.ordersCount,
                 percentage: -9.05,
                 icon: BoxIconLine,

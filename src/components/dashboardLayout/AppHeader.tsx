@@ -4,13 +4,15 @@ import { useSidebar } from "../../context/SidebarContext";
 import { ThemeToggleButton } from "../../components/common/ThemeToggleButton";
 import NotificationDropdown from "../../components/header/NotificationDropdown";
 import UserDropdown from "../../components/header/UserDropdown";
+import { useTranslation } from "react-i18next";
 import LanguageToggle from "../../components/common/LanguageToggle";
+import { useDirectionAndLanguage } from "../../context/DirectionContext";
 interface AppHeaderProps {
   userType: "admin" | "super_admin";
 }
 const AppHeader: React.FC<AppHeaderProps> = ({ userType }) => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
-
+  const { t } = useTranslation(["Header"]);
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
 
   const handleToggle = () => {
@@ -20,7 +22,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ userType }) => {
       toggleMobileSidebar();
     }
   };
-
+  const { dir } = useDirectionAndLanguage();
   const toggleApplicationMenu = () => {
     setApplicationMenuOpen(!isApplicationMenuOpen);
   };
@@ -136,7 +138,11 @@ const AppHeader: React.FC<AppHeaderProps> = ({ userType }) => {
           <div className="hidden lg:block">
             <form>
               <div className="relative">
-                <span className="absolute -translate-y-1/2 pointer-events-none left-4 top-1/2">
+                <span
+                  className={`absolute -translate-y-1/2 pointer-events-none ${
+                    dir === "rtl" ? "right-4" : "left-4"
+                  } top-1/2`}
+                >
                   <svg
                     className="fill-gray-500 dark:fill-gray-400"
                     width="20"
@@ -156,11 +162,15 @@ const AppHeader: React.FC<AppHeaderProps> = ({ userType }) => {
                 <input
                   ref={inputRef}
                   type="text"
-                  placeholder="Search or type command..."
+                  placeholder={t("searchPlaceholder")}
                   className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 pl-12 pr-14 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-900 dark:bg-white/[0.03] dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 xl:w-[430px]"
                 />
 
-                <button className="absolute right-2.5 top-1/2 inline-flex -translate-y-1/2 items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 px-[7px] py-[4.5px] text-xs -tracking-[0.2px] text-gray-500 dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-400">
+                <button
+                  className={`absolute ${
+                    dir === "rtl" ? "left-2.5" : "right-2.5"
+                  } top-1/2 inline-flex -translate-y-1/2 items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 px-[7px] py-[4.5px] text-xs -tracking-[0.2px] text-gray-500 dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-400`}
+                >
                   <span> ⌘ </span>
                   <span> K </span>
                 </button>
@@ -183,7 +193,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ userType }) => {
             {/* <!-- Notification Menu Area --> */}
           </div>
           {/* <!-- User Area --> */}
-          <UserDropdown />
+          <UserDropdown userType={userType} />
         </div>
       </div>
     </header>

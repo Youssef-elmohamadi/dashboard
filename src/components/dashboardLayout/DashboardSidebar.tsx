@@ -13,11 +13,17 @@ import {
   PieChartIcon,
   PlugInIcon,
   TableIcon,
+  TicketsIcon,
+  Order,
   UserCircleIcon,
+  Category,
+  Brand,
+  DocsIcon,
 } from "../../icons";
 import { useSidebar } from "../../context/SidebarContext";
 import { PiSignOut } from "react-icons/pi";
 import { handleLogout } from "../../components/admin/auth/Logout";
+import { useTranslation } from "react-i18next";
 
 type NavItem = {
   name: string;
@@ -29,98 +35,139 @@ type NavItem = {
 type DashboardSidebarProps = {
   userType: "admin" | "super_admin";
 };
-const AdminNavItems: NavItem[] = [
-  {
-    icon: <BoxCubeIcon />,
-    name: "Home",
-    path: "/admin",
-  },
-  {
-    icon: <GroupIcon />,
-    name: "User Management",
-    subItems: [
-      { name: "Users", path: "/admin/admins", pro: false },
-      { name: "Roles", path: "/admin/roles", pro: false },
-    ],
-  },
-  {
-    icon: <BoxCubeIcon />,
-    name: "Brands",
-    path: "/admin/brands",
-  },
-  {
-    icon: <BoxCubeIcon />,
-    name: "Products",
-    path: "/admin/products",
-  },
-  {
-    icon: <BoxCubeIcon />,
-    name: "Categories",
-    path: "/admin/categories",
-  },
-  {
-    icon: <BoxCubeIcon />,
-    name: "Orders",
-    path: "/admin/orders",
-  },
-  {
-    icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: "/admin/profile",
-  },
-  {
-    icon: <PiSignOut />,
-    name: "Logout",
-    action: handleLogout,
-  },
-];
 
-const SuperAdminNavItems: NavItem[] = [
-  {
-    icon: <BoxCubeIcon />,
-    name: "Home",
-    path: "/super_admin",
-  },
-  {
-    icon: <GroupIcon />,
-    name: "Admins Management",
-    subItems: [
-      { name: "Admins", path: "/super_admin/admins", pro: false },
-      { name: "Roles", path: "/super_admin/roles", pro: false },
-    ],
-  },
-  {
-    icon: <GroupIcon />,
-    name: "Vendors Management",
-    path: "/super_admin/vendors",
-  },
-  {
-    icon: <BoxCubeIcon />,
-    name: "Categories Management",
-    path: "/super_admin/categories",
-  },
-  {
-    icon: <BoxCubeIcon />,
-    name: "Brands",
-    path: "/super_admin/brands",
-  },
-  {
-    icon: <BoxCubeIcon />,
-    name: "Products",
-    path: "/super_admin/products",
-  },
-  {
-    icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: "/super_admin/profile",
-  },
-  {
-    icon: <PiSignOut />,
-    name: "Logout",
-    action: handleLogout,
-  },
-];
 const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
+  const { t } = useTranslation(["DashboardSidebar"]);
+  const AdminNavItems: NavItem[] = [
+    {
+      icon: <BoxCubeIcon />,
+      name: t("Home"),
+      path: "/admin",
+    },
+    {
+      icon: <GroupIcon />,
+      name: t("User Management"),
+      subItems: [
+        { name: t("Users"), path: "/admin/admins", pro: false },
+        { name: t("Roles"), path: "/admin/roles", pro: false },
+      ],
+    },
+    {
+      icon: <BoxCubeIcon />,
+      name: t("Products"),
+      path: "/admin/products",
+    },
+    {
+      icon: <Category />,
+      name: t("Categories"),
+      path: "/admin/categories",
+    },
+    {
+      icon: <Order />,
+      name: t("Orders"),
+      path: "/admin/orders",
+    },
+    {
+      icon: <TicketsIcon />,
+      name: t("Coupons"),
+      path: "/admin/coupons",
+    },
+    {
+      icon: <Brand />,
+      name: t("Brands"),
+      path: "/admin/brands",
+    },
+    {
+      icon: <DocsIcon />,
+      name: t("Reports"),
+      subItems: [
+        { name: t("Orders Report"), path: "/admin/orders_report", pro: false },
+        {
+          name: t("Products Report"),
+          path: "/admin/products_report",
+          pro: false,
+        },
+      ],
+    },
+    {
+      icon: <UserCircleIcon />,
+      name: t("User Profile"),
+      path: "/admin/profile",
+    },
+    {
+      icon: <PiSignOut />,
+      name: t("Logout"),
+      action: handleLogout,
+    },
+    // {
+    //   icon: <CalenderIcon />,
+    //   name: "Calendar",
+    //   path: "/calendar",
+    // },
+    // {
+    //   name: "Forms",
+    //   icon: <ListIcon />,
+    //   subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
+    // },
+    // {
+    //   name: "Tables",
+    //   icon: <TableIcon />,
+    //   subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
+    // },
+    // {
+    //   name: "Pages",
+    //   icon: <PageIcon />,
+    //   subItems: [
+    //     { name: "Blank Page", path: "/blank", pro: false },
+    //     { name: "404 Error", path: "/error-404", pro: false },
+    //   ],
+    // },
+  ];
+  const SuperAdminNavItems: NavItem[] = [
+    {
+      icon: <BoxCubeIcon />,
+      name: "Home",
+      path: "/super_admin",
+    },
+    {
+      icon: <GroupIcon />,
+      name: "Admins Management",
+      subItems: [
+        { name: "Admins", path: "/super_admin/admins", pro: false },
+        { name: "Roles", path: "/super_admin/roles", pro: false },
+      ],
+    },
+    {
+      icon: <GroupIcon />,
+      name: "Vendors Management",
+      path: "/super_admin/vendors",
+    },
+    {
+      icon: <BoxCubeIcon />,
+      name: "Categories Management",
+      path: "/super_admin/categories",
+    },
+    {
+      icon: <BoxCubeIcon />,
+      name: "Brands",
+      path: "/super_admin/brands",
+    },
+    {
+      icon: <BoxCubeIcon />,
+      name: "Products",
+      path: "/super_admin/products",
+    },
+    {
+      icon: <UserCircleIcon />,
+      name: "User Profile",
+      path: "/super_admin/profile",
+    },
+    {
+      icon: <PiSignOut />,
+      name: "Logout",
+      action: handleLogout,
+    },
+  ];
   const currentNavItems =
     userType === "super_admin" ? SuperAdminNavItems : AdminNavItems;
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
@@ -138,9 +185,39 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
 
   //const isActive = (path: string) => location.pathname === path;
   const isActive = useCallback(
-    (path: string) => location.pathname === path,
+    (path: string) =>
+      location.pathname === path ||
+      location.pathname.startsWith(`${path}/update`) ||
+      location.pathname.startsWith(`${path}/details`) ||
+      location.pathname === `${path}/create`,
     [location.pathname]
   );
+
+  ////////////
+
+  // useEffect(() => {
+  //   let submenuMatched = false;
+  //   ["main", "others"].forEach((menuType) => {
+  //     const items = menuType === "main" ? navItems : othersItems;
+  //     items.forEach((nav, index) => {
+  //       if (nav.subItems) {
+  //         nav.subItems.forEach((subItem) => {
+  //           if (isActive(subItem.path)) {
+  //             setOpenSubmenu({
+  //               type: menuType as "main" | "others",
+  //               index,
+  //             });
+  //             submenuMatched = true;
+  //           }
+  //         });
+  //       }
+  //     });
+  //   });
+  //   if (!submenuMatched) {
+  //     setOpenSubmenu(null);
+  //   }
+  // }, [location, isActive]);
+  //////////////////
 
   useEffect(() => {
     if (openSubmenu !== null) {
@@ -337,14 +414,14 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
               <>
                 <img
                   className="dark:hidden"
-                  src="/images/logo/logo.jpg"
+                  src="/images/logo/logo.png"
                   alt="Logo"
                   width={150}
                   height={40}
                 />
                 <img
                   className="hidden dark:block"
-                  src="/images/logo/logo-dark.svg"
+                  src="/images/logo/logo-white.png"
                   alt="Logo"
                   width={150}
                   height={40}
@@ -365,14 +442,14 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
               <>
                 <img
                   className="dark:hidden"
-                  src="/images/logo/logo.svg"
+                  src="/images/logo/logo.png"
                   alt="Logo"
                   width={150}
                   height={40}
                 />
                 <img
                   className="hidden dark:block"
-                  src="/images/logo/logo-dark.svg"
+                  src="/images/logo/logo-white.png"
                   alt="Logo"
                   width={150}
                   height={40}
@@ -401,7 +478,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Menu"
+                  t("Menu")
                 ) : (
                   <HorizontaLDots className="size-6" />
                 )}

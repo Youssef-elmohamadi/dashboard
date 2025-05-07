@@ -25,7 +25,14 @@ i18n
       "EndUserSignUp",
       "EndUserSignUpErrors",
       "EndUserSignIn",
+      "DashboardSidebar",
+      "UserDropdown",
+      "Header",
+      "Home",
+      "MonthlySalesChart",
+      "RecentOrders",
     ],
+
     defaultNS: "Signup",
     interpolation: {
       escapeValue: false,

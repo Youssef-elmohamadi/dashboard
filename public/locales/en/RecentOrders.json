@@ -1,0 +1,22 @@
+{
+    "recentOrders": {
+      "title": "Recent Orders",
+      "filter": "Filter",
+      "seeAll": "See all",
+      "product": "Product",
+      "category": "Category",
+      "price": "Price",
+      "status": "Status",
+      "na": "N/A",
+      "unknown": "Unknown",
+      "egp": "EGP",
+      "statuses": {
+        "delivered": "Delivered",
+        "shipped": "Shipped",
+        "pending": "Pending",
+        "cancelled": "Cancelled",
+        "returned": "Returned"
+      }
+    }
+  }
+  
