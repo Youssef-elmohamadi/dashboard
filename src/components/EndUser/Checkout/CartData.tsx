@@ -12,7 +12,7 @@ const CartData: React.FC = () => {
   const finalPrice = totalPrice - discount;
 
   return (
-    <div className="bg-white shadow-md rounded-xl p-6 sticky top-4 w-full">
+    <div className="bg-white border rounded-xl p-6 sticky top-4 w-full">
       <h3 className="text-2xl font-bold mb-4 text-gray-800 text-center">
         Cart Summary
       </h3>

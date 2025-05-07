@@ -8,7 +8,8 @@ import {
 } from "../../../components/EndUser/Redux/cartSlice/CartSlice";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { applyCoupon } from "../../../api/EndUserApi/ensUserProducts/_requests";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -16,15 +17,28 @@ const Cart = () => {
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
   const discount = useSelector((state) => state.cart.discount);
-  console.log(discount);
-
+  const navigate = useNavigate();
   const [cuponData, setCuponData] = useState({
     code: "",
     order_total: totalPrice,
   });
   const [couponStatus, setCouponStatus] = useState(null); // success / error
   //const [discount, setDiscount] = useState(0);
+  const handleCheckoutButton = () => {
+    const token = localStorage.getItem("uToken");
 
+    if (!token) {
+      toast.error("Please Login First");
+      return;
+    }
+
+    if (items.length === 0) {
+      toast.info("Your Cart is empty");
+      return;
+    }
+
+    navigate("/checkout");
+  };
   const handleQuantityChange = (item, quantity) => {
     if (quantity > 0) {
       dispatch(updateQuantity({ id: item.id, quantity }));
@@ -114,8 +128,11 @@ const Cart = () => {
           </p>
         )}
 
-        <button className="w-full bg-purple-700 text-white py-2 mt-4 rounded font-semibold">
-          <Link to="/checkout">Proceed to Payment ({totalQuantity} Items)</Link>
+        <button
+          onClick={handleCheckoutButton}
+          className="w-full bg-purple-700 text-white py-2 mt-4 rounded font-semibold"
+        >
+          Proceed to Payment ({totalQuantity} Items)
         </button>
       </div>
 
