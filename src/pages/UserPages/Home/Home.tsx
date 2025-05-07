@@ -9,11 +9,11 @@ import { getProductCategories } from "../../../api/EndUserApi/ensUserProducts/_r
 import ProductModal from "../../../components/EndUser/ProductModal/ProductModal";
 import { useModal } from "../Context/ModalContext";
 import AddToCartModal from "../../../components/EndUser/AddedSuccess/AddToCartModal";
-
+import { Helmet } from "react-helmet-async";
 const Home = () => {
   const [Categories, setCategories] = useState<any>();
   const [productCategories, setProductCategories] = useState<any>();
-  const { modalType } = useModal();
+  const { modalType }: any = useModal();
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -38,13 +38,28 @@ const Home = () => {
   }, []);
   return (
     <section className="">
+      <Helmet>
+        <title>Tashtiba | All-in-One Multi-Vendor Online Marketplace</title>
+        <meta
+          name="description"
+          content="Discover thousands of products on Tashtiba — your trusted multi-vendor marketplace for fashion, electronics, home goods, and more. Shop easily and securely from top sellers"
+        />
+      </Helmet>
       {modalType === "product" && <ProductModal />}
       {modalType === "addtocart" && <AddToCartModal />}
       <div className="enduser_container">
-        <AdBanner imageUrl="/images/banner.webp" linkUrl="/" />
+        <AdBanner
+          imageUrl="/images/banner.webp"
+          linkUrl="/"
+          altText="Profit Announcement"
+        />
         <FeaturesSection />
         <CircleSlider items={Categories} />
-        <AdBanner imageUrl="/images/banner-offer.webp" linkUrl="/" />
+        <AdBanner
+          imageUrl="/images/banner-offer.webp"
+          linkUrl="/"
+          altText="Profit Announcement"
+        />
       </div>
       <MultiImagesBanner
         items={[
@@ -66,7 +81,11 @@ const Home = () => {
         ]}
       />
       <div className="enduser_container">
-        <AdBanner imageUrl="/images/ad2.webp" linkUrl="/" />
+        <AdBanner
+          imageUrl="/images/ad2.webp"
+          linkUrl="/"
+          altText="Profit Announcement"
+        />
         {productCategories?.map((category: any) => (
           <HomeProducts
             key={category.id}

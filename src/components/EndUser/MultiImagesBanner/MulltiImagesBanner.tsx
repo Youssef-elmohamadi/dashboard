@@ -28,6 +28,7 @@ export const MultiImagesBanner: React.FC<Props> = ({ items }) => {
               <motion.img
                 key={i}
                 src={url}
+                alt="Product Announcement"
                 className="w-full h-full object-contain rounded-md"
                 whileHover={{ scale: 1.1, rotate: 2 }}
                 transition={{ type: "spring", stiffness: 300 }}

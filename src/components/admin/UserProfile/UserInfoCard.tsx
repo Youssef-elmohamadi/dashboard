@@ -7,7 +7,8 @@ import { useEffect, useState } from "react";
 import { showUser } from "../../../api/AdminApi/profileApi/_requests";
 import { updateAdmin } from "../../../api/AdminApi/usersApi/_requests";
 
-export default function UserInfoCard() {
+export default function UserInfoCard({ userType }) {
+  
   const { isOpen, openModal, closeModal } = useModal();
   const [dataUser, setDataUser] = useState({
     first_name: "",
@@ -308,10 +309,15 @@ export default function UserInfoCard() {
                     />
                   </div>
 
-                  {/* <div className="col-span-2">
-                    <Label>Bio</Label>
-                    <Input type="text" value="Team Manager" />
-                  </div> */}
+                  <div className="col-span-2">
+                    <Label>Password</Label>
+                    <Input
+                      name="password"
+                      type="password"
+                      value=""
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

@@ -52,19 +52,26 @@ import { ReactComponent as ChatIcon } from "./chat.svg?react";
 import { ReactComponent as MoreDotIcon } from "./moredot.svg?react";
 import { ReactComponent as AlertHexaIcon } from "./alert-hexa.svg?react";
 import { ReactComponent as ErrorHexaIcon } from "./info-hexa.svg?react";
-
+import { ReactComponent as TicketsIcon } from "./tickets.svg?react";
+import { ReactComponent as Order } from "./package-check.svg?react";
+import { ReactComponent as Category } from "./chart-bar-stacked.svg?react";
+import { ReactComponent as Brand } from "./badge-check.svg?react";
 
 export {
   ErrorHexaIcon,
   AlertHexaIcon,
   MoreDotIcon,
   DownloadIcon,
+  TicketsIcon,
   FileIcon,
   GridIcon,
   AudioIcon,
   VideoIcon,
   BoltIcon,
   PlusIcon,
+  Order,
+  Category,
+  Brand,
   BoxIcon,
   CloseIcon,
   CheckCircleIcon,

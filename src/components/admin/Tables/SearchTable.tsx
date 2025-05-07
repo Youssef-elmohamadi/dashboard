@@ -6,6 +6,7 @@ type Field = {
   type: "input" | "select";
   options?: Option[];
 };
+
 const SearchTable = ({
   fields,
   setSearchParam,

@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "./customSwiper.css";
 import { Link } from "react-router-dom";
 interface CategoryItem {
+  id: string;
   image: string;
   name: string;
   link: string;
@@ -27,8 +28,8 @@ const CircleSlider: FC<CategorySliderProps> = ({ items, rtl = false }) => {
     >
       {items?.map((item, index) => (
         <SwiperSlide key={index}>
-          <a
-            href={item.link}
+          <Link
+            to={`category/${item.id}`}
             className="flex flex-col items-center gap-2 my-10 "
           >
             <img
@@ -39,7 +40,7 @@ const CircleSlider: FC<CategorySliderProps> = ({ items, rtl = false }) => {
             <span className="text-center text-xl font-medium text-purple-600">
               <Link to={`category/${item.id}`}>{item.name}</Link>
             </span>
-          </a>
+          </Link>
         </SwiperSlide>
       ))}
     </Swiper>

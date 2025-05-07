@@ -5,7 +5,40 @@ import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { MoreDotIcon } from "../../icons";
 import { useState } from "react";
 
-export default function MonthlySalesChart() {
+export default function MonthlySalesChart({ OrdersData }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // بيانات الطلبات
+  const order_count_per_month = {
+    ...OrdersData.orderPerMonth,
+  };
+
+  // تحويل البيانات إلى تنسيق مناسب للرسم البياني
+  const monthsMap = {
+    "01": "Jan",
+    "02": "Feb",
+    "03": "Mar",
+    "04": "Apr",
+    "05": "May",
+    "06": "Jun",
+    "07": "Jul",
+    "08": "Aug",
+    "09": "Sep",
+    "10": "Oct",
+    "11": "Nov",
+    "12": "Dec",
+  };
+
+  const sortedEntries = Object.entries(order_count_per_month).sort(([a], [b]) =>
+    a.localeCompare(b)
+  );
+
+  console.log(sortedEntries);
+
+  const categories = sortedEntries.map(([key]) => monthsMap[key.split("-")[1]]);
+
+  const data = sortedEntries.map(([, value]) => value);
+
   const options: ApexOptions = {
     colors: ["#465fff"],
     chart: {
@@ -19,7 +52,7 @@ export default function MonthlySalesChart() {
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: "39%",
+        columnWidth: "35%",
         borderRadius: 5,
         borderRadiusApplication: "end",
       },
@@ -33,20 +66,7 @@ export default function MonthlySalesChart() {
       colors: ["transparent"],
     },
     xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
+      categories,
       axisBorder: {
         show: false,
       },
@@ -75,7 +95,6 @@ export default function MonthlySalesChart() {
     fill: {
       opacity: 1,
     },
-
     tooltip: {
       x: {
         show: false,
@@ -85,13 +104,13 @@ export default function MonthlySalesChart() {
       },
     },
   };
+
   const series = [
     {
-      name: "Sales",
-      data: [168, 385, 201, 298, 187, 195, 291, 110, 215, 390, 280, 112],
+      name: "order",
+      data,
     },
   ];
-  const [isOpen, setIsOpen] = useState(false);
 
   function toggleDropdown() {
     setIsOpen(!isOpen);
@@ -100,13 +119,14 @@ export default function MonthlySalesChart() {
   function closeDropdown() {
     setIsOpen(false);
   }
+
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Monthly Sales
+          Monthly Orders
         </h3>
-        <div className="relative inline-block">
+        {/* <div className="relative inline-block">
           <button className="dropdown-toggle" onClick={toggleDropdown}>
             <MoreDotIcon className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 size-6" />
           </button>
@@ -128,7 +148,7 @@ export default function MonthlySalesChart() {
               Delete
             </DropdownItem>
           </Dropdown>
-        </div>
+        </div> */}
       </div>
 
       <div className="max-w-full overflow-x-auto custom-scrollbar">

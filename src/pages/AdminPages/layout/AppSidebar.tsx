@@ -5,6 +5,7 @@ import {
   BoxCubeIcon,
   CalenderIcon,
   ChevronDownIcon,
+  DocsIcon,
   GridIcon,
   GroupIcon,
   HorizontaLDots,
@@ -13,7 +14,11 @@ import {
   PieChartIcon,
   PlugInIcon,
   TableIcon,
+  TicketsIcon,
+  Order,
   UserCircleIcon,
+  Category,
+  Brand,
 } from "../../../icons";
 import { useSidebar } from "../../../context/SidebarContext";
 import { PiSignOut } from "react-icons/pi";
@@ -44,28 +49,36 @@ const navItems: NavItem[] = [
   },
   {
     icon: <BoxCubeIcon />,
-    name: "Brands",
-    path: "/admin/brands",
-  },
-  {
-    icon: <BoxCubeIcon />,
     name: "Products",
     path: "/admin/products",
   },
   {
-    icon: <BoxCubeIcon />,
+    icon: <Category />,
     name: "Categories",
     path: "/admin/categories",
   },
   {
-    icon: <BoxCubeIcon />,
+    icon: <Order />,
     name: "Orders",
     path: "/admin/orders",
   },
   {
-    icon: <BoxCubeIcon />,
+    icon: <TicketsIcon />,
     name: "Coupons",
     path: "/admin/coupons",
+  },
+  {
+    icon: <Brand />,
+    name: "Brands",
+    path: "/admin/brands",
+  },
+  {
+    icon: <DocsIcon />,
+    name: "Reports",
+    subItems: [
+      { name: "Orders Report", path: "/admin/orders_report", pro: false },
+      { name: "Products Report", path: "/admin/products_report", pro: false },
+    ],
   },
   {
     icon: <UserCircleIcon />,
@@ -149,7 +162,11 @@ const AppSidebar: React.FC = () => {
 
   //const isActive = (path: string) => location.pathname === path;
   const isActive = useCallback(
-    (path: string) => location.pathname === path,
+    (path: string) =>
+      location.pathname === path ||
+      location.pathname.startsWith(`${path}/update`) ||
+      location.pathname.startsWith(`${path}/details`) ||
+      location.pathname === `${path}/create`,
     [location.pathname]
   );
 

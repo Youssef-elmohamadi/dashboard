@@ -4,37 +4,23 @@ import {
   TableCell,
   TableHeader,
   TableRow,
-} from "../ui/table";
-import Badge from "../ui/badge/Badge";
-import { useEffect, useState } from "react";
-import { getAllCategories } from "../../api/AdminApi/categoryApi/_requests";
-interface Order {
+} from "../../../components/ui/table";
+interface Product {
+  productId: string;
   productName: string;
-  productCategory: string;
-  productPrice: number | string;
-  productStatus: string;
-  productImage?: string;
+  productSoldCount: number | string;
 }
 
-export default function RecentOrders({ orders }: { orders: Order[] }) {
-  const [categories, setCategories] = useState([]);
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getAllCategories();
-        setCategories(response.data.data.original);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchCategories();
-  }, []);
-
+export default function TopSelligProducts({
+  products,
+}: {
+  products: Product[];
+}) {
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
       <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Recent Orders
+          Top Selling Products
         </h3>
 
         <div className="flex items-center gap-3">
@@ -55,77 +41,42 @@ export default function RecentOrders({ orders }: { orders: Order[] }) {
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                Product
+                ID
               </TableCell>
               <TableCell
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                Category
+                Product Name
               </TableCell>
               <TableCell
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                Price
+                Total Sold
               </TableCell>
-              <TableCell
+              {/* <TableCell
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
                 Status
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           </TableHeader>
 
           <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
-            {orders.map((order, idx) => (
+            {products?.map((product, idx) => (
               <TableRow key={idx}>
                 <TableCell className="py-3">
                   <div className="flex items-center gap-3">
-                    {order.productImage ? (
-                      <div className="h-[50px] w-[50px] overflow-hidden rounded-md">
-                        <img
-                          src={order.productImage}
-                          alt={order.productName}
-                          className="h-[50px] w-[50px] object-cover"
-                        />
-                      </div>
-                    ) : (
-                      <div className="h-[50px] w-[50px] flex items-center justify-center rounded-md bg-gray-100 text-gray-400">
-                        N/A
-                      </div>
-                    )}
-                    <div>
-                      <p className="font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                        {order.productName}
-                      </p>
-                    </div>
+                    {product.productId}
                   </div>
                 </TableCell>
                 <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {categories.find((cat) => cat.id === order.productCategory)
-                    ?.name || "Unknown"}
+                  {product.productName}
                 </TableCell>
                 <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {typeof order.productPrice === "number"
-                    ? `${order.productPrice} EGP`
-                    : order.productPrice}
-                </TableCell>
-                <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  <Badge
-                    size="sm"
-                    color={
-                      order.productStatus.toLowerCase() === "delivered" ||
-                      order.productStatus.toLowerCase() === "shipped"
-                        ? "success"
-                        : order.productStatus.toLowerCase() === "pending"
-                        ? "warning"
-                        : "error"
-                    }
-                  >
-                    {order.productStatus}
-                  </Badge>
+                  {product.productSoldCount}
                 </TableCell>
               </TableRow>
             ))}

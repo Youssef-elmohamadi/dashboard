@@ -32,6 +32,8 @@ import CreateCoupon from "../../components/admin/couponsTable/CreateCoupon";
 import UpdateCoupon from "../../components/admin/couponsTable/UpdateCoupon";
 import ShowMore from "../../components/admin/couponsTable/ShowMore";
 import CouponDetails from "../../components/admin/couponsTable/ShowMore";
+import OrdersReports from "../../pages/AdminPages/Orders Report/OrdersReports";
+import ProductReports from "../../pages/AdminPages/Products Report/ProductReports";
 
 export const adminRoutes = (
   <>
@@ -66,6 +68,8 @@ export const adminRoutes = (
       <Route path="coupons/create" element={<CreateCoupon />} />
       <Route path="coupons/update/:id" element={<UpdateCoupon />} />
       <Route path="coupons/details/:id" element={<CouponDetails />} />
+      <Route path="orders_report" element={<OrdersReports />} />
+      <Route path="products_report" element={<ProductReports />} />
       <Route path="blank" element={<Blank />} />
       <Route path="form-elements" element={<FormElements />} />
       <Route path="basic-tables" element={<BasicTables />} />
