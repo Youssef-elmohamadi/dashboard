@@ -1,0 +1,21 @@
+{
+  "rolesPage": {
+    "title": "الادوار",
+    "addNew": "إضافة دور جديد",
+    "all": "كل الادوار",
+    "createdSuccess": "تم إنشاء الدور بنجاح",
+    "updatedSuccess": "تم تعديل بيانات الدور بنجاح",
+    "delete": {
+      "confirmTitle": "حذف الدور؟",
+      "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
+      "confirmButtonText": "نعم، احذف",
+      "successTitle": "تم الحذف!",
+      "successText": "تم حذف الدور.",
+      "errorTitle": "خطأ",
+      "errorText": "تعذر حذف الدور."
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات الادوار"
+    }
+  }
+}

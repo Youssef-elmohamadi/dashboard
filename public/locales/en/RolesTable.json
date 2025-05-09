@@ -1,0 +1,21 @@
+{
+  "rolesPage": {
+    "title": "Roles",
+    "addNew": "Add New Role",
+    "all": "All Roles",
+    "createdSuccess": "Role Created Successfully",
+    "updatedSuccess": "Role Updated Successfully",
+    "delete": {
+      "confirmTitle": "Delete Role?",
+      "confirmText": "This action cannot be undone!",
+      "confirmButtonText": "Yes, delete",
+      "successTitle": "Role Deleted!",
+      "successText": "Role has been deleted.",
+      "errorTitle": "Error",
+      "errorText": "Could not delete the Role."
+    },
+    "table": {
+      "loadingText": "Roles data Loading"
+    }
+  }
+}

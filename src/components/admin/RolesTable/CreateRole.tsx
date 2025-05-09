@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Checkbox from "../../form/input/Checkbox";
@@ -8,7 +8,7 @@ import {
 } from "../../../api/AdminApi/rolesApi/_requests";
 import Loading from "../../common/Loading";
 import { useNavigate } from "react-router-dom";
-
+import { useTranslation } from "react-i18next";
 type Permission = {
   id: number;
   name: string;
@@ -29,7 +29,7 @@ export default function CreateRole() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
-
+  const { t } = useTranslation(["CreateRole"]);
   useEffect(() => {
     const fetchPermissions = async () => {
       setLoading(true);
@@ -70,10 +70,10 @@ export default function CreateRole() {
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
     if (!roleData.name.trim()) {
-      errors.name = "Name is required.";
+      errors.name = t("role.errors.name");
     }
     if (roleData.permissions.length === 0) {
-      errors.permissions = "At least one permission must be selected.";
+      errors.permissions = t("role.errors.permission");
     }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -92,18 +92,16 @@ export default function CreateRole() {
       const response = await createRole(roleData);
       if (response?.status === 200 || response?.status === 201) {
         navigate("/admin/roles", {
-          state: { successCreate: "Role Created Successfully" },
+          state: { successCreate: t("role.success_message") },
         });
       }
     } catch (error: any) {
-      console.error("Error creating role:", error);
-
       const status = error?.response?.status;
 
       if (status === 403 || status === 401) {
         setFormErrors({
           ...formErrors,
-          global: "You don't have permission to perform this action.",
+          global: t("role.errors.global"),
         });
         return;
       }
@@ -121,6 +119,8 @@ export default function CreateRole() {
         });
 
         setErrors(formattedErrors);
+      } else {
+        setErrors({ general: [t("role.errors.general")] });
       }
     } finally {
       setIsSubmitting(false);
@@ -131,20 +131,20 @@ export default function CreateRole() {
     <div className=" p-6">
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Create Role
+          {t("role.create_title")}
         </h3>
       </div>
       <form onSubmit={handleSubmit} className="p-4 md:p-5">
         <div className="grid gap-4 mb-4 grid-cols-2">
           <div className="col-span-2 sm:col-span-1">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">{t("role.name")}</Label>
             <Input
               type="text"
               name="name"
               id="name"
               value={roleData.name}
               onChange={handleChange}
-              placeholder="Enter the Role Name"
+              placeholder={t("role.placeholder.name")}
             />
             {formErrors.name && (
               <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
@@ -155,11 +155,11 @@ export default function CreateRole() {
           </div>
 
           {loading ? (
-            <Loading text="Wait, getting permissions..." />
+            <Loading text={t("role.get_permissions")} />
           ) : (
             <div className="col-span-2">
               <h2 className="text-sm font-medium mb-4 text-gray-700 dark:text-gray-400">
-                Permissions
+                {t("role.permission")}
               </h2>
               <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
                 {permissions.map((permission) => (
@@ -195,7 +195,7 @@ export default function CreateRole() {
             isSubmitting ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          {isSubmitting ? "Saving..." : "Save Changes"}
+          {isSubmitting ? t("role.button.submitting") : t("role.button.submit")}
         </button>
       </form>
     </div>

@@ -1,0 +1,33 @@
+{
+    "title": "Order Details",
+    "no_id": "No Order ID provided.",
+    "loading": "Loading order details...",
+    "not_found": "Order not found.",
+    "egp": "EGP",
+    "sections": {
+      "order_info": "Order Information",
+      "customer_info": "Customer Information",
+      "products": "Products",
+      "dates": "Dates"
+    },
+    "fields": {
+      "order_id": "Order ID",
+      "status": "Status",
+      "total": "Total",
+      "payment_method": "Payment Method",
+      "shipping_status": "Shipping Status",
+      "tracking_number": "Tracking Number",
+      "estimated_delivery": "Estimated Delivery",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "product_name": "Product Name",
+      "description": "Description",
+      "price": "Price",
+      "quantity": "Quantity",
+      "created_at": "Created At",
+      "updated_at": "Last Updated"
+    }
+  }
+  

@@ -9,11 +9,10 @@ import {
   getAllRolesPaginate,
 } from "../../../api/AdminApi/rolesApi/_requests";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
-import TableActions from "../../../components/admin/Tables/TablesActions";
 import BasicTable from "../../../components/admin/Tables/BasicTable";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
-
+import { useTranslation } from "react-i18next";
 type Role = {};
 
 const Roles = () => {
@@ -29,7 +28,7 @@ const Roles = () => {
   }>({
     name: "",
   });
-
+  const { t } = useTranslation(["RolesTable"]);
   const [alertData, setAlertData] = useState<{
     variant: "success" | "error" | "info" | "warning";
     title: string;
@@ -49,13 +48,13 @@ const Roles = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: "Role Created Successfully",
+        title: t("rolesPage.createdSuccess"),
         message: location.state.successCreate,
       });
     } else if (location.state?.successUpdate) {
       setAlertData({
         variant: "success",
-        title: "Role Updated Successfully",
+        title: t("rolesPage.updatedSuccess"),
         message: location.state.successEdit,
       });
     }
@@ -119,13 +118,13 @@ const Roles = () => {
       deleteRole,
       () => fetchData(pageIndex),
       {
-        confirmTitle: "Delete Role?",
-        confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, delete",
-        successTitle: "Deleted!",
-        successText: "Role has been deleted.",
-        errorTitle: "Error",
-        errorText: "Could not delete the Role.",
+        confirmTitle: t("rolesPage.delete.confirmTitle"),
+        confirmText: t("rolesPage.delete.confirmText"),
+        confirmButtonText: t("rolesPage.delete.confirmButtonText"),
+        successTitle: t("rolesPage.delete.successTitle"),
+        successText: t("rolesPage.delete.successText"),
+        errorTitle: t("rolesPage.delete.errorTitle"),
+        errorText: t("rolesPage.delete.errorText"),
       }
     );
     setReload((prev) => prev + 1);
@@ -139,7 +138,6 @@ const Roles = () => {
     includeUpdatedAt: true,
     includeCreatedAt: true,
     includeActions: true,
-    onDelete: (id) => console.log("delete", id),
   });
 
   return (
@@ -155,7 +153,7 @@ const Roles = () => {
         title="Roles Dashboard"
         description="This is the roles listing page."
       />
-      <PageBreadcrumb pageTitle="Roles" />
+      <PageBreadcrumb pageTitle={t("rolesPage.title")} userType="admin" />
       <div>
         <SearchTable
           fields={[{ key: "name", label: "Name", type: "input" }]}
@@ -164,8 +162,8 @@ const Roles = () => {
       </div>
       <div className="space-y-6">
         <ComponentCard
-          title="All Roles"
-          headerAction="Add New Role"
+          title={t("rolesPage.all")}
+          headerAction={t("rolesPage.addNew")}
           href="/admin/roles/create"
         >
           <BasicTable
@@ -185,7 +183,7 @@ const Roles = () => {
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
             searchValueName={searchValues.name}
-            loadingText="Roles data Loading"
+            loadingText={t("rolesPage.table.loadingText")}
           />
         </ComponentCard>
       </div>

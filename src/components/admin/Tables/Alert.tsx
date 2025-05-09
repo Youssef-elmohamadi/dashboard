@@ -6,6 +6,7 @@ interface AlertMessages {
   confirmTitle?: string;
   confirmText?: string;
   confirmButtonText?: string;
+  cancelButtonText?: string;
   successTitle?: string;
   successText?: string;
   errorTitle?: string;
@@ -22,6 +23,7 @@ export const alertDelete = async (
     confirmTitle = "Are you sure?",
     confirmText = "You won't be able to revert this!",
     confirmButtonText = "Yes, delete it!",
+    cancelButtonText = "Cancel", // أضف السطر ده
     successTitle = "Deleted!",
     successText = "Item has been deleted.",
     errorTitle = "Error!",
@@ -36,6 +38,7 @@ export const alertDelete = async (
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
     confirmButtonText,
+    cancelButtonText,
     customClass: { popup: "custom-popup" },
   });
 
@@ -43,7 +46,12 @@ export const alertDelete = async (
     try {
       await apiFn(id);
       const updated = await refetchFn();
-      Swal.fire({ title: successTitle, text: successText, icon: "success" });
+      Swal.fire({
+        title: successTitle,
+        text: successText,
+        icon: "success",
+        customClass: { popup: "custom-popup" },
+      });
       return updated;
     } catch (error: any) {
       console.error("Error deleting item:", error);
@@ -65,7 +73,12 @@ export const alertDelete = async (
         globalError = errorText;
       }
 
-      Swal.fire({ title: errorTitle, text: globalError, icon: "error" });
+      Swal.fire({
+        title: errorTitle,
+        text: globalError,
+        icon: "error",
+        customClass: { popup: "custom-popup" },
+      });
     }
   }
 };

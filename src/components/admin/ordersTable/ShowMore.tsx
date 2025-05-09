@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getOrderById } from "../../../api/AdminApi/ordersApi/_requests";
+import { useTranslation } from "react-i18next";
 
 // Interfaces
 interface Product {
@@ -49,6 +50,7 @@ interface Order {
 }
 
 const OrderDetails: React.FC = () => {
+  const { t } = useTranslation(["OrderDetails"]);
   const { id } = useParams();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
@@ -76,85 +78,86 @@ const OrderDetails: React.FC = () => {
     });
 
   if (!id)
-    return (
-      <div className="p-8 text-center text-gray-500">No Order ID provided.</div>
-    );
+    return <div className="p-8 text-center text-gray-500">{t("no_id")}</div>;
+
   if (loading)
-    return (
-      <div className="p-8 text-center text-gray-500">
-        Loading order details...
-      </div>
-    );
+    return <div className="p-8 text-center text-gray-500">{t("loading")}</div>;
+
   if (!order)
     return (
-      <div className="p-8 text-center text-gray-500">Order not found.</div>
+      <div className="p-8 text-center text-gray-500">{t("not_found")}</div>
     );
 
   return (
     <div className="order-details p-6 max-w-6xl mx-auto space-y-10">
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">
-        Order Details
+        {t("title")}
       </h1>
 
-      {/*Section 1: Order Info*/}
+      {/* Order Info */}
       <section className="bg-white p-6 rounded-xl shadow-md">
         <h2 className="text-xl font-semibold mb-4 text-blue-700">
-          Order Information
+          {t("sections.order_info")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
           <p>
-            <strong>Order ID:</strong> {order.order_id}
+            <strong>{t("fields.order_id")}:</strong> {order.order_id}
           </p>
           <p>
-            <strong>Status:</strong> {order.status}
+            <strong>{t("fields.status")}:</strong> {order.status}
           </p>
           <p>
-            <strong>Total:</strong> {order.total} EGP
+            <strong>{t("fields.total")}:</strong> {order.total} {t("egp")}
           </p>
           <p>
-            <strong>Payment Method:</strong> {order.order.payment_method}
+            <strong>{t("fields.payment_method")}:</strong>{" "}
+            {order.order.payment_method}
           </p>
           <p>
-            <strong>Shipping Status:</strong> {order.shipping_status}
+            <strong>{t("fields.shipping_status")}:</strong>{" "}
+            {order.shipping_status}
           </p>
           <p>
-            <strong>Tracking Number:</strong> {order.tracking_number}
+            <strong>{t("fields.tracking_number")}:</strong>{" "}
+            {order.tracking_number}
           </p>
           <p>
-            <strong>Estimated Delivery:</strong>{" "}
+            <strong>{t("fields.estimated_delivery")}:</strong>{" "}
             {formatDate(order.estimated_delivery_date)}
           </p>
         </div>
       </section>
 
-      {/*Section 2: Customer Info*/}
+      {/* Customer Info */}
       <section className="bg-white p-6 rounded-xl shadow-md">
         <h2 className="text-xl font-semibold mb-4 text-green-700">
-          Customer Information
+          {t("sections.customer_info")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
           <p>
-            <strong>Name:</strong> {order.order.user.first_name}{" "}
+            <strong>{t("fields.name")}:</strong> {order.order.user.first_name}{" "}
             {order.order.user.last_name}
           </p>
           <p>
-            <strong>Email:</strong> {order.order.user.email}
+            <strong>{t("fields.email")}:</strong> {order.order.user.email}
           </p>
           <p>
-            <strong>Phone:</strong> {order.order.user.phone}
+            <strong>{t("fields.phone")}:</strong> {order.order.user.phone}
           </p>
           {order.order.location && (
             <p>
-              <strong>Address:</strong> {order.order.location.street},{" "}
-              {order.order.location.city}
+              <strong>{t("fields.address")}:</strong>{" "}
+              {order.order.location.street}, {order.order.location.city}
             </p>
           )}
         </div>
       </section>
 
-      {/*Section 3: Products*/}
+      {/* Products */}
       <section className="bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4 text-purple-700">Products</h2>
+        <h2 className="text-xl font-semibold mb-4 text-purple-700">
+          {t("sections.products")}
+        </h2>
         <div className="space-y-4">
           {order.items.map((item) => (
             <div
@@ -163,19 +166,21 @@ const OrderDetails: React.FC = () => {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700">
                 <p>
-                  <strong>Product Name:</strong> {item.product.name}
+                  <strong>{t("fields.product_name")}:</strong>{" "}
+                  {item.product.name}
                 </p>
                 <p>
-                  <strong>Description:</strong> {item.product.description}
+                  <strong>{t("fields.description")}:</strong>{" "}
+                  {item.product.description}
                 </p>
                 <p>
-                  <strong>Price:</strong> {item.price} EGP
+                  <strong>{t("fields.price")}:</strong> {item.price} {t("egp")}
                 </p>
                 <p>
-                  <strong>Quantity:</strong> {item.quantity}
+                  <strong>{t("fields.quantity")}:</strong> {item.quantity}
                 </p>
                 <p>
-                  <strong>Total:</strong> {item.total} EGP
+                  <strong>{t("fields.total")}:</strong> {item.total} {t("egp")}
                 </p>
               </div>
             </div>
@@ -183,15 +188,19 @@ const OrderDetails: React.FC = () => {
         </div>
       </section>
 
-      {/*Section 4: Dates*/}
+      {/* Dates */}
       <section className="bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4 text-gray-700">Dates</h2>
+        <h2 className="text-xl font-semibold mb-4 text-gray-700">
+          {t("sections.dates")}
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
           <p>
-            <strong>Created At:</strong> {formatDate(order.created_at)}
+            <strong>{t("fields.created_at")}:</strong>{" "}
+            {formatDate(order.created_at)}
           </p>
           <p>
-            <strong>Last Updated:</strong> {formatDate(order.updated_at)}
+            <strong>{t("fields.updated_at")}:</strong>{" "}
+            {formatDate(order.updated_at)}
           </p>
         </div>
       </section>

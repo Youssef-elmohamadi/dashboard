@@ -1,0 +1,38 @@
+{
+    "admin": {
+      "update_title": "Update Admin",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "password": "Password",
+      "select_role": "Select Role",
+      "placeholder": {
+        "first_name": "Enter the Admin First Name",
+        "last_name": "Enter the Admin Last Name",
+        "email": "Enter the Admin Email",
+        "phone": "Enter the Admin Phone",
+        "password": "Enter The Admin password",
+        "select_role": "Select a Role"
+      },
+      "button": {
+        "submit": "Update Admin",
+        "submitting": "Updating..."
+      },
+      "errors": {
+        "first_name": "First Name is Required",
+        "last_name": "Last Name is Required",
+        "email_required": "The Email is Required",
+        "email_invalid": "Invalid Email",
+        "phone_required": "The Phone Number is Required",
+        "phone_invalid": "Please Enter Valid Phone Number",
+        "password": "The Password is Required",
+        "length_password": "The Password must be at least 8 characters",
+        "role": "The Role is Required",
+        "global": "You don't have permission to perform this action.",
+        "general": "Something went wrong."
+      },
+      "success_message": "Admin Updated Successfully"
+    }
+  }
+  

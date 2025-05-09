@@ -9,7 +9,7 @@ import { createProduct } from "../../../api/AdminApi/products/_requests";
 import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
 import TextArea from "../../form/input/TextArea";
 import { FiDelete } from "react-icons/fi";
-
+import { useTranslation } from "react-i18next";
 type Attribute = { label: string; value: string };
 type Category = { id: string; name: string };
 type Brand = { id: string; name: string };
@@ -30,8 +30,20 @@ export default function CreateProducts() {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [tags, setTags] = useState<string[]>([]);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
+  const [errors, setErrors] = useState({
+    name: [] as string[],
+    price: [] as string[],
+    description: [] as string[],
+    category_id: [] as string[],
+    brand_id: [] as string[],
+    stock_quantity: [] as string[],
+    status: [] as string[],
+    is_featured: [] as string[],
+  });
+  const [clientSideErrors, setClientSideErrors] = useState<
+    Record<string, string>
+  >({});
+  const { t } = useTranslation(["CreateProduct"]);
   const [productData, setProductData] = useState<ProductFormData>({
     name: "",
     description: "",
@@ -80,7 +92,6 @@ export default function CreateProducts() {
   ) => {
     const { name, value } = e.target;
     setProductData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,16 +133,16 @@ export default function CreateProducts() {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!productData.name) newErrors.name = "Name is required";
-    if (!productData.price) newErrors.price = "Price is required";
+    if (!productData.name) newErrors.name = t("validation.name");
+    if (!productData.price) newErrors.price = t("validation.price");
     if (!productData.stock_quantity)
-      newErrors.stock_quantity = "Stock quantity is required";
+      newErrors.stock_quantity = t("validation.stock_quantity");
     if (!productData.category_id)
-      newErrors.category_id = "Category is required";
-    if (!productData.brand_id) newErrors.brand_id = "Brand is required";
+      newErrors.category_id = t("validation.category_id");
+    if (!productData.brand_id) newErrors.brand_id = t("validation.brand_id");
     if (!productData.description)
-      newErrors.description = "Description is required";
-    setErrors(newErrors);
+      newErrors.description = t("validation.description");
+    setClientSideErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
@@ -156,131 +167,185 @@ export default function CreateProducts() {
     tags
       .filter((tag) => tag.trim() !== "")
       .forEach((tag, i) => formData.append(`tags[${i}]`, tag));
-
     try {
       await createProduct(formData);
       navigate("/admin/products", {
-        state: { successCreate: "Roles Created Successfully" },
+        state: { successCreate: t("success_create") },
       });
-    } catch (error) {
-      console.log("Error creating product:", error);
-    }
+    } catch (error: any) {
+      console.error("Error creating admin:", error);
+      const status = error?.response?.status;
+      if (status === 403 || status === 401) {
+        setErrors({
+          ...errors,
+          global: t("errors.global"),
+        });
+        return;
+      }
+      const rawErrors = error?.response?.data.errors;
 
-    setLoading(false);
+      if (Array.isArray(rawErrors)) {
+        const formattedErrors: Record<string, string[]> = {};
+
+        rawErrors.forEach((err: { code: string; message: string }) => {
+          if (!formattedErrors[err.code]) {
+            formattedErrors[err.code] = [];
+          }
+          formattedErrors[err.code].push(err.message);
+        });
+
+        setErrors(formattedErrors);
+      } else {
+        setErrors({ general: [t("admin.errors.general")] });
+      }
+    }
   };
 
   return (
     <div className="">
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Create Product
+          {t("title")}
         </h3>
       </div>
       <form onSubmit={handleSubmit} className="space-y-6 mt-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">{t("form.name")}</Label>
             <Input
               name="name"
               value={productData.name}
-              placeholder="Enter product name"
+              placeholder={t("placeholders.name")}
               onChange={handleChange}
             />
+            {clientSideErrors.name && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.name}
+              </p>
+            )}
             {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+              <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
             )}
           </div>
           <div>
-            <Label htmlFor="price">Price</Label>
+            <Label htmlFor="price">{t("form.price")}</Label>
             <Input
               type="text"
               name="price"
-              placeholder="Enter price"
+              placeholder={t("placeholders.price")}
               value={productData.price}
               onChange={handleChange}
             />
+            {clientSideErrors.price && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.price}
+              </p>
+            )}
             {errors.price && (
-              <p className="text-red-500 text-sm mt-1">{errors.price}</p>
+              <p className="text-red-500 text-sm mt-1">{errors.price[0]}</p>
             )}
           </div>
           <div>
-            <Label htmlFor="stock_quantity">Stock Quantity</Label>
+            <Label htmlFor="stock_quantity">{t("form.stock_quantity")}</Label>
             <Input
               type="text"
               name="stock_quantity"
-              placeholder="Enter quantity in stock"
+              placeholder={t("placeholders.stock_quantity")}
               value={productData.stock_quantity}
               onChange={handleChange}
             />
+            {clientSideErrors.stock_quantity && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.stock_quantity}
+              </p>
+            )}
             {errors.stock_quantity && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.stock_quantity}
+                {errors.stock_quantity[0]}
               </p>
             )}
           </div>
           <div>
-            <Label htmlFor="category_id">Category</Label>
+            <Label htmlFor="category_id">{t("form.category")}</Label>
             <select
               name="category_id"
               value={productData.category_id}
               onChange={handleChange}
               className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full dark:bg-gray-900 dark:text-white"
             >
-              <option value="">Select Category</option>
+              <option value="">{t("form.select_category")}</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
                 </option>
               ))}
             </select>
+            {clientSideErrors.category_id && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.category_id}
+              </p>
+            )}
             {errors.category_id && (
-              <p className="text-red-500 text-sm mt-1">{errors.category_id}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.category_id[0]}
+              </p>
             )}
           </div>
           <div>
-            <Label htmlFor="brand_id">Brand</Label>
+            <Label htmlFor="brand_id">{t("form.brand")}</Label>
             <select
               name="brand_id"
               value={productData.brand_id}
               onChange={handleChange}
               className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full dark:bg-gray-900 dark:text-white"
             >
-              <option value="">Select Brand</option>
+              <option value="">{t("form.select_brand")}</option>
               {brands.map((brand) => (
                 <option key={brand.id} value={brand.id}>
                   {brand.name}
                 </option>
               ))}
             </select>
+            {clientSideErrors.brand_id && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.brand_id}
+              </p>
+            )}
             {errors.brand_id && (
-              <p className="text-red-500 text-sm mt-1">{errors.brand_id}</p>
+              <p className="text-red-500 text-sm mt-1">{errors.brand_id[0]}</p>
             )}
           </div>
           <div>
-            <Label htmlFor="status">Status</Label>
+            <Label htmlFor="status">{t("form.status")}</Label>
             <select
               name="status"
               value={productData.status}
               onChange={handleChange}
               className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full dark:bg-gray-900 dark:text-white"
             >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value="active">{t("form.status_active")}</option>
+              <option value="inactive">{t("form.status_inactive")}</option>
             </select>
+            {errors.status && (
+              <p className="text-red-500 text-sm mt-1">{errors.status[0]}</p>
+            )}
           </div>
           <div className="flex gap-2 items-center">
-            <Label htmlFor="is_featured">Featured</Label>
+            <Label htmlFor="is_featured">{t("form.is_featured")}</Label>
             <Checkbox
               checked={productData.is_featured}
               onChange={(checked) =>
                 setProductData((prev) => ({ ...prev, is_featured: checked }))
               }
             />
+            {errors.is_featured && (
+              <p className="text-red-500 text-sm mt-1">{errors.brand_id[0]}</p>
+            )}
           </div>
         </div>
 
         <div>
-          <Label>Upload Images</Label>
+          <Label>{t("form.upload_images")}</Label>
           <FileInput multiple={true} onChange={handleImageChange} />
           <div className="flex gap-4 mt-2 flex-wrap">
             {imagePreviews.map((src, index) => (
@@ -295,24 +360,43 @@ export default function CreateProducts() {
         </div>
 
         <div>
-          <Label htmlFor="description">Description</Label>
+          <Label htmlFor="description">{t("form.description")}</Label>
           <TextArea
             name="description"
-            placeholder="Enter product description"
+            placeholder={t("placeholders.description")}
             value={productData.description}
             onChange={(value) =>
               setProductData((prev) => ({ ...prev, description: value }))
             }
           />
+          {clientSideErrors.description && (
+            <p className="text-red-500 text-sm mt-1">
+              {clientSideErrors.description}
+            </p>
+          )}
           {errors.description && (
-            <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+            <p className="text-red-500 text-sm mt-1">{errors.description[0]}</p>
           )}
         </div>
 
         <div>
-          <Label>Attributes</Label>
+          <Label>{t("form.attributes")}</Label>
           {attributes.map((attr, index) => (
             <div key={index} className="flex gap-2 mb-2 items-center">
+              <Input
+                placeholder={t("placeholders.attribute_label")}
+                value={attr.label}
+                onChange={(e) =>
+                  handleAttributeChange(index, "label", e.target.value)
+                }
+              />
+              <Input
+                placeholder={t("placeholders.attribute_value")}
+                value={attr.value}
+                onChange={(e) =>
+                  handleAttributeChange(index, "value", e.target.value)
+                }
+              />
               <button
                 type="button"
                 onClick={() => removeAttribute(index)}
@@ -320,20 +404,6 @@ export default function CreateProducts() {
               >
                 <FiDelete className="text-red-600 text-xl" />
               </button>
-              <Input
-                placeholder="Label"
-                value={attr.label}
-                onChange={(e) =>
-                  handleAttributeChange(index, "label", e.target.value)
-                }
-              />
-              <Input
-                placeholder="Value"
-                value={attr.value}
-                onChange={(e) =>
-                  handleAttributeChange(index, "value", e.target.value)
-                }
-              />
             </div>
           ))}
           <button
@@ -343,16 +413,21 @@ export default function CreateProducts() {
             }
             className="text-blue-500 mt-1"
           >
-            + Add Attribute
+            {t("form.add_attribute")}
           </button>
         </div>
 
         <div>
           {tags.length > 0 && (
             <div>
-              <Label>Tags</Label>
+              <Label>{t("form.tags")}</Label>
               {tags.map((tag, index) => (
                 <div key={index} className="mb-2 flex gap-2 items-center">
+                  <Input
+                    placeholder={t("placeholders.tag")}
+                    value={tag}
+                    onChange={(e) => handleTagChange(index, e.target.value)}
+                  />
                   <button
                     type="button"
                     onClick={() => removeTag(index)}
@@ -360,17 +435,12 @@ export default function CreateProducts() {
                   >
                     <FiDelete className="text-red-600 text-xl" />
                   </button>
-                  <Input
-                    placeholder="Tag"
-                    value={tag}
-                    onChange={(e) => handleTagChange(index, e.target.value)}
-                  />
                 </div>
               ))}
             </div>
           )}
           <button type="button" onClick={addTag} className="text-blue-500 mt-1">
-            + Add Tag
+            {t("form.add_tag")}
           </button>
         </div>
 
@@ -379,7 +449,7 @@ export default function CreateProducts() {
           disabled={loading}
           className="rounded-lg bg-blue-600 text-white px-6 py-2 hover:bg-blue-700 w-1/4 mx-auto"
         >
-          {loading ? "Creating..." : "Create Product"}
+          {loading ? t("form.creating_button") : t("form.create_button")}
         </button>
       </form>
     </div>

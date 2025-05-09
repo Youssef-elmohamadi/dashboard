@@ -1,0 +1,30 @@
+{
+    "table": {
+      "id": "المعرف",
+      "name": "الاسم",
+      "full_name": "الاسم الكامل",
+      "customer": "العميل",
+      "status": "الحالة",
+      "order_status": "حالة الطلب",
+      "shipping_status": "حالة الشحن",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "commission_rate": "نسبة العمولة",
+      "role": "الدور",
+      "total_amount": "المبلغ الإجمالي",
+      "payment_method": "طريقة الدفع",
+      "created_at": "تاريخ الإنشاء",
+      "updated_at": "تاريخ التعديل",
+      "address": "العنوان",
+      "code": "الرمز",
+      "type": "النوع",
+      "value": "القيمة",
+      "usage_limit": "الحد الأقصى للاستخدام",
+      "used_count": "عدد مرات الاستخدام",
+      "start_date": "تاريخ البداية",
+      "expires_at": "تاريخ الانتهاء",
+      "active": "نشط",
+      "actions": "الإجراءات"
+    }
+  }
+  

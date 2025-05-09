@@ -1,11 +1,12 @@
 import { Link } from "react-router";
-
+import { useTranslation } from "react-i18next";
 interface BreadcrumbProps {
   pageTitle: string;
   userType: string;
 }
 
 const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle, userType }) => {
+  const { t } = useTranslation(["BreadCrumpTables"]);
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
       <h2
@@ -21,7 +22,7 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle, userType }) => {
               className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400"
               to={userType === "admin" ? "/admin" : "/super_admin"}
             >
-              Home
+              {t("homeLink")}
               <svg
                 className="stroke-current"
                 width="17"

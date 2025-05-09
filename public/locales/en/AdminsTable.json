@@ -1,0 +1,23 @@
+{
+    "adminsPage": {
+      "title": "Admins",
+      "addNew": "Add New Admin",
+      "all": "All Admins",
+      "createdSuccess": "Admin Created Successfully",
+      "updatedSuccess": "Admin Updated Successfully",
+      "delete": {
+        "confirmTitle": "Delete Admin?",
+        "confirmText": "This action cannot be undone!",
+        "confirmButtonText": "Yes, delete",
+        "cancelButtonText": "Cancel",
+        "successTitle": "Admin Deleted!",
+        "successText": "Admin has been deleted.",
+        "errorTitle": "Error",
+        "errorText": "Could not delete the Admin."
+      },
+      "table": {
+        "loadingText": "Admins data Loading"
+      }
+    }
+  }
+  

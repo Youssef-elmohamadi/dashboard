@@ -3,17 +3,13 @@ import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/admin/Tables/BasicTable";
-import {
-  getAllCategories,
-  getCategoriesPaginate,
-} from "../../../api/AdminApi/categoryApi/_requests";
+import { getCategoriesPaginate } from "../../../api/AdminApi/categoryApi/_requests";
 import { useLocation } from "react-router";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
-import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
+import { useTranslation } from "react-i18next";
 type Category = {};
 const Categories = () => {
-  const [reload, setReload] = useState(0);
   const [data, setData] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Brand | null>(null);
@@ -33,7 +29,7 @@ const Categories = () => {
   });
 
   const location = useLocation();
-
+  const { t } = useTranslation(["CategoriesTable"]);
   useEffect(() => {
     if (location.state?.successCreate) {
       setAlertData({
@@ -142,7 +138,7 @@ const Categories = () => {
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <PageBreadcrumb pageTitle="Categories" />
+      <PageBreadcrumb pageTitle={t("categoriesPage.title")} userType="admin" />
       <div>
         <SearchTable
           fields={[{ key: "name", label: "Name", type: "input" }]}
@@ -150,7 +146,7 @@ const Categories = () => {
         />
       </div>
       <div className="space-y-6">
-        <ComponentCard title="All Categories">
+        <ComponentCard title={t("categoriesPage.all")}>
           <BasicTable
             columns={columns}
             fetchData={fetchData}
@@ -166,7 +162,7 @@ const Categories = () => {
             isModalEdit={false}
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             searchValueName={searchValues.name}
-            loadingText="Categories data Loading"
+            loadingText={t("categoriesPage.table.loadingText")}
           />
         </ComponentCard>
       </div>

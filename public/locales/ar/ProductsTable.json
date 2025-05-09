@@ -1,0 +1,22 @@
+{
+  "productsPage": {
+    "title": "المنتجات",
+    "addNew": "إضافة منتج جديد",
+    "all": "كل المنتجات",
+    "createdSuccess": "تم إنشاء المنتج بنجاح",
+    "updatedSuccess": "تم تعديل بيانات المنتج بنجاح",
+    "delete": {
+      "confirmTitle": "حذف المنتج؟",
+      "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
+      "confirmButtonText": "نعم، احذف",
+      "cancelButtonText": "الغاء",
+      "successTitle": "تم الحذف!",
+      "successText": "تم حذف المنتج.",
+      "errorTitle": "خطأ",
+      "errorText": "تعذر حذف المنتج."
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات المنتجات"
+    }
+  }
+}

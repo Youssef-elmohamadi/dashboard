@@ -1,0 +1,47 @@
+{
+  "title": "إنشاء منتج",
+  "form": {
+    "name": "الاسم",
+    "price": "السعر",
+    "stock_quantity": "الكمية في المخزون",
+    "category": "الفئة",
+    "select_category": "حدد الفئة",
+    "brand": "العلامة التجارية",
+    "select_brand": "حدد العلامة التجارية",
+    "status": "الحالة",
+    "status_active": "نشط",
+    "status_inactive": "غير نشط",
+    "is_featured": "مميز",
+    "description": "الوصف",
+    "upload_images": "رفع الصور",
+    "attributes": "السمات",
+    "tags": "الوسوم",
+    "add_attribute": "+ إضافة سمة",
+    "add_tag": "+ إضافة وسم",
+    "create_button": "إنشاء المنتج",
+    "creating_button": "جارٍ الإنشاء..."
+  },
+  "placeholders": {
+    "name": "أدخل اسم المنتج",
+    "price": "أدخل السعر",
+    "stock_quantity": "أدخل الكمية في المخزون",
+    "description": "أدخل وصف المنتج",
+    "tag": "وسم",
+    "attribute_label": "الاسم",
+    "attribute_value": "القيمة"
+  },
+  "validation": {
+    "name": "اسم المنتج مطلوب",
+    "price": "السعر مطلوب",
+    "stock_quantity": "الكمية مطلوبة",
+    "category_id": "الفئة مطلوبة",
+    "brand_id": "العلامة التجارية مطلوبة",
+    "description": "الوصف مطلوب"
+  },
+  "errors": {
+    "general": "حدث خطأ ما، يرجى المحاولة مرة أخرى.",
+    "global": "غير مصرح لك بتنفيذ هذا الإجراء."
+  },
+  "success_message": "تم انشاء المنتج بنجاح.",
+  "loading": "جارٍ التحميل..."
+}

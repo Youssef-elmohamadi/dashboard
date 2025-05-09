@@ -1,0 +1,48 @@
+{
+  "title": "Create Product",
+  "form": {
+    "name": "Name",
+    "price": "Price",
+    "stock_quantity": "Stock Quantity",
+    "category": "Category",
+    "select_category": "Select category",
+    "brand": "Brand",
+    "select_brand": "Select brand",
+    "status": "Status",
+    "status_active": "Active",
+    "status_inactive": "Inactive",
+    "is_featured": "Featured",
+    "description": "Description",
+    "upload_images": "Upload Images",
+    "attributes": "Attributes",
+    "tags": "Tags",
+    "add_attribute": "+ Add Attribute",
+    "add_tag": "+ Add Tag",
+    "create_button": "Create Product",
+    "creating_button": "Creating..."
+  },
+  "placeholders": {
+    "name": "Enter product name",
+    "price": "Enter price",
+    "stock_quantity": "Enter quantity in stock",
+    "description": "Enter product description",
+    "tag": "Tag",
+    "attribute_label": "Label",
+    "attribute_value": "Value"
+  },
+  "validation": {
+    "name": "Name is required",
+    "price": "Price is required",
+    "stock_quantity": "Stock quantity is required",
+    "category_id": "Category is required",
+    "brand_id": "Brand is required",
+    "description": "Description is required"
+  },
+  "errors": {
+    "general": "Something went wrong. Please try again.",
+    "global": "You are not authorized to perform this action."
+  },
+  "success_create": "Product Created Successfully",
+  "success_update": "Product Updated Successfully",
+  "loading": "Loading..."
+}

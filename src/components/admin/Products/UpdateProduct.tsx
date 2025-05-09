@@ -11,7 +11,7 @@ import {
 } from "../../../api/AdminApi/products/_requests";
 import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
 import { FiDelete } from "react-icons/fi";
-
+import { useTranslation } from "react-i18next";
 type Category = {
   id: number;
   name: string;
@@ -32,34 +32,42 @@ type Attribute = {
 };
 
 type Product = {
-  id: number;
-  vendor_id: number;
-  name: string;
-  description: string | number | undefined;
-  category_id: number;
-  brand_id: number;
-  price: number;
-  discount_price: number | null;
-  stock_quantity: number;
-  status: string;
+  id?: number;
+  vendor_id?: number;
+  name?: string;
+  description?: string | number | undefined;
+  category_id?: number | string;
+  brand_id?: number | string;
+  price?: number | string;
+  discount_price?: number | null;
+  stock_quantity?: number | string;
+  status?: string;
   is_featured: boolean;
-  rating: number | null;
-  views_count: number | null;
-  created_at: string;
-  updated_at: string;
-  category: Category;
-  brand: Brand;
-  attributes: any[];
+  rating?: number | null;
+  views_count?: number | null;
+  created_at?: string;
+  updated_at?: string;
+  category?: Category;
+  brand?: Brand;
+  attributes?: any[];
   images?: string[];
-  tags: string[];
-  variants: any[];
+  tags?: string[];
+  variants?: any[];
 };
-
 const UpdateProductPage: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const [productData, setProductData] = useState<Product | null>(null);
+  const { t } = useTranslation(["UpdateProduct"]);
+  const [productData, setProductData] = useState<Product>({
+    name: "",
+    description: "",
+    price: "",
+    stock_quantity: "",
+    category_id: "",
+    brand_id: "",
+    status: "",
+    is_featured: false,
+  });
   const [categories, setCategories] = useState<Category[]>([]);
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -68,6 +76,16 @@ const UpdateProductPage: React.FC = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [clientSideErrors, setClientSideErrors] = useState({
+    name: "",
+    description: "",
+    price: "",
+    stock_quantity: "",
+    category_id: "",
+    brand_id: "",
+    status: "",
+    is_featured: false,
+  });
   const [error, setError] = useState<string>();
   const [brands, setBrands] = useState<Brand[]>([]);
 
@@ -152,10 +170,23 @@ const UpdateProductPage: React.FC = () => {
   const addAttribute = () =>
     setAttributes([...attributes, { label: "", value: "" }]);
   const addTag = () => setTags([...tags, ""]);
-
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    if (!productData.name) newErrors.name = t("validation.name");
+    if (!productData.price) newErrors.price = t("validation.price");
+    if (!productData.stock_quantity)
+      newErrors.stock_quantity = t("validation.stock_quantity");
+    if (!productData.category_id)
+      newErrors.category_id = t("validation.category_id");
+    if (!productData.brand_id) newErrors.brand_id = t("validation.brand_id");
+    if (!productData.description)
+      newErrors.description = t("validation.description");
+    setClientSideErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!productData) return;
+    if (!validate()) return;
     setLoading(true);
     setErrors({});
 
@@ -187,54 +218,75 @@ const UpdateProductPage: React.FC = () => {
 
     try {
       await updateProduct(formData, productData.id);
-      navigate("/admin/products");
-    } catch (err: any) {
-      console.error(err);
-
-      const newErrors: { [key: string]: string } = {};
-
-      if (err?.response?.data?.errors) {
-        const errorData = err.response.data.errors;
-        Object.values(errorData).forEach((e: any) => {
-          const field = e.code.includes(".") ? e.code.split(".")[0] : e.code;
-          newErrors[field] = e.message;
+      navigate("/admin/products", {
+        state: { successCreate: t("success_update") },
+      });
+    } catch (error: any) {
+      const status = error?.response?.status;
+      if (status === 403 || status === 401) {
+        setErrors({
+          ...errors,
+          global: t("errors.global"),
         });
+        return;
       }
-      setErrors(newErrors);
-    } finally {
-      setLoading(false);
+      const rawErrors = error?.response?.data.errors;
+
+      if (Array.isArray(rawErrors)) {
+        const formattedErrors: Record<string, string[]> = {};
+
+        rawErrors.forEach((err: { code: string; message: string }) => {
+          if (!formattedErrors[err.code]) {
+            formattedErrors[err.code] = [];
+          }
+          formattedErrors[err.code].push(err.message);
+        });
+
+        setErrors(formattedErrors);
+      } else {
+        setErrors({ general: [t("errors.general")] });
+      }
     }
   };
 
-  if (!productData) return <div className="p-6">Loading...</div>;
+  if (!productData) return <div className="p-6">{t("loading")}</div>;
 
   return (
     <div className="">
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Update Product
+          {t("title")}
         </h3>
       </div>
 
-      {error && <div className="text-red-600 mb-4">{error}</div>}
+      {errors.global && (
+        <div className="text-red-600 mb-4">{errors.global}</div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6 mt-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">{t("form.name")}</Label>
             <Input
               name="name"
+              placeholder={t("placeholders.name")}
               value={productData.name}
               onChange={handleChange}
             />
             {errors.name && (
               <p className="text-red-500 text-sm mt-1">{errors.name}</p>
             )}
+            {clientSideErrors.name && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.name}
+              </p>
+            )}
           </div>
           <div>
-            <Label htmlFor="price">Price</Label>
+            <Label htmlFor="price">{t("form.price")}</Label>
             <Input
               name="price"
+              placeholder={t("placeholders.price")}
               value={productData.price}
               onChange={handleChange}
             />
@@ -243,9 +295,10 @@ const UpdateProductPage: React.FC = () => {
             )}
           </div>
           <div>
-            <Label htmlFor="stock_quantity">Stock Quantity</Label>
+            <Label htmlFor="stock_quantity">{t("form.stock_quantity")}</Label>
             <Input
               name="stock_quantity"
+              placeholder={t("placeholders.stock_quantity")}
               value={productData.stock_quantity}
               onChange={handleChange}
             />
@@ -256,14 +309,14 @@ const UpdateProductPage: React.FC = () => {
             )}
           </div>
           <div>
-            <Label htmlFor="category_id">Category</Label>
+            <Label htmlFor="category_id">{t("form.category")}</Label>
             <select
               name="category_id"
               value={productData.category_id}
               onChange={handleChange}
               className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full dark:bg-gray-900 dark:text-white"
             >
-              <option value="">Select Category</option>
+              <option value="">{t("form.select_category")}</option>
               {categories.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.name}
@@ -275,14 +328,14 @@ const UpdateProductPage: React.FC = () => {
             )}
           </div>
           <div>
-            <Label htmlFor="brand_id">Brand</Label>
+            <Label htmlFor="brand_id">{t("form.brand")}</Label>
             <select
               name="brand_id"
               value={productData.brand_id}
               onChange={handleChange}
               className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full dark:bg-gray-900 dark:text-white"
             >
-              <option value="">Select Brand</option>
+              <option value="">{t("form.select_brand")}</option>
               {brands.map((brand) => (
                 <option key={brand.id} value={brand.id}>
                   {brand.name}
@@ -295,39 +348,38 @@ const UpdateProductPage: React.FC = () => {
           </div>
 
           <div>
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">{t("form.description")}</Label>
             <Input
               name="description"
               value={productData.description}
               onChange={handleChange}
+              placeholder={t("placeholders.description")}
             />
             {errors.description && (
               <p className="text-red-500 text-sm mt-1">{errors.description}</p>
             )}
           </div>
           <div>
-            <Label htmlFor="status">Status</Label>
+            <Label htmlFor="status">{t("form.status")}</Label>
             <select
               name="status"
               value={productData.status}
               onChange={handleChange}
               className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full dark:bg-gray-900 dark:text-white"
             >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value="active">{t("form.status_active")}</option>
+              <option value="inactive">{t("form.status_inactive")}</option>
             </select>
             {errors.status && (
               <p className="text-red-500 text-sm mt-1">{errors.status}</p>
             )}
           </div>
           <div className="flex items-center space-x-3 mt-1">
-            <Label htmlFor="is_featured">Featured</Label>
+            <Label htmlFor="is_featured">{t("form.is_featured")}</Label>
             <Checkbox
-              checked={productData.is_featured}
+              checked={productData.is_featured === "1" ? true : false}
               onChange={(checked) =>
-                setProductData((prev) =>
-                  prev ? { ...prev, is_featured: checked } : prev
-                )
+                setProductData((prev) => ({ ...prev, is_featured: checked }))
               }
             />
             {errors.is_featured && (
@@ -339,7 +391,7 @@ const UpdateProductPage: React.FC = () => {
         {/* Existing Images */}
         {existingImages.length > 0 && (
           <div>
-            <Label>Existing Images</Label>
+            <Label>{t("form.existing_images")}</Label>
             <div className="flex gap-3 mt-3 flex-wrap">
               {existingImages.map((src, i) => (
                 <img
@@ -355,7 +407,7 @@ const UpdateProductPage: React.FC = () => {
 
         {/* Upload New Images */}
         <div>
-          <Label>Upload New Images</Label>
+          <Label>{t("form.upload_images")}</Label>
           <FileInput multiple onChange={handleImageChange} />
           {errors.images && (
             <p className="text-red-500 text-sm mt-1">{errors.images}</p>
@@ -389,9 +441,23 @@ const UpdateProductPage: React.FC = () => {
 
         {/* Attributes */}
         <div>
-          <Label>Attributes</Label>
+          <Label>{t("form.attributes")}</Label>
           {attributes.map((attr, i) => (
             <div key={i} className="flex gap-2 mb-2 items-center">
+              <Input
+                placeholder={t("placeholders.attribute_label")}
+                value={attr.label}
+                onChange={(e) =>
+                  handleAttributeChange(i, "label", e.target.value)
+                }
+              />
+              <Input
+                placeholder={t("placeholders.attribute_value")}
+                value={attr.value}
+                onChange={(e) =>
+                  handleAttributeChange(i, "value", e.target.value)
+                }
+              />
               <button
                 type="button"
                 onClick={() => removeAttribute(i)}
@@ -399,20 +465,6 @@ const UpdateProductPage: React.FC = () => {
               >
                 <FiDelete className="text-red-600 text-xl" />
               </button>
-              <Input
-                placeholder="Label"
-                value={attr.label}
-                onChange={(e) =>
-                  handleAttributeChange(i, "label", e.target.value)
-                }
-              />
-              <Input
-                placeholder="Value"
-                value={attr.value}
-                onChange={(e) =>
-                  handleAttributeChange(i, "value", e.target.value)
-                }
-              />
             </div>
           ))}
           <button
@@ -420,7 +472,7 @@ const UpdateProductPage: React.FC = () => {
             onClick={addAttribute}
             className="text-blue-500 mt-1"
           >
-            + Add Attribute
+            {t("form.add_attribute")}
           </button>
           {errors.attributes && (
             <p className="text-red-500 text-sm mt-1">{errors.attributes}</p>
@@ -429,9 +481,14 @@ const UpdateProductPage: React.FC = () => {
 
         {/* Tags */}
         <div>
-          <Label>Tags</Label>
+          <Label>{t("form.tags")}</Label>
           {tags.map((tag, i) => (
             <div key={i} className="mb-2 flex items-center gap-2">
+              <Input
+                value={tag}
+                onChange={(e) => handleTagChange(i, e.target.value)}
+                placeholder={t("placeholders.tag")}
+              />
               <button
                 type="button"
                 onClick={() => removeTag(i)}
@@ -439,11 +496,6 @@ const UpdateProductPage: React.FC = () => {
               >
                 <FiDelete className="text-red-600 text-xl" />
               </button>
-              <Input
-                value={tag}
-                onChange={(e) => handleTagChange(i, e.target.value)}
-                placeholder="Tag"
-              />
             </div>
           ))}
           <button
@@ -451,7 +503,7 @@ const UpdateProductPage: React.FC = () => {
             onClick={addTag}
             className="text-blue-600 hover:underline mt-2"
           >
-            + Add Tag
+            {t("form.add_tag")}
           </button>
           {errors.tags && (
             <p className="text-red-500 text-sm mt-1">{errors.tags}</p>
@@ -464,7 +516,7 @@ const UpdateProductPage: React.FC = () => {
             disabled={loading}
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg"
           >
-            {loading ? "Updating..." : "Update Product"}
+            {loading ? t("form.updating_button") : t("form.update_button")}
           </button>
         </div>
       </form>

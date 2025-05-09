@@ -1,0 +1,30 @@
+{
+    "table": {
+      "id": "ID",
+      "name": "Name",
+      "full_name": "Name",
+      "customer": "Customer",
+      "status": "Status",
+      "order_status": "Order Status",
+      "shipping_status": "Shipping Status",
+      "email": "Email",
+      "phone": "Phone",
+      "commission_rate": "Commission Rate",
+      "role": "Role",
+      "total_amount": "Total Amount",
+      "payment_method": "Payment Method",
+      "created_at": "Created At",
+      "updated_at": "Updated At",
+      "address": "Address",
+      "code": "Code",
+      "type": "Type",
+      "value": "Value",
+      "usage_limit": "Usage Limit",
+      "used_count": "Used Count",
+      "start_date": "Start Date",
+      "expires_at": "Expires At",
+      "active": "Active",
+      "actions": "Actions"
+    }
+  }
+  

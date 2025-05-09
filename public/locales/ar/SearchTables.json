@@ -1,0 +1,16 @@
+{
+    "searchTable": {
+      "title": "بحث",
+      "all": "الكل",
+      "placeholder": "أدخل {{field}}",
+      "fields": {
+        "Name": "الاسم",
+        "Email": "البريد الإلكتروني",
+        "Phone": "رقم الهاتف",
+        "Status": "الحالة",
+        "Category": "الفئة",
+        "Brand": "العلامة التجارية"
+      }
+    }
+  }
+  

@@ -10,7 +10,8 @@ import {
 } from "../../../api/AdminApi/usersApi/_requests";
 import { FiUserPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-
+import { useTranslation } from "react-i18next";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 export default function CreateAdmin() {
   const [showPassword, setShowPassword] = useState(false);
   const [options, setOptions] = useState<any[]>([]);
@@ -23,7 +24,7 @@ export default function CreateAdmin() {
     password: [] as string[],
     role: [] as string[],
   });
-  const [adminData, setAdminData] = useState({
+  const [clientSideErrors, setClientSideErrors] = useState({
     first_name: "",
     last_name: "",
     phone: "",
@@ -31,7 +32,7 @@ export default function CreateAdmin() {
     password: "",
     role: "",
   });
-  const [clientSideErrors, setClientSideErrors] = useState({
+  const [adminData, setAdminData] = useState({
     first_name: "",
     last_name: "",
     phone: "",
@@ -50,28 +51,31 @@ export default function CreateAdmin() {
       role: "",
     };
     if (!adminData.first_name) {
-      newErrors.first_name = "First Name is Required";
+      newErrors.first_name = t("admin.errors.first_name");
     } else if (!adminData.last_name) {
-      newErrors.last_name = "Last Name is Required";
+      newErrors.last_name = t("admin.errors.last_name");
     } else if (!adminData.email) {
-      newErrors.email = "The Email Required";
+      newErrors.email = t("admin.errors.email_required");
     } else if (
       !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(adminData.email)
     ) {
-      newErrors.email = "InValid Email";
+      newErrors.email = t("admin.errors.email_invalid");
     } else if (!adminData.phone) {
-      newErrors.phone = "The Phone Number is Required";
+      newErrors.phone = t("admin.errors.phone_required");
     } else if (!/^01[0125][0-9]{8}$/.test(adminData.phone)) {
-      newErrors.phone = "Please Enter Valid Phone Number";
+      newErrors.phone = t("admin.errors.phone_invalid");
     } else if (!adminData.password) {
-      newErrors.password = "The Password is Required";
+      newErrors.password = t("admin.errors.password");
+    } else if (adminData.password.length < 8) {
+      newErrors.password = t("admin.errors.length_password");
     } else if (!adminData.role) {
-      newErrors.role = "The Role is Required";
+      newErrors.role = t("admin.errors.role");
     }
     setClientSideErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");
   };
-
+  const { t } = useTranslation(["CreateAdmin"]);
+  const { dir } = useDirectionAndLanguage();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +111,7 @@ export default function CreateAdmin() {
     try {
       await createAdmin(adminData);
       navigate("/admin/admins", {
-        state: { successCreate: "Admin Created Successfully" },
+        state: { successCreate: t("admin.success_message") },
       });
     } catch (error: any) {
       console.error("Error creating admin:", error);
@@ -115,7 +119,7 @@ export default function CreateAdmin() {
       if (status === 403 || status === 401) {
         setErrors({
           ...errors,
-          global: "You don't have permission to perform this action.",
+          global: t("admin.errors.global"),
         });
         return;
       }
@@ -133,7 +137,7 @@ export default function CreateAdmin() {
 
         setErrors(formattedErrors);
       } else {
-        setErrors({ general: ["Something went wrong."] });
+        setErrors({ general: [t("admin.errors.general")] });
       }
     }
   };
@@ -141,7 +145,7 @@ export default function CreateAdmin() {
     <div>
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Create Admin
+          {t("admin.create_title")}
         </h3>
       </div>
       <form
@@ -150,12 +154,12 @@ export default function CreateAdmin() {
       >
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
-            <Label htmlFor="input">First Name</Label>
+            <Label htmlFor="input">{t("admin.first_name")}</Label>
             <Input
               type="text"
               id="input"
               name="first_name"
-              placeholder="Enter the Admin First Name"
+              placeholder={t("admin.placeholder.first_name")}
               onChange={handleChange}
             />
             {errors.first_name && (
@@ -170,12 +174,12 @@ export default function CreateAdmin() {
             )}
           </div>
           <div>
-            <Label htmlFor="inputTwo">Last Name</Label>
+            <Label htmlFor="inputTwo">{t("admin.last_name")}</Label>
             <Input
               type="text"
               id="inputTwo"
               name="last_name"
-              placeholder="Enter the Admin Last Name"
+              placeholder={t("admin.placeholder.last_name")}
               onChange={handleChange}
             />
             {errors.last_name && (
@@ -189,7 +193,7 @@ export default function CreateAdmin() {
           </div>
         </div>
         <div className="w-full">
-          <Label>Select Role</Label>
+          <Label>{t("admin.select_role")}</Label>
           <Select
             options={options.map((role) => ({
               value: role.name,
@@ -197,7 +201,7 @@ export default function CreateAdmin() {
             }))}
             defaultValue={adminData.role}
             onChange={handleSelectChange}
-            placeholder="Select a Role"
+            placeholder={t("admin.placeholder.select_role")}
             className="dark:bg-dark-900"
           />
           {errors.role && (
@@ -208,12 +212,12 @@ export default function CreateAdmin() {
           )}
         </div>
         <div className="w-full">
-          <Label htmlFor="inputTwo">Email</Label>
+          <Label htmlFor="inputTwo">{t("admin.email")}</Label>
           <Input
             type="email"
             id="inputTwo"
             name="email"
-            placeholder="Enter the Admin Email"
+            placeholder={t("admin.placeholder.email")}
             onChange={handleChange}
           />
           {errors.email && (
@@ -226,12 +230,12 @@ export default function CreateAdmin() {
           )}
         </div>
         <div className="w-full">
-          <Label htmlFor="inputTwo">Phone</Label>
+          <Label htmlFor="inputTwo">{t("admin.phone")}</Label>
           <Input
             type="text"
             id="inputTwo"
             name="phone"
-            placeholder="Enter the Admin Phone"
+            placeholder={t("admin.placeholder.phone")}
             onChange={handleChange}
           />
           {errors.phone && (
@@ -244,12 +248,12 @@ export default function CreateAdmin() {
           )}
         </div>
         <div className="w-full">
-          <Label>Password</Label>
+          <Label>{t("admin.password")}</Label>
           <div className="relative">
             <Input
               type={showPassword ? "text" : "password"}
               name="password"
-              placeholder="Enter The Admin password"
+              placeholder={t("admin.placeholder.password")}
               onChange={handleChange}
             />
             {errors.password && (
@@ -263,7 +267,9 @@ export default function CreateAdmin() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+              className={`absolute z-30 -translate-y-1/2 cursor-pointer ${
+                dir === "rtl" ? "left-4" : "right-4"
+              } top-1/2`}
             >
               {showPassword ? (
                 <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
@@ -276,13 +282,16 @@ export default function CreateAdmin() {
         {errors.global && (
           <p className="text-red-500 text-sm mt-4">{errors.global}</p>
         )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
+        )}
         <button
           type="submit"
           disabled={loading}
           className="bg-blue-600 flex gap-4 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
           <FiUserPlus size={20} />
-          {loading ? "Creating..." : "Add Admin"}
+          {loading ? t("admin.button.submitting") : t("admin.button.submit")}
         </button>
       </form>
     </div>

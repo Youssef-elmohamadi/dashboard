@@ -4,19 +4,16 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/admin/Tables/BasicTable";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { getAllAdminsPaginate } from "../../../api/usersApi/_requests";
-import { deleteAdmin } from "../../../api/AdminApi/usersApi/_requests";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns"; // مكان الملف
-import TableActions from "../../../components/admin/Tables/TablesActions";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 import {
   cancelOrder,
   getOrdersWithPaginate,
-  shipmentOrder,
 } from "../../../api/AdminApi/ordersApi/_requests";
 import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
+import { useTranslation } from "react-i18next";
 type User = {
   id: number;
   first_name: string;
@@ -33,7 +30,6 @@ type User = {
 
 const Orders = () => {
   const [data, setData] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
@@ -56,7 +52,7 @@ const Orders = () => {
     }));
     setPageIndex(0);
   };
-
+  const { t } = useTranslation(["OrdersTable"]);
   const fetchData = async (pageIndex: number = 0) => {
     setLoading(true);
     setError(null);
@@ -142,13 +138,14 @@ const Orders = () => {
       cancelOrder,
       () => fetchData(pageIndex),
       {
-        confirmTitle: "Cancel Order?",
-        confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, Cancel",
-        successTitle: "Canceled!",
-        successText: "Order has been Canceled.",
-        errorTitle: "Error",
-        errorText: "Could not Cancel The Order.",
+        confirmTitle: t("ordersPage.cancel.confirmTitle"),
+        confirmText: t("ordersPage.cancel.confirmText"),
+        confirmButtonText: t("ordersPage.cancel.confirmButtonText"),
+        cancelButtonText: t("ordersPage.cancel.cancelButtonText"),
+        successTitle: t("ordersPage.cancel.successTitle"),
+        successText: t("ordersPage.cancel.successText"),
+        errorTitle: t("ordersPage.cancel.errorTitle"),
+        errorText: t("ordersPage.cancel.errorText"),
       }
     );
     setReload((prev) => prev + 1);
@@ -181,7 +178,7 @@ const Orders = () => {
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <PageBreadcrumb pageTitle="Orders" />
+      <PageBreadcrumb pageTitle={t("ordersPage.title")} userType="admin" />
       <div>
         <SearchTable
           fields={[
@@ -193,7 +190,7 @@ const Orders = () => {
         />
       </div>
       <div className="space-y-6">
-        <ComponentCard title="All Orders">
+        <ComponentCard title={t("ordersPage.all")}>
           <BasicTable
             columns={columns}
             fetchData={fetchData}
@@ -211,7 +208,7 @@ const Orders = () => {
             searchValueName={searchValues.name}
             searchValueEmail={searchValues.email}
             searchValuePhone={searchValues.phone}
-            loadingText="Orders data Loading"
+            loadingText={t("ordersPage.table.loadingText")}
           />
         </ComponentCard>
       </div>

@@ -1,0 +1,10 @@
+{
+  "pagination": {
+    "showing": "عرض",
+    "to": "إلى",
+    "of": "من",
+    "entries": "عنصر",
+    "previous": "السابق",
+    "next": "التالي"
+  }
+}

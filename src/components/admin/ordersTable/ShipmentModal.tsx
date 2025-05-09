@@ -1,21 +1,31 @@
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import {
-  getOrdersWithPaginate,
-  shipmentOrder,
-} from "../../../api/AdminApi/ordersApi/_requests";
+import { shipmentOrder } from "../../../api/AdminApi/ordersApi/_requests";
+import i18n from "../../../i18n"; // أو استخدم useTranslation لو في React component
+import "./ShipmentModal.css";
+import { useTranslation } from "react-i18next";
 
 const MySwal = withReactContent(Swal);
 
 export const openShipmentModal = async (orderId: number) => {
+  const t = i18n.getFixedT(null, "OrdersTable");
+
   const { value: formValues } = await MySwal.fire({
-    title: "Enter Shipment Details",
+    title: t("ordersPage.ship.title"),
+    customClass: { popup: "custom-popup" },
     html: `
-      <input id="tracking_number" class="swal2-input" placeholder="Tracking Number">
-      <input id="estimated_delivery_date" type="date" class="swal2-input">
-    `,
-    confirmButtonText: "Submit",
+    <input id="tracking_number" class="swal2-input" placeholder="${t(
+      "ordersPage.ship.tracking_placeholder"
+    )}">
+    
+    <label for="estimated_delivery_date" class="block w-[300px] text-gray-700 mt-3 mr-3 ml-7 -mb-3 dark:text-white">
+      ${t("ordersPage.ship.estimated_label")}
+    </label>
+    
+    <input id="estimated_delivery_date" type="date" class="swal2-input !w-[300px]">
+  `,
+    confirmButtonText: t("ordersPage.ship.confirm_button"),
     focusConfirm: false,
     preConfirm: () => {
       const trackingNumber = (
@@ -33,7 +43,7 @@ export const openShipmentModal = async (orderId: number) => {
       if (oldMessage) oldMessage.remove();
 
       if (!trackingNumber || !estimatedDeliveryDate) {
-        Swal.showValidationMessage("Please fill in all fields");
+        Swal.showValidationMessage(t("ordersPage.ship.fill_all_fields"));
         return false;
       }
 
@@ -44,7 +54,7 @@ export const openShipmentModal = async (orderId: number) => {
         message.style.color = "red";
         message.style.fontSize = "0.8rem";
         message.style.marginTop = "4px";
-        message.innerText = "Estimated date must be today or later.";
+        message.innerText = t("ordersPage.ship.date_error");
         input?.parentElement?.appendChild(message);
         return false;
       }
@@ -58,11 +68,11 @@ export const openShipmentModal = async (orderId: number) => {
 
   if (formValues) {
     try {
-      await shipmentOrder(formValues, orderId); // Send to API
-      toast.success("Shipment info submitted successfully!");
+      await shipmentOrder(formValues, orderId);
+      toast.success(t("ordersPage.ship.success_message"));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to submit shipment info.");
+      toast.error(t("ordersPage.ship.error_message"));
     }
   }
 };

@@ -1,0 +1,9 @@
+{
+  "categoriesPage": {
+    "title": "Categories",
+    "all": "All Categories",
+    "table": {
+      "loadingText": "Categories data Loading"
+    }
+  }
+}

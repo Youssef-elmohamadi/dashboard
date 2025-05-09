@@ -14,6 +14,8 @@ import { useLocation } from "react-router";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
 import { getAllCategories } from "../../../api/AdminApi/categoryApi/_requests";
+import { useTranslation } from "react-i18next";
+import Alert from "../../../components/ui/alert/Alert";
 type Product = {};
 const Products = () => {
   const [reload, setReload] = useState(0);
@@ -35,7 +37,7 @@ const Products = () => {
     status: "",
     name: "",
   });
-
+  const { t } = useTranslation(["ProductsTable"]);
   const [alertData, setAlertData] = useState<{
     variant: "success" | "error" | "info" | "warning";
     title: string;
@@ -49,13 +51,13 @@ const Products = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: "Role Created Successfully",
+        title: t("productsPage.createdSuccess"),
         message: location.state.successCreate,
       });
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
-        title: "Role Updated Successfully",
+        title: t("productsPage.updatedSuccess"),
         message: location.state.successEdit,
       });
     }
@@ -151,13 +153,14 @@ const Products = () => {
       deleteProduct,
       () => fetchData(pageIndex),
       {
-        confirmTitle: "Delete Role?",
-        confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, delete",
-        successTitle: "Deleted!",
-        successText: "Role has been deleted.",
-        errorTitle: "Error",
-        errorText: "Could not delete the Role.",
+        confirmTitle: t("productsPage.delete.confirmTitle"),
+        confirmText: t("productsPage.delete.confirmText"),
+        confirmButtonText: t("productsPage.delete.confirmButtonText"),
+        cancelButtonText: t("productsPage.delete.cancelButtonText"),
+        successTitle: t("productsPage.delete.successTitle"),
+        successText: t("productsPage.delete.successText"),
+        errorTitle: t("productsPage.delete.errorTitle"),
+        errorText: t("productsPage.delete.errorText"),
       }
     );
     setReload((prev) => prev + 1);
@@ -172,15 +175,6 @@ const Products = () => {
     includeUpdatedAt: true,
     includeCreatedAt: true,
     includeActions: true,
-    onDelete: (id) => console.log("delete", id),
-    customActionsRenderer: (row) => (
-      <TableActions
-        id={row.id}
-        rowData={row}
-        isShowMore={true}
-        onDelete={handleDelete}
-      />
-    ),
   });
 
   return (
@@ -189,7 +183,14 @@ const Products = () => {
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <PageBreadcrumb pageTitle="Products" />
+      {alertData && (
+        <Alert
+          variant={alertData.variant}
+          title={alertData.title}
+          message={alertData.message}
+        />
+      )}
+      <PageBreadcrumb pageTitle={t("productsPage.title")} userType="admin" />
       <div>
         <SearchTable
           fields={[
@@ -227,8 +228,8 @@ const Products = () => {
       </div>
       <div className="space-y-6">
         <ComponentCard
-          title="All Products"
-          headerAction="Add New Products"
+          title={t("productsPage.all")}
+          headerAction={t("productsPage.addNew")}
           href="/admin/products/create"
         >
           <BasicTable
@@ -253,7 +254,7 @@ const Products = () => {
             searchValueCategoryId={searchValues.category_id}
             searchValueBrandId={searchValues.brand_id}
             searchValueStatus={searchValues.status}
-            loadingText="Products data Loading"
+            loadingText={t("productsPage.table.loadingText")}
           />
         </ComponentCard>
       </div>
