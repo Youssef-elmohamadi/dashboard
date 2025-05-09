@@ -132,9 +132,7 @@ const UpdateAdmin = () => {
       try {
         const res = await getAllRoles();
         setOptions(res.data.data);
-      } catch (err) {
-        console.error("Error fetching roles:", err);
-      }
+      } catch (err) {}
     };
 
     fetchRoles();
@@ -160,7 +158,9 @@ const UpdateAdmin = () => {
   // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!validate()) return;
+    setLoading(true);
     try {
       if (id) {
         const dataToSend = {
@@ -196,6 +196,8 @@ const UpdateAdmin = () => {
       } else {
         setErrors({ general: [t("admin.errors.general")] });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -356,7 +358,12 @@ const UpdateAdmin = () => {
             </p>
           )}
         </div>
-
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+        )}
         {/* Submit Button */}
         <button
           type="submit"

@@ -1,0 +1,14 @@
+{
+  "create_title": "Create Brand",
+  "name_label": "Brand Name",
+  "name_placeholder": "Enter the Brand Name",
+  "name_required": "Brand name is required.",
+  "status_label": "Select Status",
+  "status_active": "Active",
+  "status_inactive": "Inactive",
+  "image_label": "Brand Image",
+  "submit_button": "Add Brand",
+  "loading_button": "Creating...",
+  "submit_error": "Something went wrong.",
+  "create_success": "Brand Created Successfully"
+}

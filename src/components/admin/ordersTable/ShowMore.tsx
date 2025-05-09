@@ -78,28 +78,38 @@ const OrderDetails: React.FC = () => {
     });
 
   if (!id)
-    return <div className="p-8 text-center text-gray-500">{t("no_id")}</div>;
+    return (
+      <div className="p-8 text-center text-gray-500 dark:text-white">
+        {t("no_id")}
+      </div>
+    );
 
   if (loading)
-    return <div className="p-8 text-center text-gray-500">{t("loading")}</div>;
+    return (
+      <div className="p-8 text-center text-gray-500 dark:text-white">
+        {t("loading")}
+      </div>
+    );
 
   if (!order)
     return (
-      <div className="p-8 text-center text-gray-500">{t("not_found")}</div>
+      <div className="p-8 text-center text-gray-500 dark:text-white">
+        {t("not_found")}
+      </div>
     );
 
   return (
     <div className="order-details p-6 max-w-6xl mx-auto space-y-10">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">
+      <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-4">
         {t("title")}
       </h1>
 
       {/* Order Info */}
-      <section className="bg-white p-6 rounded-xl shadow-md">
+      <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
         <h2 className="text-xl font-semibold mb-4 text-blue-700">
           {t("sections.order_info")}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
             <strong>{t("fields.order_id")}:</strong> {order.order_id}
           </p>
@@ -111,7 +121,7 @@ const OrderDetails: React.FC = () => {
           </p>
           <p>
             <strong>{t("fields.payment_method")}:</strong>{" "}
-            {order.order.payment_method}
+            {order.order?.payment_method}
           </p>
           <p>
             <strong>{t("fields.shipping_status")}:</strong>{" "}
@@ -129,32 +139,32 @@ const OrderDetails: React.FC = () => {
       </section>
 
       {/* Customer Info */}
-      <section className="bg-white p-6 rounded-xl shadow-md">
+      <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
         <h2 className="text-xl font-semibold mb-4 text-green-700">
           {t("sections.customer_info")}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
-            <strong>{t("fields.name")}:</strong> {order.order.user.first_name}{" "}
-            {order.order.user.last_name}
+            <strong>{t("fields.name")}:</strong> {order.order?.user?.first_name}{" "}
+            {order.order?.user?.last_name}
           </p>
           <p>
-            <strong>{t("fields.email")}:</strong> {order.order.user.email}
+            <strong>{t("fields.email")}:</strong> {order.order?.user?.email}
           </p>
           <p>
-            <strong>{t("fields.phone")}:</strong> {order.order.user.phone}
+            <strong>{t("fields.phone")}:</strong> {order.order?.user?.phone}
           </p>
           {order.order.location && (
             <p>
               <strong>{t("fields.address")}:</strong>{" "}
-              {order.order.location.street}, {order.order.location.city}
+              {order.order.location.street}, {order.order?.location?.city}
             </p>
           )}
         </div>
       </section>
 
       {/* Products */}
-      <section className="bg-white p-6 rounded-xl shadow-md">
+      <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
         <h2 className="text-xl font-semibold mb-4 text-purple-700">
           {t("sections.products")}
         </h2>
@@ -162,25 +172,25 @@ const OrderDetails: React.FC = () => {
           {order.items.map((item) => (
             <div
               key={item.id}
-              className="border p-4 rounded-md shadow-sm bg-gray-50"
+              className="border dark:border-gray-700 p-4 rounded-md  dark:bg-gray-900"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 dark:text-white">
                 <p>
                   <strong>{t("fields.product_name")}:</strong>{" "}
-                  {item.product.name}
+                  {item?.product.name}
                 </p>
                 <p>
                   <strong>{t("fields.description")}:</strong>{" "}
-                  {item.product.description}
+                  {item?.product.description}
                 </p>
                 <p>
-                  <strong>{t("fields.price")}:</strong> {item.price} {t("egp")}
+                  <strong>{t("fields.price")}:</strong> {item?.price} {t("egp")}
                 </p>
                 <p>
-                  <strong>{t("fields.quantity")}:</strong> {item.quantity}
+                  <strong>{t("fields.quantity")}:</strong> {item?.quantity}
                 </p>
                 <p>
-                  <strong>{t("fields.total")}:</strong> {item.total} {t("egp")}
+                  <strong>{t("fields.total")}:</strong> {item?.total} {t("egp")}
                 </p>
               </div>
             </div>
@@ -189,11 +199,11 @@ const OrderDetails: React.FC = () => {
       </section>
 
       {/* Dates */}
-      <section className="bg-white p-6 rounded-xl shadow-md">
+      <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
         <h2 className="text-xl font-semibold mb-4 text-gray-700">
           {t("sections.dates")}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
             <strong>{t("fields.created_at")}:</strong>{" "}
             {formatDate(order.created_at)}

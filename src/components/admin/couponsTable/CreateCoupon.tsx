@@ -1,13 +1,16 @@
 import { useState } from "react";
-import ComponentCard from "../../../components/common/ComponentCard";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";
-import { useNavigate } from "react-router-dom";
 import { createCoupon } from "../../../api/AdminApi/couponsApi/_requests";
 
 export default function CreateCoupon() {
+  const { t } = useTranslation(["CreateCoupon"]);
   const navigate = useNavigate();
+
   const [couponData, setCouponData] = useState({
     code: "",
     type: "fixed",
@@ -15,17 +18,27 @@ export default function CreateCoupon() {
     max_discount: "",
     min_order_amount: "",
     usage_limit: "",
-    //used_count: "",
     active: "1",
     start_at: "",
     expires_at: "",
   });
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState({
+    code: [] as string[],
+    type: [] as string[],
+    value: [] as string[],
+    max_discount: [] as string[],
+    min_order_amount: [] as string[],
+    usage_limit: [] as string[],
+    active: [] as string[],
+    start_at: [] as string[],
+    expires_at: [] as string[],
+  });
+  const [clientSideErrors, setClientSideErrors] = useState<
+    Record<string, string>
+  >({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     if (name === "value" && couponData.type === "percent") {
       if (Number(value) > 100) return;
     }
@@ -46,25 +59,24 @@ export default function CreateCoupon() {
   const validate = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!couponData.code) newErrors.code = "Code is required";
-    if (!couponData.value) newErrors.value = "Value is required";
+    if (!couponData.code) newErrors.code = t("coupon.errors.code");
+    if (!couponData.value) newErrors.value = t("coupon.errors.value");
     if (!couponData.min_order_amount)
-      newErrors.min_order_amount = "Minimum order amount is required";
+      newErrors.min_order_amount = t("coupon.errors.min_order_amount");
     if (!couponData.usage_limit)
-      newErrors.usage_limit = "Usage limit is required";
-    if (!couponData.start_at) newErrors.start_at = "Start date is required";
-    if (!couponData.expires_at) newErrors.expires_at = "End date is required";
-
-    // ✅ التحقق من أن نهاية الكوبون بعد بدايته
+      newErrors.usage_limit = t("coupon.errors.usage_limit");
+    if (!couponData.start_at) newErrors.start_at = t("coupon.errors.start_at");
+    if (!couponData.expires_at)
+      newErrors.expires_at = t("coupon.errors.expires_at.required");
     if (
       couponData.start_at &&
       couponData.expires_at &&
       new Date(couponData.expires_at) <= new Date(couponData.start_at)
     ) {
-      newErrors.expires_at = "End date must be after start date";
+      newErrors.expires_at = t("coupon.errors.expires_at.invalid");
     }
 
-    setErrors(newErrors);
+    setClientSideErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
@@ -75,13 +87,33 @@ export default function CreateCoupon() {
     try {
       await createCoupon(couponData);
       navigate("/admin/coupons", {
-        state: { successCreate: "Coupon Created Successfully" },
+        state: { successCreate: t("coupon.success") },
       });
     } catch (error: any) {
-      console.error("Failed to create coupon", error);
+      console.error("Error creating admin:", error);
+      const status = error?.response?.status;
+      if (status === 403 || status === 401) {
+        setErrors({
+          ...errors,
+          global: t("errors.global"),
+        });
+        return;
+      }
+      const rawErrors = error?.response?.data.errors;
 
-      if (error.response?.data?.errors) {
-        setErrors(error.response.data.errors);
+      if (Array.isArray(rawErrors)) {
+        const formattedErrors: Record<string, string[]> = {};
+
+        rawErrors.forEach((err: { code: string; message: string }) => {
+          if (!formattedErrors[err.code]) {
+            formattedErrors[err.code] = [];
+          }
+          formattedErrors[err.code].push(err.message);
+        });
+
+        setErrors(formattedErrors);
+      } else {
+        setErrors({ general: [t("admin.errors.general")] });
       }
     }
   };
@@ -90,7 +122,7 @@ export default function CreateCoupon() {
     <div>
       <div className="p-4 border-b border-gray-200 dark:border-gray-600">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Create Coupon
+          {t("coupon.title")}
         </h3>
       </div>
       <form
@@ -99,120 +131,154 @@ export default function CreateCoupon() {
       >
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
-            <Label>Code</Label>
+            <Label>{t("coupon.fields.code")}</Label>
             <Input
               name="code"
-              placeholder="Enter coupon code"
+              placeholder={t("coupon.placeholders.code")}
               onChange={handleChange}
             />
+            {clientSideErrors.code && (
+              <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
+            )}
             {errors.code && (
               <p className="text-red-500 text-sm">{errors.code}</p>
             )}
           </div>
 
           <div>
-            <Label>Type</Label>
+            <Label>{t("coupon.fields.type")}</Label>
             <Select
               options={[
-                { value: "fixed", label: "Fixed" },
-                { value: "percent", label: "Percent" },
+                { value: "fixed", label: t("coupon.types.fixed") },
+                { value: "percent", label: t("coupon.types.percent") },
               ]}
               defaultValue={couponData.type}
               onChange={(val) => handleSelectChange("type", val)}
             />
+            {clientSideErrors.type && (
+              <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
+            )}
+            {errors.type && (
+              <p className="text-red-500 text-sm">{errors.code}</p>
+            )}
           </div>
 
           <div>
-            <Label>Value</Label>
+            <Label>{t("coupon.fields.value")}</Label>
             <Input
               name="value"
               type="number"
-              placeholder="Enter value"
+              placeholder={t("coupon.placeholders.value")}
               value={couponData.value}
               onChange={handleChange}
             />
+            {clientSideErrors.value && (
+              <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
+            )}
             {errors.value && (
-              <p className="text-red-500 text-sm">{errors.value}</p>
+              <p className="text-red-500 text-sm">{errors.code}</p>
             )}
           </div>
 
           <div>
-            <Label>Max Discount</Label>
+            <Label>{t("coupon.fields.max_discount")}</Label>
             <Input
               name="max_discount"
               type="number"
-              placeholder="Enter max discount (optional)"
+              placeholder={t("coupon.placeholders.max_discount")}
               onChange={handleChange}
             />
-          </div>
-
-          <div>
-            <Label>Min Order Amount</Label>
-            <Input
-              name="min_order_amount"
-              type="number"
-              placeholder="Enter minimum order amount"
-              onChange={handleChange}
-            />
-            {errors.min_order_amount && (
-              <p className="text-red-500 text-sm">{errors.min_order_amount}</p>
+            {clientSideErrors.max_discount && (
+              <p className="text-red-500 text-sm">
+                {clientSideErrors.max_discount}
+              </p>
+            )}
+            {errors.max_discount && (
+              <p className="text-red-500 text-sm">{errors.max_discount}</p>
             )}
           </div>
 
           <div>
-            <Label>Usage Limit</Label>
+            <Label>{t("coupon.fields.min_order_amount")}</Label>
+            <Input
+              name="min_order_amount"
+              type="number"
+              placeholder={t("coupon.placeholders.min_order_amount")}
+              onChange={handleChange}
+            />
+            {clientSideErrors.min_order_amount && (
+              <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
+            )}
+            {errors.min_order_amount && (
+              <p className="text-red-500 text-sm">{errors.code}</p>
+            )}
+          </div>
+
+          <div>
+            <Label>{t("coupon.fields.usage_limit")}</Label>
             <Input
               name="usage_limit"
               type="number"
-              placeholder="Enter usage limit"
+              placeholder={t("coupon.placeholders.usage_limit")}
               onChange={handleChange}
             />
+            {clientSideErrors.usage_limit && (
+              <p className="text-red-500 text-sm">
+                {clientSideErrors.usage_limit}
+              </p>
+            )}
             {errors.usage_limit && (
               <p className="text-red-500 text-sm">{errors.usage_limit}</p>
             )}
           </div>
-          {/* 
-          <div>
-            <Label>Used Count</Label>
-            <Input
-              name="used_count"
-              type="number"
-              placeholder="Enter used count"
-              onChange={handleChange}
-            />
-          </div> */}
 
           <div>
-            <Label>Status</Label>
+            <Label>{t("coupon.fields.status")}</Label>
             <Select
               options={[
-                { value: "1", label: "Active" },
-                { value: "0", label: "Inactive" },
+                { value: "1", label: t("coupon.statusOptions.1") },
+                { value: "0", label: t("coupon.statusOptions.0") },
               ]}
               defaultValue={couponData.active}
               onChange={(val) => handleSelectChange("active", val)}
             />
+            {clientSideErrors.active && (
+              <p className="text-red-500 text-sm">{clientSideErrors.active}</p>
+            )}
+            {errors.active && (
+              <p className="text-red-500 text-sm">{errors.active}</p>
+            )}
           </div>
 
           <div>
-            <Label>Start Date</Label>
+            <Label>{t("coupon.fields.start_at")}</Label>
             <Input
               name="start_at"
               type="datetime-local"
               onChange={handleChange}
             />
+            {clientSideErrors.start_at && (
+              <p className="text-red-500 text-sm">
+                {clientSideErrors.start_at}
+              </p>
+            )}
             {errors.start_at && (
               <p className="text-red-500 text-sm">{errors.start_at}</p>
             )}
           </div>
 
           <div>
-            <Label>Expires At</Label>
+            <Label>{t("coupon.fields.expires_at")}</Label>
             <Input
               name="expires_at"
               type="datetime-local"
               onChange={handleChange}
             />
+            {clientSideErrors.expires_at && (
+              <p className="text-red-500 text-sm">
+                {clientSideErrors.expires_at}
+              </p>
+            )}
             {errors.expires_at && (
               <p className="text-red-500 text-sm">{errors.expires_at}</p>
             )}
@@ -223,7 +289,7 @@ export default function CreateCoupon() {
           type="submit"
           className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
         >
-          Create Coupon
+          {t("coupon.button")}
         </button>
       </form>
     </div>

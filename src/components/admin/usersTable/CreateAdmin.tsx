@@ -283,7 +283,7 @@ export default function CreateAdmin() {
           <p className="text-red-500 text-sm mt-4">{errors.global}</p>
         )}
         {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
+          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
         )}
         <button
           type="submit"

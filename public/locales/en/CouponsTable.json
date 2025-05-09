@@ -1,0 +1,22 @@
+{
+    "couponsPage": {
+      "title": "Coupons",
+      "addNew": "Add New Coupon",
+      "all": "All Coupons",
+      "createdSuccess": "Coupon Created Successfully",
+      "updatedSuccess": "Coupon Updated Successfully",
+      "delete": {
+        "confirmTitle": "Delete Coupon?",
+        "confirmText": "This action cannot be undone!",
+        "confirmButtonText": "Yes, delete",
+        "cancelButtonText": "Cancel",
+        "successTitle": "Coupon Deleted!",
+        "successText": "Coupon has been deleted.",
+        "errorTitle": "Error",
+        "errorText": "Could not delete the Coupon."
+      },
+      "table": {
+        "loadingText": "Coupons data Loading"
+      }
+    }
+  }

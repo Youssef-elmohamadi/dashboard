@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Input from "../../form/input/InputField";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   file: File | null;
@@ -9,17 +10,19 @@ type Props = {
 
 function BrandImageUpload({ file, onFileChange, endPointImage }: Props) {
   const [image, setImage] = useState<string | null>(null);
+  const { t } = useTranslation(["ImageUpload"]);
 
   useEffect(() => {
     if (file && file instanceof File) {
       const objectUrl = URL.createObjectURL(file);
       setImage(objectUrl);
       return () => URL.revokeObjectURL(objectUrl);
-    } //else {
-    //   // إذا كان الملف null، استخدم المسار من السيرفر (endPointImage)
+    }
+    // لو تحب تستخدم صورة السيرفر لما الملف يختفي، فعّل الكود ده:
+    // else {
     //   setImage(endPointImage || null);
     // }
-  }, [file]); 
+  }, [file]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
@@ -55,11 +58,13 @@ function BrandImageUpload({ file, onFileChange, endPointImage }: Props) {
               />
             </svg>
             <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-              <span className="font-semibold">Click to upload</span> or drag and
-              drop
+              <span className="font-semibold">
+                {t("brandImage.click_to_upload")}
+              </span>{" "}
+              {t("brandImage.or_drag_drop")}
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              SVG, PNG, JPG or GIF (MAX. 800x400px)
+              {t("brandImage.allowed_formats")}
             </p>
           </div>
         ) : (
@@ -74,7 +79,7 @@ function BrandImageUpload({ file, onFileChange, endPointImage }: Props) {
               onClick={removeImage}
               className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded hover:bg-red-700"
             >
-              Remove
+              {t("brandImage.remove")}
             </button>
           </div>
         )}

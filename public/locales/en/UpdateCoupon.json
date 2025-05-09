@@ -1,0 +1,26 @@
+{
+  "coupon": {
+    "editCoupon": "Edit Coupon",
+    "code": "Code",
+    "type": "Type",
+    "value": "Value",
+    "maxDiscount": "Max Discount",
+    "minOrderAmount": "Min Order Amount",
+    "usageLimit": "Usage Limit",
+    "status": "Status",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "saveChanges": "Save Changes",
+    "fixed": "Fixed",
+    "percent": "Percent",
+    "active": "Active",
+    "inactive": "Inactive",
+    "placeholders": {
+      "code": "Coupon Code",
+      "value": "Value (e.g. 50 or 10%)",
+      "maxDiscount": "Maximum Discount",
+      "minOrderAmount": "Minimum Order Amount",
+      "usageLimit": "Usage Limit"
+    }
+  }
+}

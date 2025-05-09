@@ -1,0 +1,22 @@
+{
+  "brandsPage": {
+    "title": "العلامات التجارية",
+    "addNew": "إضافة علامة تجارية جديدة",
+    "all": "كل العلامات التجارية",
+    "createdSuccess": "تم إنشاء العلامة التجارية بنجاح",
+    "updatedSuccess": "تم تعديل بيانات العلامة التجارية بنجاح",
+    "delete": {
+      "confirmTitle": "حذف العلامة التجارية؟",
+      "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
+      "confirmButtonText": "نعم، احذف",
+      "cancelButtonText": "الغاء",
+      "successTitle": "تم الحذف!",
+      "successText": "تم حذف العلامة التجارية.",
+      "errorTitle": "خطأ",
+      "errorText": "لا يمكن حذف العلامة التجارية."
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات العلامات التجارية"
+    }
+  }
+}

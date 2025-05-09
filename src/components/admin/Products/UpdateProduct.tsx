@@ -86,7 +86,6 @@ const UpdateProductPage: React.FC = () => {
     status: "",
     is_featured: false,
   });
-  const [error, setError] = useState<string>();
   const [brands, setBrands] = useState<Brand[]>([]);
 
   useEffect(() => {
@@ -293,6 +292,11 @@ const UpdateProductPage: React.FC = () => {
             {errors.price && (
               <p className="text-red-500 text-sm mt-1">{errors.price}</p>
             )}
+            {clientSideErrors.price && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.price}
+              </p>
+            )}
           </div>
           <div>
             <Label htmlFor="stock_quantity">{t("form.stock_quantity")}</Label>
@@ -305,6 +309,11 @@ const UpdateProductPage: React.FC = () => {
             {errors.stock_quantity && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.stock_quantity}
+              </p>
+            )}
+            {clientSideErrors.stock_quantity && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.stock_quantity}
               </p>
             )}
           </div>
@@ -326,6 +335,11 @@ const UpdateProductPage: React.FC = () => {
             {errors.category && (
               <p className="text-red-500 text-sm mt-1">{errors.category}</p>
             )}
+            {clientSideErrors.category_id && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.category_id}
+              </p>
+            )}
           </div>
           <div>
             <Label htmlFor="brand_id">{t("form.brand")}</Label>
@@ -345,6 +359,11 @@ const UpdateProductPage: React.FC = () => {
             {errors.brand && (
               <p className="text-red-500 text-sm mt-1">{errors.brand}</p>
             )}
+            {clientSideErrors.brand_id && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.brand_id}
+              </p>
+            )}
           </div>
 
           <div>
@@ -357,6 +376,11 @@ const UpdateProductPage: React.FC = () => {
             />
             {errors.description && (
               <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+            )}
+            {clientSideErrors.description && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.description}
+              </p>
             )}
           </div>
           <div>
@@ -385,6 +409,11 @@ const UpdateProductPage: React.FC = () => {
             {errors.is_featured && (
               <p className="text-red-500 text-sm mt-1">{errors.is_featured}</p>
             )}
+            {clientSideErrors.is_featured && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.is_featured}
+              </p>
+            )}
           </div>
         </div>
 
@@ -412,6 +441,12 @@ const UpdateProductPage: React.FC = () => {
           {errors.images && (
             <p className="text-red-500 text-sm mt-1">{errors.images}</p>
           )}
+          {clientSideErrors?.images && (
+            <p className="text-red-500 text-sm mt-1">
+              {clientSideErrors?.imagess}
+            </p>
+          )}
+
           <div className="flex gap-3 mt-3 flex-wrap">
             {imagePreviews.map((src, i) => (
               <div key={i} className="relative group">
@@ -511,6 +546,12 @@ const UpdateProductPage: React.FC = () => {
         </div>
 
         <div className="text-center">
+          {errors.global && (
+            <div className="text-red-600 mb-4">{errors.global}</div>
+          )}
+          {errors.general && (
+            <p className="text-red-500 text-sm mt-1">{errors.general}</p>
+          )}
           <button
             type="submit"
             disabled={loading}

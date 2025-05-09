@@ -178,7 +178,7 @@ layer(base);
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    @apply border-gray-200! dark:border-gray-800!;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
@@ -1000,4 +1000,3 @@ span.flatpickr-weekday,
 .text-soft-primary {
   color: rgba(136, 38, 189, 0.15);
 }
-

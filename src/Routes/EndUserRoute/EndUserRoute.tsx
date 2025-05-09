@@ -1,6 +1,6 @@
 import { Route } from "react-router-dom";
-import EndUserLayout from "../../pages/UserPages/EndUserLayout/Layout"; // المسار حسب مكان الملف
-import Home from "../../pages/UserPages/Home/Home"; // أنشئ صفحة Home إن ما كانتش موجودة
+import EndUserLayout from "../../pages/UserPages/EndUserLayout/Layout";
+import Home from "../../pages/UserPages/Home/Home";
 import EndUserSignIn from "../../pages/UserPages/AuthPages/EndUserSignin";
 import EndUserSignUp from "../../pages/UserPages/AuthPages/EndUserSignUp";
 import Checkout from "../../pages/UserPages/Checkout/Checkout";
@@ -22,7 +22,6 @@ import UserProfile from "../../pages/UserPages/UserProfile/UserProfile";
 import UserNotifications from "../../pages/UserPages/UserNotifications/UserNotifications";
 import ProductsCompare from "../../pages/UserPages/ProductsCompare/ProductsCompare";
 import ProductsFavorite from "../../pages/UserPages/ProductsFavorite/ProductsFavorite";
-import { useEffect } from "react";
 
 export const EndUserRoutes = (
   <>

@@ -99,8 +99,8 @@ export default function CreateRole() {
       const status = error?.response?.status;
 
       if (status === 403 || status === 401) {
-        setFormErrors({
-          ...formErrors,
+        setErrors({
+          ...errors,
           global: t("role.errors.global"),
         });
         return;
@@ -185,9 +185,13 @@ export default function CreateRole() {
           )}
         </div>
 
-        {formErrors.global && (
-          <p className="text-red-500 text-sm mt-4">{formErrors.global}</p>
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
         )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+        )}
+
         <button
           type="submit"
           disabled={isSubmitting}

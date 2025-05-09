@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
@@ -7,6 +8,8 @@ import BrandImageUpload from "./BrandImageUpload";
 import { createBrand } from "../../../api/AdminApi/brandsApi/_requests";
 
 export default function CreateBrand() {
+  const { t } = useTranslation(["CreateBrand"]);
+
   const [brandData, setBrandData] = useState<{
     name: string;
     status: string;
@@ -52,7 +55,7 @@ export default function CreateBrand() {
     let newErrors: { name?: string } = {};
 
     if (!brandData.name.trim()) {
-      newErrors.name = "Brand name is required.";
+      newErrors.name = t("name_required") || "Brand name is required.";
       hasError = true;
     }
 
@@ -75,10 +78,10 @@ export default function CreateBrand() {
 
       await createBrand(brandFormData);
       navigate("/admin/brands", {
-        state: { successCreate: "Brand Created Successfully" },
+        state: { successCreate: t("create_success") },
       });
     } catch (error: any) {
-      setSubmitError(error.message || "Something went wrong.");
+      setSubmitError(error.message || t("submit_error"));
     } finally {
       setLoading(false);
     }
@@ -88,7 +91,7 @@ export default function CreateBrand() {
     <div className="">
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Create Brand
+          {t("create_title")}
         </h3>
       </div>
 
@@ -101,35 +104,35 @@ export default function CreateBrand() {
       <form onSubmit={handleSubmit} className="space-y-6 pt-3">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
-            <Label htmlFor="name">Brand Name</Label>
+            <Label htmlFor="name">{t("name_label")}</Label>
             <Input
               type="text"
               name="name"
               id="name"
               value={brandData.name}
               onChange={handleChange}
-              placeholder="Enter the Brand Name"
+              placeholder={t("name_placeholder")}
             />
             {errors.name && (
               <p className="text-red-600 text-sm mt-1">{errors.name}</p>
             )}
           </div>
           <div>
-            <Label>Select Status</Label>
+            <Label>{t("status_label")}</Label>
             <Select
               options={[
-                { label: "Active", value: "active" },
-                { label: "Inactive", value: "inactive" },
+                { label: t("status_active"), value: "active" },
+                { label: t("status_inactive"), value: "inactive" },
               ]}
               onChange={handleSelectChange}
-              placeholder="Select a Status"
+              placeholder={t("status_label")}
               defaultValue={brandData.status}
             />
           </div>
         </div>
 
         <div>
-          <Label>Brand Image</Label>
+          <Label>{t("image_label")}</Label>
           <BrandImageUpload
             file={brandData.image}
             onFileChange={handleFileChange}
@@ -141,7 +144,7 @@ export default function CreateBrand() {
           disabled={loading}
           className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
-          {loading ? "Creating..." : "Add Brand"}
+          {loading ? t("loading_button") : t("submit_button")}
         </button>
       </form>
     </div>

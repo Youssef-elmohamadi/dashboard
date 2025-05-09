@@ -95,10 +95,7 @@ const Roles = () => {
       if (error?.response?.status === 401 || error?.response?.status === 403) {
         setUnauthorized(true);
         setData([]);
-      } else {
-        console.error("Fetching error:", error);
       }
-      console.error("Error fetching Roles:", error);
       return {
         data: [],
         last_page: 0,
@@ -121,6 +118,7 @@ const Roles = () => {
         confirmTitle: t("rolesPage.delete.confirmTitle"),
         confirmText: t("rolesPage.delete.confirmText"),
         confirmButtonText: t("rolesPage.delete.confirmButtonText"),
+        cancelButtonText: t("rolesPage.delete.cancelButtonText"),
         successTitle: t("rolesPage.delete.successTitle"),
         successText: t("rolesPage.delete.successText"),
         errorTitle: t("rolesPage.delete.errorTitle"),

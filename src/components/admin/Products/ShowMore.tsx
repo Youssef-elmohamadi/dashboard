@@ -99,16 +99,16 @@ const ProductDetails: React.FC = () => {
 
   return (
     <div className="product-details p-6 max-w-6xl mx-auto space-y-10">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">
+      <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-4 mb-4">
         {t("title")}
       </h1>
 
       {/* Basic Info */}
-      <section className="bg-white p-6 rounded-xl shadow-md">
+      <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
         <h2 className="text-xl font-semibold mb-4 text-blue-700">
           {t("sections.basic_info")}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
             <strong>{t("fields.name")}:</strong> {product.name}
           </p>
@@ -129,11 +129,11 @@ const ProductDetails: React.FC = () => {
       </section>
 
       {/* Pricing & Stock */}
-      <section className="bg-white p-6 rounded-xl shadow-md">
+      <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
         <h2 className="text-xl font-semibold mb-4 text-green-700">
           {t("sections.pricing_stock")}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
             <strong>{t("fields.price")}:</strong> {product.price} {t("egp")}
           </p>
@@ -149,11 +149,11 @@ const ProductDetails: React.FC = () => {
       </section>
 
       {/* Category & Brand */}
-      <section className="bg-white p-6 rounded-xl shadow-md">
+      <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
         <h2 className="text-xl font-semibold mb-4 text-purple-700">
           {t("sections.category_brand")}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
             <strong>{t("fields.category")}:</strong> {product.category?.name}
           </p>
@@ -165,11 +165,11 @@ const ProductDetails: React.FC = () => {
 
       {/* Attributes */}
       {product.attributes?.length > 0 && (
-        <section className="bg-white p-6 rounded-xl shadow-md">
+        <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
           <h2 className="text-xl font-semibold mb-4 text-indigo-700">
             {t("sections.attributes")}
           </h2>
-          <ul className="list-disc list-inside text-gray-700">
+          <ul className="list-disc list-inside text-gray-700 dark:text-white">
             {product.attributes.map((attr: any) => (
               <li key={attr.id}>
                 <strong>{attr.attribute_name}:</strong> {attr.attribute_value}
@@ -181,11 +181,11 @@ const ProductDetails: React.FC = () => {
 
       {/* Tags */}
       {product.tags?.length > 0 && (
-        <section className="bg-white p-6 rounded-xl shadow-md">
+        <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
           <h2 className="text-xl font-semibold mb-4 text-pink-700">
             {t("sections.tags")}
           </h2>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 text-gray-700 dark:text-white">
             {product.tags.map((tag: any) => (
               <span
                 key={tag.id}
@@ -200,11 +200,11 @@ const ProductDetails: React.FC = () => {
 
       {/* Images */}
       {product.images?.length > 0 && (
-        <section className="bg-white p-6 rounded-xl shadow-md">
+        <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
           <h2 className="text-xl font-semibold mb-4 text-red-700">
             {t("sections.images")}
           </h2>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-4 text-gray-700 dark:text-white">
             {product.images.map((img: any) => (
               <img
                 key={img.id}
@@ -218,11 +218,11 @@ const ProductDetails: React.FC = () => {
       )}
 
       {/* Dates */}
-      <section className="bg-white p-6 rounded-xl shadow-md">
+      <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
         <h2 className="text-xl font-semibold mb-4 text-gray-700">
           {t("sections.timestamps")}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
             <strong>{t("fields.created_at")}:</strong>{" "}
             {formatDate(product.created_at)}

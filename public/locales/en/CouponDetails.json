@@ -1,0 +1,26 @@
+{
+  "coupon": {
+    "title": "Coupon Details",
+    "basic_info": "Basic Info",
+    "code": "Code",
+    "type": "Type",
+    "fixed": "Fixed Amount",
+    "percent": "Percentage",
+    "value": "Value",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "conditions": "Conditions",
+    "min_order": "Minimum Order Amount",
+    "max_discount": "Maximum Discount",
+    "usage_limit": "Usage Limit",
+    "used_count": "Used Count",
+    "validity": "Validity",
+    "start_at": "Start At",
+    "expires_at": "Expires At",
+    "no_id": "No Coupon ID provided.",
+    "loading": "Loading coupon details...",
+    "not_found": "Coupon not found.",
+    "no_limit": "No Limit"
+  }
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { showCoupon } from "../../../api/AdminApi/couponsApi/_requests";
+import { useTranslation } from "react-i18next";
 
 interface Coupon {
   code: string;
@@ -17,6 +18,7 @@ interface Coupon {
 
 const CouponDetails: React.FC = () => {
   const { id } = useParams();
+  const { t } = useTranslation(["CouponDetails"]);
   const [coupon, setCoupon] = useState<Coupon | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -45,43 +47,92 @@ const CouponDetails: React.FC = () => {
     });
 
   if (!id)
-    return <div className="p-8 text-center text-gray-500">No Coupon ID provided.</div>;
+    return (
+      <div className="p-8 text-center text-gray-500 dark:text-white">
+        {t("coupon.no_id")}
+      </div>
+    );
+
   if (loading)
-    return <div className="p-8 text-center text-gray-500">Loading coupon details...</div>;
+    return (
+      <div className="p-8 text-center text-gray-500 dark:text-white">
+        {t("coupon.loading")}
+      </div>
+    );
+
   if (!coupon)
-    return <div className="p-8 text-center text-gray-500">Coupon not found.</div>;
+    return (
+      <div className="p-8 text-center text-gray-500 dark:text-white">
+        {t("coupon.not_found")}
+      </div>
+    );
 
   return (
-    <div className="coupon-details p-6 max-w-4xl mx-auto space-y-8">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-        Coupon Details
+    <div className="coupon-details py-6 max-w-4xl mx-auto space-y-8">
+      <h1 className="text-3xl font-bold text-center text-gray-800 mb-6 dark:text-white">
+        {t("coupon.title")}
       </h1>
 
-      <section className="bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4 text-blue-700">Basic Info</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
-          <p><strong>Code:</strong> {coupon.code}</p>
-          <p><strong>Type:</strong> {coupon.type === "fixed" ? "Fixed Amount" : "Percentage"}</p>
-          <p><strong>Value:</strong> {coupon.value}{coupon.type === "percent" ? "%" : " EGP"}</p>
-          <p><strong>Status:</strong> {coupon.active === "1" ? "Active" : "Inactive"}</p>
+      {/* Basic Info */}
+      <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
+        <h2 className="text-xl font-semibold mb-4 text-blue-700">
+          {t("coupon.basic_info")}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
+          <p>
+            <strong>{t("coupon.code")}:</strong> {coupon.code}
+          </p>
+          <p>
+            <strong>{t("coupon.type")}:</strong> {t(`coupon.${coupon.type}`)}
+          </p>
+          <p>
+            <strong>{t("coupon.value")}:</strong> {coupon.value}
+            {coupon.type === "percent" ? "%" : " EGP"}
+          </p>
+          <p>
+            <strong>{t("coupon.status")}:</strong>{" "}
+            {t(`coupon.${coupon.active === "1" ? "active" : "inactive"}`)}
+          </p>
         </div>
       </section>
 
-      <section className="bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4 text-green-700">Conditions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
-          <p><strong>Minimum Order Amount:</strong> {coupon.min_order_amount} EGP</p>
-          <p><strong>Maximum Discount:</strong> {coupon.max_discount || "No Limit"}</p>
-          <p><strong>Usage Limit:</strong> {coupon.usage_limit}</p>
-          <p><strong>Used Count:</strong> {coupon.used_count}</p>
+      {/* Conditions */}
+      <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
+        <h2 className="text-xl font-semibold mb-4 text-green-700">
+          {t("coupon.conditions")}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
+          <p>
+            <strong>{t("coupon.min_order")}:</strong> {coupon.min_order_amount}{" "}
+            EGP
+          </p>
+          <p>
+            <strong>{t("coupon.max_discount")}:</strong>{" "}
+            {coupon.max_discount || t("coupon.no_limit")}
+          </p>
+          <p>
+            <strong>{t("coupon.usage_limit")}:</strong> {coupon.usage_limit}
+          </p>
+          <p>
+            <strong>{t("coupon.used_count")}:</strong> {coupon.used_count}
+          </p>
         </div>
       </section>
 
-      <section className="bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4 text-purple-700">Validity</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
-          <p><strong>Start At:</strong> {formatDate(coupon.start_at)}</p>
-          <p><strong>Expires At:</strong> {formatDate(coupon.expires_at)}</p>
+      {/* Validity */}
+      <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
+        <h2 className="text-xl font-semibold mb-4 text-purple-700">
+          {t("coupon.validity")}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
+          <p>
+            <strong>{t("coupon.start_at")}:</strong>{" "}
+            {formatDate(coupon.start_at)}
+          </p>
+          <p>
+            <strong>{t("coupon.expires_at")}:</strong>{" "}
+            {formatDate(coupon.expires_at)}
+          </p>
         </div>
       </section>
     </div>

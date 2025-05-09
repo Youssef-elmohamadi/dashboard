@@ -1,0 +1,26 @@
+{
+  "coupon": {
+    "editCoupon": "تعديل الكوبون",
+    "code": "رمز الكوبون",
+    "type": "النوع",
+    "value": "القيمة",
+    "maxDiscount": "أقصى خصم",
+    "minOrderAmount": "الحد الأدنى للطلب",
+    "usageLimit": "حد الاستخدام",
+    "status": "الحالة",
+    "startDate": "تاريخ البداية",
+    "endDate": "تاريخ الانتهاء",
+    "saveChanges": "حفظ التعديلات",
+    "fixed": "ثابت",
+    "percent": "نسبة مئوية",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "placeholders": {
+      "code": "رمز الكوبون",
+      "value": "القيمة (مثلاً: 50 أو 10%)",
+      "maxDiscount": "الحد الأقصى للخصم",
+      "minOrderAmount": "الحد الأدنى للطلب",
+      "usageLimit": "حد الاستخدام"
+    }
+  }
+}

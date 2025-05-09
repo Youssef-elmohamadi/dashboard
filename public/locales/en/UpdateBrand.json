@@ -1,0 +1,15 @@
+{
+  "update_title": "Update Brand",
+  "name_label": "Brand Name",
+  "name_placeholder_edit": "Edit the Brand Name",
+  "name_required": "Brand name is required.",
+  "status_label": "Select Status",
+  "status_active": "Active",
+  "status_inactive": "Inactive",
+  "image_label": "Brand Image",
+  "current_image": "Current Brand Image:",
+  "submit_button": "Save Changes",
+  "loading_button": "Updating...",
+  "submit_error": "An error occurred while updating the brand.",
+  "load_error": "Failed to load brand data."
+}

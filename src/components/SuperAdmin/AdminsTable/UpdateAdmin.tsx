@@ -9,7 +9,9 @@ import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
-
+import { useTranslation } from "react-i18next";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { FiUserPlus } from "react-icons/fi";
 const UpdateAdmin = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ const UpdateAdmin = () => {
     password: "",
     role: "",
   });
-
+  const [loading, setLoading] = useState(false);
   const [options, setOptions] = useState<any[]>([]);
   const [errors, setErrors] = useState<Record<string, string[]>>({
     first_name: [],
@@ -45,6 +47,49 @@ const UpdateAdmin = () => {
     role: [],
   });
 
+  const [clientSideErrors, setClientSideErrors] = useState({
+    first_name: "",
+    last_name: "",
+    phone: "",
+    email: "",
+    password: "",
+    role: "",
+  });
+  const validate = () => {
+    const newErrors = {
+      first_name: "",
+      last_name: "",
+      phone: "",
+      email: "",
+      password: "",
+      role: "",
+    };
+    if (!updateData.first_name) {
+      newErrors.first_name = t("admin.errors.first_name");
+    } else if (!updateData.last_name) {
+      newErrors.last_name = t("admin.errors.last_name");
+    } else if (!updateData.email) {
+      newErrors.email = t("admin.errors.email_required");
+    } else if (
+      !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
+        updateData.email
+      )
+    ) {
+      newErrors.email = t("admin.errors.email_invalid");
+    } else if (!updateData.phone) {
+      newErrors.phone = t("admin.errors.phone_required");
+    } else if (!/^01[0125][0-9]{8}$/.test(updateData.phone)) {
+      newErrors.phone = t("admin.errors.phone_invalid");
+    } else if (!updateData.role) {
+      newErrors.role = t("admin.errors.role");
+    } else if (updateData.password && updateData.password.length < 8) {
+      newErrors.password = t("admin.errors.length_password");
+    }
+    setClientSideErrors(newErrors);
+    return Object.values(newErrors).every((error) => error === "");
+  };
+  const { t } = useTranslation(["UpdateAdmin"]);
+  const { dir } = useDirectionAndLanguage();
   // Fetch admin by ID
   useEffect(() => {
     const fetchAdmin = async () => {
@@ -65,6 +110,15 @@ const UpdateAdmin = () => {
         }
       } catch (err) {
         console.error("Error fetching admin:", err);
+        const status = err?.response?.status;
+        if (status === 403 || status === 401) {
+          setErrors({
+            ...errors,
+            global: "You don't have permission to perform this action.",
+          });
+        }
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -105,7 +159,7 @@ const UpdateAdmin = () => {
   // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (!validate()) return;
     try {
       if (id) {
         const dataToSend = {
@@ -115,10 +169,18 @@ const UpdateAdmin = () => {
 
         await updateAdmin(id, dataToSend);
         navigate("/super_admin/admins", {
-          state: { successEdit: "Admin Updated Successfully" },
+          state: { successEdit: t("admin.success_message") },
         });
       }
     } catch (err: any) {
+      const status = err?.response?.status;
+      if (status === 403 || status === 401) {
+        setErrors({
+          ...errors,
+          global: t("admin.errors.global"),
+        });
+        return;
+      }
       const rawErrors = err?.response?.data?.errors;
 
       if (Array.isArray(rawErrors)) {
@@ -131,7 +193,7 @@ const UpdateAdmin = () => {
         });
         setErrors(formattedErrors);
       } else {
-        setErrors({ general: ["Something went wrong."] });
+        setErrors({ general: [t("admin.errors.general")] });
       }
     }
   };
@@ -140,7 +202,7 @@ const UpdateAdmin = () => {
     <div>
       <div className="p-4 border-b border-gray-200 dark:border-gray-600">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Edit Admin
+          {t("admin.update_title")}
         </h3>
       </div>
 
@@ -148,16 +210,19 @@ const UpdateAdmin = () => {
         onSubmit={handleSubmit}
         className="space-y-6 w-full mt-10 flex flex-col items-center"
       >
+        {errors.global && (
+          <p className="text-error-500 text-sm mt-1">{errors.global}</p>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
           {/* First Name */}
           <div className="col-span-1">
-            <Label htmlFor="first_name">First Name</Label>
+            <Label htmlFor="first_name">{t("admin.first_name")}</Label>
             <Input
               type="text"
               name="first_name"
               id="first_name"
               value={updateData.first_name}
-              placeholder="Edit the First Name"
+              placeholder={t("admin.placeholder.first_name")}
               onChange={handleChange}
             />
             {errors.first_name?.[0] && (
@@ -165,56 +230,113 @@ const UpdateAdmin = () => {
                 {errors.first_name[0]}
               </p>
             )}
+            {clientSideErrors.first_name && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.first_name}
+              </p>
+            )}
           </div>
 
           {/* Last Name */}
           <div className="col-span-1">
-            <Label htmlFor="last_name">Last Name</Label>
+            <Label htmlFor="last_name">{t("admin.last_name")}</Label>
             <Input
               type="text"
               name="last_name"
               id="last_name"
               value={updateData.last_name}
-              placeholder="Edit the Last Name"
+              placeholder={t("admin.placeholder.last_name")}
               onChange={handleChange}
             />
             {errors.last_name?.[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.last_name[0]}</p>
             )}
+            {clientSideErrors.last_name && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.last_name}
+              </p>
+            )}
           </div>
-
+          {/* Role */}
+          <div className="col-span-1">
+            <Label htmlFor="role">{t("admin.select_role")}</Label>
+            <Select
+              options={options?.map((role) => ({
+                value: role.name,
+                label: role.name,
+              }))}
+              onChange={handleSelectChange}
+              defaultValue={updateData.role}
+              placeholder={t("admin.placeholder.select_role")}
+            />
+            {errors.role?.[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.role[0]}</p>
+            )}
+            {clientSideErrors.role && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.role}
+              </p>
+            )}
+          </div>
           {/* Email */}
           <div className="col-span-1">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("admin.email")}</Label>
             <Input
               type="email"
               name="email"
               id="email"
               value={updateData.email}
-              placeholder="Edit the Email"
+              placeholder={t("admin.placeholder.email")}
               onChange={handleChange}
             />
             {errors.email?.[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
             )}
+            {clientSideErrors.email && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.email}
+              </p>
+            )}
           </div>
 
+          {/* Phone */}
+          <div className="col-span-1">
+            <Label htmlFor="phone">{t("admin.phone")}</Label>
+            <Input
+              type="text"
+              name="phone"
+              id="phone"
+              value={updateData.phone}
+              placeholder={t("admin.placeholder.phone")}
+              onChange={handleChange}
+            />
+            {errors.phone?.[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.phone[0]}</p>
+            )}
+            {clientSideErrors.phone && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.phone}
+              </p>
+            )}
+          </div>
           {/* Password */}
           <div className="col-span-1">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("admin.password")}</Label>
             <div className="relative">
               <Input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 id="password"
                 value={updateData.password}
-                placeholder="Enter New Password"
+                placeholder={t("admin.placeholder.password")}
                 onChange={handleChange}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2"
+                className={`absolute z-30 -translate-y-1/2 cursor-pointer ${
+                  dir === "rtl" ? "left-4" : "right-4"
+                } top-1/2`}
               >
                 {showPassword ? (
                   <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
@@ -226,59 +348,27 @@ const UpdateAdmin = () => {
             {errors.password?.[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>
             )}
-          </div>
-
-          {/* Phone */}
-          <div className="col-span-1">
-            <Label htmlFor="phone">Phone</Label>
-            <Input
-              type="text"
-              name="phone"
-              id="phone"
-              value={updateData.phone}
-              placeholder="Edit the Phone"
-              onChange={handleChange}
-            />
-            {errors.phone?.[0] && (
-              <p className="text-red-500 text-sm mt-1">{errors.phone[0]}</p>
-            )}
-          </div>
-
-          {/* Role */}
-          <div className="col-span-1">
-            <Label htmlFor="role">Role</Label>
-            <Select
-              options={options?.map((role) => ({
-                value: role.name,
-                label: role.name,
-              }))}
-              onChange={handleSelectChange}
-              defaultValue={updateData.role}
-              placeholder="Select a Role"
-            />
-            {errors.role?.[0] && (
-              <p className="text-red-500 text-sm mt-1">{errors.role[0]}</p>
+            {clientSideErrors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.password}
+              </p>
             )}
           </div>
         </div>
-
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+        )}
         {/* Submit Button */}
         <button
           type="submit"
-          className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
+          disabled={loading}
+          className="bg-blue-600 flex gap-4 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
-          <svg
-            className="me-1 -ms-1 w-5 h-5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-              clipRule="evenodd"
-            />
-          </svg>
-          Save Changes
+          <FiUserPlus size={20} />
+          {loading ? t("admin.button.submitting") : t("admin.button.submit")}
         </button>
       </form>
     </div>

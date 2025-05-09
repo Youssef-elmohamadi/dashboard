@@ -1,0 +1,22 @@
+{
+  "role": {
+    "update_title": "Update Role",
+    "name": "Name",
+    "permission": "Permission",
+    "placeholder": {
+      "name": "Enter the Role Name"
+    },
+    "button": {
+      "submit": "Update Role",
+      "submitting": "Updating..."
+    },
+    "errors": {
+      "name": "Name is Required",
+      "permission": "At least one permission must be selected.",
+      "global": "You don't have permission to perform this action.",
+      "general": "Something went wrong."
+    },
+    "get_permissions": "Wait, getting permissions...",
+    "success_message": "Role Updated Successfully"
+  }
+}

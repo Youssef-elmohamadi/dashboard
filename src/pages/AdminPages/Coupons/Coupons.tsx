@@ -16,6 +16,7 @@ import {
   deleteCoupon,
   getCouponsWithPaginate,
 } from "../../../api/AdminApi/couponsApi/_requests";
+import { useTranslation } from "react-i18next";
 type User = {
   id: number;
   first_name: string;
@@ -54,6 +55,8 @@ const Coupons = () => {
     }));
     setPageIndex(0);
   };
+
+  const { t } = useTranslation(["CouponsTable"]);
 
   const fetchData = async (pageIndex: number = 0) => {
     setLoading(true);
@@ -114,14 +117,14 @@ const Coupons = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: "Admin Created Successfully",
+        title: t("couponsPage.createdSuccess"),
         message: location.state.successCreate,
       });
       window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
-        title: "Admin Updated Successfully",
+        title: t("couponsPage.updatedSuccess"),
         message: location.state.successEdit,
       });
       window.history.replaceState({}, document.title);
@@ -140,13 +143,14 @@ const Coupons = () => {
       deleteCoupon,
       () => fetchData(pageIndex),
       {
-        confirmTitle: "Delete Coupons?",
-        confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, delete",
-        successTitle: "Deleted!",
-        successText: "Coupon has been deleted.",
-        errorTitle: "Error",
-        errorText: "Could not delete the Coupon.",
+        confirmTitle: t("couponsPage.delete.confirmTitle"),
+        confirmText: t("couponsPage.delete.confirmText"),
+        confirmButtonText: t("couponsPage.delete.confirmButtonText"),
+        cancelButtonText: t("couponsPage.delete.cancelButtonText"),
+        successTitle: t("couponsPage.delete.successTitle"),
+        successText: t("couponsPage.delete.successText"),
+        errorTitle: t("couponsPage.delete.errorTitle"),
+        errorText: t("couponsPage.delete.errorText"),
       }
     );
     setReload((prev) => prev + 1);
@@ -180,7 +184,7 @@ const Coupons = () => {
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <PageBreadcrumb pageTitle="Orders" />
+      <PageBreadcrumb pageTitle={t("couponsPage.title")} userType="admin" />
       <div>
         <SearchTable
           fields={[
@@ -193,8 +197,8 @@ const Coupons = () => {
       </div>
       <div className="space-y-6">
         <ComponentCard
-          title="All Coupons"
-          headerAction="Add New coupon"
+          title={t("couponsPage.all")}
+          headerAction={t("couponsPage.addNew")}
           href="/admin/coupons/create"
         >
           <BasicTable
@@ -212,7 +216,7 @@ const Coupons = () => {
             searchValueName={searchValues.name}
             searchValueEmail={searchValues.email}
             searchValuePhone={searchValues.phone}
-            loadingText="Orders data Loading"
+            loadingText={t("couponsPage.table.loadingText")}
           />
         </ComponentCard>
       </div>

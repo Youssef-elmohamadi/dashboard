@@ -12,6 +12,7 @@ import {
 } from "../../../api/AdminApi/brandsApi/_requests";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
+import { useTranslation } from "react-i18next";
 type Brand = {};
 const Brands = () => {
   const [reload, setReload] = useState(0);
@@ -33,6 +34,7 @@ const Brands = () => {
     name: "",
   });
   const location = useLocation();
+  const { t } = useTranslation(["BrandsTable"]);
   const handleSearch = (key: string, value: string) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -44,13 +46,13 @@ const Brands = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: "Role Created Successfully",
+        title: t("brandsPage.createdSuccess"),
         message: location.state.successCreate,
       });
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
-        title: "Role Updated Successfully",
+        title: t("brandsPage.updatedSuccess"),
         message: location.state.successEdit,
       });
     }
@@ -113,13 +115,14 @@ const Brands = () => {
       deleteBrand,
       () => fetchData(pageIndex),
       {
-        confirmTitle: "Delete Role?",
-        confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, delete",
-        successTitle: "Deleted!",
-        successText: "Role has been deleted.",
-        errorTitle: "Error",
-        errorText: "Could not delete the Role.",
+        confirmTitle: t("brandsTable.delete.confirmTitle"),
+        confirmText: t("brandsTable.delete.confirmText"),
+        confirmButtonText: t("brandsTable.delete.confirmButtonText"),
+        cancelButtonText: t("brandsTable.delete.cancelButtonText"),
+        successTitle: t("brandsTable.delete.successTitle"),
+        successText: t("brandsTable.delete.successText"),
+        errorTitle: t("brandsTable.delete.errorTitle"),
+        errorText: t("brandsTable.delete.errorText"),
       }
     );
     setReload((prev) => prev + 1);
@@ -145,7 +148,7 @@ const Brands = () => {
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <PageBreadcrumb pageTitle="Brands" />
+      <PageBreadcrumb pageTitle={t("brandsPage.title")} userType="admin" />
       <div>
         <SearchTable
           fields={[{ key: "name", label: "Name", type: "input" }]}
@@ -154,8 +157,8 @@ const Brands = () => {
       </div>
       <div className="space-y-6">
         <ComponentCard
-          title="All Brands"
-          headerAction="Add New Brand"
+          title={t("brandsPage.all")}
+          headerAction={t("brandsPage.addNew")}
           href="/admin/brands/create"
         >
           <BasicTable
@@ -176,7 +179,7 @@ const Brands = () => {
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
             searchValueName={searchValues.name}
-            loadingText="Brands data Loading"
+            loadingText={t("brandsPage.table.loadingText")}
           />
         </ComponentCard>
       </div>

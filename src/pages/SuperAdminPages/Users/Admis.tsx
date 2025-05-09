@@ -23,10 +23,9 @@ type User = {
   vendor: { id: number; name: string };
   roles: { id: number; name: string }[];
 };
-
+import { useTranslation } from "react-i18next";
 const Admins = () => {
   const [data, setData] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
@@ -42,6 +41,8 @@ const Admins = () => {
     email: "",
     phone: "",
   });
+
+  const { t } = useTranslation(["AdminsTable"]);
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -82,8 +83,6 @@ const Admins = () => {
       if (error?.response?.status === 401 || error?.response?.status === 403) {
         setUnauthorized(true);
         setData([]);
-      } else {
-        console.error("Fetching error:", error);
       }
       return {
         data: [],
@@ -108,14 +107,14 @@ const Admins = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: "Admin Created Successfully",
+        title: t("adminsPage.createdSuccess"),
         message: location.state.successCreate,
       });
       window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
-        title: "Admin Updated Successfully",
+        title: t("adminsPage.updatedSuccess"),
         message: location.state.successEdit,
       });
       window.history.replaceState({}, document.title);
@@ -134,13 +133,14 @@ const Admins = () => {
       deleteAdmin,
       () => fetchData(pageIndex),
       {
-        confirmTitle: "Delete Admin?",
-        confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, delete",
-        successTitle: "Deleted!",
-        successText: "Admin has been deleted.",
-        errorTitle: "Error",
-        errorText: "Could not delete the Admin.",
+        confirmTitle: t("adminsPage.delete.confirmTitle"),
+        confirmText: t("adminsPage.delete.confirmText"),
+        confirmButtonText: t("adminsPage.delete.confirmButtonText"),
+        cancelButtonText: t("adminsPage.delete.cancelButtonText"),
+        successTitle: t("adminsPage.delete.successTitle"),
+        successText: t("adminsPage.delete.successText"),
+        errorTitle: t("adminsPage.delete.errorTitle"),
+        errorText: t("adminsPage.delete.errorText"),
       }
     );
     setReload((prev) => prev + 1);
@@ -152,7 +152,6 @@ const Admins = () => {
     includeRoles: true,
     includeDateOfCreation: true,
     includeActions: true,
-    onDelete: (id) => console.log("delete", id),
   });
   return (
     <>
@@ -167,7 +166,10 @@ const Admins = () => {
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <PageBreadcrumb pageTitle="Admins" />
+      <PageBreadcrumb
+        pageTitle={t("adminsPage.title")}
+        userType="super_admin"
+      />
       <div>
         <SearchTable
           fields={[
@@ -180,8 +182,8 @@ const Admins = () => {
       </div>
       <div className="space-y-6">
         <ComponentCard
-          title="All Admins"
-          headerAction="Add New Admin"
+          title={t("adminsPage.all")}
+          headerAction={t("adminsPage.addNew")}
           href="/super_admin/admins/create"
         >
           <BasicTable
@@ -198,7 +200,7 @@ const Admins = () => {
             searchValueName={searchValues.name}
             searchValueEmail={searchValues.email}
             searchValuePhone={searchValues.phone}
-            loadingText="Admins data Loading"
+            loadingText={t("adminsPage.table.loadingText")}
           />
         </ComponentCard>
       </div>

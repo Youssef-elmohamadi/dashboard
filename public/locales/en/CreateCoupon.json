@@ -1,0 +1,47 @@
+{
+  "coupon": {
+    "title": "Create Coupon",
+    "fields": {
+      "code": "Code",
+      "type": "Type",
+      "value": "Value",
+      "max_discount": "Max Discount",
+      "min_order_amount": "Min Order Amount",
+      "usage_limit": "Usage Limit",
+      "used_count": "Used Count",
+      "status": "Status",
+      "start_at": "Start Date",
+      "expires_at": "End Date"
+    },
+    "placeholders": {
+      "code": "Enter coupon code",
+      "value": "Enter value",
+      "max_discount": "Enter max discount (optional)",
+      "min_order_amount": "Enter minimum order amount",
+      "usage_limit": "Enter usage limit",
+      "used_count": "Enter used count"
+    },
+    "types": {
+      "fixed": "Fixed",
+      "percent": "Percent"
+    },
+    "statusOptions": {
+      "1": "Active",
+      "0": "Inactive"
+    },
+    "errors": {
+      "code": "Code is required",
+      "value": "Value is required",
+      "min_order_amount": "Minimum order amount is required",
+      "usage_limit": "Usage limit is required",
+      "start_at": "Start date is required",
+      "expires_at": {
+        "required": "End date is required",
+        "invalid": "End date must be after start date"
+      }
+    },
+    "button": "Create Coupon",
+    "success": "Coupon Created Successfully",
+    "failure": "Failed to create coupon"
+  }
+}

@@ -443,7 +443,12 @@ export default function CreateProducts() {
             {t("form.add_tag")}
           </button>
         </div>
-
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+        )}
         <button
           type="submit"
           disabled={loading}

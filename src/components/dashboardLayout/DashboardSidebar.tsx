@@ -126,45 +126,45 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
   const SuperAdminNavItems: NavItem[] = [
     {
       icon: <BoxCubeIcon />,
-      name: "Home",
+      name: t("Home"),
       path: "/super_admin",
     },
     {
       icon: <GroupIcon />,
-      name: "Admins Management",
+      name: t("User Management"),
       subItems: [
-        { name: "Admins", path: "/super_admin/admins", pro: false },
-        { name: "Roles", path: "/super_admin/roles", pro: false },
+        { name: t("Users"), path: "/super_admin/admins", pro: false },
+        { name: t("Roles"), path: "/super_admin/roles", pro: false },
       ],
     },
     {
       icon: <GroupIcon />,
-      name: "Vendors Management",
+      name: t("vendorsManagement"),
       path: "/super_admin/vendors",
     },
     {
       icon: <BoxCubeIcon />,
-      name: "Categories Management",
+      name: t("Categories"),
       path: "/super_admin/categories",
     },
     {
       icon: <BoxCubeIcon />,
-      name: "Brands",
+      name: t("Brands"),
       path: "/super_admin/brands",
     },
     {
       icon: <BoxCubeIcon />,
-      name: "Products",
+      name: t("Products"),
       path: "/super_admin/products",
     },
     {
       icon: <UserCircleIcon />,
-      name: "User Profile",
+      name: t("User Profile"),
       path: "/super_admin/profile",
     },
     {
       icon: <PiSignOut />,
-      name: "Logout",
+      name: t("Logout"),
       action: handleLogout,
     },
   ];

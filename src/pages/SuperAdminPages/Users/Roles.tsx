@@ -12,6 +12,7 @@ import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTable";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
+import { useTranslation } from "react-i18next";
 
 type Role = {};
 
@@ -28,7 +29,7 @@ const Roles = () => {
   }>({
     name: "",
   });
-
+  const { t } = useTranslation(["RolesTable"]);
   const [alertData, setAlertData] = useState<{
     variant: "success" | "error" | "info" | "warning";
     title: string;
@@ -48,13 +49,13 @@ const Roles = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: "Role Created Successfully",
+        title: t("rolesPage.createdSuccess"),
         message: location.state.successCreate,
       });
     } else if (location.state?.successUpdate) {
       setAlertData({
         variant: "success",
-        title: "Role Updated Successfully",
+        title: t("rolesPage.updatedSuccess"),
         message: location.state.successEdit,
       });
     }
@@ -95,8 +96,6 @@ const Roles = () => {
       if (error?.response?.status === 401 || error?.response?.status === 403) {
         setUnauthorized(true);
         setData([]);
-      } else {
-        console.error("Fetching error:", error);
       }
       return {
         data: [],
@@ -117,13 +116,14 @@ const Roles = () => {
       deleteRole,
       () => fetchData(pageIndex),
       {
-        confirmTitle: "Delete Role?",
-        confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, delete",
-        successTitle: "Deleted!",
-        successText: "Role has been deleted.",
-        errorTitle: "Error",
-        errorText: "Could not delete the Role.",
+        confirmTitle: t("rolesPage.delete.confirmTitle"),
+        confirmText: t("rolesPage.delete.confirmText"),
+        confirmButtonText: t("rolesPage.delete.confirmButtonText"),
+        cancelButtonText: t("rolesPage.delete.cancelButtonText"),
+        successTitle: t("rolesPage.delete.successTitle"),
+        successText: t("rolesPage.delete.successText"),
+        errorTitle: t("rolesPage.delete.errorTitle"),
+        errorText: t("rolesPage.delete.errorText"),
       }
     );
     setReload((prev) => prev + 1);
@@ -137,7 +137,6 @@ const Roles = () => {
     includeUpdatedAt: true,
     includeDateOfCreation: true,
     includeActions: true,
-    onDelete: (id) => console.log("delete", id),
   });
 
   return (
@@ -153,7 +152,7 @@ const Roles = () => {
         title="Roles Dashboard"
         description="This is the roles listing page."
       />
-      <PageBreadcrumb pageTitle="Roles" />
+      <PageBreadcrumb pageTitle="Roles" userType="super_admin" />
       <div>
         <SearchTable
           fields={[{ key: "name", label: "Name", type: "input" }]}
@@ -162,8 +161,8 @@ const Roles = () => {
       </div>
       <div className="space-y-6">
         <ComponentCard
-          title="All Roles"
-          headerAction="Add New Role"
+          title={t("rolesPage.all")}
+          headerAction={t("rolesPage.addNew")}
           href="/super_admin/roles/create"
         >
           <BasicTable
@@ -183,7 +182,7 @@ const Roles = () => {
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
             searchValueName={searchValues.name}
-            loadingText="Roles data Loading"
+            loadingText={t("rolesPage.table.loadingText")}
           />
         </ComponentCard>
       </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   showCoupon,
   updateCoupon,
@@ -11,6 +12,7 @@ import Select from "../../form/Select";
 const UpdateCoupon = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation(["UpdateCoupon"]);
 
   const [couponData, setCouponData] = useState({
     code: "",
@@ -19,13 +21,26 @@ const UpdateCoupon = () => {
     max_discount: "",
     min_order_amount: "",
     usage_limit: "",
-    used_count: "",
     active: "1",
     start_at: "",
     expires_at: "",
   });
 
-  const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [clientSideErrors, setClientSideErrors] = useState<
+    Record<string, string>
+  >({});
+
+  const [errors, setErrors] = useState({
+    code: [] as string[],
+    type: [] as string[],
+    value: [] as string[],
+    max_discount: [] as string[],
+    min_order_amount: [] as string[],
+    usage_limit: [] as string[],
+    active: [] as string[],
+    start_at: [] as string[],
+    expires_at: [] as string[],
+  });
 
   useEffect(() => {
     const fetchCoupon = async () => {
@@ -41,7 +56,6 @@ const UpdateCoupon = () => {
             max_discount: data.max_discount || "",
             min_order_amount: data.min_order_amount || "",
             usage_limit: data.usage_limit || "",
-            used_count: data.used_count || "",
             active: data.active?.toString() || "1",
             start_at: data.start_at || "",
             expires_at: data.expires_at || "",
@@ -63,192 +77,243 @@ const UpdateCoupon = () => {
   const handleSelectChange = (value: string, name: string) => {
     setCouponData((prev) => ({ ...prev, [name]: value }));
   };
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
 
+    if (!couponData.code) newErrors.code = t("coupon.errors.code");
+    if (!couponData.value) newErrors.value = t("coupon.errors.value");
+    if (!couponData.min_order_amount)
+      newErrors.min_order_amount = t("coupon.errors.min_order_amount");
+    if (!couponData.usage_limit)
+      newErrors.usage_limit = t("coupon.errors.usage_limit");
+    if (!couponData.start_at) newErrors.start_at = t("coupon.errors.start_at");
+    if (!couponData.expires_at)
+      newErrors.expires_at = t("coupon.errors.expires_at.required");
+    if (
+      couponData.start_at &&
+      couponData.expires_at &&
+      new Date(couponData.expires_at) <= new Date(couponData.start_at)
+    ) {
+      newErrors.expires_at = t("coupon.errors.expires_at.invalid");
+    }
+
+    setClientSideErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
     try {
       if (id) {
         await updateCoupon(id, couponData);
         navigate("/admin/coupons", {
-          state: { successEdit: "Coupon updated successfully" },
+          state: { successEdit: t("coupon.successMessage") },
         });
       }
-    } catch (err: any) {
-      const rawErrors = err?.response?.data?.errors;
-      const formattedErrors: Record<string, string[]> = {};
-      if (Array.isArray(rawErrors)) {
-        rawErrors.forEach((error: { code: string; message: string }) => {
-          if (!formattedErrors[error.code]) {
-            formattedErrors[error.code] = [];
-          }
-          formattedErrors[error.code].push(error.message);
+    } catch (error: any) {
+      console.error("Error creating admin:", error);
+      const status = error?.response?.status;
+      if (status === 403 || status === 401) {
+        setErrors({
+          ...errors,
+          global: t("errors.global"),
         });
+        return;
+      }
+      const rawErrors = error?.response?.data.errors;
+
+      if (Array.isArray(rawErrors)) {
+        const formattedErrors: Record<string, string[]> = {};
+
+        rawErrors.forEach((err: { code: string; message: string }) => {
+          if (!formattedErrors[err.code]) {
+            formattedErrors[err.code] = [];
+          }
+          formattedErrors[err.code].push(err.message);
+        });
+
         setErrors(formattedErrors);
+      } else {
+        setErrors({ general: [t("admin.errors.general")] });
       }
     }
   };
 
-  const renderError = (field: string) => {
-    return errors[field]?.[0] ? (
-      <p className="text-red-500 text-sm">{errors[field][0]}</p>
-    ) : null;
-  };
-
   return (
     <div className="p-4">
-      <h3 className="text-lg font-semibold mb-4">Edit Coupon</h3>
+      <h3 className="text-lg font-semibold mb-4 dark:text-white">
+        {t("coupon.editCoupon")}
+      </h3>
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
       >
-        {/* Coupon Code */}
+        {/* Code */}
         <div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="code">Code</Label>
-          </div>
+          <Label htmlFor="code">{t("coupon.code")}</Label>
           <Input
             name="code"
             value={couponData.code}
             onChange={handleChange}
-            placeholder="Coupon Code"
+            placeholder={t("coupon.placeholders.code")}
           />
-          {renderError("code")}
+          {clientSideErrors.code && (
+            <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
+          )}
+          {errors.code && <p className="text-red-500 text-sm">{errors.code}</p>}
         </div>
 
         {/* Type */}
         <div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="type">Type</Label>
-          </div>
+          <Label htmlFor="type">{t("coupon.type")}</Label>
           <Select
             options={[
-              { label: "Fixed", value: "fixed" },
-              { label: "Percent", value: "percent" },
+              { label: t("coupon.fixed"), value: "fixed" },
+              { label: t("coupon.percent"), value: "percent" },
             ]}
             defaultValue={couponData.type}
             onChange={(value) => handleSelectChange(value, "type")}
           />
-          {renderError("type")}
+          {clientSideErrors.type && (
+            <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
+          )}
+          {errors.type && <p className="text-red-500 text-sm">{errors.code}</p>}
         </div>
 
         {/* Value */}
         <div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="value">Value</Label>
-          </div>
+          <Label htmlFor="value">{t("coupon.value")}</Label>
           <Input
             name="value"
             value={couponData.value}
             onChange={handleChange}
-            placeholder="Value (e.g. 50 or 10%)"
+            placeholder={t("coupon.placeholders.value")}
           />
-          {renderError("value")}
+          {clientSideErrors.value && (
+            <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
+          )}
+          {errors.value && (
+            <p className="text-red-500 text-sm">{errors.code}</p>
+          )}
         </div>
 
         {/* Max Discount */}
         <div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="max_discount">Max Discount</Label>
-          </div>
+          <Label htmlFor="max_discount">{t("coupon.maxDiscount")}</Label>
           <Input
             name="max_discount"
             value={couponData.max_discount}
             onChange={handleChange}
-            placeholder="Maximum Discount"
+            placeholder={t("coupon.placeholders.maxDiscount")}
           />
-          {renderError("max_discount")}
+          {clientSideErrors.max_discount && (
+            <p className="text-red-500 text-sm">
+              {clientSideErrors.max_discount}
+            </p>
+          )}
+          {errors.max_discount && (
+            <p className="text-red-500 text-sm">{errors.max_discount}</p>
+          )}
         </div>
 
-        {/* Minimum Order Amount */}
+        {/* Min Order Amount */}
         <div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="min_order_amount">Min Order Amount</Label>
-          </div>
+          <Label htmlFor="min_order_amount">{t("coupon.minOrderAmount")}</Label>
           <Input
             name="min_order_amount"
             value={couponData.min_order_amount}
             onChange={handleChange}
-            placeholder="Minimum Order Amount"
+            placeholder={t("coupon.placeholders.minOrderAmount")}
           />
-          {renderError("min_order_amount")}
+          {clientSideErrors.min_order_amount && (
+            <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
+          )}
+          {errors.min_order_amount && (
+            <p className="text-red-500 text-sm">{errors.code}</p>
+          )}
         </div>
 
         {/* Usage Limit */}
         <div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="usage_limit">Usage Limit</Label>
-          </div>
+          <Label htmlFor="usage_limit">{t("coupon.usageLimit")}</Label>
           <Input
             name="usage_limit"
             value={couponData.usage_limit}
             onChange={handleChange}
-            placeholder="Usage Limit"
+            placeholder={t("coupon.placeholders.usageLimit")}
           />
-          {renderError("usage_limit")}
+          {clientSideErrors.usage_limit && (
+            <p className="text-red-500 text-sm">
+              {clientSideErrors.usage_limit}
+            </p>
+          )}
+          {errors.usage_limit && (
+            <p className="text-red-500 text-sm">{errors.usage_limit}</p>
+          )}
         </div>
 
-        {/* Used Count */}
+        {/* Status */}
         <div>
-          <Label htmlFor="used_count">Used Count</Label>
-          <Input
-            name="used_count"
-            value={couponData.used_count}
-            onChange={handleChange}
-            placeholder="Used Count"
-            disabled
-          />
-        </div>
-
-        {/* Active Status */}
-        <div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="active">Status</Label>
-          </div>
+          <Label htmlFor="active">{t("coupon.status")}</Label>
           <Select
             options={[
-              { label: "Active", value: "1" },
-              { label: "Inactive", value: "0" },
+              { label: t("coupon.active"), value: "1" },
+              { label: t("coupon.inactive"), value: "0" },
             ]}
             defaultValue={couponData.active}
             onChange={(value) => handleSelectChange(value, "active")}
           />
-          {renderError("active")}
+          {clientSideErrors.active && (
+            <p className="text-red-500 text-sm">{clientSideErrors.active}</p>
+          )}
+          {errors.active && (
+            <p className="text-red-500 text-sm">{errors.active}</p>
+          )}
         </div>
 
-        {/* Start At */}
+        {/* Start Date */}
         <div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="start_at">Start Date</Label>
-          </div>
+          <Label htmlFor="start_at">{t("coupon.startDate")}</Label>
           <Input
             type="datetime-local"
             name="start_at"
             value={couponData.start_at}
             onChange={handleChange}
           />
-          {renderError("start_at")}
+          {clientSideErrors.start_at && (
+            <p className="text-red-500 text-sm">{clientSideErrors.start_at}</p>
+          )}
+          {errors.start_at && (
+            <p className="text-red-500 text-sm">{errors.start_at}</p>
+          )}
         </div>
 
-        {/* Expires At */}
+        {/* End Date */}
         <div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="expires_at">End Date</Label>
-          </div>
+          <Label htmlFor="expires_at">{t("coupon.endDate")}</Label>
           <Input
             type="datetime-local"
             name="expires_at"
             value={couponData.expires_at}
             onChange={handleChange}
           />
-          {renderError("expires_at")}
+          {clientSideErrors.expires_at && (
+            <p className="text-red-500 text-sm">
+              {clientSideErrors.expires_at}
+            </p>
+          )}
+          {errors.expires_at && (
+            <p className="text-red-500 text-sm">{errors.expires_at}</p>
+          )}
         </div>
 
+        {/* Submit Button */}
         <div className="md:col-span-2">
           <button
             type="submit"
             className="w-full md:w-auto text-white bg-blue-700 hover:bg-blue-800 px-5 py-2 rounded-lg"
           >
-            Save Changes
+            {t("coupon.saveChanges")}
           </button>
         </div>
       </form>

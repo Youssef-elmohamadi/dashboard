@@ -1,0 +1,22 @@
+{
+  "brandsPage": {
+    "title": "Brands",
+    "addNew": "Add New Brand",
+    "all": "All Brands",
+    "createdSuccess": "Brand Created Successfully",
+    "updatedSuccess": "Brand Updated Successfully",
+    "delete": {
+      "confirmTitle": "Delete Brand?",
+      "confirmText": "This action cannot be undone!",
+      "confirmButtonText": "Yes, delete",
+      "cancelButtonText": "Cancel",
+      "successTitle": "Brand Deleted!",
+      "successText": "Brand has been deleted.",
+      "errorTitle": "Error",
+      "errorText": "Could not delete the Brand."
+    },
+    "table": {
+      "loadingText": "Brands data Loading"
+    }
+  }
+}

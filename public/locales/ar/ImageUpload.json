@@ -1,0 +1,8 @@
+{
+  "brandImage": {
+    "click_to_upload": "اضغط للرفع",
+    "or_drag_drop": "أو اسحب الملف هنا",
+    "allowed_formats": "SVG، PNG، JPG أو GIF (الحد الأقصى 800×400)",
+    "remove": "حذف"
+  }
+}
