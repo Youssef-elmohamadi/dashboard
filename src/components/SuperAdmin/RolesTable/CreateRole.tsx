@@ -22,13 +22,14 @@ export default function CreateRole() {
     name: "",
     permissions: [] as number[],
   });
-  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+  const [clientSideErrors, setClientSideErrors] = useState<{
+    [key: string]: string;
+  }>({});
   const [errors, setErrors] = useState({
     name: [] as string[],
     permissions: [] as string[],
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const navigate = useNavigate();
   const { t } = useTranslation(["CreateRole"]);
   useEffect(() => {
@@ -76,14 +77,13 @@ export default function CreateRole() {
     if (roleData.permissions.length === 0) {
       errors.permissions = t("role.errors.permission");
     }
-    setFormErrors(errors);
+    setClientSideErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     if (!validateForm()) {
       setIsSubmitting(false);
       return;
@@ -147,8 +147,10 @@ export default function CreateRole() {
               onChange={handleChange}
               placeholder={t("role.placeholder.name")}
             />
-            {formErrors.name && (
-              <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
+            {clientSideErrors.name && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.name}
+              </p>
             )}
             {errors.name && (
               <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
@@ -172,9 +174,9 @@ export default function CreateRole() {
                   />
                 ))}
               </div>
-              {formErrors.permissions && (
+              {clientSideErrors.permissions && (
                 <p className="text-red-500 text-sm mt-1">
-                  {formErrors.permissions}
+                  {clientSideErrors.permissions}
                 </p>
               )}
               {errors.permissions && (

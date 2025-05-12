@@ -5,6 +5,7 @@ import { GroupIcon } from "../../../icons";
 import { BoxIconLine } from "../../../icons";
 import FilterRangeDate from "../../../components/admin/productReports/FilterRangeDate";
 import TopSelligProducts from "../../../components/admin/productReports/TopSellingProducts";
+import { useTranslation } from "react-i18next";
 const ProductReports = () => {
   const [totalProductSell, setTotalProductSell] = useState([]);
   const [numbersData, setNumbersData] = useState({
@@ -26,7 +27,6 @@ const ProductReports = () => {
           outOfStockProduct: productReportData.outOfStockProduct,
           lowStockProduct: productReportData.lowStockProduct,
         });
-        console.log(productReportData.topSellingProducts);
 
         setTotalProductSell(
           productReportData.topSellingProducts?.map((product: any) => ({
@@ -48,7 +48,6 @@ const ProductReports = () => {
     start_date: "",
     end_date: "",
   });
-  console.log(totalProductSell);
 
   const handleFilter = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
@@ -56,6 +55,8 @@ const ProductReports = () => {
       [key]: value,
     }));
   };
+
+  const { t } = useTranslation(["ProductsReports"]);
   return (
     <>
       <FilterRangeDate setSearchParam={handleFilter} />
@@ -64,31 +65,31 @@ const ProductReports = () => {
           parentClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6"
           metrics={[
             {
-              label: "Products",
+              label: t("allProducts"),
               value: numbersData.allProduct,
               percentage: 11.01,
               icon: GroupIcon,
             },
             {
-              label: "Active Products",
+              label: t("activeProducts"),
               value: numbersData.activeProduct,
               percentage: -9.05,
               icon: BoxIconLine,
             },
             {
-              label: "Inactive Products",
+              label: t("inactiveProducts"),
               value: numbersData.inactiveProduct,
               percentage: -9.05,
               icon: BoxIconLine,
             },
             {
-              label: "Out Of Stock",
+              label: t("outOfStockProducts"),
               value: numbersData.outOfStockProduct,
               percentage: -9.05,
               icon: BoxIconLine,
             },
             {
-              label: "Low Stock",
+              label: t("lowStockProducts"),
               value: numbersData.lowStockProduct,
               percentage: -9.05,
               icon: BoxIconLine,

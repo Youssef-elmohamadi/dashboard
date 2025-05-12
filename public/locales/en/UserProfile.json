@@ -1,0 +1,22 @@
+{
+    "userProfile":{
+        "title":"Profile"
+    },
+    "userInfoCard":{
+        "title":"Personal Information",
+        "avatar":"Avatar",
+        "first_name":"First Name",
+        "last_name":"Last Name",
+        "email":"Email Address",
+        "phone":"Phone",
+        "update":"Edit"
+    },
+    "editInfoCard":{
+        "change_avatar":"Click to change your profile picture",
+        "editDescription":"Update your details to keep your profile up-to-date.",
+        "avatar":"Avatar",
+        "password":"Password",
+        "save":"Save Changes", 
+        "close":"Close"
+    }
+}

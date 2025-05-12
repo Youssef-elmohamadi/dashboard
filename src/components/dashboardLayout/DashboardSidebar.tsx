@@ -190,33 +190,33 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       location.pathname.startsWith(`${path}/update`) ||
       location.pathname.startsWith(`${path}/details`) ||
       location.pathname === `${path}/create`,
+
     [location.pathname]
   );
 
   ////////////
 
-  // useEffect(() => {
-  //   let submenuMatched = false;
-  //   ["main", "others"].forEach((menuType) => {
-  //     const items = menuType === "main" ? navItems : othersItems;
-  //     items.forEach((nav, index) => {
-  //       if (nav.subItems) {
-  //         nav.subItems.forEach((subItem) => {
-  //           if (isActive(subItem.path)) {
-  //             setOpenSubmenu({
-  //               type: menuType as "main" | "others",
-  //               index,
-  //             });
-  //             submenuMatched = true;
-  //           }
-  //         });
-  //       }
-  //     });
-  //   });
-  //   if (!submenuMatched) {
-  //     setOpenSubmenu(null);
-  //   }
-  // }, [location, isActive]);
+  useEffect(() => {
+    let submenuMatched = false;
+    const items =
+      userType === "super_admin" ? SuperAdminNavItems : AdminNavItems;
+    items.some((nav, index) => {
+      if (nav.subItems) {
+        nav.subItems.some((subItem) => {
+          if (isActive(subItem.path)) {
+            setOpenSubmenu({
+              type: "main",
+              index,
+            });
+            submenuMatched = true;
+          }
+        });
+      }
+    });
+    if (!submenuMatched) {
+      setOpenSubmenu(null);
+    }
+  }, [location, isActive]);
   //////////////////
 
   useEffect(() => {
@@ -230,7 +230,9 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       }
     }
   }, [openSubmenu]);
-
+  const hasActiveSubItem = (subItems?: { path: string }[]) => {
+    return subItems?.some((item) => isActive(item.path));
+  };
   const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
     setOpenSubmenu((prevOpenSubmenu) => {
       if (
@@ -252,7 +254,9 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
             <button
               onClick={() => handleSubmenuToggle(index, menuType)}
               className={`menu-item group ${
-                openSubmenu?.type === menuType && openSubmenu?.index === index
+                (openSubmenu?.type === menuType &&
+                  openSubmenu?.index === index) ||
+                hasActiveSubItem(nav.subItems)
                   ? "menu-item-active"
                   : "menu-item-inactive"
               } cursor-pointer ${
@@ -263,7 +267,9 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
             >
               <span
                 className={`menu-item-icon-size  ${
-                  openSubmenu?.type === menuType && openSubmenu?.index === index
+                  (openSubmenu?.type === menuType &&
+                    openSubmenu?.index === index) ||
+                  hasActiveSubItem(nav.subItems)
                     ? "menu-item-icon-active"
                     : "menu-item-icon-inactive"
                 }`}

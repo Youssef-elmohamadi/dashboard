@@ -1,0 +1,9 @@
+{
+  "title": "Top Selling Products",
+  "id": "ID",
+  "name": "Product Name",
+  "total": "Total Sold",
+  "seeAll": "See All",
+  "filter": "Filter",
+  "loading": "Loading Data..."
+}

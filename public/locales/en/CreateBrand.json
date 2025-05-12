@@ -10,5 +10,12 @@
   "submit_button": "Add Brand",
   "loading_button": "Creating...",
   "submit_error": "Something went wrong.",
-  "create_success": "Brand Created Successfully"
+  "create_success": "Brand Created Successfully",
+  "errors": {
+    "name": "Brand name is required.",
+    "status": "Select brand status.",
+    "image": "Brand image is required.",
+    "general": "Something went wrong.",
+    "global": "You don't have permission to perform this action."
+  }
 }

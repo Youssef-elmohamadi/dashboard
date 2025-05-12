@@ -1,0 +1,7 @@
+{
+    "ordersCount":"Orders Count",
+    "deliveredOrdersCount":"Delivered Orders Count",
+    "cancelledOrdersCount":"Cancelled Orders Count",
+    "totalItemsSold":"Total Items Sold",
+    "averageOrderValue":"Average Order Value"
+}

@@ -5,6 +5,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table";
+import { useTranslation } from "react-i18next";
 interface Product {
   productId: string;
   productName: string;
@@ -16,19 +17,20 @@ export default function TopSelligProducts({
 }: {
   products: Product[];
 }) {
+  const { t } = useTranslation(["TopSellingTable"]);
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
       <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Top Selling Products
+          {t("title")}
         </h3>
 
         <div className="flex items-center gap-3">
           <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
-            Filter
+            {t("seeAll")}
           </button>
           <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
-            See all
+            {t("filter")}
           </button>
         </div>
       </div>
@@ -41,19 +43,19 @@ export default function TopSelligProducts({
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                ID
+                {t("id")}
               </TableCell>
               <TableCell
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                Product Name
+                {t("name")}
               </TableCell>
               <TableCell
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                Total Sold
+                {t("total")}
               </TableCell>
               {/* <TableCell
                 isHeader
@@ -68,7 +70,7 @@ export default function TopSelligProducts({
             {products?.map((product, idx) => (
               <TableRow key={idx}>
                 <TableCell className="py-3">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 text-gray-500">
                     {product.productId}
                   </div>
                 </TableCell>

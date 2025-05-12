@@ -25,20 +25,21 @@ interface ColumnBuilderOptions<T extends BaseEntity> {
   onEdit?: (id: number) => void;
   customActionsRenderer?: (rowData: T) => React.ReactNode;
 }
-
+import { useTranslation } from "react-i18next";
 export const buildColumns = <T extends BaseEntity>(
   options: ColumnBuilderOptions<T>
 ): any[] => {
+  const { t } = useTranslation(["ColmunsAdmin"]);
   const columns: any[] = [
     {
-      Header: "ID",
+      Header: t("table.id"),
       accessor: "id" as keyof T,
     },
   ];
 
   if (options.includeImagesAndNameCell) {
     columns.push({
-      Header: "Name",
+      Header: t("table.name"),
       id: "name_and_image",
       Cell: ({ row }: any) => (
         <BrandCell name={row.original?.name} image={row.original?.image} />
@@ -48,21 +49,21 @@ export const buildColumns = <T extends BaseEntity>(
 
   if (options.includeRoleName) {
     columns.push({
-      Header: "Name",
+      Header: t("table.name"),
       accessor: "name",
     });
   }
 
   if (options.includeName) {
     columns.push({
-      Header: "Name",
+      Header: t("table.name"),
       id: "full_name",
       accessor: (row: any) => `${row.first_name} ${row.last_name}`,
     });
   }
   if (options.includeVendorName) {
     columns.push({
-      Header: "Name",
+      Header: t("table.name"),
       accessor: "name",
     });
   }
@@ -77,7 +78,7 @@ export const buildColumns = <T extends BaseEntity>(
 
   if (options.includeStatus) {
     columns.push({
-      Header: "Status",
+      Header: t("table.status"),
       id: "status",
       Cell: ({ row }: any) => <BrandStatus status={row.original.status} />,
     });
@@ -104,19 +105,19 @@ export const buildColumns = <T extends BaseEntity>(
 
   if (options.includeVendorEmail) {
     columns.push({
-      Header: "Email",
+      Header: t("table.email"),
       accessor: "email" as keyof T,
     });
   }
   if (options.includeVendorPhone) {
     columns.push({
-      Header: "Phone",
+      Header: t("table.phone"),
       accessor: "phone",
     });
   }
   if (options.includeCommissionRate) {
     columns.push({
-      Header: "Commission Rate",
+      Header: t("table.commission_rate"),
       accessor: "commission_rate" as keyof T,
     });
   }
@@ -146,7 +147,7 @@ export const buildColumns = <T extends BaseEntity>(
 
   if (options.includeDateOfCreation) {
     columns.push({
-      Header: "Date of Creation",
+      Header: t("table.created_at"),
       accessor: "created_at" as keyof T,
       Cell: ({ value }: any) => format(new Date(value), "dd/MM/yyyy"),
     });
@@ -229,7 +230,7 @@ export const buildColumns = <T extends BaseEntity>(
   // }
   if (options.includeActions) {
     columns.push({
-      Header: "Actions",
+      Header: t("table.actions"),
       id: "actions",
       Cell: ({ row }: any) =>
         options.customActionsRenderer

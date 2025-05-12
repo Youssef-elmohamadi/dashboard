@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { productsReport } from "../../../api/AdminApi/productsReportApi/_requests";
+import { useEffect, useState } from "react";
 import EcommerceMetrics from "../../../components/ecommerce/EcommerceMetrics";
 import { GroupIcon } from "../../../icons";
 import { BoxIconLine } from "../../../icons";
 import FilterRangeDate from "../../../components/admin/productReports/FilterRangeDate";
-import TopSelligProducts from "../../../components/admin/productReports/TopSellingProducts";
 import { ordersReport } from "../../../api/AdminApi/ordersReports/_requests";
+import { useTranslation } from "react-i18next";
 const ProductReports = () => {
-  const [totalProductSell, setTotalProductSell] = useState([]);
   const [numbersData, setNumbersData] = useState({
     orderCount: 0,
     deliveredOrdersCount: 0,
@@ -40,7 +38,8 @@ const ProductReports = () => {
     start_date: "",
     end_date: "",
   });
-  console.log(totalProductSell);
+
+  const { t } = useTranslation(["OrdersReports"]);
 
   const handleFilter = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
@@ -56,32 +55,32 @@ const ProductReports = () => {
           parentClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6"
           metrics={[
             {
-              label: "Orders Count",
+              label: t("ordersCount"),
               value: numbersData.orderCount,
               percentage: 11.01,
               icon: GroupIcon,
             },
             {
-              label: "Delivered Orders Count",
+              label: t("deliveredOrdersCount"),
               value: numbersData.deliveredOrdersCount,
               percentage: -9.05,
               icon: BoxIconLine,
             },
             {
-              label: "Total Items Sold",
+              label: t("cancelledOrdersCount"),
               value: numbersData.totalItemsSold,
               percentage: -9.05,
               icon: BoxIconLine,
             },
             {
-              label: "cancelled Orders Count",
+              label: t("totalItemsSold"),
               value: numbersData.cancelledOrdersCount,
               percentage: -9.05,
               icon: BoxIconLine,
             },
             {
-              label: "Average Order Value",
-              value: numbersData.averageOrderValue.toFixed(2) ,
+              label: t("averageOrderValue"),
+              value: numbersData.averageOrderValue.toFixed(2),
               percentage: -9.05,
               icon: BoxIconLine,
             },

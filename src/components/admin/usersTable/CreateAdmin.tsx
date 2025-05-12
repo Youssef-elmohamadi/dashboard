@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import ComponentCard from "../../../components/common/ComponentCard";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";

@@ -1,0 +1,7 @@
+{
+  "ordersCount": "عدد الطلبات",
+  "deliveredOrdersCount": "عدد الطلبات المستلمة",
+  "cancelledOrdersCount": "عدد الطلبات الملغية",
+  "totalItemsSold": "العدد الكلي للمنتجات المباعة",
+  "averageOrderValue": "متوسط قيمة الطلب"
+}

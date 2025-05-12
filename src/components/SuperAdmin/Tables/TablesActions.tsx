@@ -3,6 +3,7 @@ import { AiOutlineCloseCircle, AiOutlineMore } from "react-icons/ai";
 import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import { MdLocalShipping } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   rowData: any;
@@ -77,7 +78,7 @@ const TableActions = ({
   const handleChangeStatus = useCallback(() => {
     onChangeStatus?.(rowData.id);
   }, [onChangeStatus, rowData.id]);
-
+  const { t } = useTranslation(["AdminsTablesActions"]);
   return (
     <div className="flex gap-2 justify-around">
       {onEdit && (
@@ -88,7 +89,7 @@ const TableActions = ({
               className="text-blue-600 hover:text-blue-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
             >
               {editIcon}
-              <span className="ml-1">{editLabel}</span>
+              <span className="ml-1">{t("edit_label")}</span>
             </button>
           ) : (
             <Link
@@ -96,7 +97,7 @@ const TableActions = ({
               className="text-blue-600 hover:text-blue-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
             >
               {editIcon}
-              <span className="ml-1">{editLabel}</span>
+              <span className="ml-1">{t("edit_label")}</span>
             </Link>
           )}
         </div>
@@ -108,7 +109,7 @@ const TableActions = ({
           className="text-green-600 hover:text-green-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
         >
           {moreIcon}
-          <span className="ml-1">{moreLabel}</span>
+          <span className="ml-1">{t("more_label")}</span>
         </button>
       )}
 
@@ -118,7 +119,7 @@ const TableActions = ({
           className="text-blue-600 hover:text-blue-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
         >
           {moreIcon}
-          <span className="ml-1">{moreLabel}</span>
+          <span className="ml-1">{t("more_label")}</span>
         </Link>
       )}
 
@@ -128,7 +129,7 @@ const TableActions = ({
           className="text-red-600 hover:text-red-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
         >
           {deleteIcon}
-          <span className="ml-1">{deleteLabel}</span>
+          <span className="ml-1">{t("delete_label")}</span>
         </button>
       )}
 
@@ -138,7 +139,7 @@ const TableActions = ({
           className="text-green-600 hover:text-green-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
         >
           {shippedIcon}
-          <span className="ml-1">{shipLabel}</span>
+          <span className="ml-1">{t("ship_label")}</span>
         </button>
       )}
 
@@ -148,7 +149,7 @@ const TableActions = ({
           className="text-yellow-600 hover:text-yellow-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
         >
           {cancelIcon}
-          <span className="ml-1">{cancelLabel}</span>
+          <span className="ml-1">{t("cancel_label")}</span>
         </button>
       )}
       {isChangeStatus && onChangeStatus && (
@@ -157,7 +158,7 @@ const TableActions = ({
           className="text-yellow-600 hover:text-yellow-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
         >
           {cancelIcon}
-          <span className="ml-1">{changeStatusLabel}</span>
+          <span className="ml-1">{t("change_status_label")}</span>
         </button>
       )}
     </div>

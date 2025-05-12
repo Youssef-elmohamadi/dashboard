@@ -6,9 +6,10 @@ import Label from "../../form/Label";
 import { useEffect, useState } from "react";
 import { showUser } from "../../../api/AdminApi/profileApi/_requests";
 import { updateAdmin } from "../../../api/AdminApi/usersApi/_requests";
+import { useTranslation } from "react-i18next";
 
 export default function UserInfoCard({ userType }) {
-  
+  const { t } = useTranslation(["UserProfile"]);
   const { isOpen, openModal, closeModal } = useModal();
   const [dataUser, setDataUser] = useState({
     first_name: "",
@@ -58,8 +59,20 @@ export default function UserInfoCard({ userType }) {
     if (storedUserId) {
       const fetchData = async (id: any) => {
         try {
-          const res = await showUser(id);
-          setDataUser(res.data.data);
+          if (userType === "admin") {
+            const res = await showUser(id);
+            setDataUser(res.data.data);
+          } else {
+            setDataUser({
+              first_name: "Mariam",
+              last_name: "Darouich",
+              email: "Mariam@yahoo.com",
+              phone: "796423522",
+              roles: [{ name: "" }],
+              avatar: "",
+              password: "",
+            });
+          }
         } catch (error) {
           console.log("Failed to get data", error);
         }
@@ -99,12 +112,12 @@ export default function UserInfoCard({ userType }) {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <h4 className="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
-            Personal Information
+            {t("userInfoCard.title")}
           </h4>
 
           <div className="mb-5">
             <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-              Avatar
+              {t("userInfoCard.avatar")}
             </p>
             <div className="w-24 h-24 overflow-hidden rounded-full border border-gray-300 dark:border-gray-600">
               <img
@@ -117,7 +130,7 @@ export default function UserInfoCard({ userType }) {
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                First Name
+                {t("userInfoCard.first_name")}
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
                 {dataUser.first_name}
@@ -126,7 +139,7 @@ export default function UserInfoCard({ userType }) {
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Last Name
+                {t("userInfoCard.last_name")}
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
                 {dataUser.last_name}
@@ -135,7 +148,7 @@ export default function UserInfoCard({ userType }) {
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Email address
+                {t("userInfoCard.email")}
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
                 {dataUser.email}
@@ -144,7 +157,7 @@ export default function UserInfoCard({ userType }) {
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Phone
+                {t("userInfoCard.phone")}
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
                 {dataUser.phone}
@@ -181,7 +194,7 @@ export default function UserInfoCard({ userType }) {
               fill=""
             />
           </svg>
-          Edit
+          {t("userInfoCard.update")}
         </button>
       </div>
 
@@ -189,10 +202,10 @@ export default function UserInfoCard({ userType }) {
         <div className=" relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11 h-[700px]">
           <div className="px-2 pr-14">
             <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Edit Personal Information
+              {t("userInfoCard.title")}
             </h4>
             <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-              Update your details to keep your profile up-to-date.
+              {t("editInfoCard.editDescription")}
             </p>
           </div>
           <form className="flex flex-col">
@@ -226,7 +239,7 @@ export default function UserInfoCard({ userType }) {
                 />
               </div>
               <p className="text-sm text-gray-500 mt-2">
-                Click to change your profile picture
+                {t("editInfoCard.change_avatar")}
               </p>
             </div>
             <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
@@ -265,12 +278,12 @@ export default function UserInfoCard({ userType }) {
               </div> */}
               <div className="mt-7">
                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
-                  Personal Information
+                  {t("userInfoCard.title")}
                 </h5>
 
                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>First Name</Label>
+                    <Label>{t("userInfoCard.first_name")}</Label>
                     <Input
                       name="first_name"
                       type="text"
@@ -280,7 +293,7 @@ export default function UserInfoCard({ userType }) {
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>Last Name</Label>
+                    <Label>{t("userInfoCard.last_name")}</Label>
                     <Input
                       name="last_name"
                       type="text"
@@ -290,7 +303,7 @@ export default function UserInfoCard({ userType }) {
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>Email Address</Label>
+                    <Label>{t("userInfoCard.email")}</Label>
                     <Input
                       name="email"
                       type="text"
@@ -300,7 +313,7 @@ export default function UserInfoCard({ userType }) {
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>Phone</Label>
+                    <Label>{t("userInfoCard.phone")}</Label>
                     <Input
                       name="phone"
                       type="text"
@@ -310,7 +323,7 @@ export default function UserInfoCard({ userType }) {
                   </div>
 
                   <div className="col-span-2">
-                    <Label>Password</Label>
+                    <Label>{t("editInfoCard.password")}</Label>
                     <Input
                       name="password"
                       type="password"
@@ -323,10 +336,10 @@ export default function UserInfoCard({ userType }) {
             </div>
             <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
               <Button size="sm" variant="outline" onClick={closeModal}>
-                Close
+                {t("editInfoCard.close")}
               </Button>
               <Button size="sm" onClick={handleSave}>
-                Save Changes
+                {t("editInfoCard.save")}
               </Button>
             </div>
           </form>

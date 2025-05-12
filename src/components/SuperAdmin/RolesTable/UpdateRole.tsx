@@ -22,14 +22,12 @@ const UpdateRole: React.FC = () => {
     name: "",
     permissions: [] as number[],
   });
-  const [error, setError] = useState<string | null>(null);
   const [errors, setErrors] = useState({
     name: [] as string[],
     permissions: [] as string[],
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({}); // إضافة حالة لتخزين الأخطاء
-
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({}); 
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateRole"]);
@@ -54,7 +52,6 @@ const UpdateRole: React.FC = () => {
         }
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError("Something went wrong while loading data.");
       } finally {
         setLoading(false);
       }

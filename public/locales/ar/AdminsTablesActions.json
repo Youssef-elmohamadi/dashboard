@@ -3,5 +3,6 @@
   "delete_label": "حذف",
   "more_label": "عرض",
   "ship_label": "شحن",
-  "cancel_label": "إلغاء"
+  "cancel_label": "إلغاء",
+    "change_status_label": "تغيير الحالة"
 }

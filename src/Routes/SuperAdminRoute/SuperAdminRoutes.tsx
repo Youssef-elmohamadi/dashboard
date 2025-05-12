@@ -18,6 +18,7 @@ import UpdateAdmin from "../../components/SuperAdmin/AdminsTable/UpdateAdmin";
 import Roles from "../../pages/SuperAdminPages/Users/Roles";
 import CreateRole from "../../components/SuperAdmin/RolesTable/CreateRole";
 import UpdateRole from "../../components/SuperAdmin/RolesTable/UpdateRole";
+import UserProfiles from "../../pages/SuperAdminPages/UserProfile/UserProfiles";
 export const SuperAdminRoutes = (
   <>
     <Route
@@ -44,6 +45,7 @@ export const SuperAdminRoutes = (
       <Route path="brands/details/:id" element={<BrandDetails />} />
       <Route path="products" element={<Products />} />
       <Route path="products/details/:id" element={<ProductDetails />} />
+      <Route path="profile" element={<UserProfiles />} />
     </Route>
     <Route path="/super_admin/signin" element={<SuperAdminSignIn />} />
   </>

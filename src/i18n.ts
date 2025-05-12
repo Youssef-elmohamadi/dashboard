@@ -61,6 +61,11 @@ i18n
       "UsersTable",
       "CreateUser",
       "UserDetails",
+      "DateFilter",
+      "TopSellingTable",
+      "OrdersReport",
+      "ProductsReports",
+      "UserProfile",
     ],
 
     defaultNS: "Signup",

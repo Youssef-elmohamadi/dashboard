@@ -11,5 +11,12 @@
   "submit_button": "Save Changes",
   "loading_button": "Updating...",
   "submit_error": "An error occurred while updating the brand.",
-  "load_error": "Failed to load brand data."
+  "load_error": "Failed to load brand data.",
+  "errors": {
+    "name": "Brand name is required.",
+    "status": "Select brand status.",
+    "image": "Brand image is required.",
+    "general": "Something went wrong.",
+    "global": "You don't have permission to perform this action."
+  }
 }

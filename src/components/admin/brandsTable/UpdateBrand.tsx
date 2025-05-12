@@ -26,9 +26,11 @@ const UpdateBrandPage = () => {
     status: "",
     image: "",
   });
-
-  const [error, setError] = useState("");
   const [errors, setErrors] = useState<{ name?: string }>({});
+  const [clientSideErrors, setClientSideErrors] = useState({
+    name: "",
+    status: "",
+  });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -40,9 +42,7 @@ const UpdateBrandPage = () => {
           status: brandData.data.data.status || "active",
           image: brandData.data.data?.image,
         });
-      } catch (err) {
-        setError(t("load_error"));
-      }
+      } catch (err) {}
     };
     fetchBrand();
   }, [id, t]);
@@ -69,24 +69,23 @@ const UpdateBrandPage = () => {
     }));
   };
 
+  const validate = () => {
+    const newErrors = {
+      name: "",
+      status: "",
+    };
+    if (!updateData.name) {
+      newErrors.name = t("errors.name");
+    } else if (!updateData.status) {
+      newErrors.status = t("errors.status");
+    }
+    setClientSideErrors(newErrors);
+    return Object.values(newErrors).every((error) => error === "");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-
-    let hasError = false;
-    let newErrors: { name?: string } = {};
-
-    if (!updateData.name) {
-      newErrors.name = t("name_required");
-      hasError = true;
-    }
-
-    if (hasError) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setErrors({});
+    if (!validate()) return;
     setLoading(true);
 
     try {
@@ -100,8 +99,32 @@ const UpdateBrandPage = () => {
 
       await updateBrand(formData, id);
       navigate("/admin/brands");
-    } catch (err: any) {
-      setError(err.message || t("submit_error"));
+    } catch (error: any) {
+      console.error("Error creating admin:", error);
+      const status = error?.response?.status;
+      if (status === 403 || status === 401) {
+        setErrors({
+          ...errors,
+          global: t("errors.global"),
+        });
+        return;
+      }
+      const rawErrors = error?.response?.data.errors;
+
+      if (Array.isArray(rawErrors)) {
+        const formattedErrors: Record<string, string[]> = {};
+
+        rawErrors.forEach((err: { code: string; message: string }) => {
+          if (!formattedErrors[err.code]) {
+            formattedErrors[err.code] = [];
+          }
+          formattedErrors[err.code].push(err.message);
+        });
+
+        setErrors(formattedErrors);
+      } else {
+        setErrors({ general: [t("errors.general")] });
+      }
     } finally {
       setLoading(false);
     }
@@ -115,12 +138,6 @@ const UpdateBrandPage = () => {
         </h3>
       </div>
 
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-800 border border-red-400 rounded">
-          {error}
-        </div>
-      )}
-
       <form onSubmit={handleSubmit} className="space-y-6 mt-4">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
@@ -133,6 +150,11 @@ const UpdateBrandPage = () => {
               onChange={handleChange}
               placeholder={t("name_placeholder_edit")}
             />
+            {clientSideErrors.name && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.name}
+              </p>
+            )}
             {errors.name && (
               <p className="text-red-600 text-sm mt-1">{errors.name}</p>
             )}
@@ -147,8 +169,13 @@ const UpdateBrandPage = () => {
               ]}
               onChange={handleSelectChange}
               placeholder={t("status_label")}
-              defaultValue={updateData.status || "active"}
+              defaultValue={updateData.status}
             />
+            {clientSideErrors.status && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.status}
+              </p>
+            )}
           </div>
         </div>
 
@@ -176,6 +203,13 @@ const UpdateBrandPage = () => {
             )}
           </div>
         </div>
+
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+        )}
 
         <button
           type="submit"

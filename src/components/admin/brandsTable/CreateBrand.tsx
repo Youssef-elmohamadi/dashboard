@@ -16,15 +16,17 @@ export default function CreateBrand() {
     image: File | null;
   }>({
     name: "",
-    status: "active",
+    status: "",
     image: null,
   });
 
   const [errors, setErrors] = useState<{ name?: string }>({});
   const [loading, setLoading] = useState(false);
-  const [submitError, setSubmitError] = useState("");
   const navigate = useNavigate();
-
+  const [clientSideErrors, setClientSideErrors] = useState({
+    name: "",
+    status: "",
+  });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setBrandData((prev) => ({
@@ -47,26 +49,24 @@ export default function CreateBrand() {
     }));
   };
 
+  const validate = () => {
+    const newErrors = {
+      name: "",
+      status: "",
+    };
+    if (!brandData.name) {
+      newErrors.name = t("errors.name");
+    } else if (!brandData.status) {
+      newErrors.status = t("errors.status");
+    }
+    setClientSideErrors(newErrors);
+    return Object.values(newErrors).every((error) => error === "");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitError("");
-
-    let hasError = false;
-    let newErrors: { name?: string } = {};
-
-    if (!brandData.name.trim()) {
-      newErrors.name = t("name_required") || "Brand name is required.";
-      hasError = true;
-    }
-
-    if (hasError) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setErrors({});
+    if (!validate()) return;
     setLoading(true);
-
     try {
       const brandFormData = new FormData();
       brandFormData.append("name", brandData.name);
@@ -81,7 +81,31 @@ export default function CreateBrand() {
         state: { successCreate: t("create_success") },
       });
     } catch (error: any) {
-      setSubmitError(error.message || t("submit_error"));
+      console.error("Error creating admin:", error);
+      const status = error?.response?.status;
+      if (status === 403 || status === 401) {
+        setErrors({
+          ...errors,
+          global: t("errors.global"),
+        });
+        return;
+      }
+      const rawErrors = error?.response?.data.errors;
+
+      if (Array.isArray(rawErrors)) {
+        const formattedErrors: Record<string, string[]> = {};
+
+        rawErrors.forEach((err: { code: string; message: string }) => {
+          if (!formattedErrors[err.code]) {
+            formattedErrors[err.code] = [];
+          }
+          formattedErrors[err.code].push(err.message);
+        });
+
+        setErrors(formattedErrors);
+      } else {
+        setErrors({ general: [t("errors.general")] });
+      }
     } finally {
       setLoading(false);
     }
@@ -94,13 +118,6 @@ export default function CreateBrand() {
           {t("create_title")}
         </h3>
       </div>
-
-      {submitError && (
-        <div className="mb-4 p-3 bg-red-100 text-red-800 border border-red-400 rounded">
-          {submitError}
-        </div>
-      )}
-
       <form onSubmit={handleSubmit} className="space-y-6 pt-3">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
@@ -113,6 +130,11 @@ export default function CreateBrand() {
               onChange={handleChange}
               placeholder={t("name_placeholder")}
             />
+            {clientSideErrors.name && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.name}
+              </p>
+            )}
             {errors.name && (
               <p className="text-red-600 text-sm mt-1">{errors.name}</p>
             )}
@@ -128,6 +150,11 @@ export default function CreateBrand() {
               placeholder={t("status_label")}
               defaultValue={brandData.status}
             />
+            {clientSideErrors.status && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.status}
+              </p>
+            )}
           </div>
         </div>
 
@@ -138,6 +165,13 @@ export default function CreateBrand() {
             onFileChange={handleFileChange}
           />
         </div>
+
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+        )}
 
         <button
           type="submit"
