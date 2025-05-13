@@ -1,8 +1,8 @@
 {
     "adminsPage": {
       "title": "المدراء",
-      "addNew": "إضافة مدير جديد",
       "all": "كل المدراء",
+      "addNew": "إضافة مدير جديد",
       "createdSuccess": "تم إنشاء المدير بنجاح",
       "updatedSuccess": "تم تعديل بيانات المدير بنجاح",
       "delete": {

@@ -52,6 +52,7 @@ i18n
       "CreateCategory",
       "CategoryDetails",
       "BrandsTable",
+      "BrandDetails",
       "CreateBrand",
       "UpdateBrand",
       "ImageUpload",
@@ -66,6 +67,7 @@ i18n
       "OrdersReport",
       "ProductsReports",
       "UserProfile",
+      "UpdateCategory",
     ],
 
     defaultNS: "Signup",

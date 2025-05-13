@@ -1,0 +1,14 @@
+{
+  "title": "Brand Details",
+  "basicInfo": "Basic Info",
+  "name": "Name",
+  "status": "Status",
+  "image": "Brand Image",
+  "noImage": "No image available.",
+  "dates": "Dates",
+  "createdAt": "Creation Date",
+  "updatedAt": "Updated Date",
+  "loading": "Loading brand details...",
+  "notFound": "Brand not found.",
+  "noId": "No Brand ID provided."
+}

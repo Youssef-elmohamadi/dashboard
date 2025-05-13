@@ -15,6 +15,21 @@
       "errorTitle": "خطأ",
       "errorText": "لا يمكن حذف العلامة التجارية."
     },
+    "changeStatus": {
+      "title": "تغيير الحالة",
+      "inputPlaceholder": "اختر الحالة",
+      "errorSelect": "يجب اختيار الحالة",
+      "success": "تم تحديث الحالة بنجاح: {{status}}",
+      "noChangeMessage": "لم يتم إجراء أي تغيير",
+      "errorResponse": "تعذر تحديث الحالة",
+      "confirmButtonText": "تأكيد",
+      "cancelButtonText": "إلغاء"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
     "table": {
       "loadingText": "جاري تحميل بيانات العلامات التجارية"
     }

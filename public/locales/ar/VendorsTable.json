@@ -1,0 +1,50 @@
+{
+  "vendorsPage": {
+    "title": "البائعون",
+    "all": "كل البائعون",
+    "details": {
+      "pageTitle": "تفاصيل البائع",
+      "basicInfo": "المعلومات الأساسية",
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "description": "الوصف",
+      "noDescription": "لا يوجد وصف",
+      "dates": "التواريخ",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ التحديث",
+      "documents": "المستندات",
+      "status": "الحالة",
+      "noDocuments": "لا توجد مستندات مرفوعة.",
+      "changeStatusBtn": "تغيير الحالة",
+      "documentTypes": {
+        "1": "السجل التجاري",
+        "2": "شهادة التسجيل الضريبي",
+        "default": "أخرى"
+      },
+      "loading": "جاري تحميل تفاصيل البائع...",
+      "notFound": "لم يتم العثور على البائع.",
+      "noId": "لم يتم تقديم رقم تعريف البائع."
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "approved": "موافق",
+      "rejected": "مرفوض"
+    },
+    "changeStatus": {
+      "title": "تغيير الحالة",
+      "inputPlaceholder": "اختر الحالة",
+      "errorSelect": "يجب اختيار الحالة",
+      "success": "تم تحديث الحالة إلى: {{status}}",
+      "noChangeMessage": "لم يتم إجراء أي تغيير",
+      "errorResponse": "تعذر تحديث الحالة",
+      "confirmButtonText": "تأكيد",
+      "cancelButtonText": "إلغاء"
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات البائعون"
+    }
+  }
+}

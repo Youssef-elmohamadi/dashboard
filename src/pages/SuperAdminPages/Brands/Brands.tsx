@@ -16,6 +16,7 @@ import {
 } from "../../../api/SuperAdminApi/Brands/_requests";
 import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
+import { useTranslation } from "react-i18next";
 type User = {
   id: number;
   first_name: string;
@@ -48,6 +49,7 @@ const Brands = () => {
     email: "",
     phone: "",
   });
+  const { t } = useTranslation(["BrandsTable"]);
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -161,16 +163,25 @@ const Brands = () => {
     const res = await getBrandById(id);
     return res.data.data.status;
   };
-
   const handleChangeStatus = async (id: number) => {
     await openChangeStatusModal({
       id,
       getStatus,
       changeStatus,
       options: {
-        Pending: "Pending",
-        Active: "Active",
-        InActive: "InActive",
+        Pending: t("brandsPage.status.pending"),
+        Active: t("brandsPage.status.active"),
+        InActive: t("brandsPage.status.inactive"),
+      },
+      Texts: {
+        title: t("brandsPage.changeStatus.title"),
+        inputPlaceholder: t("brandsPage.changeStatus.inputPlaceholder"),
+        errorSelect: t("brandsPage.changeStatus.errorSelect"),
+        success: t("brandsPage.changeStatus.success"),
+        noChangeMessage: t("brandsPage.changeStatus.noChangeMessage"),
+        errorResponse: t("brandsPage.changeStatus.errorResponse"),
+        confirmButtonText: t("brandsPage.changeStatus.confirmButtonText"),
+        cancelButtonText: t("brandsPage.changeStatus.cancelButtonText"),
       },
     });
 
@@ -196,7 +207,10 @@ const Brands = () => {
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <PageBreadcrumb pageTitle="Orders" />
+      <PageBreadcrumb
+        pageTitle={t("brandsPage.title")}
+        userType="super_admin"
+      />
       <div>
         <SearchTable
           fields={[
@@ -208,7 +222,7 @@ const Brands = () => {
         />
       </div>
       <div className="space-y-6">
-        <ComponentCard title="All Brands">
+        <ComponentCard title={t("brandsPage.all")}>
           <BasicTable
             columns={columns}
             fetchData={fetchData}
@@ -223,7 +237,7 @@ const Brands = () => {
             searchValueName={searchValues.name}
             searchValueEmail={searchValues.email}
             searchValuePhone={searchValues.phone}
-            loadingText="Vendors data Loading"
+            loadingText={t("brandsPage.table.loadingText")}
           />
         </ComponentCard>
       </div>

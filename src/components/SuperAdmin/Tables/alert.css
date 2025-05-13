@@ -1,14 +1,30 @@
-/* ترفع الـ container كله */
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
 .swal2-container {
   z-index: 99999 !important;
 }
 
-/* ترفع الـ popup نفسه
-  .custom-popup {
-    z-index: 99999 !important;
-  }
-  
-  /* الـ backdrop لازم يكون تحته */
-/* .swal2-backdrop {
-    z-index: 99999 !important;
-  } */
+.custom-popup {
+  @apply bg-white text-gray-800 dark:bg-gray-800 dark:text-white rounded-lg shadow-lg;
+}
+
+.swal2-confirm {
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded;
+}
+
+.swal2-cancel {
+  @apply bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded ml-2;
+}
+.dark .swal2-select {
+  background-color: #1f2937; /* Tailwind's gray-800 */
+  color: #f9fafb; /* Tailwind's gray-100 */
+  border: 1px solid #374151; /* Tailwind's gray-700 */
+}
+
+/* تنسيق option داخل select في الوضع الداكن */
+.dark .swal2-select option {
+  background-color: #1f2937; /* same dark background */
+  color: #f9fafb;
+}

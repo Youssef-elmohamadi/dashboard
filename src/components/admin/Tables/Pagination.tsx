@@ -51,7 +51,6 @@ const Pagination: React.FC<PaginationProps> = ({
               {t("pagination.previous")}
             </button>
           </li>
-
           {Array.from({ length: pageCount }).map((_, i) => (
             <li key={i}>
               <button

@@ -137,10 +137,6 @@ const Brands = () => {
     includeUpdatedAt: true,
     includeCreatedAt: true,
     includeActions: true,
-    onDelete: (id) => console.log("delete", id),
-    customActionsRenderer: (row) => (
-      <TableActions id={row.id} rowData={row} onDelete={handleDelete} />
-    ),
   });
   return (
     <>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   getVendorById,
   changeDocumentStatus,
@@ -29,23 +30,23 @@ interface Vendor {
 
 const VendorDetails: React.FC = () => {
   const { id } = useParams();
+  const { t } = useTranslation(["VendorsTable"]);
   const [vendor, setVendor] = useState<Vendor | null>(null);
   const [loading, setLoading] = useState(true);
   const [showImage, setShowImage] = useState(false);
   const [doc, setDoc] = useState({});
 
+  const fetchVendor = async () => {
+    try {
+      const res = await getVendorById(id as string);
+      setVendor(res.data.data);
+    } catch (err) {
+      console.error("Error fetching vendor:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchVendor = async () => {
-      try {
-        const res = await getVendorById(id as string);
-        setVendor(res.data.data);
-      } catch (err) {
-        console.error("Error fetching vendor:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (id) fetchVendor();
   }, [id]);
 
@@ -63,54 +64,63 @@ const VendorDetails: React.FC = () => {
       minute: "2-digit",
     });
 
-  const documentTypeLabel = (type: number) => {
-    switch (type) {
-      case 1:
-        return "Commercial Registration";
-      case 2:
-        return "Tax Registration Certificate";
-      default:
-        return "Other";
-    }
-  };
+  const documentTypeLabel = (type: number) =>
+    t(`vendorsPage.details.documentTypes.${type}`) ??
+    t("vendorsPage.details.documentTypes.default");
 
   const getStatus = async (docId: number) => {
     const document = vendor?.documents.find((doc) => doc.id === docId);
     return document?.status || "";
   };
 
-  const handleChangeStatus = async (docId: number) => {
+  const changeStatus = async (id: number, status: string) => {
+    await changeDocumentStatus(id, { status });
+    if (vendor?.id) {
+      const updated = await getVendorById(String(vendor.id));
+      setVendor(updated.data.data);
+    }
+  };
+
+  const handleChangeStatus = async (id: number) => {
     await openChangeStatusModal({
-      id: docId,
+      id,
       getStatus,
-      changeStatus: changeDocumentStatus,
+      changeStatus,
       options: {
-        pending: "Pending",
-        approved: "Approved",
-        rejected: "Rejected",
+        Pending: t("vendorsPage.status.pending"),
+        Approved: t("vendorsPage.status.approved"),
+        Rejected: t("vendorsPage.status.rejected"),
+      },
+      Texts: {
+        title: t("vendorsPage.changeStatus.title"),
+        inputPlaceholder: t("vendorsPage.changeStatus.inputPlaceholder"),
+        errorSelect: t("vendorsPage.changeStatus.errorSelect"),
+        success: t("vendorsPage.changeStatus.success"),
+        noChangeMessage: t("vendorsPage.changeStatus.noChangeMessage"),
+        errorResponse: t("vendorsPage.changeStatus.errorResponse"),
+        confirmButtonText: t("vendorsPage.changeStatus.confirmButtonText"),
+        cancelButtonText: t("vendorsPage.changeStatus.cancelButtonText"),
       },
     });
-    if (id) {
-      const res = await getVendorById(id);
-      setVendor(res.data.data);
-    }
   };
 
   if (!id)
     return (
-      <div className="p-8 text-center text-gray-500">
-        No Vendor ID provided.
+      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        {t("vendorsPage.details.noId")}
       </div>
     );
   if (loading)
     return (
-      <div className="p-8 text-center text-gray-500">
-        Loading vendor details...
+      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        {t("vendorsPage.details.loading")}
       </div>
     );
   if (!vendor)
     return (
-      <div className="p-8 text-center text-gray-500">Vendor not found.</div>
+      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        {t("vendorsPage.details.notFound")}
+      </div>
     );
 
   return (
@@ -120,50 +130,54 @@ const VendorDetails: React.FC = () => {
         setShowImageModal={setShowImage}
         doc={doc}
       />
-      <div className="vendor-details p-6 max-w-5xl mx-auto space-y-8">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          Vendor Details
+      <div className="vendor-details p-6 max-w-5xl mx-auto space-y-8 text-gray-800 dark:text-gray-100">
+        <h1 className="text-3xl font-bold text-center mb-6">
+          {t("vendorsPage.details.pageTitle")}
         </h1>
 
         {/* Vendor Info */}
-        <section className="bg-white p-6 rounded-xl shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-blue-700">
-            Basic Info
+        <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-blue-700 dark:text-blue-400">
+            {t("vendorsPage.details.basicInfo")}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <p>
-              <strong>Name:</strong> {vendor.name}
+              <strong>{t("vendorsPage.details.name")}:</strong> {vendor.name}
             </p>
             <p>
-              <strong>Email:</strong> {vendor.email}
+              <strong>{t("vendorsPage.details.email")}:</strong> {vendor.email}
             </p>
             <p>
-              <strong>Phone:</strong> {vendor.phone}
+              <strong>{t("vendorsPage.details.phone")}:</strong> {vendor.phone}
             </p>
             <p>
-              <strong>Description:</strong>{" "}
-              {vendor.description || "No description"}
+              <strong>{t("vendorsPage.details.description")}:</strong>{" "}
+              {vendor.description || t("vendorsPage.details.noDescription")}
             </p>
           </div>
         </section>
 
         {/* Dates */}
-        <section className="bg-white p-6 rounded-xl shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">Dates</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+        <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">
+            {t("vendorsPage.details.dates")}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <p>
-              <strong>Created At:</strong> {formatDate(vendor.created_at)}
+              <strong>{t("vendorsPage.details.createdAt")}:</strong>{" "}
+              {formatDate(vendor.created_at)}
             </p>
             <p>
-              <strong>Updated At:</strong> {formatDate(vendor.updated_at)}
+              <strong>{t("vendorsPage.details.updatedAt")}:</strong>{" "}
+              {formatDate(vendor.updated_at)}
             </p>
           </div>
         </section>
 
         {/* Documents */}
-        <section className="bg-white p-6 rounded-xl shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-purple-700">
-            Documents
+        <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-purple-700 dark:text-purple-400">
+            {t("vendorsPage.details.documents")}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {vendor.documents.length > 0 ? (
@@ -171,7 +185,7 @@ const VendorDetails: React.FC = () => {
                 <div
                   key={doc.id}
                   onClick={() => handleOpenImage(doc)}
-                  className="border p-4 rounded-md shadow-sm bg-gray-50 flex flex-col items-center cursor-pointer"
+                  className="border p-4 rounded-md shadow-sm bg-gray-50 dark:bg-gray-900 flex flex-col items-center cursor-pointer"
                 >
                   <img
                     src={doc.document_name}
@@ -179,26 +193,29 @@ const VendorDetails: React.FC = () => {
                     className="w-full h-48 object-cover rounded mb-3"
                   />
                   <div className="text-center space-y-1">
-                    <p className="font-semibold text-gray-800">
+                    <p className="font-semibold">
                       {documentTypeLabel(doc.document_type)}
                     </p>
-                    <p className="text-sm text-gray-600">
-                      Status: {doc.status}
+                    <p className="text-sm">
+                      {t("vendorsPage.details.status")}:{" "}
+                      {t(`vendorsPage.status.${doc.status.toLowerCase()}`)}
                     </p>
                     <button
                       onClick={(e) => {
-                        e.stopPropagation(); // ما تفتحش الصورة لما تضغط الزر
+                        e.stopPropagation();
                         handleChangeStatus(doc.id);
                       }}
-                      className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                      className="mt-2 px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded hover:bg-blue-700 dark:hover:bg-blue-600 transition"
                     >
-                      Change Status
+                      {t("vendorsPage.details.changeStatusBtn")}
                     </button>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-gray-500">No documents uploaded.</p>
+              <p className="text-gray-500 dark:text-gray-400">
+                {t("vendorsPage.details.noDocuments")}
+              </p>
             )}
           </div>
         </section>

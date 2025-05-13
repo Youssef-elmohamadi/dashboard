@@ -4,6 +4,7 @@ import {
   getAllCategories,
   getCategoryById,
 } from "../../../api/SuperAdminApi/Categories/_requests";
+import { useTranslation } from "react-i18next";
 
 interface Category {
   id: number;
@@ -22,8 +23,10 @@ interface Category {
 
 const CategoryDetails: React.FC = () => {
   const { id } = useParams();
+  const { t } = useTranslation(["CategoryDetails"]);
+
   const [category, setCategory] = useState<Category | null>(null);
-  const [categories, setCategories] = useState<Category | null>(null);
+  const [categories, setCategories] = useState<Category[] | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,19 +43,18 @@ const CategoryDetails: React.FC = () => {
 
     if (id) fetchCategory();
   }, [id]);
+
   useEffect(() => {
-    const fetchCategory = async () => {
+    const fetchCategories = async () => {
       try {
         const res = await getAllCategories();
         setCategories(res.data.data.original);
       } catch (error) {
-        console.error("Error fetching category:", error);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching all categories:", error);
       }
     };
 
-    fetchCategory();
+    fetchCategories();
   }, []);
 
   const formatDate = (dateStr: string | null) => {
@@ -68,67 +70,71 @@ const CategoryDetails: React.FC = () => {
 
   if (!id)
     return (
-      <div className="p-8 text-center text-gray-500">
-        No Category ID provided.
+      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        {t("noId")}
       </div>
     );
 
   if (loading)
     return (
-      <div className="p-8 text-center text-gray-500">
-        Loading category details...
+      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        {t("loading")}
       </div>
     );
 
   if (!category)
     return (
-      <div className="p-8 text-center text-gray-500">Category not found.</div>
+      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        {t("notFound")}
+      </div>
     );
 
   return (
     <div className="category-details p-6 max-w-5xl mx-auto space-y-8">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-        Category Details
+      <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
+        {t("title")}
       </h1>
 
       {/* Basic Info */}
-      <section className="bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4 text-blue-700">Basic Info</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+      <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+        <h2 className="text-xl font-semibold mb-4 text-blue-700 dark:text-blue-400">
+          {t("basicInfo")}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-gray-200">
           <p>
-            <strong>Name:</strong> {category.name}
+            <strong>{t("name")}:</strong> {category.name}
           </p>
           <p>
-            <strong>Description:</strong> {category.description}
+            <strong>{t("description")}:</strong> {category.description}
           </p>
           <p>
-            <strong>Commission Rate:</strong> {category.commission_rate}%
+            <strong>{t("commissionRate")}:</strong> {category.commission_rate}%
           </p>
           <p>
-            <strong>Order:</strong> {category.order}
+            <strong>{t("order")}:</strong> {category.order}
           </p>
           <p>
-            <strong>Status:</strong> {category.status}
+            <strong>{t("status")}:</strong> {category.status}
           </p>
           <p>
-            <strong>Appears on Website:</strong>{" "}
-            {category.appears_in_website === "yes" ? "Yes" : "No"}
+            <strong>{t("appearsOnWebsite")}:</strong>{" "}
+            {category.appears_in_website === "yes" ? t("yes") : t("no")}
           </p>
           <p>
-            <strong>Parent ID:</strong>{" "}
+            <strong>{t("parentId")}:</strong>{" "}
             {category.parent_id
               ? categories?.find((cat) => cat.id === category.parent_id)
-                  ?.name || "Unknown"
-              : "None"}
+                  ?.name || t("unknown")
+              : t("none")}
           </p>
         </div>
       </section>
 
       {/* Image */}
       {category.image && (
-        <section className="bg-white p-6 rounded-xl shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-green-700">
-            Category Image
+        <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">
+            {t("categoryImage")}
           </h2>
           <div className="w-full flex justify-center">
             <img
@@ -140,15 +146,17 @@ const CategoryDetails: React.FC = () => {
         </section>
       )}
 
-      {/* Dates */}
-      <section className="bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4 text-gray-700">Timestamps</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+      {/* Timestamps */}
+      <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+        <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">
+          {t("timestamps")}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-gray-200">
           <p>
-            <strong>Created At:</strong> {formatDate(category.created_at)}
+            <strong>{t("createdAt")}:</strong> {formatDate(category.created_at)}
           </p>
           <p>
-            <strong>Updated At:</strong> {formatDate(category.updated_at)}
+            <strong>{t("updatedAt")}:</strong> {formatDate(category.updated_at)}
           </p>
         </div>
       </section>

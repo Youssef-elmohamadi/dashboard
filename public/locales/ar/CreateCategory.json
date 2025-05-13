@@ -1,0 +1,26 @@
+{
+  "category": {
+    "title": "إنشاء تصنيف",
+    "name": "الاسم",
+    "description": "الوصف",
+    "commission": "نسبة العمولة %",
+    "commissionPlaceholder": "أدخل نسبة العمولة (0 - 100)",
+    "namePlaceholder": "أدخل اسم التصنيف",
+    "descPlaceholder": "أدخل الوصف",
+    "parent": "تصنيف رئيسي (اختياري)",
+    "selectParent": "اختر تصنيف رئيسي",
+    "image": "صورة التصنيف",
+    "submit": "إضافة التصنيف",
+    "submitting": "جارٍ الإضافة...",
+    "errors": {
+      "name": "الاسم مطلوب",
+      "description": "الوصف مطلوب",
+      "commissionRequired": "نسبة العمولة مطلوبة",
+      "commissionMax": "لا يمكن أن تتجاوز نسبة العمولة 100",
+      "parent": "التصنيف الرئيسي غير صالح",
+      "global": "غير مصرح لك بتنفيذ هذا الإجراء.",
+      "general": "حدث خطأ ما. حاول مرة أخرى لاحقًا."
+    },
+    "success": "تم إنشاء التصنيف بنجاح"
+  }
+}

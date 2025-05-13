@@ -32,6 +32,7 @@ const ModalShowImage = ({ showImageModal, setShowImageModal, doc }) => {
         return "Other";
     }
   };
+  console.log(doc);
 
   return showImageModal && doc ? (
     <div
@@ -56,8 +57,8 @@ const ModalShowImage = ({ showImageModal, setShowImageModal, doc }) => {
             {/* Image Section */}
             <div className="w-full md:w-7/12 flex justify-center">
               <InnerImageZoom
-                src={"/images/cards/card-01.jpg"}
-                zoomSrc={"/images/cards/card-01.jpg"}
+                src={doc?.document_name}
+                zoomSrc={doc?.document_name}
                 zoomType="hover"
                 zoomPreload={true}
                 className="object-contain h-full rounded"

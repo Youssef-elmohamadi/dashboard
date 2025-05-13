@@ -12,6 +12,8 @@ import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTable";
 import { useLocation } from "react-router";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
+import { useTranslation } from "react-i18next";
+import Alert from "../../../components/ui/alert/Alert";
 type Product = {};
 const Categories = () => {
   const [reload, setReload] = useState(0);
@@ -42,18 +44,18 @@ const Categories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const location = useLocation();
-
+  const { t } = useTranslation(["CategoriesTable"]);
   useEffect(() => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: "Role Created Successfully",
+        title: t("categoriesPage.createdSuccess"),
         message: location.state.successCreate,
       });
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
-        title: "Role Updated Successfully",
+        title: t("categoriesPage.updatedSuccess"),
         message: location.state.successEdit,
       });
     }
@@ -127,10 +129,10 @@ const Categories = () => {
     } catch (error) {
       if (error?.response?.status === 401 || error?.response?.status === 403) {
         setUnauthorized(true);
-        setData([]); 
+        setData([]);
       } else {
         console.error("Fetching error:", error);
-      };
+      }
       return {
         data: [],
         last_page: 0,
@@ -150,13 +152,13 @@ const Categories = () => {
       deleteCategory,
       () => fetchData(pageIndex),
       {
-        confirmTitle: "Delete Role?",
-        confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, delete",
-        successTitle: "Deleted!",
-        successText: "Role has been deleted.",
-        errorTitle: "Error",
-        errorText: "Could not delete the Role.",
+        confirmTitle: t("categoriesPage.delete.confirmTitle"),
+        confirmText: t("categoriesPage.delete.confirmText"),
+        confirmButtonText: t("categoriesPage.delete.confirmButtonText"),
+        successTitle: t("categoriesPage.delete.successTitle"),
+        successText: t("categoriesPage.delete.successText"),
+        errorTitle: t("categoriesPage.delete.errorTitle"),
+        errorText: t("categoriesPage.delete.errorText"),
       }
     );
     setReload((prev) => prev + 1);
@@ -168,24 +170,25 @@ const Categories = () => {
     includeDateOfCreation: true,
     includeActions: true,
     includeCommissionRate: true,
-    onDelete: (id) => console.log("delete", id),
-    customActionsRenderer: (row) => (
-      <TableActions
-        id={row.id}
-        rowData={row}
-        isShowMore={true}
-        onDelete={handleDelete}
-      />
-    ),
   });
 
   return (
     <>
+      {alertData && (
+        <Alert
+          variant={alertData.variant}
+          title={alertData.title}
+          message={alertData.message}
+        />
+      )}
       <PageMeta
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <PageBreadcrumb pageTitle="Products" />
+      <PageBreadcrumb
+        pageTitle={t("categoriesPage.title")}
+        userType="super_admin"
+      />
       <div>
         <SearchTable
           fields={[{ key: "name", label: "Name", type: "input" }]}
@@ -194,8 +197,8 @@ const Categories = () => {
       </div>
       <div className="space-y-6">
         <ComponentCard
-          title="All Categories"
-          headerAction="Add New Category"
+          title={t("categoriesPage.all")}
+          headerAction={t("categoriesPage.addNew")}
           href="/super_admin/categories/create"
         >
           <BasicTable
@@ -220,7 +223,7 @@ const Categories = () => {
             searchValueCategoryId={searchValues.category_id}
             searchValueBrandId={searchValues.brand_id}
             searchValueStatus={searchValues.status}
-            loadingText="Products data Loading"
+            loadingText={t("categoriesPage.table.loadingText")}
           />
         </ComponentCard>
       </div>

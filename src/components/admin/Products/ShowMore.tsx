@@ -99,7 +99,7 @@ const ProductDetails: React.FC = () => {
 
   return (
     <div className="product-details p-6 max-w-6xl mx-auto space-y-10">
-      <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-4 mb-4">
+      <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-4">
         {t("title")}
       </h1>
 
@@ -163,6 +163,23 @@ const ProductDetails: React.FC = () => {
         </div>
       </section>
 
+      {/* Section 4: Vendor */}
+      <section className="bg-white p-6 rounded-xl">
+        <h2 className="text-xl font-semibold mb-4 text-yellow-700">
+          {t("sections.vendor_info")}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+          <p>
+            <strong>{t("fields.vendor_name")}:</strong> {product.vendor?.name}
+          </p>
+          <p>
+            <strong>{t("fields.vendor_email")}:</strong> {product.vendor?.email}
+          </p>
+          <p>
+            <strong>{t("fields.vendor_phone")}:</strong> {product.vendor?.phone}
+          </p>
+        </div>
+      </section>
       {/* Attributes */}
       {product.attributes?.length > 0 && (
         <section className="bg-white p-6 rounded-xl dark:bg-gray-900">

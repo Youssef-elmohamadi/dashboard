@@ -15,6 +15,23 @@
       "errorTitle": "خطأ",
       "errorText": "تعذر حذف المنتج."
     },
+    "status": {
+      "pending": "قيد الانتظار",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "approved": "موافق",
+      "rejected": "مرفوض"
+    },
+    "changeStatus": {
+      "title": "تغيير الحالة",
+      "inputPlaceholder": "اختر الحالة",
+      "errorSelect": "يجب اختيار الحالة",
+      "success": "تم تحديث الحالة إلى: {{status}}",
+      "noChangeMessage": "لم يتم إجراء أي تغيير",
+      "errorResponse": "تعذر تحديث الحالة",
+      "confirmButtonText": "تأكيد",
+      "cancelButtonText": "إلغاء"
+    },
     "table": {
       "loadingText": "جاري تحميل بيانات المنتجات"
     }

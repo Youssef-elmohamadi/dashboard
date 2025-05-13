@@ -1,0 +1,26 @@
+{
+  "category": {
+    "title": "Update Category",
+    "name": "Name",
+    "description": "Description",
+    "commission": "Commission Rate %",
+    "commissionPlaceholder": "Enter commission rate (0 - 100)",
+    "namePlaceholder": "Enter Category Name",
+    "descPlaceholder": "Enter Description",
+    "parent": "Parent Category (Optional)",
+    "selectParent": "Select parent category",
+    "image": "Category Image",
+    "submit": "Update Category",
+    "submitting": "Updating...",
+    "errors": {
+      "name": "Name is required",
+      "description": "Description is required",
+      "commissionRequired": "Commission rate is required",
+      "commissionMax": "Commission rate cannot exceed 100",
+      "parent": "Parent category is invalid",
+      "global": "You are not authorized to perform this action.",
+      "general": "Something went wrong. Please try again later."
+    },
+    "success": "Category Updated Successfully"
+  }
+}

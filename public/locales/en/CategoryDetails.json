@@ -1,0 +1,22 @@
+{
+  "title": "Category Details",
+  "basicInfo": "Basic Info",
+  "name": "Name",
+  "description": "Description",
+  "commissionRate": "Commission Rate",
+  "order": "Order",
+  "status": "Status",
+  "appearsOnWebsite": "Appears on Website",
+  "yes": "Yes",
+  "no": "No",
+  "parentId": "Parent ID",
+  "unknown": "Unknown",
+  "none": "None",
+  "categoryImage": "Category Image",
+  "timestamps": "Timestamps",
+  "createdAt": "Created At",
+  "updatedAt": "Updated At",
+  "noId": "No Category ID provided.",
+  "loading": "Loading category details...",
+  "notFound": "Category not found."
+}

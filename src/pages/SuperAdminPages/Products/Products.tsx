@@ -15,6 +15,7 @@ import {
   getProductById,
 } from "../../../api/SuperAdminApi/Products/_requests";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
+import { useTranslation } from "react-i18next";
 type User = {
   id: number;
   first_name: string;
@@ -47,6 +48,7 @@ const Products = () => {
     email: "",
     phone: "",
   });
+  const { t } = useTranslation(["ProductsTable"]);
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -163,9 +165,19 @@ const Products = () => {
       getStatus,
       changeStatus,
       options: {
-        Pending: "Pending",
-        Active: "Active",
-        InActive: "InActive",
+        Pending: t("productsPage.status.pending"),
+        Active: t("productsPage.status.active"),
+        InActive: t("productsPage.status.inactive"),
+      },
+      Texts: {
+        title: t("productsPage.changeStatus.title"),
+        inputPlaceholder: t("productsPage.changeStatus.inputPlaceholder"),
+        errorSelect: t("productsPage.changeStatus.errorSelect"),
+        success: t("productsPage.changeStatus.success"),
+        noChangeMessage: t("productsPage.changeStatus.noChangeMessage"),
+        errorResponse: t("productsPage.changeStatus.errorResponse"),
+        confirmButtonText: t("productsPage.changeStatus.confirmButtonText"),
+        cancelButtonText: t("productsPage.changeStatus.cancelButtonText"),
       },
     });
 
@@ -191,7 +203,7 @@ const Products = () => {
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <PageBreadcrumb pageTitle="Orders" />
+      <PageBreadcrumb pageTitle={t("productsPage.title")} userType="super_admin" />
       <div>
         <SearchTable
           fields={[
@@ -203,7 +215,7 @@ const Products = () => {
         />
       </div>
       <div className="space-y-6">
-        <ComponentCard title="All Brands">
+        <ComponentCard title={t("productsPage.title")}>
           <BasicTable
             columns={columns}
             fetchData={fetchData}
@@ -218,7 +230,7 @@ const Products = () => {
             searchValueName={searchValues.name}
             searchValueEmail={searchValues.email}
             searchValuePhone={searchValues.phone}
-            loadingText="Vendors data Loading"
+            loadingText={t("productsPage.table.loadingText")}
           />
         </ComponentCard>
       </div>

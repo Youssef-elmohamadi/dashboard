@@ -10,8 +10,10 @@ import {
   getAllCategories,
 } from "../../../api/SuperAdminApi/Categories/_requests";
 import CategoryImageUpload from "./CategoryImageUpload";
+import { useTranslation } from "react-i18next";
 
 export default function CreateCategory() {
+  const { t } = useTranslation(["CreateCategory"]);
   const [categoryData, setCategoryData] = useState({
     name: "",
     description: "",
@@ -23,7 +25,6 @@ export default function CreateCategory() {
   const [errors, setErrors] = useState<any>({});
   const [clientErrors, setClientErrors] = useState<any>({});
   const [categories, setCategories] = useState<any[]>([]);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -31,8 +32,6 @@ export default function CreateCategory() {
     const fetchCategories = async () => {
       try {
         const res = await getAllCategories();
-        console.log(res);
-
         setCategories(res.data.data.original);
       } catch (error) {
         console.error("Error fetching categories", error);
@@ -61,13 +60,13 @@ export default function CreateCategory() {
 
   const validate = () => {
     const newErrors: any = {};
-    if (!categoryData.name) newErrors.name = "Name is required";
+    if (!categoryData.name) newErrors.name = t("category.errors.name");
     if (!categoryData.description)
-      newErrors.description = "Description is required";
+      newErrors.description = t("category.errors.description");
     if (!categoryData.commission_rate) {
-      newErrors.commission_rate = "Commission rate is required";
+      newErrors.commission_rate = t("category.errors.commissionRequired");
     } else if (+categoryData.commission_rate > 100) {
-      newErrors.commission_rate = "Commission rate cannot exceed 100";
+      newErrors.commission_rate = t("category.errors.commissionMax");
     }
     setClientErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -89,11 +88,32 @@ export default function CreateCategory() {
       setLoading(true);
       await createCategory(formData);
       navigate("/super_admin/categories", {
-        state: { successCreate: "Category Created Successfully" },
+        state: { successCreate: t("category.success") },
       });
     } catch (error: any) {
-      const apiErrors = error?.response?.data?.errors || {};
-      setErrors(apiErrors);
+      console.error("Error creating category:", error);
+      const status = error?.response?.status;
+      if (status === 403 || status === 401) {
+        setErrors({
+          ...errors,
+          global: t("category.errors.global"),
+        });
+        return;
+      }
+      const rawErrors = error?.response?.data.errors;
+
+      if (Array.isArray(rawErrors)) {
+        const formattedErrors: Record<string, string[]> = {};
+        rawErrors.forEach((err: { code: string; message: string }) => {
+          if (!formattedErrors[err.code]) {
+            formattedErrors[err.code] = [];
+          }
+          formattedErrors[err.code].push(err.message);
+        });
+        setErrors(formattedErrors);
+      } else {
+        setErrors({ general: [t("category.errors.general")] });
+      }
     } finally {
       setLoading(false);
     }
@@ -103,7 +123,7 @@ export default function CreateCategory() {
     <div>
       <div className="p-4 border-b border-gray-200 dark:border-gray-600">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Create Category
+          {t("category.title")}
         </h3>
       </div>
       <form
@@ -112,11 +132,11 @@ export default function CreateCategory() {
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
           <div>
-            <Label>Name</Label>
+            <Label>{t("category.name")}</Label>
             <Input
               type="text"
               name="name"
-              placeholder="Enter Category Name"
+              placeholder={t("category.namePlaceholder")}
               onChange={handleChange}
             />
             {errors.name && (
@@ -127,11 +147,11 @@ export default function CreateCategory() {
             )}
           </div>
           <div>
-            <Label>Commission Rate %</Label>
+            <Label>{t("category.commission")}</Label>
             <Input
               type="number"
               name="commission_rate"
-              placeholder="Enter commission rate (0 - 100)"
+              placeholder={t("category.commissionPlaceholder")}
               onChange={handleChange}
             />
             {errors.commission_rate && (
@@ -146,14 +166,15 @@ export default function CreateCategory() {
             )}
           </div>
         </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
           <div className="w-full">
-            <Label>Description</Label>
+            <Label>{t("category.description")}</Label>
             <textarea
               name="description"
-              placeholder="Enter Description"
+              placeholder={t("category.descPlaceholder")}
               onChange={handleChange}
-              className="w-full mt-2 p-2 border rounded dark:bg-dark-900"
+              className="w-full mt-2 p-2 border outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
               rows={4}
             />
             {errors.description && (
@@ -167,8 +188,8 @@ export default function CreateCategory() {
               </p>
             )}
           </div>
-          <div className="">
-            <Label>Parent Category (Optional)</Label>
+          <div>
+            <Label>{t("category.parent")}</Label>
             <Select
               options={categories.map((cat) => ({
                 value: cat.id.toString(),
@@ -176,15 +197,16 @@ export default function CreateCategory() {
               }))}
               defaultValue={categoryData.parent_id}
               onChange={handleSelectChange}
-              placeholder="Select parent category"
+              placeholder={t("category.selectParent")}
             />
             {errors.parent_id && (
               <p className="text-red-500 text-sm mt-1">{errors.parent_id[0]}</p>
             )}
           </div>
         </div>
+
         <div className="w-full">
-          <Label>Category Image</Label>
+          <Label>{t("category.image")}</Label>
           <CategoryImageUpload
             file={categoryData.image}
             onFileChange={handleImageChange}
@@ -193,13 +215,21 @@ export default function CreateCategory() {
             <p className="text-red-500 text-sm mt-1">{errors.image[0]}</p>
           )}
         </div>
+
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+        )}
+
         <button
           type="submit"
           disabled={loading}
           className="bg-blue-600 flex gap-4 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
           <FiPlus size={20} />
-          {loading ? "Creating..." : "Add Category"}
+          {loading ? t("category.submitting") : t("category.submit")}
         </button>
       </form>
     </div>

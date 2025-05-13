@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getBrandById } from "../../../api/AdminApi/brandsApi/_requests";
+import { useTranslation } from "react-i18next";
 
 interface Brand {
   id: number;
@@ -13,6 +14,8 @@ interface Brand {
 
 const BrandDetails: React.FC = () => {
   const { id } = useParams();
+  const { t } = useTranslation(["BrandDetails"]);
+
   const [brand, setBrand] = useState<Brand | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -42,63 +45,75 @@ const BrandDetails: React.FC = () => {
 
   if (!id)
     return (
-      <div className="p-8 text-center text-gray-500">No Brand ID provided.</div>
-    );
-  if (loading)
-    return (
-      <div className="p-8 text-center text-gray-500">
-        Loading brand details...
+      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        {t("noId")}
       </div>
     );
+
+  if (loading)
+    return (
+      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        {t("loading")}
+      </div>
+    );
+
   if (!brand)
     return (
-      <div className="p-8 text-center text-gray-500">Brand not found.</div>
+      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        {t("notFound")}
+      </div>
     );
 
   return (
     <div className="brand-details p-6 max-w-3xl mx-auto space-y-8">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-        Brand Details
+      <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
+        {t("title")}
       </h1>
 
       {/* Brand Info */}
-      <section className="bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4 text-blue-700">Basic Info</h2>
-        <div className="grid grid-cols-1 gap-4 text-gray-700">
+      <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+        <h2 className="text-xl font-semibold mb-4 text-blue-700 dark:text-blue-400">
+          {t("basicInfo")}
+        </h2>
+        <div className="grid grid-cols-1 gap-4 text-gray-700 dark:text-gray-200">
           <p>
-            <strong>Name:</strong> {brand.name}
+            <strong>{t("name")}:</strong> {brand.name}
           </p>
           <p>
-            <strong>Status:</strong> {brand.status}
+            <strong>{t("status")}:</strong> {brand.status}
           </p>
         </div>
       </section>
 
       {/* Image */}
-      <section className="bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4 text-green-700">
-          Brand Image
+      <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+        <h2 className="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">
+          {t("image")}
         </h2>
         {brand.image ? (
-          <img
-            src={brand.image}
-            alt={brand.name}
-            className="w-64 h-64 object-contain rounded-lg border"
-          />
+          <div className="flex justify-center">
+            <img
+              src={brand.image}
+              alt={brand.name}
+              className="w-64 h-64 object-contain rounded-lg border"
+            />
+          </div>
         ) : (
-          <p className="text-gray-500">No image available.</p>
+          <p className="text-gray-500 dark:text-gray-400">{t("noImage")}</p>
         )}
       </section>
 
       {/* Dates */}
-      <section className="bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4 text-gray-700">Dates</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+      <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+        <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">
+          {t("dates")}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-gray-200">
           <p>
-            <strong>Creation Date:</strong> {formatDate(brand.created_at)}
+            <strong>{t("createdAt")}:</strong> {formatDate(brand.created_at)}
           </p>
           <p>
-            <strong>Updated Date:</strong> {formatDate(brand.updated_at)}
+            <strong>{t("updatedAt")}:</strong> {formatDate(brand.updated_at)}
           </p>
         </div>
       </section>
