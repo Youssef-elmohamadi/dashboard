@@ -163,8 +163,8 @@ const Admins = () => {
         />
       )}
       <PageMeta
-        title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
-        description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+        title="Tashtiba | Manege Admins"
+        description="Create and Update Your Admins"
       />
       <PageBreadcrumb pageTitle={t("adminsPage.title")} userType="admin" />
       <div>

@@ -3,7 +3,16 @@ import AuthLayout from "./AuthPageLayout";
 import SignUpForm from "../../../components/admin/auth/SignUpForm";
 import EndUserSignUpForm from "../../../components/EndUser/Auth/EndUserSignUpForm";
 
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 export default function EndUserSignUp() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("uToken");
+    if (token) {
+      navigate("/");
+    }
+  }, []);
   return (
     <>
       <PageMeta

@@ -3,7 +3,16 @@ import AuthLayout from "./AuthPageLayout";
 import AdminSignInForm from "../../../components/admin/auth/AdminSignInForm";
 import SuperAdminSignInForm from "../../../components/SuperAdmin/Auth/SuperAdminSignInForm";
 
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 export default function SuperAdminSignIn() {
+    const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("sToken");
+    if (token) {
+      navigate("/super_admin");
+    }
+  }, []);
   return (
     <>
       <PageMeta

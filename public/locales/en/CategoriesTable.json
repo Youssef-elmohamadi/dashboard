@@ -16,7 +16,7 @@
       "errorText": "Could not delete the Category."
     },
     "table": {
-      "loadingText": "جاري تحميل بيانات الفئات"
+      "loadingText": "Categories data Loading"
     }
   }
 }

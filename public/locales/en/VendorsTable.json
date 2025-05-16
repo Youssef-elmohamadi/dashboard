@@ -42,6 +42,9 @@
       "errorResponse": "The Status didn't update",
       "confirmButtonText": "Confirm",
       "cancelButtonText": "Cancel"
+    },
+    "table": {
+      "loadingText": "Vendors data Loading..."
     }
   }
 }

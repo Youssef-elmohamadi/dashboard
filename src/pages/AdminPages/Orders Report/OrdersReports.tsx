@@ -5,6 +5,7 @@ import { BoxIconLine } from "../../../icons";
 import FilterRangeDate from "../../../components/admin/productReports/FilterRangeDate";
 import { ordersReport } from "../../../api/AdminApi/ordersReports/_requests";
 import { useTranslation } from "react-i18next";
+import PageMeta from "../../../components/common/PageMeta";
 const ProductReports = () => {
   const [numbersData, setNumbersData] = useState({
     orderCount: 0,
@@ -49,6 +50,10 @@ const ProductReports = () => {
   };
   return (
     <>
+          <PageMeta
+        title="Tashtiba | Orders Reports"
+        description="Show Your Orders Reports"
+      />
       <FilterRangeDate setSearchParam={handleFilter} />
       <div className="col-span-6 space-y-6 ">
         <EcommerceMetrics

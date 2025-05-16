@@ -6,6 +6,7 @@ import { BoxIconLine } from "../../../icons";
 import FilterRangeDate from "../../../components/admin/productReports/FilterRangeDate";
 import TopSelligProducts from "../../../components/admin/productReports/TopSellingProducts";
 import { useTranslation } from "react-i18next";
+import PageMeta from "../../../components/common/PageMeta";
 const ProductReports = () => {
   const [totalProductSell, setTotalProductSell] = useState([]);
   const [numbersData, setNumbersData] = useState({
@@ -59,6 +60,10 @@ const ProductReports = () => {
   const { t } = useTranslation(["ProductsReports"]);
   return (
     <>
+      <PageMeta
+        title="Tashtiba | Products Report"
+        description="Show Products Report"
+      />
       <FilterRangeDate setSearchParam={handleFilter} />
       <div className="col-span-6 space-y-6 ">
         <EcommerceMetrics

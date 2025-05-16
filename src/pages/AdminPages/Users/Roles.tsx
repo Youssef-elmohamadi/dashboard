@@ -148,7 +148,7 @@ const Roles = () => {
         />
       )}
       <PageMeta
-        title="Roles Dashboard"
+        title="Tashtiba | Manage Roles"
         description="This is the roles listing page."
       />
       <PageBreadcrumb pageTitle={t("rolesPage.title")} userType="admin" />

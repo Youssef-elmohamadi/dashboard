@@ -1,13 +1,21 @@
 import PageMeta from "../../../components/common/PageMeta";
 import AuthLayout from "./AuthPageLayout";
 import SignUpForm from "../../../components/admin/auth/SignUpForm";
-
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 export default function AdminSignUp() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("aToken");
+    if (token) {
+      navigate("/admin");
+    }
+  }, []);
   return (
     <>
       <PageMeta
-        title="React.js SignUp Dashboard | TailAdmin - Next.js Admin Dashboard Template"
-        description="This is React.js SignUp Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+        title="Tashtiba | Register Admin"
+        description="Register as a New Admin Manege your Store"
       />
       <AuthLayout>
         <SignUpForm />

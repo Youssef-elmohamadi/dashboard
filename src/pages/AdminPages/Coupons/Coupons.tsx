@@ -181,8 +181,8 @@ const Coupons = () => {
         />
       )}
       <PageMeta
-        title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
-        description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+        title="Tashtiba | Manege Coupons"
+        description="Create and Update Your Coupons"
       />
       <PageBreadcrumb pageTitle={t("couponsPage.title")} userType="admin" />
       <div>
