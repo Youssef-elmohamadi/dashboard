@@ -56,8 +56,10 @@ import { ReactComponent as TicketsIcon } from "./tickets.svg?react";
 import { ReactComponent as Order } from "./package-check.svg?react";
 import { ReactComponent as Category } from "./chart-bar-stacked.svg?react";
 import { ReactComponent as Brand } from "./badge-check.svg?react";
+import { ReactComponent as Banners } from "./ad.svg?react";
 
 export {
+  Banners,
   ErrorHexaIcon,
   AlertHexaIcon,
   MoreDotIcon,

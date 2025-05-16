@@ -164,11 +164,11 @@ const ProductDetails: React.FC = () => {
       </section>
 
       {/* Section 4: Vendor */}
-      <section className="bg-white p-6 rounded-xl">
+      <section className="bg-white dark:bg-gray-900 p-6 rounded-xl">
         <h2 className="text-xl font-semibold mb-4 text-yellow-700">
           {t("sections.vendor_info")}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
             <strong>{t("fields.vendor_name")}:</strong> {product.vendor?.name}
           </p>

@@ -19,6 +19,7 @@ import {
   Category,
   Brand,
   DocsIcon,
+  Banners,
 } from "../../icons";
 import { useSidebar } from "../../context/SidebarContext";
 import { PiSignOut } from "react-icons/pi";
@@ -91,6 +92,11 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
     },
     {
       icon: <UserCircleIcon />,
+      name: t("Vendor Settings"),
+      path: "/admin/Settings",
+    },
+    {
+      icon: <UserCircleIcon />,
       name: t("User Profile"),
       path: "/admin/profile",
     },
@@ -143,12 +149,12 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       path: "/super_admin/vendors",
     },
     {
-      icon: <BoxCubeIcon />,
+      icon: <Category />,
       name: t("Categories"),
       path: "/super_admin/categories",
     },
     {
-      icon: <BoxCubeIcon />,
+      icon: <Brand />,
       name: t("Brands"),
       path: "/super_admin/brands",
     },
@@ -156,6 +162,11 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       icon: <BoxCubeIcon />,
       name: t("Products"),
       path: "/super_admin/products",
+    },
+    {
+      icon: <Banners />,
+      name: t("bannersManagement"),
+      path: "/super_admin/banners",
     },
     {
       icon: <UserCircleIcon />,

@@ -5,18 +5,21 @@ import { register } from "../../../api/EndUserApi/endUserAuth/_requests";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
-
+import OTPPage from "./OtpPage";
+import { sendOtp, verifyOtp } from "../../../api/OtpApi/_requests";
+import { toast } from "react-toastify";
 export default function SignUpForm() {
   const navigate = useNavigate();
-  const { t } = useTranslation("EndUserSignUp");
-  const { t: tErrors } = useTranslation("EndUserSignUpErrors");
-
+  const { t } = useTranslation("auth");
+  const [step, setStep] = useState<1 | 2>(1);
   const [clientErrors, setClientErrors] = useState<{ [key: string]: string }>(
     {}
   );
   const [serverErrors, setServerErrors] = useState<{ [key: string]: string }>(
     {}
   );
+  const [otp, setOtp] = useState(Array(6).fill(""));
+  const [otpError, setOtpError] = useState("");
   const [dataForm, setDataForm] = useState({
     first_name: "",
     last_name: "",
@@ -28,37 +31,66 @@ export default function SignUpForm() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleServerErrors = (errorsArray: any) => {
-    const formattedErrors: any = {};
-    errorsArray.forEach((err: any) => {
-      formattedErrors[err.code] = err.message;
-    });
-    setServerErrors(formattedErrors);
-  };
-
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setDataForm((prev) => ({ ...prev, [name]: value }));
     setClientErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
+  const handleSendOtp = async () => {
+    try {
+      const res = await sendOtp({
+        identifier: dataForm.phone,
+        type: "user",
+      });
+      toast.success(t("otp.successSendOtp"));
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+      toast.error(t("otp.failedSendOtp"));
+    }
+  };
+  const handleSubmitOtp = async () => {
+    const enteredOtp = otp.join("");
+
+    if (enteredOtp.length < 6) {
+      setOtpError(t("otp.invalid"));
+      return;
+    }
+
+    try {
+      const res = await verifyOtp({
+        identifier: dataForm.phone,
+        type: "admin",
+        otp: enteredOtp,
+      });
+
+      if (res?.status === 200) {
+        toast.success(t("otp.success"));
+        navigate("/admin/signin");
+      }
+    } catch (err: any) {
+      const message = t("otp.invalid");
+      setOtpError(message);
+    }
+  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const errors: { [key: string]: string } = {};
 
-    if (!dataForm.first_name)
-      errors.first_name = tErrors("Errors.firstNameRequired");
-    if (!dataForm.last_name)
-      errors.last_name = tErrors("Errors.lastNameRequired");
-    if (!dataForm.phone) errors.phone = tErrors("Errors.phoneRequired");
-    if (!dataForm.email) errors.email = tErrors("Errors.emailRequired");
-    if (!dataForm.password)
-      errors.password = tErrors("Errors.passwordRequired");
+    if (!dataForm.first_name) errors.first_name = t("errors.firstNameError");
+    if (!dataForm.last_name) errors.last_name = t("errors.lastNameError");
+    if (!dataForm.phone) errors.phone = t("errors.phoneError");
+    if (!dataForm.email) errors.email = t("errors.emailError");
+    if (!/\S+@\S+\.\S+/.test(dataForm.email))
+      errors.email = t("errors.emailFormatError");
+    if (!dataForm.password) errors.password = t("Errors.passwordRequired");
+    if (dataForm.password.length < 8)
+      errors.password = t("errors.passwordLengthError");
     if (!dataForm.confirm_password) {
-      errors.confirm_password = tErrors("Errors.confirmPasswordRequired");
+      errors.confirm_password = t("errors.confirmPasswordError");
     } else if (dataForm.password !== dataForm.confirm_password) {
-      errors.confirm_password = tErrors("Errors.passwordsNotMatch");
+      errors.confirm_password = t("errors.passwordMatchError");
     }
 
     if (Object.keys(errors).length > 0) {
@@ -69,19 +101,60 @@ export default function SignUpForm() {
     try {
       const res = await register(dataForm);
       if (res?.status === 200 || res?.status === 201) {
-        navigate("/signin");
+        setStep(2);
+        handleSendOtp();
       }
     } catch (error: any) {
-      handleServerErrors(error.response.data.errors);
+      const rawErrors = error?.response?.data.errors;
+
+      if (Array.isArray(rawErrors)) {
+        const formattedErrors: Record<string, string[]> = {};
+
+        rawErrors.forEach((err: { code: string; message: string }) => {
+          if (!formattedErrors[err.code]) {
+            formattedErrors[err.code] = [];
+          }
+          formattedErrors[err.code].push(err.message);
+        });
+
+        setServerErrors(formattedErrors);
+      }
     }
   };
+
+  if (step === 2) {
+    return (
+      <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
+        <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
+          <div className="mb-5 sm:mb-8 flex flex-col items-center">
+            <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
+              {t("signUpTitle")}
+            </h1>
+          </div>
+          <OTPPage
+            identifier={dataForm.phone}
+            otp={otp}
+            setOtp={setOtp}
+            onSubmit={handleSubmitOtp}
+            onResend={handleSendOtp}
+            title={t("otp.title")}
+            subtitle={t("otp.subtitle")}
+            resendText={t("otp.resendBtn")}
+            continueText={t("otp.continue")}
+            otpError={otpError}
+            setOtpError={setOtpError}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div className="mb-5 sm:mb-8 flex flex-col items-center">
           <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-            {t("title")}
+            {t("signUpTitle")}
           </h1>
         </div>
 
@@ -90,14 +163,14 @@ export default function SignUpForm() {
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div className="sm:col-span-1">
                 <Label>
-                  {t("firstName")}
+                  {t("basicInformation.firstName")}
                   <span className="text-error-500">*</span>
                 </Label>
                 <Input
                   type="text"
                   id="first_name"
                   name="first_name"
-                  placeholder={t("placeholder.firstName")}
+                  placeholder={t("basicInformation.placeholder.firstName")}
                   value={dataForm.first_name}
                   onChange={handleChange}
                 />
@@ -110,14 +183,14 @@ export default function SignUpForm() {
 
               <div className="sm:col-span-1">
                 <Label>
-                  {t("lastName")}
+                  {t("basicInformation.lastName")}
                   <span className="text-error-500">*</span>
                 </Label>
                 <Input
                   type="text"
                   id="last_name"
                   name="last_name"
-                  placeholder={t("placeholder.lastName")}
+                  placeholder={t("basicInformation.placeholder.lastName")}
                   value={dataForm.last_name}
                   onChange={handleChange}
                 />
@@ -131,14 +204,14 @@ export default function SignUpForm() {
 
             <div>
               <Label>
-                {t("phone")}
+                {t("basicInformation.phone")}
                 <span className="text-error-500">*</span>
               </Label>
               <Input
                 type="text"
                 id="phone"
                 name="phone"
-                placeholder={t("placeholder.phone")}
+                placeholder={t("basicInformation.placeholder.phone")}
                 value={dataForm.phone}
                 onChange={handleChange}
               />
@@ -149,21 +222,21 @@ export default function SignUpForm() {
               )}
               {serverErrors?.["phone"] && (
                 <p className="text-error-500 text-xs mt-1">
-                  {tErrors("ServerErrors.phoneTaken")}
+                  {t("errors.endUserPhoneTaken")}
                 </p>
               )}
             </div>
 
             <div>
               <Label>
-                {t("email")}
+                {t("basicInformation.email")}
                 <span className="text-error-500">*</span>
               </Label>
               <Input
                 type="email"
                 id="email"
                 name="email"
-                placeholder={t("placeholder.email")}
+                placeholder={t("basicInformation.placeholder.email")}
                 value={dataForm.email}
                 onChange={handleChange}
               />
@@ -174,7 +247,7 @@ export default function SignUpForm() {
               )}
               {serverErrors?.["email"] && (
                 <p className="text-error-500 text-xs mt-1">
-                  {tErrors("ServerErrors.emailTaken")}
+                  {t("errors.endUserEmailTaken")}
                 </p>
               )}
             </div>
@@ -187,7 +260,7 @@ export default function SignUpForm() {
               <div className="relative">
                 <Input
                   type={showPassword ? "text" : "password"}
-                  placeholder={t("placeholder.password")}
+                  placeholder={t("basicInformation.placeholder.password")}
                   name="password"
                   value={dataForm.password}
                   onChange={handleChange}
@@ -216,13 +289,15 @@ export default function SignUpForm() {
 
             <div>
               <Label>
-                {t("confirmPassword")}
+                {t("basicInformation.confirmPassword")}
                 <span className="text-error-500">*</span>
               </Label>
               <div className="relative">
                 <Input
                   type={showPassword ? "text" : "password"}
-                  placeholder={t("placeholder.confirmPassword")}
+                  placeholder={t(
+                    "basicInformation.placeholder.confirmPassword"
+                  )}
                   value={dataForm.confirm_password}
                   name="confirm_password"
                   onChange={handleChange}
@@ -254,7 +329,7 @@ export default function SignUpForm() {
             type="submit"
             className="w-full bg-brand-500 mt-5 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700 text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300"
           >
-            {t("button")}
+            {t("buttons.createButton")}
           </button>
         </form>
 
@@ -265,7 +340,7 @@ export default function SignUpForm() {
               to="/signin"
               className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
             >
-              {t("login")}
+              {t("buttons.loginButton")}
             </Link>
           </p>
         </div>

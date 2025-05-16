@@ -1,0 +1,40 @@
+{
+  "banner": {
+    "title": "إنشاء بانر جديد",
+    "name": "العنوان",
+    "linkType": "نوع الرابط",
+    "url": "ادخل الرابط",
+    "category": "التصنيف",
+    "position": "الموضع",
+    "status": "الحالة",
+    "bannerImage": "صورة البانر",
+    "titlePlaceholder": "أدخل عنوان البانر",
+    "positionPlaceholder": "ادخل موضع البانر",
+    "linkTypePlaceholder": "اختر نوع الرابط",
+    "categoryPlaceholder": "اختر التصنيف",
+    "statusPlaceholder": "اختر الحالة",
+    "options": {
+      "externalOption": "خارجي",
+      "categoryOption": "تصنيف",
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "submit": "إضافة التصنيف",
+    "submitting": "جارٍ الإضافة...",
+    "errors": {
+      "name": "العنوان مطلوب",
+      "titleTaken": " العنوان مستخدم من قبل",
+      "url": "الرابط مطلوب",
+      "linkType": "نوع الرابط مطلوب",
+      "category": "التصنيف مطلوب",
+      "position": "الموضع مطلوب",
+      "status": "الحالة مطلوبة",
+      "invalidUrl": "الرابط غير صالح",
+      "image": "الصورة مطلوبة",
+      "invalidImage": "صورة غير صالحة",
+      "global": "غير مصرح لك بتنفيذ هذا الإجراء.",
+      "general": "حدث خطأ ما. حاول مرة أخرى لاحقًا."
+    },
+    "success": "تم إنشاء التصنيف بنجاح"
+  }
+}

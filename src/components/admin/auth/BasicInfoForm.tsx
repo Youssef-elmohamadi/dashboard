@@ -27,7 +27,7 @@ function BasicInfoForm({
 }: Props) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { t } = useTranslation(["Signup", "ServerErrors"]);
+  const { t } = useTranslation(["auth"]);
 
   return (
     <div className="space-y-5">
@@ -91,16 +91,15 @@ function BasicInfoForm({
           value={adminInfo.phone}
           onChange={(e) => handleChange(e, "adminInfo")}
         />
-        {clientErrors.phoneAdmin ? (
+        {clientErrors.phoneAdmin && (
           <p className="text-error-500 text-xs mt-1">
             {clientErrors.phoneAdmin}
           </p>
-        ) : (
-          serverErrors?.["adminInfo.phone"] && (
-            <p className="text-error-500 text-xs mt-1">
-              {t("ServerErrors:vendorPhoneError")}
-            </p>
-          )
+        )}
+        {serverErrors["adminInfo.phone"] && (
+          <p className="text-error-500 text-xs mt-1">
+            {t("errors.adminPhoneTaken")}
+          </p>
         )}
       </div>
       {/* <!-- Email --> */}
@@ -117,16 +116,15 @@ function BasicInfoForm({
           value={adminInfo.email}
           onChange={(e) => handleChange(e, "adminInfo")}
         />
-        {clientErrors.emailAdmin ? (
+        {clientErrors.emailAdmin && (
           <p className="text-error-500 text-xs mt-1">
             {clientErrors.emailAdmin}
           </p>
-        ) : (
-          serverErrors?.["adminInfo.email"] && (
-            <p className="text-error-500 text-xs mt-1">
-              {t("ServerErrors:vendorEmailError")}
-            </p>
-          )
+        )}
+        {serverErrors["adminInfo.email"] && (
+          <p className="text-error-500 text-xs mt-1">
+            {t("errors.adminEmailTaken")}
+          </p>
         )}
       </div>
       <div>

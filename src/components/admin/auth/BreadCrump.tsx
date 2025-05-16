@@ -30,7 +30,7 @@ const BreadCrump = ({ step, setStep }: Props) => {
             </button>
           </li>
         )}
-        {step >= 2 && (
+        {/* {step >= 2 && (
           <li>
             <div className="flex items-center">
               <svg
@@ -55,6 +55,35 @@ const BreadCrump = ({ step, setStep }: Props) => {
                 }`}
               >
                 {t("bankInformation")}
+              </button>
+            </div>
+          </li>
+        )} */}
+        {step >= 2 && (
+          <li aria-current="page">
+            <div className="flex items-center">
+              <svg
+                className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 6 10"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="m1 9 4-4-4-4"
+                />
+              </svg>
+              <button
+                onClick={() => setStep(3)}
+                className={`inline-flex items-center text-sm font-medium  hover:text-blue-600 dark:text-gray-400 dark:hover:text-white ${
+                  step === 2 ? "text-blue-600 dark:text-white" : "text-gray-700"
+                }`}
+              >
+                {t("storeInformation")}
               </button>
             </div>
           </li>
@@ -83,7 +112,7 @@ const BreadCrump = ({ step, setStep }: Props) => {
                   step === 3 ? "text-blue-600 dark:text-white" : "text-gray-700"
                 }`}
               >
-                {t("storeInformation")}
+                {t("verifyPhone")}
               </button>
             </div>
           </li>

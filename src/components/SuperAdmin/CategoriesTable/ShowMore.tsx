@@ -48,7 +48,7 @@ const CategoryDetails: React.FC = () => {
     const fetchCategories = async () => {
       try {
         const res = await getAllCategories();
-        setCategories(res.data.data.original);
+        setCategories(res.data.data);
       } catch (error) {
         console.error("Error fetching all categories:", error);
       }
@@ -56,6 +56,7 @@ const CategoryDetails: React.FC = () => {
 
     fetchCategories();
   }, []);
+  console.log(categories);
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return "N/A";

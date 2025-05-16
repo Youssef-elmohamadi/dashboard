@@ -1,0 +1,22 @@
+{
+  "bannersPage": {
+    "title": "Banners",
+    "all": "All Banners",
+    "addNew": "Add New Banner",
+    "createdSuccess": "Banner Created Successfully",
+    "updatedSuccess": "Banner Updated Successfully",
+    "delete": {
+      "confirmTitle": "Delete Banner?",
+      "confirmText": "This action cannot be undone!",
+      "confirmButtonText": "Yes, delete",
+      "cancelButtonText": "Cancel",
+      "successTitle": "Deleted!",
+      "successText": "Banner has been deleted.",
+      "errorTitle": "Error",
+      "errorText": "Could not delete the Banner."
+    },
+    "table": {
+      "loadingText": "Banners data Loading..."
+    }
+  }
+}

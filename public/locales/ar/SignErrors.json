@@ -1,15 +1,3 @@
 {
-  "fistNameError": "الاسم الأول مطلوب",
-  "lastNameError": "اسم العائلة مطلوب",
-  "phoneError": "رقم الهاتف مطلوب",
-  "emailError": "البريد الإلكتروني مطلوب",
-  "emailFormatError": "تنسيق البريد الإلكتروني غير صالح",
-  "passwordError": "كلمة المرور مطلوبة",
-  "passwordLengthError": "كلمة المرور يجب ان تكون على الاقل 8 حروف",
-  "confirmPasswordError": "تأكيد كلمة المرور مطلوب",
-  "passwordMatchError": "كلمتا المرور غير متطابقتين",
-  "storeNameError": "اسم المتجر مطلوب",
-  "storePhoneError": "رقم هاتف المتجر مطلوب",
-  "storeEmailError": "بريد المتجر الإلكتروني مطلوب",
-  "documentError": "الوثائق مطلوبة"
+
 }

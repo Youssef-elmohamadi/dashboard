@@ -18,7 +18,7 @@ const EndUserSignInForm = () => {
     loginError?: string;
   }>({});
 
-  const { t } = useTranslation(["Signin"]);
+  const { t } = useTranslation(["auth"]);
 
   const validateEmail = (email: any) => {
     if (!/\S+@\S+\.\S+/.test(email)) {
@@ -43,6 +43,7 @@ const EndUserSignInForm = () => {
   };
 
   const navigate = useNavigate();
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
@@ -89,7 +90,7 @@ const EndUserSignInForm = () => {
         <div>
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-              {t("title")}
+              {t("signInTitle")}
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               {t("paragraph")}
@@ -179,14 +180,18 @@ const EndUserSignInForm = () => {
                   <div className="relative">
                     <Input
                       type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
+                      placeholder={t("placeholder.password")}
                       name="password"
                       onChange={handleChange}
                       value={password}
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                      className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
+                        document.documentElement.dir === "rtl"
+                          ? "left-4"
+                          : "right-4"
+                      }`}
                     >
                       {showPassword ? (
                         <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
@@ -215,7 +220,7 @@ const EndUserSignInForm = () => {
                     type="submit"
                     className="w-full bg-brand-500 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700 text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300"
                   >
-                    {t("button")}
+                    {t("buttons.loginButton")}
                   </button>
                 </div>
               </div>

@@ -19,7 +19,7 @@ export default function SuperAdminSignInForm() {
     loginError?: string;
   }>({});
 
-  const { t } = useTranslation(["Signin"]);
+  const { t } = useTranslation(["auth"]);
 
   const validateEmail = (email: any) => {
     if (!/\S+@\S+\.\S+/.test(email)) {
@@ -90,7 +90,7 @@ export default function SuperAdminSignInForm() {
         <div>
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-              {t("title")}
+              {t("signInTitle")}
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               {t("paragraph")}
@@ -180,7 +180,7 @@ export default function SuperAdminSignInForm() {
                   <div className="relative">
                     <Input
                       type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
+                      placeholder={t("placeholder.password")}
                       name="password"
                       onChange={handleChange}
                       value={password}
@@ -216,13 +216,13 @@ export default function SuperAdminSignInForm() {
                     type="submit"
                     className="w-full bg-brand-500 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700 text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300"
                   >
-                    {t("button")}
+                    {t("buttons.loginButton")}
                   </button>
                 </div>
               </div>
             </form>
 
-            <div className="mt-5">
+            {/* <div className="mt-5">
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
                 {t("signup")}
                 <Link
@@ -232,7 +232,7 @@ export default function SuperAdminSignInForm() {
                   {t("signupLink")}
                 </Link>
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

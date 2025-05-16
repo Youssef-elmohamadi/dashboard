@@ -19,6 +19,11 @@ import Roles from "../../pages/SuperAdminPages/Users/Roles";
 import CreateRole from "../../components/SuperAdmin/RolesTable/CreateRole";
 import UpdateRole from "../../components/SuperAdmin/RolesTable/UpdateRole";
 import UserProfiles from "../../pages/SuperAdminPages/UserProfile/UserProfiles";
+import Banners from "../../pages/SuperAdminPages/Banners/Banners";
+import CreateBanner from "../../components/SuperAdmin/BannersTable/CreateBanner";
+import UpdateBanner from "../../components/SuperAdmin/BannersTable/UpdateBanner";
+import BannerDetails from "../../components/SuperAdmin/BannersTable/BannerDetails";
+import SuperAdminForgotPassword from "../../pages/SuperAdminPages/AuthPages/UserForgotPassword";
 export const SuperAdminRoutes = (
   <>
     <Route
@@ -45,8 +50,16 @@ export const SuperAdminRoutes = (
       <Route path="brands/details/:id" element={<BrandDetails />} />
       <Route path="products" element={<Products />} />
       <Route path="products/details/:id" element={<ProductDetails />} />
+      <Route path="banners" element={<Banners />} />
+      <Route path="banners/create" element={<CreateBanner />} />
+      <Route path="banners/update/:id" element={<UpdateBanner />} />
+      <Route path="banners/details/:id" element={<BannerDetails />} />
       <Route path="profile" element={<UserProfiles />} />
     </Route>
     <Route path="/super_admin/signin" element={<SuperAdminSignIn />} />
+    <Route
+      path="/super_admin/reset-password"
+      element={<SuperAdminForgotPassword />}
+    />
   </>
 );

@@ -30,7 +30,7 @@ const StoreInfoForm = ({
   handleChange,
   serverErrors,
 }: Props) => {
-  const { t } = useTranslation(["Signup", "SignErrors", "ServerErrors"]);
+  const { t } = useTranslation(["auth"]);
 
   return (
     <div className="space-y-5">
@@ -57,6 +57,7 @@ const StoreInfoForm = ({
             {clientErrors.storeName}
           </p>
         )}
+
       </div>
       <div>
         <Label>
@@ -71,16 +72,15 @@ const StoreInfoForm = ({
           value={vendorInfo.email}
           onChange={(e) => handleChange(e, "vendorInfo")}
         />
-        {clientErrors.storeEmail ? (
+        {clientErrors.storeEmail && (
           <p className="text-error-500 text-xs mt-1">
-            {clientErrors.storeName}
+            {t("errors.storeEmailError")}
           </p>
-        ) : (
-          serverErrors?.["vendorInfo.email"] && (
-            <p className="text-error-500 text-xs mt-1">
-              {t("ServerErrors:vendorEmailError")}
-            </p>
-          )
+        )}
+                {serverErrors["vendorInfo.email"] && (
+          <p className="text-error-500 text-xs mt-1">
+            {t("errors.storeEmailTaken")}
+          </p>
         )}
       </div>
       <div className="">
@@ -96,16 +96,15 @@ const StoreInfoForm = ({
           value={vendorInfo.phone}
           onChange={(e) => handleChange(e, "vendorInfo")}
         />
-        {clientErrors.storePhone ? (
+        {clientErrors.storePhone && (
           <p className="text-error-500 text-xs mt-1">
-            {clientErrors.storeName}
+            {t("errors.storePhoneError")}
           </p>
-        ) : (
-          serverErrors?.["vendorInfo.phone"] && (
-            <p className="text-error-500 text-xs mt-1">
-              {t("ServerErrors:storePhoneError")}
-            </p>
-          )
+        )}
+        {serverErrors["vendorInfo.phone"] && (
+          <p className="text-error-500 text-xs mt-1">
+            {t("errors.storePhoneTaken")}
+          </p>
         )}
       </div>
       <div>
@@ -119,8 +118,15 @@ const StoreInfoForm = ({
           field="commercialRegisterDoc"
           onFileChange={handleFileChange}
         />
-        {clientErrors.document && (
-          <p className="text-error-500 text-xs mt-1">{clientErrors.document}</p>
+        {clientErrors.commercialRegisterDocument && (
+          <p className="text-error-500 text-xs mt-1">
+            {t("errors.commercialRegisterDocumentError")}
+          </p>
+        )}
+        {serverErrors["documentInfo.0.document_file"] && (
+          <p className="text-error-500 text-xs mt-1">
+            {t("errors.invalidDocument")}
+          </p>
         )}
       </div>
 
@@ -135,8 +141,15 @@ const StoreInfoForm = ({
           field="taxRegisterDoc"
           onFileChange={handleFileChange}
         />
-        {clientErrors.document && (
-          <p className="text-error-500 text-xs mt-1">{clientErrors.document}</p>
+        {clientErrors.taxRegisterDocument && (
+          <p className="text-error-500 text-xs mt-1">
+            {t("errors.taxRegisterDocumentError")}
+          </p>
+        )}
+        {serverErrors["documentInfo.1.document_file"] && (
+          <p className="text-error-500 text-xs mt-1">
+            {t("errors.invalidDocument")}
+          </p>
         )}
       </div>
     </div>

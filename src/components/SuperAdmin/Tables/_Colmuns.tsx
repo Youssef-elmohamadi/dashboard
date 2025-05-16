@@ -11,6 +11,9 @@ type Role = { name: string };
 interface ColumnBuilderOptions<T extends BaseEntity> {
   includeName?: boolean;
   includeEmail?: boolean;
+  includeTitle?: boolean;
+  includePosition?: boolean;
+  includeIsActive?: boolean;
   includeRoles?: boolean;
   includeRoleName?: boolean;
   includeVendorName?: boolean;
@@ -21,6 +24,7 @@ interface ColumnBuilderOptions<T extends BaseEntity> {
   includeCommissionRate?: boolean;
   includeStatus?: boolean;
   includeImagesAndNameCell?: boolean;
+  categories?: { id: number; name: string }[];
   onDelete?: (id: number) => void;
   onEdit?: (id: number) => void;
   customActionsRenderer?: (rowData: T) => React.ReactNode;
@@ -51,6 +55,12 @@ export const buildColumns = <T extends BaseEntity>(
     columns.push({
       Header: t("table.name"),
       accessor: "name",
+    });
+  }
+  if (options.includeTitle) {
+    columns.push({
+      Header: t("table.name"),
+      accessor: "title",
     });
   }
 
@@ -109,6 +119,19 @@ export const buildColumns = <T extends BaseEntity>(
       accessor: "email" as keyof T,
     });
   }
+
+  if (options.includePosition && options.categories) {
+    columns.push({
+      Header: t("table.position"), // أو "Position" مباشرة
+      id: "position",
+      accessor: "position",
+      Cell: ({ value }: any) => {
+        const category = options.categories?.find((cat) => cat.id === value);
+        return category ? `before ${category.name}` : "-";
+      },
+    });
+  }
+
   if (options.includeVendorPhone) {
     columns.push({
       Header: t("table.phone"),
@@ -221,13 +244,13 @@ export const buildColumns = <T extends BaseEntity>(
   //   });
   // }
 
-  // if (options.includeIsActive) {
-  //   columns.push({
-  //     Header: "Active",
-  //     accessor: "active" as keyof T,
-  //     Cell: ({ value }: any) => (value ? "✅" : "❌"),
-  //   });
-  // }
+  if (options.includeIsActive) {
+    columns.push({
+      Header: t("table.status"),
+      accessor: "is_active" as keyof T,
+      Cell: ({ value }: any) => (value ? "✅Active" : "❌Inactive"),
+    });
+  }
   if (options.includeActions) {
     columns.push({
       Header: t("table.actions"),

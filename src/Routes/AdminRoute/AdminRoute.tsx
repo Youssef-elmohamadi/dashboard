@@ -34,6 +34,8 @@ import ShowMore from "../../components/admin/couponsTable/ShowMore";
 import CouponDetails from "../../components/admin/couponsTable/ShowMore";
 import OrdersReports from "../../pages/AdminPages/Orders Report/OrdersReports";
 import ProductReports from "../../pages/AdminPages/Products Report/ProductReports";
+import AdminForgotPassword from "../../pages/AdminPages/AuthPages/AdminForgotPassword";
+import VendorSettings from "../../pages/AdminPages/VendorSettings/VendorSettings";
 
 export const adminRoutes = (
   <>
@@ -70,6 +72,7 @@ export const adminRoutes = (
       <Route path="coupons/details/:id" element={<CouponDetails />} />
       <Route path="orders_report" element={<OrdersReports />} />
       <Route path="products_report" element={<ProductReports />} />
+      <Route path="settings" element={<VendorSettings />} />
       <Route path="blank" element={<Blank />} />
       <Route path="form-elements" element={<FormElements />} />
       <Route path="basic-tables" element={<BasicTables />} />
@@ -78,5 +81,6 @@ export const adminRoutes = (
     </Route>
     <Route path="/admin/signin" element={<AdminSignIn />} />
     <Route path="/admin/signup" element={<AdminSignUp />} />
+    <Route path="/admin/reset-password" element={<AdminForgotPassword />} />
   </>
 );

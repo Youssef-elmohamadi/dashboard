@@ -2,12 +2,15 @@ import React, { useState, useRef, useEffect } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io";
-import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
+import {
+  getAllCategories,
+  fetcher,
+} from "../../../api/EndUserApi/endUserCategories/_requests";
 import { useSelector, useDispatch } from "react-redux";
 import { removeItem } from "../Redux/cartSlice/CartSlice";
 import { RiDashboard2Fill, RiDeleteBin4Fill } from "react-icons/ri";
 import { CiShoppingCart } from "react-icons/ci";
-
+import useSWR from "swr";
 const NavBar = React.memo(() => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [Categories, setCategories] = useState<any>();
@@ -65,6 +68,7 @@ const NavBar = React.memo(() => {
     const fetchCategories = async () => {
       try {
         const response = await getAllCategories();
+        console.log(response.cached);
         setCategories(response.data.data);
       } catch (error) {
         console.log(error);

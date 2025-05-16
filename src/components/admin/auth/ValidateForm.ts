@@ -1,40 +1,40 @@
 export const validateAdminForm = (setErrors: any, dataForm: any, t: any) => {
   // First Name
   if (!dataForm.adminInfo.first_name.trim()) {
-    setErrors({ firstName: t("SignErrors:firstNameError") });
+    setErrors({ firstName: t("errors.firstNameError") });
     return false;
   }
   // Last Name
   if (!dataForm.adminInfo.last_name.trim()) {
-    setErrors({ lastName: t("SignErrors:lastNameError") });
+    setErrors({ lastName: t("errors.lastNameError") });
     return false;
   }
 
   // Phone Admin
   if (!dataForm.adminInfo.phone.trim()) {
-    setErrors({ phoneAdmin: t("SignErrors:phoneError") });
+    setErrors({ phoneAdmin: t("errors.phoneError") });
     return false;
   }
   // Email Admin
   if (!dataForm.adminInfo.email.trim()) {
-    setErrors({ emailAdmin: t("SignErrors:emailError") });
+    setErrors({ emailAdmin: t("errors.emailError") });
     return false;
   } else if (!/\S+@\S+\.\S+/.test(dataForm.adminInfo.email)) {
-    setErrors({ emailAdmin: t("SignErrors:emailFormatError") });
+    setErrors({ emailAdmin: t("errors.emailFormatError") });
     return false;
   }
   // Password
   if (!dataForm.adminInfo.password) {
-    setErrors({ password: t("SignErrors:passwordError") });
+    setErrors({ password: t("errors.passwordError") });
     return false;
   }
   if (dataForm.adminInfo.password.length < 8) {
-    setErrors({ password: t("SignErrors:passwordLengthError") });
+    setErrors({ password: t("errors.passwordLengthError") });
     return false;
   }
 
   if (dataForm.adminInfo.confirm_password !== dataForm.adminInfo.password) {
-    setErrors({ confirm_password: t("SignErrors:passwordMatchError") });
+    setErrors({ confirm_password: t("errors.passwordMatchError") });
     return false;
   }
 
@@ -45,30 +45,32 @@ export const validateAdminForm = (setErrors: any, dataForm: any, t: any) => {
 export const validateVendorForm = (setErrors: any, dataForm: any, t: any) => {
   // Store Name
   if (!dataForm.vendorInfo.name.trim()) {
-    setErrors({ storeName: t("SignErrors:storeNameError") });
+    setErrors({ storeName: t("errors.storeNameError") });
     return false;
   }
   // Store Phone
   if (!dataForm.vendorInfo.phone.trim()) {
-    setErrors({ storePhone: t("SignErrors:storePhoneError") });
+    setErrors({ storePhone: t("errors.storePhoneError") });
     return false;
   }
   // Store Email
   if (!dataForm.vendorInfo.email.trim()) {
-    setErrors({ storeEmail: t("SignErrors:storeEmailError") });
+    setErrors({ storeEmail: t("errors.storeEmailError") });
     return false;
   } else if (!/\S+@\S+\.\S+/.test(dataForm.vendorInfo.email)) {
-    setErrors({ storeEmail: t("SignErrors:emailFormatError") });
+    setErrors({ storeEmail: t("errors.emailFormatError") });
     return false;
   }
   // Document
   if (!dataForm.documentInfo[0].document_file) {
-    setErrors({ document: t("SignErrors:documentError") });
+    setErrors({
+      commercialRegisterDocument: t("errors.commercialRegisterDocumentError"),
+    });
     return false;
   }
 
   if (!dataForm.documentInfo[1].document_file) {
-    setErrors({ document: t("SignErrors:documentError") });
+    setErrors({ taxRegisterDocument: t("errors.taxRegisterDocumentError") });
     return false;
   }
   setErrors({});

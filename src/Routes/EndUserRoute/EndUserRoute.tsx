@@ -22,6 +22,7 @@ import UserProfile from "../../pages/UserPages/UserProfile/UserProfile";
 import UserNotifications from "../../pages/UserPages/UserNotifications/UserNotifications";
 import ProductsCompare from "../../pages/UserPages/ProductsCompare/ProductsCompare";
 import ProductsFavorite from "../../pages/UserPages/ProductsFavorite/ProductsFavorite";
+import UserForgotPassword from "../../pages/UserPages/AuthPages/UserForgotPassword";
 
 export const EndUserRoutes = (
   <>
@@ -50,6 +51,7 @@ export const EndUserRoutes = (
         </Route>
       </Route>
       <Route path="/checkout" element={<Checkout />} />
+      <Route path="/reset-password" element={<UserForgotPassword />} />
       <Route path="/signin" element={<EndUserSignIn />} />
       <Route path="/signup" element={<EndUserSignUp />} />
     </Route>

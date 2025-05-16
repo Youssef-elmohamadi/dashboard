@@ -1,0 +1,21 @@
+{
+  "title": "Banner Details",
+  "basicInfo": "Basic Information",
+  "bannerTitle": "Title",
+  "linkType": "Link Type",
+  "linkId": "Link ID",
+  "url": "URL",
+  "position": "Position",
+  "isActive": "Active",
+  "yes": "Yes",
+  "no": "No",
+  "notAvailable": "Not Available",
+  "bannerImage": "Banner Image",
+  "timestamps": "Timestamps",
+  "visitLink": "Visit Link",
+  "createdAt": "Created At",
+  "updatedAt": "Updated At",
+  "noId": "No banner ID provided.",
+  "loading": "Loading banner data...",
+  "notFound": "Banner not found."
+}

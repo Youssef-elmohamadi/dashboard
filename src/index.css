@@ -178,7 +178,7 @@ layer(base);
   ::before,
   ::backdrop,
   ::file-selector-button {
-    @apply border-gray-200! dark:border-gray-800!;
+    @apply !border-gray-200 dark:!border-gray-800;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
@@ -307,7 +307,7 @@ layer(base);
 }
 
 .apexcharts-tooltip.apexcharts-theme-light {
-  @apply gap-1 rounded-lg! border-gray-200! p-3 shadow-theme-sm! dark:border-gray-800! dark:bg-gray-900!;
+  @apply gap-1 rounded-lg! !border-gray-200 p-3 shadow-theme-sm! dark:!border-gray-800 dark:bg-gray-900!;
 }
 
 .apexcharts-tooltip-marker {

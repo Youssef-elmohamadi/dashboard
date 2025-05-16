@@ -5,14 +5,18 @@ import CircleSlider from "../../../components/EndUser/CircleSlider/CircleSlider"
 import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
 import { MultiImagesBanner } from "../../../components/EndUser/MultiImagesBanner/MulltiImagesBanner";
 import HomeProducts from "../../../components/EndUser/HomeProducts/HomeProducts";
+import LatestProducts from "../../../components/EndUser/LatestProducts/HomeLatest";
 import { getProductCategories } from "../../../api/EndUserApi/ensUserProducts/_requests";
 import ProductModal from "../../../components/EndUser/ProductModal/ProductModal";
 import { useModal } from "../Context/ModalContext";
 import AddToCartModal from "../../../components/EndUser/AddedSuccess/AddToCartModal";
 import { Helmet } from "react-helmet-async";
+import { getHome } from "../../../api/EndUserApi/HomeApi/_requests";
 const Home = () => {
   const [Categories, setCategories] = useState<any>();
   const [productCategories, setProductCategories] = useState<any>();
+  const [banners, setBanners] = useState<any>();
+  const [latest, setLatest] = useState<any>();
   const { modalType }: any = useModal();
   useEffect(() => {
     const fetchCategories = async () => {
@@ -26,6 +30,29 @@ const Home = () => {
     fetchCategories();
   }, []);
   useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const response = await getHome();
+        setBanners(response.data.data.banners);
+        console.log(response.data.data.banners);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBanners();
+  }, []);
+  useEffect(() => {
+    const fetchLatestProducts = async () => {
+      try {
+        const response = await getHome();
+        setLatest(response.data.data.leatestProducts);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchLatestProducts();
+  }, []);
+  useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await getProductCategories();
@@ -36,6 +63,8 @@ const Home = () => {
     };
     fetchProducts();
   }, []);
+  console.log(latest);
+
   return (
     <section className="">
       <Helmet>
@@ -81,19 +110,30 @@ const Home = () => {
         ]}
       />
       <div className="enduser_container">
-        <AdBanner
-          imageUrl="/images/ad2.webp"
-          linkUrl="/"
-          altText="Profit Announcement"
-        />
         {productCategories?.map((category: any) => (
-          <HomeProducts
-            key={category.id}
-            title={category.name}
-            products={category.products}
-            viewAllLink={`/category/${category.id}`}
-          />
+          <div key={category.id}>
+            {banners
+              ?.filter((banner: any) => banner.position === category.id)
+              .map((banner: any, idx: number) => (
+                <AdBanner
+                  key={idx}
+                  imageUrl={banner.image}
+                  linkUrl={
+                    banner.url
+                      ? banner.url
+                      : `/category/${category.id}` || "/images/ad1.webp"
+                  }
+                  altText="Profit Announcement"
+                />
+              ))}
+            <HomeProducts
+              title={category.name}
+              products={category.products}
+              viewAllLink={`/category/${category.id}`}
+            />
+          </div>
         ))}
+        <LatestProducts products={latest} title="Latest Products" />
       </div>
     </section>
   );
