@@ -38,16 +38,16 @@ const OTPPage: React.FC<OTPPageProps> = ({
       return () => clearTimeout(countdown);
     }
   }, [timer]);
-
   const handleChange = (value: string, index: number) => {
     if (!/^\d*$/.test(value)) return;
+
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-    setOtpError("");
+    setOtpError?.("");
 
-    if (value && index < otp.length - 1) {
-      inputRefs.current[index + 1]?.focus();
+    if (value && index < otp.length - 1 && inputRefs.current[index + 1]) {
+      inputRefs.current[index + 1]!.focus();
     }
   };
 
@@ -62,7 +62,9 @@ const OTPPage: React.FC<OTPPageProps> = ({
       inputRefs.current[index - 1]?.focus();
     }
   };
-
+  useEffect(() => {
+    console.log(inputRefs.current); // اطبع الـ refs للتأكد إنها موجودة
+  }, []);
   const handleResend = async () => {
     try {
       await onResend();
@@ -78,16 +80,20 @@ const OTPPage: React.FC<OTPPageProps> = ({
 
   return (
     <div className="flex p-4">
-      <div className="bg-white rounded-2xl p-6 w-full max-w-md text-center border">
-        <h2 className="text-xl font-semibold mb-2">{title}</h2>
-        <p className="text-gray-600 mb-4">
+      <div className=" rounded-2xl p-6 w-full max-w-md text-center border">
+        <h2 className="text-xl font-semibold dark:text-gray-100 mb-2">
+          {title}
+        </h2>
+        <p className="text-gray-600 mb-4 dark:text-gray-100">
           {subtitle} <strong>{identifier}</strong>
         </p>
-        <p className="text-sm text-gray-500 mb-6">
+        <p className="text-sm text-gray-500 mb-6 dark:text-gray-100">
           {resendText}{" "}
           <button
             className={`font-semibold underline ${
-              timer === 0 ? "text-black" : "text-gray-400 cursor-not-allowed"
+              timer === 0
+                ? "text-black dark:text-white"
+                : "text-gray-400 cursor-not-allowed"
             }`}
             type="button"
             onClick={handleResend}
@@ -104,24 +110,24 @@ const OTPPage: React.FC<OTPPageProps> = ({
               ref={(el) => (inputRefs.current[idx] = el)}
               type="text"
               maxLength={1}
-              className="w-12 h-12 text-center text-xl border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="md:w-12 md:h-12 h-8 w-8 **: text-center text-xl border dark:border-gray-50 dark:bg-gray-700 dark:text-gray-100 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={digit}
-              onChange={(e) => handleChange(e.target.value, idx)}
               onKeyDown={(e) => handleKeyDown(e, idx)}
+              onChange={(e) => handleChange(e.target.value, idx)}
             />
           ))}
         </div>
 
         {otpError && <p className="text-red-500 mb-4 text-sm">{otpError}</p>}
 
-        <div className="mb-4 text-gray-700 font-medium text-lg">
+        <div className="mb-4 text-gray-700 font-medium text-lg dark:text-gray-100">
           Timer: {formattedTime}
         </div>
 
         <button
           type="button"
           onClick={() => onSubmit(otp.join(""))}
-          className={`w-full py-2 rounded-full font-semibold transition ${
+          className={`w-full py-2 rounded-full  font-semibold transition ${
             isOtpComplete
               ? "bg-brand-500 text-white hover:bg-brand-600"
               : "bg-gray-300 text-gray-600 cursor-not-allowed"

@@ -210,7 +210,7 @@ export default function AdminSignInForm() {
                     </span>
                   </div>
                   <Link
-                    to="/reset-password"
+                    to="/admin/reset-password"
                     className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
                   >
                     {t("forgotPassword")}

@@ -133,7 +133,9 @@ const VendorEditPage: React.FC = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">{t("vendor.edit_title")}</h2>
+      <h2 className="text-2xl font-bold mb-4 dark:text-white">
+        {t("vendor.edit_title")}
+      </h2>
       <form onSubmit={handleSubmit}>
         <div className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -187,17 +189,17 @@ const VendorEditPage: React.FC = () => {
         <hr className="my-6" />
 
         <div>
-          <h3 className="text-xl font-semibold mb-4">
+          <h3 className="text-xl font-semibold mb-4 dark:text-white">
             {t("vendor.documents_title")}
           </h3>
           <div className="space-y-6">
             {vendor.documents.map((doc) => (
               <div
                 key={doc.id}
-                className="border p-4 rounded bg-gray-50 flex flex-col md:flex-row gap-4 items-start"
+                className="border p-4 rounded bg-gray-50 flex flex-col md:flex-row gap-4 items-start dark:bg-gray-900"
               >
                 <div className="flex-1 space-y-1">
-                  <p className="font-medium">
+                  <p className="font-medium dark:text-white">
                     {t(
                       documentTypeMap[doc.document_type] ||
                         `vendor.document_${doc.document_type}`
@@ -215,7 +217,7 @@ const VendorEditPage: React.FC = () => {
                     {t(`vendor.status_${doc.status}`)}
                   </p>
 
-                  {doc.status !== "approved" && (
+                  {doc.status !== "approved" && doc.status !== "pending" && (
                     <div className="mt-2">
                       <input
                         type="file"
@@ -226,6 +228,7 @@ const VendorEditPage: React.FC = () => {
                             e.target.files ? e.target.files[0] : null
                           )
                         }
+                        className="dark:text-white"
                       />
                       {updatedDocs[doc.id] && (
                         <>
@@ -236,7 +239,7 @@ const VendorEditPage: React.FC = () => {
                           <img
                             src={URL.createObjectURL(updatedDocs[doc.id]!)}
                             alt="preview"
-                            className="w-full max-w-xs h-auto object-contain mt-2 rounded border"
+                            className="w-full max-w-xs h-auto object-contain mt-2 rounded border dark:text-white"
                           />
                         </>
                       )}

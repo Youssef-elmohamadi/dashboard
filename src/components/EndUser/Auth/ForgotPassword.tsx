@@ -17,12 +17,21 @@ const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [otpError, setOtpError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const { t } = useTranslation(["auth"]);
   const navigate = useNavigate();
 
   const handleNext = async () => {
     if (step === 1 && phone) {
+      if (!phone) {
+        setPhoneError(t("forgotPasswordPage.errors.phone"));
+        return;
+      }
+      if (/^01[0125][0-5]{8}$/.test(phone)) {
+        setPasswordError(t("forgotPasswordPage.errors.phoneInvalid"));
+        return;
+      }
       await handleSendOtp();
       setStep(2);
     } else if (step === 2 && otp.length === 6) {
@@ -91,11 +100,12 @@ const ResetPassword = () => {
       });
 
       if (res?.status === 200) {
-        toast.success("Password reset successful!");
+        toast.success(t("forgotPasswordPage.resetPasswordSuccess"));
         navigate("/signin");
       }
     } catch (err: any) {
       const response = err?.response?.data;
+      toast.success(t("forgotPasswordPage.resetPasswordFail"));
       if (response?.password && Array.isArray(response.password)) {
         setPasswordError(response.password[0]);
       } else {
@@ -110,29 +120,32 @@ const ResetPassword = () => {
         return (
           <div className="border p-12 rounded-2xl">
             <h2 className="text-2xl font-bold text-center mb-2 text-gray-800">
-              Forgot Password?
+              {t("forgotPasswordPage.title")}
             </h2>
             <p className="text-sm text-gray-500 text-center mb-6">
-              Enter your phone number to receive reset code.
+              {t("forgotPasswordPage.description")}
             </p>
             <input
               type="text"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="Your phone number"
+              placeholder={t("forgotPasswordPage.phonePlaceholder")}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
+            {phoneError && (
+              <p className="text-red-500 text-sm mt-2">{phoneError}</p>
+            )}
             <button
               onClick={handleNext}
               className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              Send Code
+             {t("forgotPasswordPage.submit")}
             </button>
             <button
               onClick={() => navigate("/signin")}
               className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              Back To Login
+              {t("forgotPasswordPage.backToLogin")}
             </button>
           </div>
         );
@@ -157,23 +170,23 @@ const ResetPassword = () => {
         return (
           <div className="border p-12 rounded-2xl">
             <h2 className="text-2xl font-bold text-center mb-2 text-gray-800">
-              Reset Password
+              {t("forgotPasswordPage.resetPassword")}
             </h2>
             <p className="text-sm text-gray-500 text-center mb-6">
-              Enter your new password and confirm it.
+              {t("forgotPasswordPage.enterAndConfirmPassword")}
             </p>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="New Password"
+               placeholder={t("forgotPasswordPage.newPasswordPlaceholder")}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
             <input
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm Password"
+              placeholder={t("forgotPasswordPage.confirmPasswordPlaceholder")}
               className="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
             {passwordError && (
@@ -183,7 +196,7 @@ const ResetPassword = () => {
               onClick={handleNext}
               className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              Reset Password
+               {t("forgotPasswordPage.resetPasswordBtn")}
             </button>
           </div>
         );
@@ -202,7 +215,7 @@ const ResetPassword = () => {
             onClick={() => setStep(step > 1 ? step - 1 : 1)}
             className="w-full mt-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition"
           >
-            ← Back
+             {t("forgotPasswordPage.back")}
           </button>
         )}
       </div>
