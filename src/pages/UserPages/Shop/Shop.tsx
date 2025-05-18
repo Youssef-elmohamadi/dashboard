@@ -9,6 +9,7 @@ const Shop = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(true);
+  
   const { category_id } = useParams();
   const [searchParams] = useSearchParams();
 

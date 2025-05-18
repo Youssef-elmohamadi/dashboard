@@ -2,45 +2,67 @@ import React, { useState, useEffect, useRef } from "react";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { Separator } from "../Separator/Separator";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { useTranslation } from "react-i18next";
 
 const TopBar = () => {
-  const [language, setLanguage] = useState("English");
-  const [languages, setLanguages] = useState([
-    "German",
-    "French",
-    "Italian",
-    "Spanish",
-  ]);
-  const [showlangs, setShowLangs] = useState(false);
-  const [showCurrencies, setShowCurrencies] = useState(false);
+  const { i18n, t } = useTranslation(["EndUserTopBar"]);
+  const { setDir, setLang, dir, lang } = useDirectionAndLanguage();
 
-  const [currency, setCurrency] = useState("USD");
-  const [currencies, setCurrencies] = useState(["EUR", "EGP"]);
+  const [language, setLanguage] = useState<string>();
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [showLangs, setShowLangs] = useState(false);
+
+  const [currency, setCurrency] = useState(t("egp"));
+  const [currencies, setCurrencies] = useState<string[]>([t("egp")]);
+  const [showCurrencies, setShowCurrencies] = useState(false);
 
   const langRef = useRef<HTMLDivElement>(null);
   const currencyRef = useRef<HTMLDivElement>(null);
 
-  const handleLanguageChange = (newLang: any) => {
-    setLanguages([language, ...languages.filter((lang) => lang !== newLang)]);
+  useEffect(() => {
+    setLanguages([t("arabic"), t("english")]);
+    setCurrency(t("egp"));
+    setCurrencies([t("egp")]);
+  }, [i18n.language]);
+
+  useEffect(() => {
+    setLanguage(i18n.language === "ar" ? t("arabic") : t("english"));
+  }, [i18n.language]);
+
+  useEffect(() => {
+    window.localStorage.setItem("i18nextLng", lang);
+    window.localStorage.setItem("dir", dir);
+    document.documentElement.setAttribute("dir", dir); // لضبط الاتجاه العام
+  }, [lang, dir]);
+
+  const switchLanguage = (lang: "en" | "ar") => {
+    i18n.changeLanguage(lang);
+  };
+
+  const handleLanguageChange = (newLang: string) => {
+    const langCode = newLang === t("arabic") ? "ar" : "en";
     setLanguage(newLang);
+    setLang(langCode);
+    setDir(langCode === "ar" ? "rtl" : "ltr");
+    switchLanguage(langCode);
     setShowLangs(false);
   };
 
-  const handleCurrencyChange = (newCurrency: any) => {
-    setCurrencies([
-      currency,
-      ...currencies.filter((curr) => curr !== newCurrency),
-    ]);
+  const handleCurrencyChange = (newCurrency: string) => {
     setCurrency(newCurrency);
     setShowCurrencies(false);
   };
 
   useEffect(() => {
-    const handleClickOutside = (e: any) => {
-      if (langRef.current && !langRef.current.contains(e.target)) {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
         setShowLangs(false);
       }
-      if (currencyRef.current && !currencyRef.current.contains(e.target)) {
+      if (
+        currencyRef.current &&
+        !currencyRef.current.contains(e.target as Node)
+      ) {
         setShowCurrencies(false);
       }
     };
@@ -52,62 +74,71 @@ const TopBar = () => {
   }, []);
 
   return (
-    <div className="px-3 py-2 mx-auto flex items-center justify-between bg-white">
+    <div className="enduser_container z-10 relative px-3 py-2 mx-auto flex items-center justify-between bg-white">
       {/* Language & Currency */}
       <div className="flex items-center justify-between lg:justify-start flex-[3]">
         {/* Language */}
         <div ref={langRef} className="relative flex items-center">
           <div
             className="flex items-center gap-2 cursor-pointer"
-            onClick={() => setShowLangs(!showlangs)}
+            onClick={() => setShowLangs(!showLangs)}
           >
-            <div className="p-1 text-sm text-secondary">{language}</div>
+            <span className="p-1 text-sm text-secondary">{language}</span>
             <MdOutlineKeyboardArrowDown />
           </div>
           <div
-            className={`absolute p-3 top-8 left-0 bg-white shadow z-50 ${
-              showlangs ? "block" : "hidden"
-            }`}
+            className={`absolute mt-2 min-w-[8rem] top-4 rounded-lg border border-gray-200 shadow-lg bg-white transition-all duration-200 ease-in-out ${
+              dir === "rtl" ? "right-0" : "left-0"
+            } ${showLangs ? "block" : "hidden"}`}
           >
-            <ul>
-              {languages.map((lang, index) => (
+            <ul className="py-2">
+              {languages.map((langItem, index) => (
                 <li
                   key={index}
-                  className="p-2 w-36 bg-gray-300 my-2 text-sm uppercase hover:bg-white hover:border hover:border-black transition duration-300 cursor-pointer"
-                  onClick={() => handleLanguageChange(lang)}
+                  className={`px-4 py-2 text-sm text-center cursor-pointer transition 
+                    ${
+                      langItem === language
+                        ? "bg-gray-100 text-black font-medium"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  onClick={() => handleLanguageChange(langItem)}
                 >
-                  {lang}
+                  {langItem}
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        {/* Separator */}
         <Separator className="hidden lg:block" />
 
         {/* Currency */}
-        <div ref={currencyRef} className="relative flex items-center">
+        <div ref={currencyRef} className="relative flex items-center ">
           <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => setShowCurrencies(!showCurrencies)}
           >
-            <div className="p-1 text-sm text-secondary">{currency}</div>
+            <span className="p-1 text-sm text-secondary">{currency}</span>
             <MdOutlineKeyboardArrowDown />
           </div>
           <div
-            className={`absolute p-3 top-8 right-0 bg-white shadow z-50 ${
-              showCurrencies ? "block" : "hidden"
-            }`}
+            className={`absolute mt-2 min-w-[8rem] top-4 rounded-lg border border-gray-200 shadow-lg bg-white transition-all duration-200 ease-in-out ${
+              dir === "rtl" ? "right-0" : "left-0"
+            } ${showCurrencies ? "block" : "hidden"}`}
           >
-            <ul>
-              {currencies.map((curr, index) => (
+            <ul className="py-2">
+              {currencies.map((currItem, index) => (
                 <li
                   key={index}
-                  className="p-2 w-36 bg-gray-300 my-2 text-sm uppercase hover:bg-white hover:border hover:border-black transition duration-300 cursor-pointer"
-                  onClick={() => handleCurrencyChange(curr)}
+                  className={`px-4 py-2 text-sm text-center cursor-pointer transition 
+                    ${
+                      currItem === currency
+                        ? "bg-gray-100 text-black font-medium"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  onClick={() => handleCurrencyChange(currItem)}
                 >
-                  {curr}
+                  {currItem}
                 </li>
               ))}
             </ul>
@@ -119,24 +150,22 @@ const TopBar = () => {
       <div className="items-center flex-[2] hidden lg:flex">
         <Link to="/admin">
           <div className="p-2 text-sm text-secondary hover:text-black transition duration-300 cursor-pointer">
-            Be A Seller
+            {t("be_a_seller")}
           </div>
         </Link>
-
         <Separator />
-
         <Link to="/admin">
           <div className="p-2 text-sm text-secondary hover:text-black transition duration-300 cursor-pointer">
-            Login As A Seller
+            {t("login_as_seller")}
           </div>
         </Link>
       </div>
 
       {/* Contact */}
-      <div className="items-center flex-[2] hidden lg:flex">
+      <div className="items-center flex-[2] justify-end hidden lg:flex">
         <Link to="/">
           <div className="p-2 text-sm text-secondary hover:text-black transition duration-300 cursor-pointer">
-            Direct Contact Number 00966501326310
+            {t("contact_number")}
           </div>
         </Link>
       </div>

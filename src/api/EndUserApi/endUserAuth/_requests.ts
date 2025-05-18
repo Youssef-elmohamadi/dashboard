@@ -1,5 +1,5 @@
 import axiosJson from "../../userAxiosInstanceEndUser";
-import axiosFormData from "../../axiosInstanceFormData";
+import axiosFormData from "../../userAxiosInstanceEndUserFormData";
 const login = async (email: string, password: string) => {
   return await axiosJson.post("/api/user/login", { email, password });
 };
@@ -8,7 +8,7 @@ const getProfile = async () => {
 };
 
 const updateProfile = async (data) => {
-  return await axiosJson.post("/api/user/profile/update", data);
+  return await axiosFormData.post("/api/user/profile/update", data);
 };
 
 const register = async (formData: {}) => {

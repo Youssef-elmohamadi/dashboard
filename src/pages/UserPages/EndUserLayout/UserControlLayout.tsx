@@ -22,7 +22,7 @@ export default function UserControlLayout() {
   }, []);
   return (
     <div className="flex flex-row min-h-screen">
-      <aside className="w-64 bg-white p-4 border-r shadow hidden lg:block ">
+      <aside className="w-72 bg-white p-4 border-r shadow hidden lg:block ">
         <div className="space-y-4 ">
           <div className="text-center flex flex-col items-center">
             <div className="w-20 h-20 rounded-full  ">
@@ -32,9 +32,7 @@ export default function UserControlLayout() {
                 alt="User Avatar"
               />
             </div>
-            <div className="font-semibold">
-              {user?.first_name} {user?.last_name}
-            </div>
+            <div className="text-center">{user?.first_name}</div>
             <div className="text-sm text-gray-500">{user?.email}</div>
           </div>
           <nav className="space-y-2 mt-6">
@@ -48,27 +46,27 @@ export default function UserControlLayout() {
             <NavLink
               to="/u-profile"
               className={({ isActive }) =>
-                `p-2 rounded flex items-center gap-2 ${
+                `p-2 px-3 rounded-3xl flex items-center group gap-2 transition-all duration-300 pl-2 ${
                   isActive
-                    ? "bg-gray-100 text-purple-700 font-semibold"
-                    : "hover:bg-gray-100"
+                    ? "bg-[#8826bd35] pl-4"
+                    : "hover:bg-[#8826bd35] hover:pl-4"
                 }`
               }
             >
-              <RiProfileFill className="text-lg text-gray-500" />
+              <RiProfileFill className="text-lg text-gray-500 transition-all duration-300" />
               Profile Management
             </NavLink>
             <NavLink
               to="/u-orders"
               className={({ isActive }) =>
-                `p-2 rounded flex items-center gap-2 ${
+                `p-2 px-3 rounded-3xl flex items-center group gap-2 transition-all duration-300 pl-2 ${
                   isActive
-                    ? "bg-gray-100 text-purple-700 font-semibold"
-                    : "hover:bg-gray-100"
+                    ? "bg-[#8826bd35] pl-4"
+                    : "hover:bg-[#8826bd35] hover:pl-4"
                 }`
               }
             >
-              <TiDocumentText className="text-lg text-gray-500" />
+              <TiDocumentText className="text-lg text-gray-500 transition-all duration-300" />
               Orders History
             </NavLink>
             {/* <Link
@@ -103,42 +101,42 @@ export default function UserControlLayout() {
             <NavLink
               to="/u-compare"
               className={({ isActive }) =>
-                `p-2 rounded flex items-center gap-2 ${
+                `p-2 px-3 rounded-3xl flex items-center group gap-2 transition-all duration-300 pl-2 ${
                   isActive
-                    ? "bg-gray-100 text-purple-700 font-semibold"
-                    : "hover:bg-gray-100"
+                    ? "bg-[#8826bd35] pl-4"
+                    : "hover:bg-[#8826bd35] hover:pl-4"
                 }`
               }
             >
-              <MdCompareArrows className="text-lg text-gray-500" />
+              <MdCompareArrows className="text-lg text-gray-500  transition-all duration-300" />
               Compare Product
             </NavLink>
             <NavLink
               to="/u-favorite"
               className={({ isActive }) =>
-                `p-2 rounded flex items-center gap-2 ${
+                `p-2 px-3 rounded-3xl flex items-center group gap-2 transition-all duration-300 pl-2 ${
                   isActive
-                    ? "bg-gray-100 text-purple-700 font-semibold"
-                    : "hover:bg-gray-100"
+                    ? "bg-[#8826bd35] pl-4"
+                    : "hover:bg-[#8826bd35] hover:pl-4"
                 }`
               }
             >
-              <MdFavorite className="text-lg text-gray-500" />
+              <MdFavorite className="text-lg text-gray-500 transition duration-400" />
               Favorite Products
             </NavLink>
             <button
-              onClick={handleDeleteAccount}
-              className="p-2 w-full rounded hover:bg-gray-100 flex items-center gap-2"
+              onClick={handleLogout}
+              className="flex items-center group gap-3 transition-all duration-400 px-4 py-2 rounded-3xl hover:bg-red-300 cursor-pointer pl-2 hover:pl-4 w-full"
             >
-              <MdDelete className="text-lg text-error-500" />
-              Delete Account
+              <BiLogOut className="text-lg text-gray-500 transition duration-400  " />
+              Logout
             </button>
             <button
-              onClick={handleLogout}
-              className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-100 cursor-pointer w-full"
+              onClick={handleDeleteAccount}
+              className="p-2 px-3 w-full rounded-3xl group hover:bg-red-300 flex items-center gap-2 transition-all duration-300 pl-2 hover:pl-4 "
             >
-              <BiLogOut className="text-lg text-error-500" />
-              Logout
+              <MdDelete className="text-lg text-gray-500 transition-all duration-400" />
+              Delete Account
             </button>
           </nav>
         </div>

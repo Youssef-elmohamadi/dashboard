@@ -1,0 +1,20 @@
+{
+  "featuredSection": {
+    "fastDelivery": {
+      "title": "Fast Delivery",
+      "description": "We guarantee the best delivery speed"
+    },
+    "returnable": {
+      "title": "Returnable",
+      "description": "Returnable within 7 days"
+    },
+    "fullCoverage": {
+      "title": "Full Coverage",
+      "description": "Coverage across all cities in the Kingdom"
+    },
+    "currentOffers": {
+      "title": "Current Offers",
+      "description": "Massive deals across all categories"
+    }
+  }
+}

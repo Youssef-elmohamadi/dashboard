@@ -24,6 +24,7 @@ import CreateBanner from "../../components/SuperAdmin/BannersTable/CreateBanner"
 import UpdateBanner from "../../components/SuperAdmin/BannersTable/UpdateBanner";
 import BannerDetails from "../../components/SuperAdmin/BannersTable/BannerDetails";
 import SuperAdminForgotPassword from "../../pages/SuperAdminPages/AuthPages/UserForgotPassword";
+import Home from "../../pages/AdminPages/Dashboard/Home";
 export const SuperAdminRoutes = (
   <>
     <Route
@@ -34,6 +35,7 @@ export const SuperAdminRoutes = (
         </ProtectedSuperAdminRoute>
       }
     >
+      <Route index element={<Home />} />
       <Route path="vendors" element={<Vendors />} />
       <Route path="vendors/details/:id" element={<VendorDetails />} />
       <Route path="admins" element={<Admins />} />

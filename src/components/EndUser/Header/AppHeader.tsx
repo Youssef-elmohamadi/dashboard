@@ -18,6 +18,8 @@ import {
 import { RiProfileFill } from "react-icons/ri";
 import { getProfile } from "../../../api/EndUserApi/endUserAuth/_requests";
 import { handleLogout } from "../../../components/EndUser/Auth/Logout";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { useTranslation } from "react-i18next";
 
 const AppHeader = () => {
   const uToken = localStorage.getItem("uToken");
@@ -27,7 +29,8 @@ const AppHeader = () => {
   const closeMenu = () => setIsMenuOpen(false);
   const [user, setUser] = useState({});
   const { items } = useSelector((state) => state.wishList);
-
+  const { dir } = useDirectionAndLanguage();
+  const { t } = useTranslation(["EndUserHeader"]);
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -53,8 +56,8 @@ const AppHeader = () => {
   }, []);
 
   return (
-    <>
-      <header className="enduser_container py-4 flex items-center justify-start gap-12 relative z-50">
+    <div >
+      <header className="enduser_container py-4 flex items-center justify-start gap-12 relative">
         {/* الهيدر */}
         <div className="flex justify-between w-full md:w-auto">
           <div className="flex gap-2 items-center w-full">
@@ -79,10 +82,10 @@ const AppHeader = () => {
           <div className="flex items-center gap-2 relative w-full">
             <input
               type="text"
-              placeholder="i'm Search about..."
+              placeholder={t("search_placeholder")}
               className="rounded-full text-sm px-4 py-2 border border-soft-light focus:outline-none focus:border-secondary-base w-full"
             />
-            <div className="absolute right-4">
+            <div className={`absolute ${dir === "ltr" ? "right-4" : "left-4"}`}>
               <CiSearch className="text-2xl" />
             </div>
           </div>
@@ -109,92 +112,123 @@ const AppHeader = () => {
                     </div>
                   </div>
                   {/* القائمة المنسدلة */}
-                  <div className="absolute right-0 top-[90%] mt-1 bg-white shadow-lg rounded-md w-60 py-3 px-2 z-50 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
-                    <ul className="space-y-1">
-                      {/* روابط الحساب */}
+                  <div className="absolute border right-0 top-[90%] mt-1 bg-white shadow-lg rounded-md w-56 py-3 px-2 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
+                    <ul className=" ">
                       <NavLink
                         to="/u-profile"
                         className={({ isActive }) =>
-                          `p-2 rounded flex items-center gap-2 ${
+                          `p-2 rounded flex items-center gap-2 transition-all duration-300 ${
+                            dir === "ltr" ? "pl-2" : "pr-2"
+                          } border-b last:border-none ${
                             isActive
-                              ? "bg-gray-100 text-purple-700 font-semibold"
-                              : "hover:bg-gray-100"
+                              ? `bg-[#8826bd35] text-black ${
+                                  dir === "ltr" ? "pl-4" : "pr-4"
+                                }`
+                              : `hover:bg-[#8826bd35] ${
+                                  dir === "ltr" ? "hover:pl-4" : "hover:pr-4"
+                                }`
                           }`
                         }
                       >
                         <RiProfileFill className="text-lg text-gray-500" />
-                        Profile Management
+                        {t("profile_management")}
                       </NavLink>
+
                       <NavLink
                         to="/u-orders"
                         className={({ isActive }) =>
-                          `p-2 rounded flex items-center gap-2 ${
+                          `p-2 rounded flex items-center gap-2 transition-all duration-300 ${
+                            dir === "ltr" ? "pl-2" : "pr-2"
+                          } border-b last:border-none ${
                             isActive
-                              ? "bg-gray-100 text-purple-700 font-semibold"
-                              : "hover:bg-gray-100"
+                              ? `bg-[#8826bd35] text-black ${
+                                  dir === "ltr" ? "pl-4" : "pr-4"
+                                }`
+                              : `hover:bg-[#8826bd35] ${
+                                  dir === "ltr" ? "hover:pl-4" : "hover:pr-4"
+                                }`
                           }`
                         }
                       >
                         <TiDocumentText className="text-xl text-secondary" />
-                        Orders History
+                        {t("orders_history")}
                       </NavLink>
+
                       <NavLink
                         to="/u-compare"
                         className={({ isActive }) =>
-                          `p-2 rounded flex items-center gap-2 ${
+                          `p-2 rounded flex items-center gap-2 transition-all duration-300 ${
+                            dir === "ltr" ? "pl-2" : "pr-2"
+                          } border-b last:border-none ${
                             isActive
-                              ? "bg-gray-100 text-purple-700 font-semibold"
-                              : "hover:bg-gray-100"
+                              ? `bg-[#8826bd35] text-black ${
+                                  dir === "ltr" ? "pl-4" : "pr-4"
+                                }`
+                              : `hover:bg-[#8826bd35] ${
+                                  dir === "ltr" ? "hover:pl-4" : "hover:pr-4"
+                                }`
                           }`
                         }
                       >
                         <MdCompareArrows className="text-lg text-gray-500" />
-                        Compare Product
+                        {t("compare_product")}
                       </NavLink>
+
                       <NavLink
                         to="/u-favorite"
                         className={({ isActive }) =>
-                          `p-2 rounded flex items-center gap-2 ${
+                          `p-2 rounded flex items-center gap-2 transition-all duration-300 ${
+                            dir === "ltr" ? "pl-2" : "pr-2"
+                          } border-b last:border-none ${
                             isActive
-                              ? "bg-gray-100 text-purple-700 font-semibold"
-                              : "hover:bg-gray-100"
+                              ? `bg-[#8826bd35] text-black ${
+                                  dir === "ltr" ? "pl-4" : "pr-4"
+                                }`
+                              : `hover:bg-[#8826bd35] ${
+                                  dir === "ltr" ? "hover:pl-4" : "hover:pr-4"
+                                }`
                           }`
                         }
                       >
                         <MdFavorite className="text-lg text-gray-500" />
-                        Favorite Products
+                        {t("favorite_products")}
                       </NavLink>
+
                       <li
                         onClick={handleLogout}
-                        className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-100 cursor-pointer"
+                        className={`flex items-center gap-3 px-4 py-2 transition-all duration-400 rounded hover:bg-red-300 cursor-pointer pl-2 pr-2 ${
+                          dir === "ltr" ? "hover:pl-4" : "hover:pr-4"
+                        } w-full`}
                       >
                         <GrLogout className="text-xl" />
-                        Logout
+                        {t("logout")}
                       </li>
                     </ul>
                   </div>
                 </div>
                 <Separator />
               </div>
-              <div className="flex items-center gap-2">
-                <NavLink to="/u-notification">
-                  <MdNotifications className="text-2xl text-secondary" />
-                </NavLink>
-              </div>
-              <div className="flex items-center gap-2 relative">
-                <NavLink to="/u-favorite">
-                  {items && (
-                    <div className="absolute -top-2 -right-2 bg-purple-700 w-5 h-5 flex justify-center items-center rounded-full text-white text-xs">
-                      {items.length}
-                    </div>
-                  )}
-                  <MdFavorite className="text-2xl text-secondary" />
-                </NavLink>
-              </div>
-              <div className="flex items-center gap-2">
-                <NavLink to="/u-compare">
-                  <MdOutlineCompareArrows className="text-2xl text-secondary" />
-                </NavLink>
+              <div className="flex gap-4">
+                <div className="flex items-center gap-2">
+                  <NavLink to="/u-notification">
+                    <MdNotifications className="text-2xl text-secondary" />
+                  </NavLink>
+                </div>
+                <div className="flex items-center gap-2 relative">
+                  <NavLink to="/u-favorite">
+                    {items && (
+                      <div className="absolute -top-2 -right-2 bg-purple-700 w-5 h-5 flex justify-center items-center rounded-full text-white text-xs">
+                        {items.length}
+                      </div>
+                    )}
+                    <MdFavorite className="text-2xl text-secondary" />
+                  </NavLink>
+                </div>
+                <div className="flex items-center gap-2">
+                  <NavLink to="/u-compare">
+                    <MdOutlineCompareArrows className="text-2xl text-secondary" />
+                  </NavLink>
+                </div>
               </div>
             </>
           ) : (
@@ -203,13 +237,13 @@ const AppHeader = () => {
                 <FaRegCircleUser className="text-2xl mt-1 text-secondary cursor-pointer" />
                 <Separator />
                 <NavLink to="/signin" className="text-secondary text-sm">
-                  Login
+                  {t("login")}
                 </NavLink>
                 <Separator />
               </div>
               <div className="flex items-center gap-2">
                 <NavLink to="/signup" className="text-secondary text-sm">
-                  Signup
+                  {t("signup")}
                 </NavLink>
               </div>
             </>
@@ -221,7 +255,7 @@ const AppHeader = () => {
       {isMenuOpen && (
         <div
           onClick={closeMenu}
-          className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-50"
+          className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-999999  overflow-auto"
         />
       )}
       <div
@@ -260,13 +294,13 @@ const AppHeader = () => {
                   <FaRegCircleUser className="text-2xl mt-1 text-secondary cursor-pointer" />
                   <Separator />
                   <NavLink to="/signin" className="text-secondary text-sm">
-                    Login
+                    {t("login")}
                   </NavLink>
                   <Separator />
                 </div>
                 <div className="flex items-center gap-2">
                   <NavLink to="/signup" className="text-secondary text-sm">
-                    Signup
+                    {t("signup")}
                   </NavLink>
                 </div>
               </div>
@@ -284,7 +318,7 @@ const AppHeader = () => {
                     `py-3 px-2 block ${
                       isActive
                         ? "bg-gray-100 text-purple-700 font-semibold"
-                        : "hover:bg-gray-100"
+                        : "hover:bg-[#8826bd35]"
                     }`
                   }
                 >
@@ -303,11 +337,11 @@ const AppHeader = () => {
                     `py-3 px-2 block ${
                       isActive
                         ? "bg-gray-100 text-purple-700 font-semibold"
-                        : "hover:bg-gray-100"
+                        : "hover:bg-[#8826bd35]"
                     }`
                   }
                 >
-                  <li>Profile</li>
+                  <li>{t("profile")}</li>
                 </NavLink>
                 <NavLink
                   to="/u-notification"
@@ -315,11 +349,11 @@ const AppHeader = () => {
                     `py-3 px-2 block ${
                       isActive
                         ? "bg-gray-100 text-purple-700 font-semibold"
-                        : "hover:bg-gray-100"
+                        : "hover:bg-[#8826bd35]"
                     }`
                   }
                 >
-                  <li>Notifications</li>
+                  <li>{t("notifications")}</li>
                 </NavLink>
                 <NavLink
                   to="/u-favorite"
@@ -327,11 +361,11 @@ const AppHeader = () => {
                     `py-3 px-2 block ${
                       isActive
                         ? "bg-gray-100 text-purple-700 font-semibold"
-                        : "hover:bg-gray-100"
+                        : "hover:bg-[#8826bd35]"
                     }`
                   }
                 >
-                  <li>Favorite</li>
+                  <li>{t("favorite_products")}</li>
                 </NavLink>
                 <NavLink
                   to="/u-compare"
@@ -339,11 +373,11 @@ const AppHeader = () => {
                     `py-3 px-2 block ${
                       isActive
                         ? "bg-gray-100 text-purple-700 font-semibold"
-                        : "hover:bg-gray-100"
+                        : "hover:bg-[#8826bd35]"
                     }`
                   }
                 >
-                  <li>Compare</li>
+                  <li>{t("compare_product")}</li>
                 </NavLink>
               </ul>
               <ul className="flex flex-col justify-center">
@@ -352,14 +386,14 @@ const AppHeader = () => {
                   className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-100 cursor-pointer"
                 >
                   <GrLogout className="text-xl" />
-                  Logout
+                  {t("logout")}
                 </li>
               </ul>
             </>
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

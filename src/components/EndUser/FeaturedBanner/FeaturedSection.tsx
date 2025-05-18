@@ -1,31 +1,32 @@
 // components/FeaturesSection.jsx
+import { useTranslation } from "react-i18next";
 import FeatureItem from "./FeatureItem";
 import { FaShippingFast, FaUndo, FaMapMarkedAlt, FaTags } from "react-icons/fa";
 
 const FeaturesSection = () => {
-  const features =[
+  const { t } = useTranslation(["EndUserHome"]);
+  const features = [
     {
       icon: <FaShippingFast />,
-      title: "Fast Delivery",
-      description: "We guarantee the best delivery speed",
+      title: t("featuredSection.fastDelivery.title"),
+      description: t("featuredSection.fastDelivery.description"),
     },
     {
       icon: <FaUndo />,
-      title: "Returnable",
-      description: "Returnable within 7 days",
+      title: t("featuredSection.returnable.title"),
+      description: t("featuredSection.returnable.description"),
     },
     {
       icon: <FaMapMarkedAlt />,
-      title: "Full Coverage",
-      description: "Coverage across all cities in the Kingdom",
+      title: t("featuredSection.fullCoverage.title"),
+      description: t("featuredSection.fullCoverage.description"),
     },
     {
       icon: <FaTags />,
-      title: "Current Offers",
-      description: "Massive deals across all categories",
+      title: t("featuredSection.currentOffers.title"),
+      description: t("featuredSection.currentOffers.description"),
     },
   ];
-  
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 bg-white p-4 rounded-xl">

@@ -1,0 +1,20 @@
+{
+  "featuredSection": {
+    "fastDelivery": {
+      "title": "توصيل سريع",
+      "description": "نضمن لك أفضل سرعة توصيل"
+    },
+    "returnable": {
+      "title": "قابل للإرجاع",
+      "description": "يمكن الإرجاع خلال 7 أيام"
+    },
+    "fullCoverage": {
+      "title": "تغطية شاملة",
+      "description": "تغطية في جميع مدن المملكة"
+    },
+    "currentOffers": {
+      "title": "عروض حالية",
+      "description": "عروض ضخمة على جميع الأقسام"
+    }
+  }
+}

@@ -71,6 +71,8 @@ i18n
       "ProductsReports",
       "UserProfile",
       "UpdateCategory",
+      "EndUserProfile",
+      "EndUserHeader",
     ],
 
     defaultNS: "Signup",

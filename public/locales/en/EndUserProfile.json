@@ -1,0 +1,37 @@
+{
+    "title": "Profile",
+  "form": {
+    "avatar": "Change Avatar",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "password_confirmation": "Confirm Password",
+    "submit": "Update Profile",
+    "updating": "Updating..."
+  },
+  "toast": {
+    "update_success": "Profile updated successfully.",
+    "update_fail": "Failed to update profile.",
+    "form_error": "Please correct the errors in the form."
+  },
+  "validation": {
+    "first_name_required": "First name is required.",
+    "last_name_required": "Last name is required.",
+    "email_required": "Email is required.",
+    "email_invalid": "Email is not valid.",
+    "phone_required": "Phone number is required.",
+    "password_short": "Password must be at least 6 characters.",
+    "password_confirmation_mismatch": "Passwords do not match."
+  },
+  "backend": {
+    "The given data was invalid.": "The submitted data is invalid.",
+    "The email has already been taken.": "This email is already taken.",
+    "The phone has already been taken.": "This phone number is already taken.",
+    "The password must be at least 6 characters.": "Password must be at least 6 characters.",
+    "The password confirmation does not match.": "Password confirmation does not match.",
+    "The selected email is invalid.": "Email is not valid.",
+    "The selected phone is invalid.": "Phone number is not valid."
+  }
+}
