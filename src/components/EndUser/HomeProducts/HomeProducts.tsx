@@ -1,8 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, To } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "./customSwiper.css";
 import ProductCard from "../ProductCard/ProductCard";
+import { useTranslation } from "react-i18next";
 
 type Product = {
   id: number | string;
@@ -23,6 +24,7 @@ const HomeProducts: React.FC<CategorySliderProps> = ({
   viewAllLink,
   products,
 }) => {
+  const { t } = useTranslation(["EndUserHome"]);
   return (
     <>
       {products && products.length > 0 && (
@@ -32,10 +34,10 @@ const HomeProducts: React.FC<CategorySliderProps> = ({
               {title}
             </h2>
             <Link
-              to={viewAllLink}
+              to={viewAllLink as To}
               className="text-sm text-purple-600 hover:underline"
             >
-              Show All
+              {t("homeProducts.showAll")}
             </Link>
           </div>
 

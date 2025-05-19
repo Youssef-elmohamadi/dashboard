@@ -16,5 +16,8 @@
       "title": "Current Offers",
       "description": "Massive deals across all categories"
     }
+  },
+  "homeProducts":{
+    "showAll":"Show All"
   }
 }

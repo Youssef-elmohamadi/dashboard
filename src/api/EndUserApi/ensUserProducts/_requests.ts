@@ -2,7 +2,15 @@ import axiosForm from "../../axiosInstanceFormData";
 import axiosInstanceEndUser from "../../userAxiosInstanceEndUser";
 
 export const getProductCategories = async () => {
-  return await axiosInstanceEndUser.get("/api/user/products/productCategories");
+  return await axiosInstanceEndUser.get(
+    "/api/user/products/productCategories",
+    {
+      cache: {
+        ttl: 1000 * 60 * 5,
+        interpretHeader: false,
+      },
+    }
+  );
 };
 export const showProduct = async (id) => {
   return await axiosInstanceEndUser.get(`/api/user/products/${id}`);
@@ -19,6 +27,10 @@ export const getProductCategoriesById = async (
   params: Record<string, any> = {}
 ) => {
   return await axiosInstanceEndUser.get(`/api/user/products`, {
+    cache: {
+      ttl: 1000 * 60 * 5,
+      interpretHeader: false,
+    },
     params,
   });
 };
