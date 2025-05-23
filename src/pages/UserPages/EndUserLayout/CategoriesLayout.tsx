@@ -12,23 +12,25 @@ import { IoIosArrowDown } from "react-icons/io";
 import PriceRangeFilter from "../../../components/EndUser/SpinnerFilter/PriceRangeFilter";
 import { FaFilter } from "react-icons/fa";
 import FilterSidebar from "../../../components/EndUser/CategoryMobile/FilterSidebar";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 export default function CategoriesLayout() {
   const [showCategories, setShowCategories] = useState(true);
-  const [categories, setCategories] = useState([]);
-  const [currentPage, setCurrentPage] = useState("All Categories");
+  //const [categories, setCategories] = useState([]);
+  const { t } = useTranslation(["EndUserShop"]);
+  const [currentPage, setCurrentPage] = useState(t("allCategories"));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const menuRef = useRef(null);
   const location = useLocation();
   const { category_id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-
   const selectedSort = searchParams.get("sort");
   const sortOptions = [
-    { label: "Sort By", value: "" },
-    { label: "Newest", value: "newest" },
-    { label: "Oldest", value: "oldest" },
+    { label: t("sortByMenu.title"), value: "" },
+    { label: t("sortByMenu.newest"), value: "newest" },
+    { label: t("sortByMenu.oldest"), value: "oldest" },
   ];
 
   // Handle price range update
@@ -51,17 +53,14 @@ export default function CategoriesLayout() {
     setIsMenuOpen(false);
   };
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getAllCategories();
-        setCategories(response.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  const { data: categories, isLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await getAllCategories();
+      return res.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -78,16 +77,16 @@ export default function CategoriesLayout() {
       location.pathname === "/category" ||
       location.pathname === "/category/"
     ) {
-      setCurrentPage("All Categories");
+      setCurrentPage(t("allCategories"));
     } else {
-      const category = categories.find(
+      const category = categories?.find(
         (cat) => cat.id.toString() === category_id
       );
       if (category) {
         setCurrentPage(category.name);
       }
     }
-  }, [location.pathname, categories]);
+  }, [category_id, categories]);
 
   return (
     <div className="flex flex-row min-h-screen enduser_container my-10">
@@ -102,49 +101,57 @@ export default function CategoriesLayout() {
       />
 
       {/* Sidebar */}
+
       <aside className="w-64 hidden 2xl:block">
-        <div className="border p-4">
-          <button
-            onClick={() => setShowCategories((prev) => !prev)}
-            className="font-bold w-full flex justify-between items-center"
-          >
-            Categories
-            <IoIosArrowDown
-              className={`transition-transform duration-300 ${
-                showCategories ? "rotate-180" : ""
-              }`}
-            />
-          </button>
-          {showCategories && (
-            <ul className="mt-4 space-y-2">
-              <li>
-                <Link
-                  className={`text-gray-500 hover:text-purple-600 transition ${
-                    !category_id ? "text-purple-600 font-semibold" : ""
+        <div className="border border-gray-200 p-4">
+          {isLoading ? (
+            <div className="text-center py-10">{t("loadingCategories")}</div>
+          ) : (
+            <>
+              <button
+                onClick={() => setShowCategories((prev) => !prev)}
+                className="font-bold w-full flex justify-between items-center"
+              >
+                {t("categories")}
+                <IoIosArrowDown
+                  className={`transition-transform duration-300 ${
+                    showCategories ? "rotate-180" : ""
                   }`}
-                  to={`/category/`}
-                >
-                  All Categories
-                </Link>
-              </li>
-              {categories.map((category) => (
-                <li
-                  key={category.id}
-                  onClick={() => setCurrentPage(category.name)}
-                >
-                  <Link
-                    className={`text-gray-500 hover:text-purple-600 transition ${
-                      category.id.toString() === category_id
-                        ? "text-purple-600 font-semibold"
-                        : ""
-                    }`}
-                    to={`/category/${category.id}`}
-                  >
-                    {category.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                />
+              </button>
+
+              {showCategories && (
+                <ul className="mt-4 space-y-2">
+                  <li>
+                    <Link
+                      className={`text-gray-500 hover:text-purple-600 transition ${
+                        !category_id ? "text-purple-600 font-semibold" : ""
+                      }`}
+                      to={`/category/`}
+                    >
+                      {t("allCategories")}
+                    </Link>
+                  </li>
+                  {categories?.map((category) => (
+                    <li
+                      key={category.id}
+                      onClick={() => setCurrentPage(category.name)}
+                    >
+                      <Link
+                        className={`text-gray-500 hover:text-purple-600 transition ${
+                          category.id.toString() === category_id
+                            ? "text-purple-600 font-semibold"
+                            : ""
+                        }`}
+                        to={`/category/${category.id}`}
+                      >
+                        {category.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
           )}
         </div>
         <PriceRangeFilter setValuesProp={handlePriceChange} />
@@ -154,27 +161,27 @@ export default function CategoriesLayout() {
       <main className="flex-1 p-6">
         <CategoryBreadCrump currentPage={currentPage} />
         <div>
-          <div className="flex items-center justify-between border-b pb-4 mb-6">
+          <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-6">
             <h2 className="md:text-lg font-bold">{currentPage}</h2>
             <div className="flex items-center gap-4">
               {/* Filter Button */}
               <button
-                className="flex items-center 2xl:hidden gap-2 px-4 py-2 border rounded hover:bg-gray-100 transition"
+                className="flex items-center 2xl:hidden gap-2 px-4 py-2 border border-gray-200 rounded hover:bg-gray-100 transition"
                 onClick={() => setIsFilterOpen((prev) => !prev)}
               >
                 <FaFilter className="text-lg" />
-                <span className="font-semibold">Filter</span>
+                <span className="font-semibold">{t("mainContent.filter")}</span>
               </button>
 
               {/* Sort Dropdown */}
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setIsMenuOpen((prev) => !prev)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white border rounded hover:bg-gray-100 transition w-32 justify-between"
+                  className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded hover:bg-gray-100 transition w-32 justify-between"
                 >
                   <span className="text-gray-400 text-sm">
                     {sortOptions.find((opt) => opt.value === selectedSort)
-                      ?.label || "Sort By"}
+                      ?.label || t("sortByMenu.title")}
                   </span>
                   <IoIosArrowDown
                     className={`transform transition-transform duration-300 ${
@@ -184,12 +191,12 @@ export default function CategoriesLayout() {
                 </button>
 
                 {isMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border rounded z-10 overflow-hidden">
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded z-10 overflow-hidden">
                     {sortOptions.map((option) => (
                       <button
                         key={option.value}
                         onClick={() => handleSortChange(option.value)}
-                        className="block w-full text-left px-4 py-2 hover:bg-purple-600 hover:text-white transition"
+                        className="block w-full px-4 py-2 hover:bg-purple-600 hover:text-white transition"
                       >
                         {option.label}
                       </button>

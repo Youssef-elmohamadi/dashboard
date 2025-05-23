@@ -185,8 +185,11 @@ const UpdateProductPage: React.FC = () => {
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
     setLoading(true);
+    if (!validate()) {
+      setLoading(false);
+      return;
+    }
     setErrors({});
 
     const formData = new FormData();
@@ -245,6 +248,8 @@ const UpdateProductPage: React.FC = () => {
       } else {
         setErrors({ general: [t("errors.general")] });
       }
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -453,7 +458,7 @@ const UpdateProductPage: React.FC = () => {
                 <img
                   src={src}
                   alt={`Preview ${i}`}
-                  className="w-32 h-32 text-gray-700 dark:text-gray-400 object-cover rounded border dark:border-gray-700"
+                  className="w-32 h-32 text-gray-700 dark:text-gray-400 object-cover rounded border border-gray-200 dark:border-gray-700"
                 />
                 <button
                   type="button"

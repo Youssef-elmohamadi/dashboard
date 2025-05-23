@@ -35,6 +35,11 @@ interface DataTableWrapperProps<T> {
   trigger?: number;
   searchKey?: string;
   searchValueName?: string;
+  searchValueTrackingNumber?: string;
+  searchValueShippingStatus?: string;
+  searchValueToDate?: string;
+  searchValueType?: string;
+  searchValueFromDate?: string;
   searchValueEmail?: string;
   searchValuePhone?: string;
   searchValueCategoryId?: string;
@@ -64,11 +69,16 @@ const BasicTable = <T extends { id: number }>({
   trigger,
   isShowMore,
   searchValueName,
+  searchValueType,
   searchValueEmail,
   searchValuePhone,
   searchValueStatus,
   searchValueCategoryId,
   searchValueBrandId,
+  searchValueFromDate,
+  searchValueToDate,
+  searchValueShippingStatus,
+  searchValueTrackingNumber,
   loadingText,
 }: DataTableWrapperProps<T>) => {
   const [data, setData] = useState<T[]>([]);
@@ -130,6 +140,11 @@ const BasicTable = <T extends { id: number }>({
     searchValueCategoryId,
     searchValueBrandId,
     searchValueStatus,
+    searchValueFromDate,
+    searchValueType,
+    searchValueToDate,
+    searchValueShippingStatus,
+    searchValueTrackingNumber,
   ]);
 
   const handlePageChange = (newPage: number) => {

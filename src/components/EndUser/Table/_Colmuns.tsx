@@ -1,6 +1,5 @@
 import { format } from "date-fns";
-import BrandCell from "./BrandCell";
-import BrandStatus from "./BrandStatus";
+import { useTranslation } from "react-i18next";
 
 type BaseEntity = {
   id: number;
@@ -40,23 +39,25 @@ interface ColumnBuilderOptions<T extends BaseEntity> {
 export const buildOrderColumns = <T extends BaseEntity>(
   options: ColumnBuilderOptions<T>
 ): any[] => {
+  const { t } = useTranslation(["EndUserOrderHistory"]);
   const columns: any[] = [
     {
-      Header: "ID",
+      Header: t("ordersTable.columns.id"),
       accessor: "id",
     },
     {
-      Header: "Order Date",
+      Header: t("ordersTable.columns.date"),
       accessor: "created_at",
       Cell: ({ value }: any) => format(new Date(value), "dd/MM/yyyy"),
     },
     {
-      Header: "Total Amount",
+      Header: t("ordersTable.columns.total"),
       accessor: "total_amount",
-      Cell: ({ value }: any) => `${value.toLocaleString()} EGP`,
+      Cell: ({ value }: any) =>
+        `${value.toLocaleString()} ${t("orderDetails.egp")}`,
     },
     {
-      Header: "Shipping Status",
+      Header: t("ordersTable.columns.shippingStatus"),
       accessor: "sub_orders",
       Cell: ({ value }) => {
         const shippingStatus = value?.[0]?.shipping_status;
@@ -77,13 +78,17 @@ export const buildOrderColumns = <T extends BaseEntity>(
       },
     },
     {
-      Header: "Paid Status",
+      Header: t("ordersTable.columns.paidStatus"),
       id: "is_paid",
       Cell: ({ row }: any) =>
         row.original.is_paid ? (
-          <span className="text-green-600 font-semibold">Paid</span>
+          <span className="text-green-600 font-semibold">
+            {t("orderDetails.paid")}
+          </span>
         ) : (
-          <span className="text-red-600 font-semibold">Unpaid</span>
+          <span className="text-red-600 font-semibold">
+            {t("orderDetails.unpaid")}
+          </span>
         ),
     },
   ];
@@ -91,7 +96,7 @@ export const buildOrderColumns = <T extends BaseEntity>(
   // Add column for order status if includeOrderStatus is true
   if (options.includeOrderStatus) {
     columns.push({
-      Header: "Order Status",
+      Header: t("ordersTable.columns.orderStatus"),
       accessor: "status",
       Cell: ({ value }: any) => (
         <span
@@ -109,7 +114,7 @@ export const buildOrderColumns = <T extends BaseEntity>(
 
   if (options.includeActions) {
     columns.push({
-      Header: "Options",
+      Header: t("ordersTable.columns.actions"),
       id: "actions",
       Cell: ({ row }: any) =>
         options.customActionsRenderer

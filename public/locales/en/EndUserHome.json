@@ -19,5 +19,7 @@
   },
   "homeProducts":{
     "showAll":"Show All"
-  }
+
+  },
+  "latestProducts":"Latest Products"
 }

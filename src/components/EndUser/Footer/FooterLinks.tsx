@@ -13,26 +13,28 @@ const FooterSection = ({
 }) => {
   return (
     <div>
-      {/* Title bar with toggle icon on small screens */}
+      {/* Section Header */}
       <div
-        className="flex justify-between items-center md:block cursor-pointer md:cursor-default border-b-[0.5px] border-gray-500 py-2"
+        className="flex justify-between items-center md:block cursor-pointer md:cursor-default border-b border-gray-600 py-2"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <h4 className="font-semibold mb-2 text-gray-500">{title}</h4>
+        <h4 className="font-semibold text-base text-white mb-2">{title}</h4>
+
+        {/* Toggle Icon - Mobile Only */}
         <span className="md:hidden transition-transform duration-300">
           {isOpen ? (
-            <FaMinus className="text-base text-gray-500" />
+            <FaMinus className="text-sm text-purple-400" />
           ) : (
-            <FaPlus className="text-base text-gray-500" />
+            <FaPlus className="text-sm text-purple-400" />
           )}
         </span>
       </div>
 
-      {/* Content list - collapses on small screens */}
+      {/* Collapsible Content */}
       <ul
-        className={`space-y-1 text-sm overflow-hidden transition-all duration-300 ${
-          isOpen ? "max-h-96 mt-2" : "max-h-0 md:max-h-full"
-        } ${isOpen ? "opacity-100" : "opacity-0 md:opacity-100"} md:mt-0`}
+        className={`text-gray-300 text-sm space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${
+          isOpen ? "max-h-96 mt-3 opacity-100" : "max-h-0 opacity-0"
+        } md:max-h-full md:opacity-100 md:mt-2`}
       >
         {children}
       </ul>

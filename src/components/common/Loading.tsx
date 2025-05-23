@@ -1,13 +1,14 @@
 import React from "react";
 type Props = {
   text: string;
+  className?: string;
 };
-const Loading = ({ text }: Props) => {
+const Loading = ({ text, className }: Props) => {
   return (
     <div className="p-3 flex items-center flex-col !w-full">
       <svg
         aria-hidden="true"
-        className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+        className={`w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +22,9 @@ const Loading = ({ text }: Props) => {
           fill="currentFill"
         />
       </svg>
-      <span className="dark:text-gray-200">{text}</span>
+      <span className={`dark:text-gray-200 ${className} text-gray-900 `}>
+        {text}
+      </span>
     </div>
   );
 };

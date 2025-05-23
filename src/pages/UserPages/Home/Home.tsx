@@ -12,15 +12,13 @@ import { useModal } from "../Context/ModalContext";
 import AddToCartModal from "../../../components/EndUser/AddedSuccess/AddToCartModal";
 import { Helmet } from "react-helmet-async";
 import { getHome } from "../../../api/EndUserApi/HomeApi/_requests";
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
   const { modalType }: any = useModal();
-
+  const { t } = useTranslation(["EndUserHome"]);
   // Query: All Categories
-  const {
-    data: categories,
-    isLoading: isCategoriesLoading,
-  } = useQuery({
+  const { data: categories, isLoading: isCategoriesLoading } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
       const res = await getAllCategories();
@@ -30,11 +28,8 @@ const Home = () => {
   });
 
   // Query: Home Banners & Latest Products
-  const {
-    data: homeData,
-    isLoading: isHomeLoading,
-  } = useQuery({
-    queryKey: ["home"],
+  const { data: homeData, isLoading: isHomeLoading } = useQuery({
+    queryKey: ["homePage"],
     queryFn: async () => {
       const res = await getHome();
       return res.data.data;
@@ -43,10 +38,7 @@ const Home = () => {
   });
 
   // Query: Product Categories (with their products)
-  const {
-    data: productCategories,
-    isLoading: isProductsLoading,
-  } = useQuery({
+  const { data: productCategories, isLoading: isProductsLoading } = useQuery({
     queryKey: ["product-categories"],
     queryFn: async () => {
       const res = await getProductCategories();
@@ -124,7 +116,10 @@ const Home = () => {
           </div>
         ))}
 
-        <LatestProducts products={homeData?.leatestProducts} title="Latest Products" />
+        <LatestProducts
+          products={homeData?.leatestProducts}
+          title={t("latestProducts")}
+        />
       </div>
     </section>
   );

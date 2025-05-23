@@ -1,0 +1,18 @@
+{
+  "order_summary": "ملخص الطلب",
+  "items_total": "إجمالي العناصر",
+  "tax": "الضريبة",
+  "total": "الإجمالي",
+  "have_coupon": "هل لديك كوبون؟",
+  "apply": "تطبيق",
+  "coupon_success": "تم تطبيق الكوبون بنجاح",
+  "coupon_error": "لم يتم تطبيق الكوبون.",
+  "proceed_to_payment": "المتابعة إلى الدفع ({{count}} عنصر)",
+  "cart_items": "عناصر السلة ({{count}})",
+  "tax_label": "الضريبة: {{amount}} جنيه",
+  "price_label": "{{price}} جنيه",
+  "empty_cart": "سلة التسوق فارغة",
+  "please_login": "يرجى تسجيل الدخول أولاً",
+  "empty_cart_toast": "سلة التسوق فارغة",
+  "egp": "جنيه"
+}

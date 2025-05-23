@@ -1,73 +1,51 @@
-import { useEffect, useState, useCallback } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getProductCategoriesById } from "../../../api/EndUserApi/ensUserProducts/_requests";
 import ProductCard from "../../../components/EndUser/ProductCard/ProductCard";
 import { Circles } from "react-loader-spinner";
+import { useTranslation } from "react-i18next";
 
 const Shop = () => {
-  const [products, setProducts] = useState([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoading] = useState(true);
-  
   const { category_id } = useParams();
   const [searchParams] = useSearchParams();
 
   const sort = searchParams.get("sort") || "";
   const min = searchParams.get("min") || "";
   const max = searchParams.get("max") || "";
-
-  // Reset data when filters or category changes
-  useEffect(() => {
-    setProducts([]);
-    setPage(1);
-    setHasMore(true);
-    fetchProducts(1, true);
-  }, [category_id, sort, min, max]);
-
-  const fetchProducts = useCallback(
-    async (pageNumber = 1, isFirstLoad = false) => {
-      if (!category_id) return;
-      setLoading(true);
-      try {
+    const { t } = useTranslation(["EndUserShop"]);
+  const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
+    useInfiniteQuery({
+      queryKey: ["endUserProducts", category_id, sort, min, max],
+      queryFn: async ({ pageParam = 1 }) => {
         const response = await getProductCategoriesById({
           category_id,
           sort,
           min,
           max,
-          page: pageNumber,
+          page: pageParam,
         });
 
-        const data = response.data.data;
-        const newProducts = data.data || [];
+        return response.data.data;
+      },
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) => {
+        return lastPage.current_page < lastPage.last_page
+          ? lastPage.current_page + 1
+          : undefined;
+      },
+      enabled: !!category_id,
+      staleTime: 1000 * 60 * 5,
+    });
 
-        setProducts((prev) =>
-          isFirstLoad ? newProducts : [...prev, ...newProducts]
-        );
-        setHasMore(data.current_page < data.last_page);
-        setPage(data.current_page);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [category_id, sort, min, max]
-  );
-
-  const loadMore = () => {
-    if (hasMore && !loading) {
-      fetchProducts(page + 1);
-    }
-  };
+  const products = data?.pages.flatMap((page) => page.data) || [];
 
   return (
     <div className="min-h-[300px] flex flex-col items-center">
-      {loading && products.length === 0 ? (
+      {isLoading ? (
         <Circles height="80" width="80" color="#6B46C1" ariaLabel="loading" />
       ) : products.length === 0 ? (
         <p className="text-gray-500 text-lg font-semibold">
-          No data for this category.
+          {t("mainContent.noDataForCategory")}
         </p>
       ) : (
         <>
@@ -78,13 +56,14 @@ const Shop = () => {
               </div>
             ))}
           </div>
-          {hasMore && (
+
+          {hasNextPage && (
             <button
-              onClick={loadMore}
-              disabled={loading}
+              onClick={() => fetchNextPage()}
+              disabled={isFetching}
               className="mt-6 px-6 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
             >
-              {loading ? "Loading..." : "Load More"}
+              {isFetching ? t("mainContent.loadingMore") : t("showMore")}
             </button>
           )}
         </>

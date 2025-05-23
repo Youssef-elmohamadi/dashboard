@@ -197,7 +197,7 @@ const UpdateBrandPage = () => {
                 <img
                   src={updateData.image}
                   alt="Brand Preview"
-                  className="w-32 h-32 object-cover rounded border dark:border-gray-700"
+                  className="w-32 h-32 object-cover rounded border border-gray-200 dark:border-gray-700"
                 />
               </div>
             )}

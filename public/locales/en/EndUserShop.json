@@ -1,0 +1,23 @@
+{
+  "loadingCategories": "Loading categories...",
+  "categories": "Categories",
+  "allCategories": "All Categories",
+  "showMore": "Show More",
+  "priceFilter": {
+    "egp": "EGP",
+    "title": "Price Filter"
+  },
+  "breadcrumbCategory": {
+    "home": "Home"
+  },
+  "sortByMenu": {
+    "title": "Sort By",
+    "newest": "Newest",
+    "oldest": "Oldest"
+  },
+  "mainContent": {
+    "filter": "Filter",
+    "noDataForCategory": "No products for this category",
+    "loadingMore": "Loading More..."
+  }
+}

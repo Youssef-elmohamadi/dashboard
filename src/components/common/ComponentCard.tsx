@@ -27,7 +27,9 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
       <div className="px-6 py-5">
         <div className="flex gap-4 flex-row items-center justify-between">
           {/* Title */}
-          <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
+          <h3
+            className={`text-base font-medium text-gray-800 dark:text-white/90 ${className}`}
+          >
             {title}
           </h3>
 
@@ -56,7 +58,9 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
       </div>
 
       {/* Card Body */}
-      <div className="p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6">
+      <div
+        className={`p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6 ${className}`}
+      >
         <div className="space-y-6">{children}</div>
       </div>
     </div>

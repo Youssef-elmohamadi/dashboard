@@ -3,6 +3,7 @@ import PriceRangeFilter from "../SpinnerFilter/PriceRangeFilter";
 import { Link } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const FilterSidebar = ({
   isMenuOpen,
@@ -14,7 +15,7 @@ const FilterSidebar = ({
   handlePriceChange,
 }) => {
   const closeMenu = () => setIsMenuOpen(false);
-
+  const { t } = useTranslation(["EndUserShop"]);
   return (
     <>
       {isMenuOpen && (
@@ -36,12 +37,12 @@ const FilterSidebar = ({
           </div>
         </div>
         <div>
-          <div className="border p-4">
+          <div className="border border-gray-200 p-4">
             <button
               onClick={() => setShowCategories((prev) => !prev)}
               className="font-bold w-full flex justify-between items-center"
             >
-              Categories
+              {t("categories")}
               <IoIosArrowDown
                 className={`transition-transform duration-300 ${
                   showCategories ? "rotate-180" : ""
@@ -57,10 +58,10 @@ const FilterSidebar = ({
                     }`}
                     to={`/category/`}
                   >
-                    All Categories
+                    {t("allCategories")}
                   </Link>
                 </li>
-                {categories.map((category) => (
+                {categories?.map((category) => (
                   <li key={category.id}>
                     <Link
                       className={`text-gray-500 hover:text-purple-600 transition ${

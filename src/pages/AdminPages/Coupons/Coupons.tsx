@@ -40,13 +40,17 @@ const Coupons = () => {
   const location = useLocation();
   const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
-    name: string;
-    email: string;
-    phone: string;
+    active: string;
+    code: string;
+    type: string;
+    from_date: string;
+    to_date: string;
   }>({
-    name: "",
-    email: "",
-    phone: "",
+    active: "",
+    code: "",
+    type: "",
+    from_date: "",
+    to_date: "",
   });
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
@@ -188,9 +192,28 @@ const Coupons = () => {
       <div>
         <SearchTable
           fields={[
-            { key: "name", label: "Name", type: "input" },
-            { key: "email", label: "Email", type: "input" },
-            { key: "phone", label: "Phone", type: "input" },
+            { key: "code", label: "Code", type: "input" },
+
+            {
+              key: "status",
+              label: "Status",
+              type: "select",
+              options: [
+                { label: "Active", value: "1" },
+                { label: "Inactive", value: "0" },
+              ],
+            },
+            {
+              key: "type",
+              label: "Type",
+              type: "select",
+              options: [
+                { label: "Fixed", value: "fixed" },
+                { label: "Percent", value: "percent" },
+              ],
+            },
+            { key: "from_date", label: "From", type: "date" },
+            { key: "to_date", label: "To", type: "date" },
           ]}
           setSearchParam={handleSearch}
         />
@@ -213,9 +236,11 @@ const Coupons = () => {
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
-            searchValueName={searchValues.name}
-            searchValueEmail={searchValues.email}
-            searchValuePhone={searchValues.phone}
+            searchValueName={searchValues.code}
+            searchValueType={searchValues.type}
+            searchValueStatus={searchValues.active}
+            searchValueToDate={searchValues.to_date}
+            searchValueFromDate={searchValues.from_date}
             loadingText={t("couponsPage.table.loadingText")}
           />
         </ComponentCard>

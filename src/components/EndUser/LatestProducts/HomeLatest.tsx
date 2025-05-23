@@ -1,8 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "./customSwiper.css";
 import ProductCard from "../ProductCard/ProductCard";
+import { useTranslation } from "react-i18next";
 
 type Product = {
   id: number | string;
@@ -14,15 +14,12 @@ type Product = {
 
 interface CategorySliderProps {
   title: string;
-  viewAllLink?: string;
   products: Product[];
 }
 
-const LatestProducts: React.FC<CategorySliderProps> = ({
-  title,
-  viewAllLink,
-  products,
-}) => {
+const LatestProducts: React.FC<CategorySliderProps> = ({ title, products }) => {
+  const { t } = useTranslation(["EndUserHome"]);
+
   return (
     <>
       {products && products.length > 0 && (
@@ -31,12 +28,6 @@ const LatestProducts: React.FC<CategorySliderProps> = ({
             <h2 className="text-lg md:text-xl font-semibold text-gray-800">
               {title}
             </h2>
-            <Link
-              to={viewAllLink}
-              className="text-sm text-purple-600 hover:underline"
-            >
-              Show All
-            </Link>
           </div>
 
           <Swiper
@@ -49,8 +40,8 @@ const LatestProducts: React.FC<CategorySliderProps> = ({
               0: { slidesPerView: 1 },
             }}
           >
-            {products.map((product) => (
-              <SwiperSlide key={product.id}>
+            {products?.map((product) => (
+              <SwiperSlide key={product?.id}>
                 <ProductCard product={product} />
               </SwiperSlide>
             ))}

@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const CategoryBreadCrump = ({ currentPage }) => {
+  const { t } = useTranslation(["EndUserShop"]);
   return (
     <div className="-mt-7">
       <ol className="flex items-center whitespace-nowrap">
@@ -9,7 +11,7 @@ const CategoryBreadCrump = ({ currentPage }) => {
             className="flex items-center text-sm text-gray-500 hover:text-blue-600 focus:outline-hidden  focus:text-blue-600"
             to="/"
           >
-            Home
+            {t("breadcrumbCategory.home")}
           </Link>
           <svg
             className="shrink-0 mx-2 size-4 text-gray-400"

@@ -35,10 +35,10 @@ const CircleSlider: FC<CategorySliderProps> = ({ items, rtl = false }) => {
             <img
               src={item.image || "images/default-avatar.jpg"}
               alt={item.name}
-              className="w-40 h-40 rounded-full object-cover"
+              className="w-30 h-30 rounded-full object-cover"
             />
-            <span className="text-center text-xl font-medium text-purple-600">
-              <Link to={`category/${item.id}`}>{item.name}</Link>
+            <span className="text-center font-medium text-purple-600">
+              <div>{item.name}</div>
             </span>
           </Link>
         </SwiperSlide>

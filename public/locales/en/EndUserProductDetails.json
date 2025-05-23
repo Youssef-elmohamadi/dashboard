@@ -1,0 +1,20 @@
+{
+  "reviews": "Reviews",
+  "egp": "EGP",
+  "category": "Category",
+  "brand": "Brand",
+  "store": "Store",
+  "available": "Available",
+  "inStock": "In Stock",
+  "specifications": "Specifications",
+  "price": "Price",
+  "addToWishlist": "Add to Wishlist",
+  "addToCompare": "Add to Compare",
+  "quantity": "Quantity",
+  "addToCart": "Add to Cart",
+  "successAddedToFav": "The Product has been added to Favorite List ",
+  "successRemoveFromFav": "The Product has been removed from Favorite List",
+  "fieldRemoveFromFav": "Error occurred while removing the Product from favorites",
+  "fieldAddedToFav": "Error occurred while adding the Product to favorites",
+  "noAuth": "Please Login first"
+}

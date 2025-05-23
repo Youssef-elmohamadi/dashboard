@@ -17,7 +17,8 @@
       "description": "عروض ضخمة على جميع الأقسام"
     }
   },
-  "homeProducts":{
-    "showAll":"اظهار الكل"
-  }
+  "homeProducts": {
+    "showAll": "اظهار الكل"
+  },
+  "latestProducts": "المنتجات الحديثة"
 }

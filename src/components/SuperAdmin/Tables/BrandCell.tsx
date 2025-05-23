@@ -8,7 +8,7 @@ const BrandCell = ({ name, image }: Props) => {
       <img
         src={image}
         alt={name}
-        className="w-10 h-10 rounded-full object-cover border border-gray shadow-sm"
+        className="w-10 h-10 rounded-full object-cover border border-gray-200 shadow-sm"
       />
       <span className="font-medium text-gray-800  dark:text-gray-100 text-sm ">
         {name}

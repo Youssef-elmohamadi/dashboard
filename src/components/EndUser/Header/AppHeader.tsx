@@ -20,43 +20,61 @@ import { getProfile } from "../../../api/EndUserApi/endUserAuth/_requests";
 import { handleLogout } from "../../../components/EndUser/Auth/Logout";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useTranslation } from "react-i18next";
+import { QueriesObserver, QueryClient, useQuery } from "@tanstack/react-query";
 
 const AppHeader = () => {
   const uToken = localStorage.getItem("uToken");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [Categories, setCategories] = useState<any>();
+  //const [Categories, setCategories] = useState<any>();
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
-  const [user, setUser] = useState({});
+  //const [user, setUser] = useState({});
   const { items } = useSelector((state) => state.wishList);
   const { dir } = useDirectionAndLanguage();
   const { t } = useTranslation(["EndUserHeader"]);
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getAllCategories();
-        setCategories(response.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const response = await getAllCategories();
+  //       setCategories(response.data.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchCategories();
+  // }, []);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await getProfile();
-        setUser(response.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchProfile();
-  }, []);
+  const { data: categories, isLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await getAllCategories();
+      return res.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     try {
+  //       const response = await getProfile();
+  //       setUser(response.data.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchProfile();
+  // }, []);
+
+  const { data: user, isLoading: isLoadingUser } = useQuery({
+    queryKey: ["endUserProfileData"],
+    queryFn: async () => {
+      const res = await getProfile();
+      return res.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
 
   return (
-    <div >
+    <div>
       <header className="enduser_container py-4 flex items-center justify-start gap-12 relative">
         {/* الهيدر */}
         <div className="flex justify-between w-full md:w-auto">
@@ -83,7 +101,7 @@ const AppHeader = () => {
             <input
               type="text"
               placeholder={t("search_placeholder")}
-              className="rounded-full text-sm px-4 py-2 border border-soft-light focus:outline-none focus:border-secondary-base w-full"
+              className="rounded-full text-sm px-4 py-2 border border-gray-200 focus:outline-none w-full"
             />
             <div className={`absolute ${dir === "ltr" ? "right-4" : "left-4"}`}>
               <CiSearch className="text-2xl" />
@@ -102,24 +120,20 @@ const AppHeader = () => {
                     <div className="h-8 w-8">
                       <img
                         className="w-full h-full rounded-full"
-                        src={
-                          user?.avatar ||
-                          user?.Avatar ||
-                          "/images/default-avatar.jpg"
-                        }
+                        src={user?.avatar || "/images/default-avatar.jpg"}
                         alt="User Avatar"
                       />
                     </div>
                   </div>
                   {/* القائمة المنسدلة */}
-                  <div className="absolute border right-0 top-[90%] mt-1 bg-white shadow-lg rounded-md w-56 py-3 px-2 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
+                  <div className="absolute border border-gray-200 right-0 top-[90%] mt-1 bg-white shadow-lg rounded-md w-56 py-3 px-2 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
                     <ul className=" ">
                       <NavLink
                         to="/u-profile"
                         className={({ isActive }) =>
                           `p-2 rounded flex items-center gap-2 transition-all duration-300 ${
                             dir === "ltr" ? "pl-2" : "pr-2"
-                          } border-b last:border-none ${
+                          } border-b border-gray-200 last:border-none ${
                             isActive
                               ? `bg-[#8826bd35] text-black ${
                                   dir === "ltr" ? "pl-4" : "pr-4"
@@ -139,7 +153,7 @@ const AppHeader = () => {
                         className={({ isActive }) =>
                           `p-2 rounded flex items-center gap-2 transition-all duration-300 ${
                             dir === "ltr" ? "pl-2" : "pr-2"
-                          } border-b last:border-none ${
+                          } border-b border-gray-200 last:border-none ${
                             isActive
                               ? `bg-[#8826bd35] text-black ${
                                   dir === "ltr" ? "pl-4" : "pr-4"
@@ -159,7 +173,7 @@ const AppHeader = () => {
                         className={({ isActive }) =>
                           `p-2 rounded flex items-center gap-2 transition-all duration-300 ${
                             dir === "ltr" ? "pl-2" : "pr-2"
-                          } border-b last:border-none ${
+                          } border-b border-gray-200 last:border-none ${
                             isActive
                               ? `bg-[#8826bd35] text-black ${
                                   dir === "ltr" ? "pl-4" : "pr-4"
@@ -179,7 +193,7 @@ const AppHeader = () => {
                         className={({ isActive }) =>
                           `p-2 rounded flex items-center gap-2 transition-all duration-300 ${
                             dir === "ltr" ? "pl-2" : "pr-2"
-                          } border-b last:border-none ${
+                          } border-b border-gray-200 last:border-none ${
                             isActive
                               ? `bg-[#8826bd35] text-black ${
                                   dir === "ltr" ? "pl-4" : "pr-4"
@@ -255,135 +269,102 @@ const AppHeader = () => {
       {isMenuOpen && (
         <div
           onClick={closeMenu}
-          className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-999999  overflow-auto"
+          className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-[999999] overflow-auto"
         />
       )}
+
       <div
-        className={`fixed top-0 left-0 z-999999 h-full w-72 bg-white shadow-lg transform overflow-auto transition-transform duration-300 ${
-          isMenuOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 ${
+          dir === "ltr" ? "left-0" : "right-0"
+        } z-[999999] h-full w-72 bg-white shadow-lg transform transition-transform duration-300 ${
+          isMenuOpen
+            ? "translate-x-0"
+            : dir === "ltr"
+            ? "-translate-x-full"
+            : "translate-x-full"
         }`}
       >
         <div className="flex flex-col gap-1">
           <div className="text-right p-4">
-            <button onClick={closeMenu} className="text-right text-red-500">
+            <button onClick={closeMenu} className="text-red-500 text-xl">
               <TfiClose />
             </button>
           </div>
-          <div>
+
+          <div className="px-4">
             {uToken ? (
-              <div className="text-center flex flex-col items-center">
-                <div className="w-20 h-20 rounded-full">
+              <div className="flex items-center gap-2 border-b border-gray-200 py-3">
+                <div className="w-10 h-10 rounded-full overflow-hidden">
                   <img
-                    src={
-                      user?.avatar ||
-                      user?.Avatar ||
-                      "/images/default-avatar.jpg"
-                    }
-                    className="w-full h-full rounded-full"
+                    src={user?.avatar || "/images/default-avatar.jpg"}
                     alt="User Avatar"
+                    className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="font-semibold">
-                  {user?.first_name} {user?.last_name}
-                </div>
-                <div className="text-sm text-gray-500">{user?.email}</div>
+                <div className="text-sm font-medium">{user?.first_name}</div>
               </div>
             ) : (
-              <div className="flex border-b">
-                <div className="p-4 flex items-center gap-2">
-                  <FaRegCircleUser className="text-2xl mt-1 text-secondary cursor-pointer" />
-                  <Separator />
-                  <NavLink to="/signin" className="text-secondary text-sm">
+              <div className="flex items-center justify-between border-b border-gray-200 py-3">
+                <div className="flex items-center gap-2">
+                  <FaRegCircleUser className="text-2xl text-secondary" />
+                  <NavLink to="/signin" className="text-sm text-secondary">
                     {t("login")}
                   </NavLink>
-                  <Separator />
                 </div>
-                <div className="flex items-center gap-2">
-                  <NavLink to="/signup" className="text-secondary text-sm">
-                    {t("signup")}
-                  </NavLink>
-                </div>
+                <NavLink to="/signup" className="text-sm text-secondary">
+                  {t("signup")}
+                </NavLink>
               </div>
             )}
           </div>
 
-          {/* باقي القائمة */}
-          <ul className="flex flex-col justify-center border-b">
-            {Categories?.map((Category, i) =>
-              i < 4 ? (
-                <NavLink
-                  key={i}
-                  to={`/category/${Category.id}`}
-                  className={({ isActive }) =>
-                    `py-3 px-2 block ${
-                      isActive
-                        ? "bg-gray-100 text-purple-700 font-semibold"
-                        : "hover:bg-[#8826bd35]"
-                    }`
-                  }
-                >
-                  <li>{Category.name}</li>
-                </NavLink>
-              ) : null
-            )}
+          <ul className="flex flex-col border-b border-gray-200 mt-2">
+            {categories?.slice(0, 4).map((category, i) => (
+              <NavLink
+                key={i}
+                to={`/category/${category.id}`}
+                className={({ isActive }) =>
+                  `px-4 py-3 block rounded transition ${
+                    isActive
+                      ? "bg-gray-100 text-purple-700 font-semibold"
+                      : "hover:bg-[#8826bd35]"
+                  }`
+                }
+              >
+                <li>{category.name}</li>
+              </NavLink>
+            ))}
           </ul>
 
           {uToken && (
             <>
-              <ul className="flex flex-col justify-center border-b">
-                <NavLink
-                  to="/u-profile"
-                  className={({ isActive }) =>
-                    `py-3 px-2 block ${
-                      isActive
-                        ? "bg-gray-100 text-purple-700 font-semibold"
-                        : "hover:bg-[#8826bd35]"
-                    }`
-                  }
-                >
-                  <li>{t("profile")}</li>
-                </NavLink>
-                <NavLink
-                  to="/u-notification"
-                  className={({ isActive }) =>
-                    `py-3 px-2 block ${
-                      isActive
-                        ? "bg-gray-100 text-purple-700 font-semibold"
-                        : "hover:bg-[#8826bd35]"
-                    }`
-                  }
-                >
-                  <li>{t("notifications")}</li>
-                </NavLink>
-                <NavLink
-                  to="/u-favorite"
-                  className={({ isActive }) =>
-                    `py-3 px-2 block ${
-                      isActive
-                        ? "bg-gray-100 text-purple-700 font-semibold"
-                        : "hover:bg-[#8826bd35]"
-                    }`
-                  }
-                >
-                  <li>{t("favorite_products")}</li>
-                </NavLink>
-                <NavLink
-                  to="/u-compare"
-                  className={({ isActive }) =>
-                    `py-3 px-2 block ${
-                      isActive
-                        ? "bg-gray-100 text-purple-700 font-semibold"
-                        : "hover:bg-[#8826bd35]"
-                    }`
-                  }
-                >
-                  <li>{t("compare_product")}</li>
-                </NavLink>
+              <ul className="flex flex-col border-b border-gray-200 mt-2">
+                {[
+                  { to: "/u-profile", label: t("profile") },
+                  { to: "/u-notification", label: t("notifications") },
+                  { to: "/u-favorite", label: t("favorite_products") },
+                  { to: "/u-compare", label: t("compare_product") },
+                ].map((item, idx) => (
+                  <NavLink
+                    key={idx}
+                    to={item.to}
+                    className={({ isActive }) =>
+                      `px-4 py-3 block rounded transition ${
+                        isActive
+                          ? "bg-gray-100 text-purple-700 font-semibold"
+                          : "hover:bg-[#8826bd35]"
+                      }`
+                    }
+                  >
+                    <li>{item.label}</li>
+                  </NavLink>
+                ))}
               </ul>
-              <ul className="flex flex-col justify-center">
+
+              <ul className="flex flex-col mt-2">
                 <li
                   onClick={handleLogout}
-                  className="flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-100 cursor-pointer"
+                  className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-100 cursor-pointer"
                 >
                   <GrLogout className="text-xl" />
                   {t("logout")}

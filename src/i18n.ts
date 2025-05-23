@@ -16,10 +16,20 @@ i18n
     backend: {
       loadPath: "/locales/{{lng}}/{{ns}}.json",
     },
+
     ns: [
-      "auth",
+      "auth", //✔
       "BreadCrump",
+      "EndUserProductModal",
+      "EndUserCheckout",
+      "EndUserCart",
+      "EndUserShop",
+      "AddedToCartModel",
+      "EndUserProductDetails",
       "SignErrors",
+      "EndUserOrderHistory",
+      "EndUserFooter",
+      "EndUserEndUserControlMenu",
       "ServerErrors",
       "EndUserSignUp",
       "EndUserSignUpErrors",
@@ -31,11 +41,11 @@ i18n
       "MonthlySalesChart",
       "RecentOrders",
       "SearchTables",
-      "AdminsTable",
+      "AdminsTable", //✔
       "BreadCrumpTables",
       "ColmunsAdmin",
       "PaginationDashboardTables",
-      "AdminsTablesActions",
+      "AdminsTablesActions", //✔
       "RolesTable",
       "CreateRole",
       "productsTable",
@@ -55,8 +65,9 @@ i18n
       "CreateBrand",
       "UpdateBrand",
       "UpdateVendor",
-      "BannersTable",
-      "CreateBanner",
+      "BannersTable", //✔
+      "BannerDetails", //✔
+      "CreateBanner", //✔
       "UpdateBanner",
       "ImageUpload",
       "VendorsTable",
@@ -73,6 +84,9 @@ i18n
       "UpdateCategory",
       "EndUserProfile",
       "EndUserHeader",
+      "EndUserBottomNav",
+      "EndUserHeader",
+      "EndUserProductCard",
     ],
 
     defaultNS: "Signup",

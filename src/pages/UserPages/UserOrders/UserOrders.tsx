@@ -14,6 +14,7 @@ import {
   getOrdersWithPaginate,
 } from "../../../api/EndUserApi/endUserOrders/_requests";
 import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
+import { useTranslation } from "react-i18next";
 type User = {
   id: number;
   first_name: string;
@@ -45,6 +46,7 @@ const Orders = () => {
     email: "",
     phone: "",
   });
+  const { t } = useTranslation(["EndUserOrderHistory"]);
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -109,13 +111,14 @@ const Orders = () => {
       cancelOrder,
       () => fetchData(pageIndex),
       {
-        confirmTitle: "Cancel Order?",
-        confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, Cancel",
-        successTitle: "Canceled!",
-        successText: "Order has been Canceled.",
-        errorTitle: "Error",
-        errorText: "Could not Cancel The Order.",
+        confirmTitle: t("cancelAlert.cancelTitle"),
+        confirmText: t("cancelAlert.cancelText"),
+        confirmButtonText: t("cancelAlert.confirmButtonText"),
+        cancelButtonText: t("cancelAlert.cancelButtonText"),
+        successTitle: t("cancelAlert.successTitle"),
+        successText: t("cancelAlert.successText"),
+        errorTitle: t("cancelAlert.errorTitle"),
+        errorText: t("cancelAlert.errorText"),
       }
     );
     setReload((prev) => prev + 1);
@@ -147,7 +150,10 @@ const Orders = () => {
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
       <div className="space-y-6">
-        <ComponentCard title="All Orders">
+        <ComponentCard
+          title={t("ordersTable.title")}
+          className="dark:!border-gray-200 dark:!text-gray-900"
+        >
           <BasicTable
             columns={columns}
             fetchData={fetchData}
@@ -158,7 +164,7 @@ const Orders = () => {
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
-            loadingText="Orders data Loading"
+            loadingText={t("ordersTable.loadingText")}
           />
         </ComponentCard>
       </div>

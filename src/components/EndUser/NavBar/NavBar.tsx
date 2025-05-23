@@ -8,9 +8,10 @@ import { removeItem } from "../Redux/cartSlice/CartSlice";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { useQuery } from "@tanstack/react-query";
 const NavBar = React.memo(() => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [Categories, setCategories] = useState<any>();
+  //const [Categories, setCategories] = useState<any>();
   const items = useSelector((state) => state.cart.items);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
@@ -62,18 +63,27 @@ const NavBar = React.memo(() => {
     };
   }, [isDropdownOpen]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getAllCategories();
-        console.log(response.cached);
-        setCategories(response.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const response = await getAllCategories();
+  //       console.log(response.cached);
+  //       setCategories(response.data.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchCategories();
+  // }, []);
+
+  const { data: categories, isLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await getAllCategories();
+      return res.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
 
   return (
     <nav className="bg-primary w-full md:block hidden">
@@ -103,16 +113,17 @@ const NavBar = React.memo(() => {
                 : "opacity-0 scale-y-0 invisible"
             }`}
           >
-            <ul className="flex flex-col overflow-y-auto max-h-[74vh] scroll-bar-hide">
-              {Categories?.length > 0 ? (
-                Categories.map((category, index) => (
+            <ul className="flex flex-col overflow-y-auto max-h-[74vh] scroll-bar-hide relative z-30">
+              {categories?.length > 0 ? (
+                categories.map((category, index) => (
                   <li
+                    onClick={toggleDropdown}
                     key={index}
                     className="group relative px-4 py-2 hover:bg-[#8826bd35] cursor-pointer"
                   >
                     <Link
                       to={`/category/${category.id}`}
-                      className="flex justify-between items-center"
+                      className="flex justify-between items-center w-full"
                     >
                       <div className="">{category.name}</div>
                       {category.childs && category.childs.length > 0 && (
@@ -125,9 +136,9 @@ const NavBar = React.memo(() => {
                     </Link>
                     {category.childs && category.childs.length > 0 && (
                       <ul
-                        className={`fixed top-0 ${
+                        className={`fixed top-0 z-[99999] ${
                           dir === "ltr" ? "left-full" : "right-full"
-                        } w-[200%] h-[calc(100vh-11em)] bg-white z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-y-auto py-2 px-4`}
+                        } w-[200%] h-[calc(100vh-11em)] bg-white  invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-y-auto py-2 px-4`}
                       >
                         {category.childs.map((sub, subIndex) => (
                           <li key={subIndex} className="p-2">
@@ -172,14 +183,14 @@ const NavBar = React.memo(() => {
 
         {/* Static Links */}
         <ul className="flex justify-center lg:justify-start flex-[2] gap-5">
-          {Categories?.map((Category, i) =>
+          {categories?.map((category, i) =>
             i < 4 ? (
               <li key={i} className="text-white py-3">
                 <Link
-                  to={`/category/${Category.id}`}
+                  to={`/category/${category.id}`}
                   className="py-3 font-semibold"
                 >
-                  {Category.name}
+                  {category.name}
                 </Link>
               </li>
             ) : null
@@ -213,7 +224,7 @@ const NavBar = React.memo(() => {
                   items?.map((item) => (
                     <li
                       key={item.id}
-                      className="py-2 flex items-center justify-between gap-2"
+                      className="py-2 flex items-center justify-between gap-2 border-b border-gray-200"
                     >
                       <img
                         src={item.images[0]?.image || ""}

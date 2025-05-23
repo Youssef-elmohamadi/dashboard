@@ -28,9 +28,8 @@ export default function EndUserLayout() {
   }, [lastScroll]);
 
   return (
-    <div className="!bg-white">
+    <div className="bg-white text-black dark:bg-white dark:text-black min-h-screen">
       {/* TopBar */}
-      {/* Header*/}
       <div
         className={`sticky z-[50] bg-white shadow-md transition-all duration-400 ease-in-out ${
           hidden ? "top-0" : "top-12"
@@ -45,6 +44,7 @@ export default function EndUserLayout() {
         </div>
         <AppHeader />
       </div>
+
       {/* NavBar */}
       <div
         className={`fixed left-0 w-full z-[10] transition-transform duration-500 ease-in-out ${
@@ -54,10 +54,12 @@ export default function EndUserLayout() {
       >
         <NavBar />
       </div>
+
       {/* Main content */}
       <main className="md:pt-[100px] pt-[50px]">
         <Outlet />
       </main>
+
       <footer>
         <Footer />
       </footer>

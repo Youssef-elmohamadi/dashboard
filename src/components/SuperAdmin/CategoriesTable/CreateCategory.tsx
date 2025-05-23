@@ -174,7 +174,7 @@ export default function CreateCategory() {
               name="description"
               placeholder={t("category.descPlaceholder")}
               onChange={handleChange}
-              className="w-full mt-2 p-2 border outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
+              className="w-full mt-2 p-2 border border-gray-200 outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
               rows={4}
             />
             {errors.description && (

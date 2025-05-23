@@ -95,7 +95,7 @@ const BrandDetails: React.FC = () => {
             <img
               src={brand.image}
               alt={brand.name}
-              className="w-64 h-64 object-contain rounded-lg border"
+              className="w-64 h-64 object-contain rounded-lg border border-gray-200"
             />
           </div>
         ) : (

@@ -148,8 +148,11 @@ export default function CreateProducts() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
     setLoading(true);
+    if (!validate()) {
+      setLoading(false);
+      return;
+    }
 
     const formData = new FormData();
     Object.entries(productData).forEach(([key, value]) => {
@@ -198,6 +201,8 @@ export default function CreateProducts() {
       } else {
         setErrors({ general: [t("admin.errors.general")] });
       }
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -185,7 +185,7 @@ const VendorDetails: React.FC = () => {
                 <div
                   key={doc.id}
                   onClick={() => handleOpenImage(doc)}
-                  className="border p-4 rounded-md shadow-sm bg-gray-50 dark:bg-gray-900 flex flex-col items-center cursor-pointer"
+                  className="border border-gray-200 p-4 rounded-md shadow-sm bg-gray-50 dark:bg-gray-900 flex flex-col items-center cursor-pointer"
                 >
                   <img
                     src={doc.document_name}

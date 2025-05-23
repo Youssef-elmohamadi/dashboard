@@ -80,7 +80,7 @@ const OTPPage: React.FC<OTPPageProps> = ({
 
   return (
     <div className="flex p-4">
-      <div className=" rounded-2xl p-6 w-full max-w-md text-center border">
+      <div className=" rounded-2xl p-6 w-full max-w-md text-center border border-gray-200">
         <h2 className="text-xl font-semibold dark:text-gray-100 mb-2">
           {title}
         </h2>

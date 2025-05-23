@@ -37,13 +37,17 @@ const Orders = () => {
   const location = useLocation();
   const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
-    name: string;
-    email: string;
-    phone: string;
+    status: string;
+    shipping_status: string;
+    tracking_number: string;
+    from_date: string;
+    to_date: string;
   }>({
-    name: "",
-    email: "",
-    phone: "",
+    status: "",
+    shipping_status: "",
+    tracking_number: "",
+    from_date: "",
+    to_date: "",
   });
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
@@ -52,6 +56,8 @@ const Orders = () => {
     }));
     setPageIndex(0);
   };
+  console.log(searchValues);
+
   const { t } = useTranslation(["OrdersTable"]);
   const fetchData = async (pageIndex: number = 0) => {
     setLoading(true);
@@ -182,9 +188,32 @@ const Orders = () => {
       <div>
         <SearchTable
           fields={[
-            { key: "name", label: "Name", type: "input" },
-            { key: "email", label: "Email", type: "input" },
-            { key: "phone", label: "Phone", type: "input" },
+            { key: "tracking_number", label: "Tracking Number", type: "input" },
+
+            {
+              key: "status",
+              label: "Status",
+              type: "select",
+              options: [
+                { label: "Pending", value: "pending" },
+                { label: "Paid", value: "paid" },
+                { label: "Shipped", value: "shipped" },
+                { label: "Delivered", value: "delivered" },
+                { label: "Cancelled", value: "cancelled" },
+              ],
+            },
+            {
+              key: "shipping_status",
+              label: "Shipping Status",
+              type: "select",
+              options: [
+                { label: "Pending", value: "pending" },
+                { label: "Shipped", value: "shipped" },
+                { label: "Delivered", value: "delivered" },
+              ],
+            },
+            { key: "from_date", label: "From", type: "date" },
+            { key: "to_date", label: "To", type: "date" },
           ]}
           setSearchParam={handleSearch}
         />
@@ -205,9 +234,11 @@ const Orders = () => {
             onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
             trigger={reload}
             onDataUpdate={(newData) => setData(newData)}
-            searchValueName={searchValues.name}
-            searchValueEmail={searchValues.email}
-            searchValuePhone={searchValues.phone}
+            searchValueTrackingNumber={searchValues.tracking_number}
+            searchValueShippingStatus={searchValues.shipping_status}
+            searchValueStatus={searchValues.status}
+            searchValueToDate={searchValues.to_date}
+            searchValueFromDate={searchValues.from_date}
             loadingText={t("ordersPage.table.loadingText")}
           />
         </ComponentCard>

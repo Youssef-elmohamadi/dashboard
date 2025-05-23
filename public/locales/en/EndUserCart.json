@@ -1,0 +1,18 @@
+{
+  "order_summary": "Order Summary",
+  "items_total": "Items Total",
+  "tax": "Tax",
+  "total": "Total",
+  "have_coupon": "Have a coupon?",
+  "apply": "Apply",
+  "coupon_success": "Coupon applied successfully",
+  "coupon_error": "Coupon could not be applied.",
+  "proceed_to_payment": "Proceed to Payment ({{count}} Items)",
+  "cart_items": "Cart Items ({{count}})",
+  "tax_label": "Tax: {{amount}} EGP",
+  "price_label": "{{price}} EGP",
+  "empty_cart": "Your cart is empty",
+  "please_login": "Please Login First",
+  "empty_cart_toast": "Your Cart is empty",
+  "egp": "EGP"
+}

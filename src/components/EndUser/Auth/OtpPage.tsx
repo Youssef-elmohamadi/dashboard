@@ -78,7 +78,7 @@ const OTPPage: React.FC<OTPPageProps> = ({
 
   return (
     <div className="flex p-4">
-      <div className="bg-white rounded-2xl p-6 w-full max-w-md text-center border">
+      <div className="bg-white rounded-2xl p-6 w-full max-w-md text-center border border-gray-200">
         <h2 className="text-xl font-semibold mb-2">{title}</h2>
         <p className="text-gray-600 mb-4">
           {subtitle} <strong>{identifier}</strong>

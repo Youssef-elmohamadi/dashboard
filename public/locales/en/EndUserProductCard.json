@@ -1,0 +1,9 @@
+{
+  "successAddedToFav": "The Product has been added to Favorite List ",
+  "successRemoveFromFav": "The Product has been removed from Favorite List",
+  "fieldRemoveFromFav": "Error occurred while removing the Product from favorites",
+  "fieldAddedToFav": "Error occurred while adding the Product to favorites",
+  "noAuth": "Please Login first",
+  "addToCart": "Add to Cart",
+  "egp": "EGP"
+}

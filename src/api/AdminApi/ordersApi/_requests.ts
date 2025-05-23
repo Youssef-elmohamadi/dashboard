@@ -2,9 +2,11 @@ import axiosForm from "../../axiosInstanceFormData";
 import axiosJson from "../../axiosInstanceJson";
 export const getOrdersWithPaginate = async (params: {
   page?: number;
-  name?: string;
-  email?: string;
-  phone?: string;
+  status?: string;
+  shipping_status?: string;
+  tracking_number?: string;
+  from_date?: string;
+  to_date?: string;
 }) => {
   return await axiosJson.get("/api/vendor/orders/withPaginate", {
     params,

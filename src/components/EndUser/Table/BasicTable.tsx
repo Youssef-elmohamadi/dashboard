@@ -118,17 +118,14 @@ const BasicTable = <T extends { id: number }>({
 
   return (
     <div>
-      <div className="max-w-full overflow-x-auto border dark:border-gray-700 m-0.5 rounded">
+      <div className="max-w-full overflow-x-auto border border-gray-200  m-0.5 rounded">
         <table {...getTableProps()} className="min-w-full  overflow-auto">
-          <thead className="border-b border-gray-100 dark:border-white/[0.05]">
+          <thead className="border-b border-gray-100">
             {headerGroups.map((headerGroup: any) => (
               <TableHeader key={headerGroup.id} headerGroup={headerGroup} />
             ))}
           </thead>
-          <tbody
-            {...getTableBodyProps()}
-            className="divide-y divide-gray-100 dark:divide-white/[0.05]"
-          >
+          <tbody {...getTableBodyProps()} className="divide-y divide-gray-100 ">
             {page.map((row: any, i: number) => {
               prepareRow(row);
               return (
@@ -144,7 +141,9 @@ const BasicTable = <T extends { id: number }>({
             })}
           </tbody>
         </table>
-        {loading && <Loading text={loadingText} />}
+        {loading && (
+          <Loading text={loadingText} className="dark:!text-gray-900" />
+        )}
         {!loading && noData && (
           <div className="p-4 text-center text-gray-500">No Data Found</div>
         )}

@@ -51,8 +51,8 @@ const HomeProducts: React.FC<CategorySliderProps> = ({
               0: { slidesPerView: 1 },
             }}
           >
-            {products.map((product) => (
-              <SwiperSlide key={product.id}>
+            {products?.map((product) => (
+              <SwiperSlide key={product?.id}>
                 <ProductCard product={product} />
               </SwiperSlide>
             ))}

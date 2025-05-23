@@ -24,7 +24,7 @@ const ProductsFavorite = () => {
         {items.map((item) => (
           <div
             key={item.id}
-            className="relative group border rounded-xl overflow-hidden shadow-sm transition duration-300 hover:shadow-lg"
+            className="relative group border border-gray-200 rounded-xl overflow-hidden shadow-sm transition duration-300 hover:shadow-lg"
           >
             <button
               onClick={() => dispatch(removeItem(item.id))}

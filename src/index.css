@@ -178,7 +178,7 @@ layer(base);
   ::before,
   ::backdrop,
   ::file-selector-button {
-    @apply !border-gray-200 dark:!border-gray-800;
+    @apply border-gray-200 dark:border-gray-800;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {

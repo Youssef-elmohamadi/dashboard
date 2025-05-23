@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { AiOutlineCloseCircle, AiOutlineMore } from "react-icons/ai";
 import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import { MdLocalShipping } from "react-icons/md";
@@ -11,6 +12,8 @@ type Props = {
   onMore?: (id: number) => void;
   onShip?: (id: number) => void;
   onCancel?: (id: number) => void;
+  onRate?: (id: number) => void;
+  isRate?: boolean;
   isModalEdit?: boolean;
   isShowMore?: boolean;
   isShipped?: boolean;
@@ -34,15 +37,17 @@ const TableActions = ({
   onMore,
   onShip,
   onCancel,
+  onRate,
   isModalEdit = false,
   isShowMore = false,
   isShipped = false,
   isCancel = false,
+  isRate = false,
   editLabel = "Edit",
   deleteLabel = "Delete",
-  moreLabel = "Show",
+  moreLabel,
   shipLabel = "Ship",
-  cancelLabel = "Cancel",
+  cancelLabel,
   editIcon = <FaEdit size={20} />,
   deleteIcon = <FaTrash size={20} />,
   moreIcon = <AiOutlineMore size={20} />,
@@ -68,75 +73,32 @@ const TableActions = ({
   const handleCancel = useCallback(() => {
     onCancel?.(rowData.id);
   }, [onCancel, rowData.id]);
-
+  const { t } = useTranslation(["EndUserOrderHistory"]);
   return (
     <div className="flex gap-2 justify-around">
-      {onEdit && (
-        <div>
-          {isModalEdit ? (
-            <button
-              onClick={handleEdit}
-              className="text-blue-600 hover:text-blue-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
-            >
-              {editIcon}
-              <span className="ml-1">{editLabel}</span>
-            </button>
-          ) : (
-            <Link
-              to={`update/${rowData.id}`}
-              className="text-blue-600 hover:text-blue-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
-            >
-              {editIcon}
-              <span className="ml-1">{editLabel}</span>
-            </Link>
-          )}
-        </div>
-      )}
-
-      {onMore && (
-        <button
-          onClick={handleMore}
-          className="text-green-600 hover:text-green-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
-        >
-          {moreIcon}
-          <span className="ml-1">{moreLabel}</span>
-        </button>
-      )}
-
       {isShowMore && (
         <Link
           to={`details/${rowData.id}`}
-          className="text-blue-600 hover:text-blue-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
+          className="text-blue-600 hover:text-blue-800 bg-gray-200  border-gray-200  p-2 flex items-center justify-center"
         >
           {moreIcon}
-          <span className="ml-1">{moreLabel}</span>
+          <span className="ml-1">{t("tableActions.view")}</span>
         </Link>
-      )}
-
-      {onDelete && (
-        <button
-          onClick={handleDelete}
-          className="text-red-600 hover:text-red-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
-        >
-          {deleteIcon}
-          <span className="ml-1">{deleteLabel}</span>
-        </button>
-      )}
-
-      {isShipped && onShip && (
-        <button
-          onClick={handleShip}
-          className="text-green-600 hover:text-green-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
-        >
-          {shippedIcon}
-          <span className="ml-1">{shipLabel}</span>
-        </button>
       )}
 
       {isCancel && onCancel && (
         <button
           onClick={handleCancel}
-          className="text-yellow-600 hover:text-yellow-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
+          className="text-yellow-600 hover:text-yellow-800 bg-gray-200 rounded border border-gray-200  p-2 flex items-center justify-center"
+        >
+          {cancelIcon}
+          <span className="ml-1">{t("tableActions.cancel")}</span>
+        </button>
+      )}
+      {isRate && onRate && (
+        <button
+          onClick={handleCancel}
+          className="text-yellow-600 hover:text-yellow-800 bg-gray-200  rounded border border-gray-200  p-2 flex items-center justify-center"
         >
           {cancelIcon}
           <span className="ml-1">{cancelLabel}</span>

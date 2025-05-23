@@ -14,7 +14,7 @@ const FilterRangeDate = ({
           {t("title")}
         </h3>
 
-        <div className="border-t grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl p-4">
+        <div className="border-t border-gray-200 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl p-4">
           <div>
             <label className="block text-sm font-medium mb-3 dark:text-white">
               {t("startDate")}
@@ -22,7 +22,7 @@ const FilterRangeDate = ({
             <input
               type="date"
               onChange={(e) => setSearchParam("start_date", e.target.value)}
-              className="w-full border rounded px-3 py-2 dark:text-gray-500"
+              className="w-full border border-gray-200 rounded px-3 py-2 dark:text-gray-500"
             />
           </div>
           <div>
@@ -32,7 +32,7 @@ const FilterRangeDate = ({
             <input
               type="date"
               onChange={(e) => setSearchParam("end_date", e.target.value)}
-              className="w-full border rounded px-3 py-2 dark:text-gray-500"
+              className="w-full border border-gray-200 rounded px-3 py-2 dark:text-gray-500"
             />
           </div>
         </div>

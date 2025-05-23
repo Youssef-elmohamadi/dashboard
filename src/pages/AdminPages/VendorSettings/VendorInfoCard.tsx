@@ -196,7 +196,7 @@ const VendorEditPage: React.FC = () => {
             {vendor.documents.map((doc) => (
               <div
                 key={doc.id}
-                className="border p-4 rounded bg-gray-50 flex flex-col md:flex-row gap-4 items-start dark:bg-gray-900"
+                className="border border-gray-200 p-4 rounded bg-gray-50 flex flex-col md:flex-row gap-4 items-start dark:bg-gray-900"
               >
                 <div className="flex-1 space-y-1">
                   <p className="font-medium dark:text-white">
@@ -239,7 +239,7 @@ const VendorEditPage: React.FC = () => {
                           <img
                             src={URL.createObjectURL(updatedDocs[doc.id]!)}
                             alt="preview"
-                            className="w-full max-w-xs h-auto object-contain mt-2 rounded border dark:text-white"
+                            className="w-full max-w-xs h-auto object-contain mt-2 rounded border border-gray-200 dark:text-white"
                           />
                         </>
                       )}
@@ -256,7 +256,7 @@ const VendorEditPage: React.FC = () => {
                   <img
                     src={doc.document_name}
                     alt="document"
-                    className="w-full max-w-xs h-auto object-contain rounded border"
+                    className="w-full max-w-xs h-auto object-contain rounded border border-gray-200"
                   />
                 </div>
               </div>

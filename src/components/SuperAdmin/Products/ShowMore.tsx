@@ -170,7 +170,7 @@ const ProductDetails: React.FC = () => {
                 key={img.id}
                 src={img.image}
                 alt="Product Image"
-                className="w-32 h-32 object-cover rounded-md border"
+                className="w-32 h-32 object-cover rounded-md border border-gray-200"
               />
             ))}
           </div>

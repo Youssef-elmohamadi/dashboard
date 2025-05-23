@@ -7,22 +7,34 @@ import { handleDeleteAccount } from "../../../components/EndUser/Auth/DeleteAcco
 import { RiProfileFill } from "react-icons/ri";
 import { MdCompareArrows, MdDelete, MdFavorite } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
+import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 export default function UserControlLayout() {
-  const [user, setUser] = useState({});
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await getProfile();
-        setUser(response.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchProfile();
-  }, []);
+  //const [user, setUser] = useState({});
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     try {
+  //       const response = await getProfile();
+  //       setUser(response.data.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchProfile();
+  // }, []);
+
+  const { data: user, isLoading: isLoadingUser } = useQuery({
+    queryKey: ["endUserProfileData"],
+    queryFn: async () => {
+      const res = await getProfile();
+      return res.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+  const { t } = useTranslation(["EndUserControlMenu"]);
   return (
     <div className="flex flex-row min-h-screen">
-      <aside className="w-72 bg-white p-4 border-r shadow hidden lg:block ">
+      <aside className="w-72 bg-white p-4 border-r border-gray-200 shadow hidden lg:block ">
         <div className="space-y-4 ">
           <div className="text-center flex flex-col items-center">
             <div className="w-20 h-20 rounded-full  ">
@@ -54,7 +66,7 @@ export default function UserControlLayout() {
               }
             >
               <RiProfileFill className="text-lg text-gray-500 transition-all duration-300" />
-              Profile Management
+              {t("profile_management")}
             </NavLink>
             <NavLink
               to="/u-orders"
@@ -67,7 +79,7 @@ export default function UserControlLayout() {
               }
             >
               <TiDocumentText className="text-lg text-gray-500 transition-all duration-300" />
-              Orders History
+              {t("orders_history")}
             </NavLink>
             {/* <Link
               to="/u-downloads"
@@ -109,7 +121,7 @@ export default function UserControlLayout() {
               }
             >
               <MdCompareArrows className="text-lg text-gray-500  transition-all duration-300" />
-              Compare Product
+              {t("compare_product")}
             </NavLink>
             <NavLink
               to="/u-favorite"
@@ -122,21 +134,21 @@ export default function UserControlLayout() {
               }
             >
               <MdFavorite className="text-lg text-gray-500 transition duration-400" />
-              Favorite Products
+              {t("favorite_products")}
             </NavLink>
             <button
               onClick={handleLogout}
               className="flex items-center group gap-3 transition-all duration-400 px-4 py-2 rounded-3xl hover:bg-red-300 cursor-pointer pl-2 hover:pl-4 w-full"
             >
               <BiLogOut className="text-lg text-gray-500 transition duration-400  " />
-              Logout
+              {t("logout")}
             </button>
             <button
               onClick={handleDeleteAccount}
               className="p-2 px-3 w-full rounded-3xl group hover:bg-red-300 flex items-center gap-2 transition-all duration-300 pl-2 hover:pl-4 "
             >
               <MdDelete className="text-lg text-gray-500 transition-all duration-400" />
-              Delete Account
+              {t("delete_account")}
             </button>
           </nav>
         </div>

@@ -1,0 +1,23 @@
+{
+  "loadingCategories": "جاري التحميل التصنيفات...",
+  "categories": "التصنيفات",
+  "allCategories": "جميع التصنيفات",
+  "showMore": "عرض المزيد",
+  "priceFilter": {
+    "egp": "جنيه",
+    "title": "تصفية بالسعر"
+  },
+  "breadcrumbCategory": {
+    "home": "الرئيسية"
+  },
+  "sortByMenu": {
+    "title": "ترتيب حسب",
+    "newest": "الاحدث",
+    "oldest": "الاقدم"
+  },
+  "mainContent": {
+    "filter": "تصفية",
+    "noDataForCategory": "لا يوجد منتجات لهذا التصنيف",
+    "loadingMore": "جاري التحميل المزيد..."
+  }
+}

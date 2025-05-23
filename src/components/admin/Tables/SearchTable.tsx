@@ -5,7 +5,7 @@ type Option = { label: string; value: string | number };
 type Field = {
   key: string;
   label: string;
-  type: "input" | "select";
+  type: "input" | "select" | "date";
   options?: Option[];
 };
 
@@ -26,7 +26,6 @@ const SearchTable = ({
   return (
     <div className="rounded-2xl border mb-5 border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
       <div className="gap-4 px-6 py-5 flex-row items-center justify-between">
-        {/* Title */}
         <h3 className="flex gap-2 mb-4 items-center text-base m-1 font-medium text-gray-800 dark:text-gray-200">
           <FaFilter />
           {t("searchTable.title")}
@@ -39,7 +38,7 @@ const SearchTable = ({
                 {getTranslatedLabel(field.label)}
               </label>
 
-              {field.type === "input" ? (
+              {field.type === "input" && (
                 <input
                   type="text"
                   onChange={(e) => setSearchParam(field.key, e.target.value)}
@@ -48,7 +47,9 @@ const SearchTable = ({
                     field: getTranslatedLabel(field.label),
                   })}
                 />
-              ) : (
+              )}
+
+              {field.type === "select" && (
                 <select
                   onChange={(e) => setSearchParam(field.key, e.target.value)}
                   className="w-full border dark:border-gray-800 border-gray-200 rounded px-3 py-2 text-gray-900 dark:text-gray-200 text-sm outline-none"
@@ -61,7 +62,7 @@ const SearchTable = ({
                   </option>
                   {field.options?.map((option) => (
                     <option
-                      className="text-gray-900 dark:bg-gray-800  dark:text-gray-200 text-sm outline-none"
+                      className="text-gray-900 dark:bg-gray-800 dark:text-gray-200 text-sm outline-none"
                       key={option.value}
                       value={option.value}
                     >
@@ -69,6 +70,25 @@ const SearchTable = ({
                     </option>
                   ))}
                 </select>
+              )}
+
+              {field.key === "from_date" && (
+                <div>
+                  <input
+                    type="date"
+                    onChange={(e) => setSearchParam(field.key, e.target.value)}
+                    className="w-full border border-gray-200 rounded px-3 py-2 dark:text-gray-500"
+                  />
+                </div>
+              )}
+              {field.key === "to_date" && (
+                <div>
+                  <input
+                    type="date"
+                    onChange={(e) => setSearchParam(field.key, e.target.value)}
+                    className="w-full border border-gray-200 rounded px-3 py-2 dark:text-gray-500"
+                  />
+                </div>
               )}
             </div>
           ))}

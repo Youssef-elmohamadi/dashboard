@@ -4,17 +4,35 @@ import Label from "../../form/Label";
 import Radio from "../../form/input/Radio";
 import { SlWallet } from "react-icons/sl";
 import Checkbox from "../../form/input/Checkbox";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { checkout } from "../../../api/EndUserApi/ensUserProducts/_requests";
 import TextArea from "../../form/input/TextArea";
 import { SweetAlert } from "../../common/SweetAlert";
-import { useDispatch } from "react-redux";
 import { clearCart } from "../Redux/cartSlice/CartSlice";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const CheckoutForm: React.FC = () => {
+  const { t } = useTranslation(["EndUserCheckout"]);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [clientSideErrors, setClientSideErrors] = useState({
+    payment_method: "",
+    location: {
+      full_name: "",
+      phone: "",
+      city: "",
+      area: "",
+      street: "",
+      building_number: "",
+      floor_number: "",
+      apartment_number: "",
+      landmark: "",
+      notes: "",
+    },
+    save_info: false,
+    newsletter: false,
+  });
   const [checkoutForm, setCheckoutForm] = useState({
     items: [],
     payment_method: "",
@@ -36,6 +54,61 @@ const CheckoutForm: React.FC = () => {
 
   const items = useSelector((state: any) => state.cart.items);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const validate = () => {
+    const fieldErrors: Record<string, string[]> = {};
+
+    if (!checkoutForm.payment_method) {
+      fieldErrors.payment_method = [t("checkout.payment_required")];
+    }
+
+    const loc = checkoutForm.location;
+    [
+      "full_name",
+      "phone",
+      "city",
+      "area",
+      "street",
+      "building_number",
+      "floor_number",
+      "apartment_number",
+    ].forEach((field) => {
+      if (!loc[field as keyof typeof loc]) {
+        fieldErrors[field] = [t(`checkout.${field}_required`)];
+      } else if (!/^01[0125][0-9]{8}$/.test(loc.phone)) {
+        fieldErrors["phone"] = [t("checkout.phone_invalid")];
+      }
+    });
+
+    setClientSideErrors((prev) => ({
+      ...prev,
+      location: {
+        ...prev.location,
+        ...Object.fromEntries(
+          Object.entries(loc).map(([key, value]) => [
+            key,
+            fieldErrors[key] ? fieldErrors[key][0] : "",
+          ])
+        ),
+      },
+      payment_method: fieldErrors.payment_method?.[0] || "",
+    }));
+
+    return Object.keys(fieldErrors).length === 0;
+  };
+
+  useEffect(() => {
+    const updatedItems = items.map((item: any) => ({
+      product_id: item.id,
+      quantity: item.quantity,
+    }));
+    setCheckoutForm((prev) => ({
+      ...prev,
+      items: updatedItems,
+    }));
+  }, [items]);
+
   const handleChangeLocation = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -55,246 +128,209 @@ const CheckoutForm: React.FC = () => {
       [name]: value,
     }));
   };
-  const dispatch = useDispatch();
+
   const handleCheckBox = (id: string, checked: boolean) => {
     setCheckoutForm((prev) => ({ ...prev, [id]: checked }));
   };
-
-  useEffect(() => {
-    const updatedItems = items.map((item: any) => ({
-      product_id: item.id,
-      quantity: item.quantity,
-    }));
-    setCheckoutForm((prev) => ({
-      ...prev,
-      items: updatedItems,
-    }));
-  }, [items]);
 
   const afterSuccess = () => {
     localStorage.removeItem("state");
     dispatch(clearCart());
     navigate("/");
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitted(true);
+    if (!validate()) return;
 
     try {
       await checkout(checkoutForm);
-      SweetAlert("Your request has been received successfully.", afterSuccess);
+      SweetAlert(t("checkout.success_message"), afterSuccess);
     } catch (error: any) {
-      const rawErrors = error.response?.data?.errors || [];
-      const formattedErrors: Record<string, string[]> = {};
-      rawErrors.forEach((err: { code: string; message: string }) => {
-        if (!formattedErrors[err.code]) {
-          formattedErrors[err.code] = [];
-        }
-        formattedErrors[err.code].push(err.message);
-      });
-      setErrors(formattedErrors);
+      const rawErrors = error?.response?.data.errors;
+
+      if (Array.isArray(rawErrors)) {
+        const formattedErrors: Record<string, string[]> = {};
+
+        rawErrors.forEach((err: { code: string; message: string }) => {
+          if (!formattedErrors[err.code]) {
+            formattedErrors[err.code] = [];
+          }
+          formattedErrors[err.code].push(err.message);
+        });
+
+        setErrors(formattedErrors);
+      } else {
+        setErrors({ general: [t("general")] });
+      }
     }
   };
 
-  const getLocationError = (field: string) => {
-    return isSubmitted ? errors[`location.${field}`]?.[0] : "";
-  };
-
-  const getError = (field: string) => {
-    return isSubmitted ? errors[field]?.[0] : "";
-  };
-
   return (
-    <>
-      <form onSubmit={handleSubmit} className="space-y-6 ">
-        <h2 className="text-2xl font-bold">Delivery Details</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label>Full Name</Label>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <h2 className="text-2xl font-bold text-gray-800">
+        {t("checkout.deliveryDetails")}
+      </h2>
+      {errors.general && (
+        <p className="text-red-500 text-sm mt-1">{errors.general}</p>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {[
+          "full_name",
+          "phone",
+          "city",
+          "area",
+          "street",
+          "building_number",
+          "floor_number",
+          "apartment_number",
+        ].map((name) => (
+          <div key={name}>
+            <Label className="dark:!text-gray-700">
+              {t(`checkout.${name}`)}
+            </Label>
             <Input
               type="text"
-              name="full_name"
-              placeholder="Full Name"
-              value={checkoutForm.location.full_name}
+              name={name}
+              className="dark:!bg-transparent dark:placeholder:!text-gray-400 !placeholder:text-gray-400 text-gray-800 dark:!border-gray-200 dark:!text-gray-800"
+              placeholder={t(`checkout.${name}`)}
+              value={
+                checkoutForm.location[
+                  name as keyof typeof checkoutForm.location
+                ]
+              }
               onChange={handleChangeLocation}
-              error={!!getLocationError("full_name")}
             />
-            {isSubmitted && errors["location.full_name"] && (
-              <p className="text-error-500 text-sm">Full Name Is Required</p>
+            {clientSideErrors.location[name] && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.location[name]}
+              </p>
+            )}
+            {errors[name] && (
+              <p className="text-red-500 text-sm mt-1">{errors[name][0]}</p>
             )}
           </div>
-          <div>
-            <Label>Phone</Label>
-            <Input
-              type="text"
-              name="phone"
-              placeholder="Phone"
-              value={checkoutForm.location.phone}
-              onChange={handleChangeLocation}
-              error={!!getLocationError("phone")}
-            />
-            {isSubmitted && errors["location.phone"] && (
-              <p className="text-error-500 text-sm">Phone Is Required</p>
-            )}
-          </div>
-          <div>
-            <Label>City</Label>
-            <Input
-              type="text"
-              name="city"
-              placeholder="City"
-              value={checkoutForm.location.city}
-              onChange={handleChangeLocation}
-              error={!!getLocationError("city")}
-            />
-            {isSubmitted && errors["location.city"] && (
-              <p className="text-error-500 text-sm">City Is Required</p>
-            )}
-          </div>
-          <div>
-            <Label>Area</Label>
-            <Input
-              type="text"
-              name="area"
-              placeholder="Area"
-              value={checkoutForm.location.area}
-              onChange={handleChangeLocation}
-              error={!!getLocationError("area")}
-              hint={getLocationError("area")}
-            />
-          </div>
-          <div>
-            <Label>Street</Label>
-            <Input
-              type="text"
-              name="street"
-              placeholder="Street"
-              value={checkoutForm.location.street}
-              onChange={handleChangeLocation}
-              error={!!getLocationError("street")}
-              hint={getLocationError("street")}
-            />
-          </div>
-          <div>
-            <Label>Building Number</Label>
-            <Input
-              type="text"
-              name="building_number"
-              placeholder="Building Number"
-              value={checkoutForm.location.building_number}
-              onChange={handleChangeLocation}
-              error={!!getLocationError("building_number")}
-              hint={getLocationError("building_number")}
-            />
-          </div>
-          <div>
-            <Label>Floor Number</Label>
-            <Input
-              type="text"
-              name="floor_number"
-              placeholder="Floor Number"
-              value={checkoutForm.location.floor_number}
-              onChange={handleChangeLocation}
-              error={!!getLocationError("floor_number")}
-              hint={getLocationError("floor_number")}
-            />
-          </div>
-          <div>
-            <Label>Apartment Number</Label>
-            <Input
-              type="text"
-              name="apartment_number"
-              placeholder="Apartment Number"
-              value={checkoutForm.location.apartment_number}
-              onChange={handleChangeLocation}
-              error={!!getLocationError("apartment_number")}
-              hint={getLocationError("apartment_number")}
-            />
-          </div>
-        </div>
-        <div>
-          <Label>Landmark</Label>
-          <Input
-            type="text"
-            name="landmark"
-            placeholder="Landmark"
-            value={checkoutForm.location.landmark}
-            onChange={handleChangeLocation}
-            error={!!getLocationError("landmark")}
-            hint={getLocationError("landmark")}
-          />
-        </div>
-        <div>
-          <Label>Notes</Label>
-          <TextArea
-            name="notes"
-            placeholder="Any Extra Notes"
-            value={checkoutForm.location.notes}
-            onChange={(e) => handleChangeLocation}
-          />
-        </div>
+        ))}
+      </div>
 
+      <div>
+        <Label className="dark:!text-gray-700">{t("checkout.landmark")}</Label>
+        <Input
+          type="text"
+          name="landmark"
+          placeholder={t("checkout.landmark")}
+          value={checkoutForm.location.landmark}
+          onChange={handleChangeLocation}
+          className="dark:!bg-transparent dark:placeholder:!text-gray-400 dark:!border-gray-200 dark:!text-gray-800"
+        />
+        {clientSideErrors.location.landmark && (
+          <p className="text-red-500 text-sm mt-1">
+            {clientSideErrors.location.landmark}
+          </p>
+        )}
+        {errors.landmark && (
+          <p className="text-red-500 text-sm mt-1">{errors.landmark[0]}</p>
+        )}
+      </div>
+
+      <div>
+        <Label className="dark:!text-gray-700">{t("checkout.notes")}</Label>
+        <TextArea
+          name="notes"
+          placeholder={t("checkout.notes_placeholder")}
+          value={checkoutForm.location.notes}
+          onChange={(value) =>
+            setCheckoutForm((prev) => ({
+              ...prev,
+              location: {
+                ...prev.location,
+                notes: value,
+              },
+            }))
+          }
+          className="dark:!bg-transparent dark:!border-gray-200 dark:!text-gray-800"
+        />
+        {clientSideErrors.location.notes && (
+          <p className="text-red-500 text-sm mt-1">
+            {clientSideErrors.location.notes}
+          </p>
+        )}
+        {errors.notes && (
+          <p className="text-red-500 text-sm mt-1">{errors.notes[0]}</p>
+        )}
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4">
         <Checkbox
-          label="Save my information for next time"
+          label={t("checkout.save_info")}
           id="save_info"
           checked={checkoutForm.save_info}
           onChange={(checked) => handleCheckBox("save_info", checked)}
+          className="dark:!bg-transparent dark:text-gray-900 dark:!border-gray-300 dark:checked:!bg-brand-500"
         />
         <Checkbox
-          label="Subscribe to newsletter"
+          label={t("checkout.newsletter")}
           id="newsletter"
           checked={checkoutForm.newsletter}
           onChange={(checked) => handleCheckBox("newsletter", checked)}
+          className="dark:!bg-transparent dark:text-gray-900 dark:!border-gray-300 dark:checked:!bg-brand-500"
         />
+      </div>
 
-        <h2 className="text-2xl font-bold mt-6">Payment Method</h2>
-        <p className="text-sm text-gray-500 mb-4">
-          All transactions are secure and encrypted.
+      <h2 className="text-2xl font-bold text-gray-800 mt-6">
+        {t("checkout.payment_method")}
+      </h2>
+      <p className="text-sm text-gray-500 mb-4">
+        {t("checkout.payment_security")}
+      </p>
+
+      {isSubmitted && clientSideErrors.payment_method && (
+        <p className="text-sm text-red-500 mb-2">
+          {clientSideErrors.payment_method}
         </p>
+      )}
+      {isSubmitted && errors.payment_method?.length && (
+        <p className="text-sm text-red-500 mb-2">{errors.payment_method[0]}</p>
+      )}
 
-        {isSubmitted && errors.payment_method?.length && (
-          <p className="text-sm text-red-500 mb-2">
-            {errors.payment_method[0]}
-          </p>
-        )}
-
-        <div className="border p-4 rounded-lg mb-4">
-          <Radio
-            name="payment_method"
-            id="wallet"
-            value="wallet"
-            label="Pay via Wallet / Credit Card / Installments"
-            onChange={(value) => handleRadio("payment_method", value)}
-            checked={checkoutForm.payment_method === "wallet"}
-          />
-          <div className="flex justify-center my-4">
-            <SlWallet className="text-6xl text-purple-700" />
-          </div>
-          <p className="text-center text-gray-500">
-            After clicking Pay Now, you’ll be redirected to the secure payment
-            page.
-          </p>
+      <div className="border border-gray-200 p-4 rounded-xl mb-4">
+        <Radio
+          name="payment_method"
+          id="wallet"
+          value="wallet"
+          label={t("checkout.pay_wallet")}
+          onChange={(value) => handleRadio("payment_method", value)}
+          checked={checkoutForm.payment_method === "wallet"}
+          className="dark:!bg-transparent dark:text-gray-900 dark:!border-gray-300 dark:checked:!bg-brand-500"
+        />
+        <div className="flex justify-center my-4">
+          <SlWallet className="text-6xl text-purple-700" />
         </div>
+        <p className="text-center text-gray-500">
+          {t("checkout.redirect_payment")}
+        </p>
+      </div>
 
-        <div className="border p-4 rounded-lg">
-          <Radio
-            name="payment_method"
-            id="cash"
-            value="cash"
-            label="Cash on Delivery"
-            onChange={(value) => handleRadio("payment_method", value)}
-            checked={checkoutForm.payment_method === "cash"}
-          />
-        </div>
+      <div className="border border-gray-200 p-4 rounded-xl">
+        <Radio
+          name="payment_method"
+          id="cash"
+          value="cash"
+          label={t("checkout.pay_cash")}
+          onChange={(value) => handleRadio("payment_method", value)}
+          checked={checkoutForm.payment_method === "cash"}
+          className="dark:!bg-transparent dark:text-gray-900 dark:!border-gray-300 dark:checked:!bg-brand-500"
+        />
+      </div>
 
-        <button
-          type="submit"
-          className="w-full mt-6 bg-purple-700 hover:bg-purple-800 text-white py-3 rounded-lg font-medium"
-        >
-          Pay Now
-        </button>
-      </form>
-    </>
+      <button
+        type="submit"
+        className="w-full mt-6 bg-purple-700 hover:bg-purple-800 text-white py-3 rounded-xl font-medium shadow-sm"
+      >
+        {t("checkout.pay_now")}
+      </button>
+    </form>
   );
 };
 

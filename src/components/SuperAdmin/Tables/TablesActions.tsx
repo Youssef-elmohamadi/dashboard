@@ -86,7 +86,7 @@ const TableActions = ({
           {isModalEdit ? (
             <button
               onClick={handleEdit}
-              className="text-blue-600 hover:text-blue-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
+              className="text-blue-600 hover:text-blue-800 bg-gray-200 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 p-2 flex items-center justify-center"
             >
               {editIcon}
               <span className="ml-1">{t("edit_label")}</span>
@@ -94,7 +94,7 @@ const TableActions = ({
           ) : (
             <Link
               to={`update/${rowData.id}`}
-              className="text-blue-600 hover:text-blue-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
+              className="text-blue-600 hover:text-blue-800 bg-gray-200 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 p-2 flex items-center justify-center"
             >
               {editIcon}
               <span className="ml-1">{t("edit_label")}</span>
@@ -106,7 +106,7 @@ const TableActions = ({
       {onMore && (
         <button
           onClick={handleMore}
-          className="text-green-600 hover:text-green-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
+          className="text-green-600 hover:text-green-800 bg-gray-200 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 p-2 flex items-center justify-center"
         >
           {moreIcon}
           <span className="ml-1">{t("more_label")}</span>
@@ -116,7 +116,7 @@ const TableActions = ({
       {isShowMore && (
         <Link
           to={`details/${rowData.id}`}
-          className="text-blue-600 hover:text-blue-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
+          className="text-blue-600 hover:text-blue-800 bg-gray-200 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 p-2 flex items-center justify-center"
         >
           {moreIcon}
           <span className="ml-1">{t("more_label")}</span>
@@ -136,7 +136,7 @@ const TableActions = ({
       {isShipped && onShip && (
         <button
           onClick={handleShip}
-          className="text-green-600 hover:text-green-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
+          className="text-green-600 hover:text-green-800 bg-gray-200 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 p-2 flex items-center justify-center"
         >
           {shippedIcon}
           <span className="ml-1">{t("ship_label")}</span>
@@ -146,7 +146,7 @@ const TableActions = ({
       {isCancel && onCancel && (
         <button
           onClick={handleCancel}
-          className="text-yellow-600 hover:text-yellow-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
+          className="text-yellow-600 hover:text-yellow-800 bg-gray-200 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 p-2 flex items-center justify-center"
         >
           {cancelIcon}
           <span className="ml-1">{t("cancel_label")}</span>
@@ -155,7 +155,7 @@ const TableActions = ({
       {isChangeStatus && onChangeStatus && (
         <button
           onClick={handleChangeStatus}
-          className="text-yellow-600 hover:text-yellow-800 bg-gray-200 dark:bg-gray-700 rounded border dark:border-gray-600 p-2 flex items-center justify-center"
+          className="text-yellow-600 hover:text-yellow-800 bg-gray-200 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 p-2 flex items-center justify-center"
         >
           {cancelIcon}
           <span className="ml-1">{t("change_status_label")}</span>

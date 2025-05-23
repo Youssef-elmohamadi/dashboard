@@ -7,6 +7,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
 import { Circles } from "react-loader-spinner";
+import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { EyeCloseIcon, EyeIcon } from "../../../icons";
 
 const UserProfile = () => {
   const { t } = useTranslation(["EndUserProfile"]);
@@ -20,6 +23,17 @@ const UserProfile = () => {
     password_confirmation: "",
     avatar: null as File | null,
   });
+  const [existingImage, setExistingImage] = useState("");
+  // const [userProfileData, setUserProfileData] = useState({
+  //   id: "",
+  //   first_name: "",
+  //   last_name: "",
+  //   email: "",
+  //   phone: "",
+  //   password: "",
+  //   password_confirmation: "",
+  //   avatar: null as File | null,
+  // });
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -29,34 +43,59 @@ const UserProfile = () => {
   );
   const [errors, setErrors] = useState<any>();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     setLoadLoading(true);
+  //     try {
+  //       const res = await getProfile();
+  //       const data = res.data.data;
+  //       setFormData({
+  //         id: data.id,
+  //         first_name: data.first_name,
+  //         last_name: data.last_name,
+  //         email: data.email,
+  //         phone: data.phone,
+  //         password: "",
+  //         password_confirmation: "",
+  //         avatar: null,
+  //       });
+  //       setImageUrl(data.image);
+  //     } catch (error) {
+  //       setLoadLoading(false);
+  //       console.error("Failed to fetch profile:", error);
+  //     } finally {
+  //       setLoadLoading(false);
+  //     }
+  //   };
+
+  //   fetchProfile();
+  // }, []);
+
+  const { data: userProfileData, isLoading: isLoading } = useQuery({
+    queryKey: ["endUserProfileData"],
+    queryFn: async () => {
+      const res = await getProfile();
+      return res.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      setLoadLoading(true);
-      try {
-        const res = await getProfile();
-        const data = res.data.data;
-        setFormData({
-          id: data.id,
-          first_name: data.first_name,
-          last_name: data.last_name,
-          email: data.email,
-          phone: data.phone,
-          password: "",
-          password_confirmation: "",
-          avatar: null,
-        });
-        setImageUrl(data.image);
-      } catch (error) {
-        setLoadLoading(false);
-        console.error("Failed to fetch profile:", error);
-      } finally {
-        setLoadLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, []);
+    if (userProfileData) {
+      setFormData({
+        id: userProfileData.id,
+        first_name: userProfileData.first_name,
+        last_name: userProfileData.last_name,
+        email: userProfileData.email,
+        phone: userProfileData.phone,
+        password: "",
+        password_confirmation: "",
+        avatar: null as File | null,
+      });
+      setExistingImage(userProfileData.avatar || "/images/default-avatar.jpg");
+    }
+  }, [userProfileData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = e.target;
@@ -111,31 +150,18 @@ const UserProfile = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const queryClient = useQueryClient();
 
-    const isValid = validateForm();
-    if (!isValid) {
-      toast.error(t("toast.form_error"));
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const payload = new FormData();
-
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value) {
-          payload.append(key, value as any);
-        }
-      });
-
-      await updateProfile(payload);
+  const updateProfileMutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      return await updateProfile(formData);
+    },
+    onSuccess: () => {
       toast.success(t("toast.update_success"));
-    } catch (error) {
+      queryClient.invalidateQueries({ queryKey: ["endUserProfileData"] });
+    },
+    onError: (error: any) => {
       const rawErrors = error?.response?.data?.errors;
-      console.log(rawErrors);
       if (Array.isArray(rawErrors)) {
         const formattedErrors: Record<string, string[]> = {};
         rawErrors.forEach((err: { code: string; message: string }) => {
@@ -144,22 +170,41 @@ const UserProfile = () => {
           }
           formattedErrors[err.code].push(err.message);
         });
-
         setErrors(formattedErrors);
       } else {
         setErrors({ general: "" });
       }
+
       toast.error(t("toast.update_fail"));
-    } finally {
-      setLoading(false);
+    },
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const isValid = validateForm();
+    if (!isValid) {
+      toast.error(t("toast.form_error"));
+      return;
     }
+
+    const payload = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value) {
+        payload.append(key, value as any);
+      }
+    });
+
+    updateProfileMutation.mutate(payload);
   };
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-medium mb-4 border-b pb-3">{t("title")}</h2>
+      <h2 className="text-2xl font-medium mb-4 border-b border-gray-200 pb-3">
+        {t("title")}
+      </h2>
 
-      {loadLoading ? (
+      {isLoading && !userProfileData ? (
         <div className="flex justify-center">
           <Circles height="80" width="80" color="#6B46C1" ariaLabel="loading" />
         </div>
@@ -171,7 +216,7 @@ const UserProfile = () => {
               onClick={handleImageClick}
             >
               <img
-                src={imageUrl || "/default-avatar.png"}
+                src={imageUrl || existingImage}
                 alt="User"
                 className="w-36 h-36 rounded-full object-cover border-4 border-purple-700"
               />
@@ -198,7 +243,7 @@ const UserProfile = () => {
                   value={formData.first_name}
                   onChange={handleChange}
                   placeholder={t("form.first_name")}
-                  className="h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:text-white/90  dark:focus:border-brand-800"
+                  className="h-11 w-full rounded-lg  border border-gray-200 appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 focus:border-brand-300 focus:ring-brand-500/20 "
                 />
                 {clientErrors.first_name && (
                   <p className="text-red-600 text-sm mt-1">
@@ -214,7 +259,7 @@ const UserProfile = () => {
                   value={formData.last_name}
                   onChange={handleChange}
                   placeholder={t("form.last_name")}
-                  className="h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:text-white/90  dark:focus:border-brand-800"
+                  className="h-11 w-full rounded-lg  border border-gray-200 appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 focus:border-brand-300 focus:ring-brand-500/20 "
                 />
                 {clientErrors.last_name && (
                   <p className="text-red-600 text-sm mt-1">
@@ -231,7 +276,7 @@ const UserProfile = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder={t("form.email")}
-                  className="h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:text-white/90  dark:focus:border-brand-800"
+                  className="h-11 w-full rounded-lg  border border-gray-200 appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 focus:border-brand-300 focus:ring-brand-500/20 "
                 />
                 {clientErrors.email && (
                   <p className="text-red-600 text-sm mt-1">
@@ -246,7 +291,7 @@ const UserProfile = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder={t("form.phone")}
-                  className="h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:text-white/90  dark:focus:border-brand-800"
+                  className="h-11 w-full rounded-lg  border border-gray-200 appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 focus:border-brand-300 focus:ring-brand-500/20 "
                 />
                 {clientErrors.phone && (
                   <p className="text-red-600 text-sm mt-1">
@@ -256,35 +301,63 @@ const UserProfile = () => {
               </div>
             </div>
             <div className="grid md:grid-cols-2 grid-cols-1  gap-3">
-              <div>
+              <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
                   placeholder={t("form.password")}
-                  className="h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:text-white/90  dark:focus:border-brand-800"
+                  className="h-11 w-full rounded-lg  border border-gray-200 appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 focus:border-brand-300 focus:ring-brand-500/20 "
                 />
                 {clientErrors.password && (
                   <p className="text-red-600 text-sm mt-1">
                     {clientErrors.password}
                   </p>
                 )}
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
+                    document.documentElement.dir === "rtl"
+                      ? "left-4"
+                      : "right-4"
+                  }`}
+                >
+                  {showPassword ? (
+                    <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                  ) : (
+                    <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                  )}
+                </span>
               </div>
-              <div>
+              <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password_confirmation"
                   value={formData.password_confirmation}
                   onChange={handleChange}
                   placeholder={t("form.password_confirmation")}
-                  className="h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:text-white/90  dark:focus:border-brand-800"
+                  className="h-11 w-full rounded-lg  border border-gray-200 appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 focus:border-brand-300 focus:ring-brand-500/20 "
                 />
                 {clientErrors.password_confirmation && (
                   <p className="text-red-600 text-sm mt-1">
                     {clientErrors.password_confirmation}
                   </p>
                 )}
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
+                    document.documentElement.dir === "rtl"
+                      ? "left-4"
+                      : "right-4"
+                  }`}
+                >
+                  {showPassword ? (
+                    <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                  ) : (
+                    <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                  )}
+                </span>
               </div>
             </div>
             <button

@@ -1,0 +1,9 @@
+{
+  "successAddedToFav": "تمت إضافة المنتج إلى المفضلة",
+  "successRemoveFromFav": "تمت حذف المنتج إلى المفضلة",
+  "fieldAddedToFav": "حدث خطأ اثناء اضافة المنتج  للسلة",
+  "fieldRemoveFromFav": "حدث خطأ اثناء حذف المنتج  من السلة",
+  "noAuth": "من فضلك قم بتسجيل الدخول اولا",
+  "addToCart": "اضف الى السلة",
+  "egp": "جنيه"
+}

@@ -3,69 +3,93 @@ import { useOutletContext, useSearchParams } from "react-router-dom";
 import ProductCard from "../../../components/EndUser/ProductCard/ProductCard";
 import { getAllProducts } from "../../../api/EndUserApi/ensUserProducts/_requests";
 import { Circles } from "react-loader-spinner";
-
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 const AllProducts = () => {
-  const [products, setProducts] = useState([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoading] = useState(true);
+  // const [products, setProducts] = useState([]);
+  // const [page, setPage] = useState(1);
+  // const [hasMore, setHasMore] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
 
   const sort = searchParams.get("sort") || "";
   const min = searchParams.get("min") || "";
   const max = searchParams.get("max") || "";
 
-  const fetchProducts = useCallback(
-    async (pageNumber = 1, isNewQuery = false) => {
-      setLoading(true);
-      try {
+  // const fetchProducts = useCallback(
+  //   async (pageNumber = 1, isNewQuery = false) => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await getAllProducts({
+  //         sort,
+  //         min,
+  //         max,
+  //         page: pageNumber,
+  //       });
+
+  //       const newProducts = response.data.data.data;
+
+  //       setProducts((prev) =>
+  //         pageNumber === 1 || isNewQuery
+  //           ? newProducts
+  //           : [...prev, ...newProducts]
+  //       );
+
+  //       setHasMore(
+  //         response.data.data.current_page < response.data.data.last_page
+  //       );
+
+  //       setPage(pageNumber);
+  //     } catch (error) {
+  //       console.error(error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   },
+  //   [sort, min, max]
+  // );
+
+  // // تحميل الصفحة الأولى عند الفتح
+  // useEffect(() => {
+  //   fetchProducts(1, true);
+  // }, [sort, min, max]);
+
+  // const loadMore = () => {
+  //   if (hasMore && !loading) {
+  //     fetchProducts(page + 1);
+  //   }
+  // };
+  const { t } = useTranslation(["EndUserShop"]);
+  const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
+    useInfiniteQuery({
+      queryKey: ["endUserAllProducts", sort, min, max],
+      queryFn: async ({ pageParam = 1 }) => {
         const response = await getAllProducts({
           sort,
           min,
           max,
-          page: pageNumber,
+          page: pageParam,
         });
+        return response.data.data;
+      },
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) => {
+        return lastPage.current_page < lastPage.last_page
+          ? lastPage.current_page + 1
+          : undefined;
+      },
+      staleTime: 1000 * 60 * 5,
+    });
 
-        const newProducts = response.data.data.data;
-
-        setProducts((prev) =>
-          pageNumber === 1 || isNewQuery
-            ? newProducts
-            : [...prev, ...newProducts]
-        );
-
-        setHasMore(
-          response.data.data.current_page < response.data.data.last_page
-        );
-
-        setPage(pageNumber);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [sort, min, max]
-  );
-
-  // تحميل الصفحة الأولى عند الفتح
-  useEffect(() => {
-    fetchProducts(1, true);
-  }, [sort, min, max]);
-
-  const loadMore = () => {
-    if (hasMore && !loading) {
-      fetchProducts(page + 1);
-    }
-  };
+  const products = data?.pages.flatMap((page) => page.data) || [];
 
   return (
     <div className="min-h-[300px] flex flex-col items-center">
-      {loading && page === 1 ? (
+      {isLoading ? (
         <Circles height="80" width="80" color="#6B46C1" ariaLabel="loading" />
       ) : products.length === 0 ? (
         <p className="text-gray-500 text-lg font-semibold mt-10">
-          No data for this category.
+          {t("mainContent.noDataForCategory")}
         </p>
       ) : (
         <>
@@ -77,18 +101,18 @@ const AllProducts = () => {
             ))}
           </div>
 
-          {hasMore && !loading && (
+          {hasNextPage && (
             <div className="flex justify-center mt-6">
               <button
-                onClick={loadMore}
+                onClick={() => fetchNextPage()}
                 className="px-6 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
               >
-                Show More
+                {isFetching ? t("mainContent.loadingMore") : t("showMore")}
               </button>
             </div>
           )}
 
-          {loading && page > 1 && (
+          {isLoading && (
             <div className="mt-4">
               <Circles height="40" width="40" color="#6B46C1" />
             </div>

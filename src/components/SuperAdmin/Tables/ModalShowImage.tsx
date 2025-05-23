@@ -43,7 +43,7 @@ const ModalShowImage = ({ showImageModal, setShowImageModal, doc }) => {
         onClick={(e) => e.stopPropagation()}
         className="bg-white rounded-xl shadow-lg w-full max-w-4xl max-h-[90vh] overflow-auto relative"
       >
-        <div className="flex gap-3 py-4  border-b">
+        <div className="flex gap-3 py-4  border-b border-gray-200">
           <button
             onClick={closeImageModal}
             className="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-2xl font-bold"

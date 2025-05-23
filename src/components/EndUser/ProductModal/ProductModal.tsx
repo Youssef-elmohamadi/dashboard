@@ -4,15 +4,31 @@ import "react-inner-image-zoom/src/styles.css";
 import { useModal } from "../../../pages/UserPages/Context/ModalContext";
 import { useDispatch } from "react-redux";
 import { addItem } from "../Redux/cartSlice/CartSlice";
+import { useQuery } from "@tanstack/react-query";
+import StarRatings from "react-star-ratings";
+import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
+import { useTranslation } from "react-i18next";
+
 const ProductModal = () => {
   const [selectedImage, setSelectedImage] = useState("");
   const { modalType, openModal, modalProps, closeModal }: any = useModal();
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
+  const { t } = useTranslation(["EndUserProductModal"]);
+  const { data: categories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await getAllCategories();
+      return res.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
   const handleAddToCart = (item: any) => {
     dispatch(addItem({ item, quantity }));
     openModal("addtocart", { ...item, quantity });
   };
+
   useEffect(() => {
     if (modalProps?.images) {
       setSelectedImage(modalProps.images[0]?.image || null);
@@ -22,110 +38,141 @@ const ProductModal = () => {
   if (modalType !== "product") return null;
 
   const images = modalProps.images?.map((image) => image.image);
+  const categoryName =
+    categories?.find((cat) => cat.id === modalProps?.category_id)?.name ||
+    t("unknownCategory");
+  const discounted = modalProps.discount_price;
+  const finalPrice = discounted || modalProps.price;
 
   return (
     <div
       onClick={closeModal}
-      className="fixed inset-0 bg-[rgba(0,0,0,0.5)]  flex items-center justify-center z-50"
+      className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center z-50"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white p-6 rounded-xl shadow-lg md:w-1/2 w-[calc(100%-30px)]  relative min-h-[60vh] overflow-y-auto"
+        className="bg-white p-6 rounded-xl shadow-lg md:w-4/5 lg:w-2/3 w-[calc(100%-30px)] relative max-h-[90vh] overflow-y-auto"
       >
-        <div>
-          {" "}
-          <button
-            className="absolute top-3 right-3 z-999 bg-gray-500 w-8 h-8 rounded-full text-white text-lg"
-            onClick={closeModal}
-          >
-            ✕
-          </button>
-        </div>
+        <button
+          className="absolute z-50 top-3 right-3 bg-gray-500 w-8 h-8 rounded-full text-white text-lg"
+          onClick={closeModal}
+        >
+          ✕
+        </button>
 
-        <div className="grid grid-cols-6 gap-4">
-          <div className="lg:col-span-3 col-span-6 grid grid-cols-4 gap-2   ">
-            <div className="flex lg:col-span-1 col-span-1 flex-col gap-2 overflow-y-auto max-h-[400px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
+          <div>
+            <InnerImageZoom
+              src={selectedImage}
+              zoomSrc={selectedImage}
+              zoomType="hover"
+              zoomPreload={false}
+              className="rounded w-full max-h-[400px] object-contain"
+            />
+            <div className="flex gap-2 mt-4 overflow-x-auto">
               {images?.map((img, index) => (
                 <img
                   key={index}
                   src={img}
                   onClick={() => setSelectedImage(img)}
-                  className={`w-full h-20 object-cover border-2 cursor-pointer rounded ${
+                  className={`w-16 h-14 object-cover border-2 cursor-pointer rounded ${
                     selectedImage === img
-                      ? "border-blue-500"
+                      ? "border-purple-500"
                       : "border-gray-300"
                   }`}
                 />
               ))}
             </div>
-            <div className="lg:col-span-3 col-span-3 flex justify-between items-center">
-              <div className="max-h-[500px] w-full flex justify-center">
-                <InnerImageZoom
-                  src={selectedImage}
-                  zoomSrc={selectedImage}
-                  zoomType="hover"
-                  zoomPreload={false}
-                  className="object-contain h-full rounded"
-                />
-              </div>
-            </div>
           </div>
-          <div className="mt-6 lg:col-span-3 col-span-6 px-2 ml-8">
-            <h2 className="text-2xl font-bold mb-2">
-              {modalProps?.name || "Product Name"}
-            </h2>
-            <p className="text-sm text-black mb-3">
-              {modalProps?.description || "Product Description"}
-            </p>
-            <div className="flex gap-10 mb-2">
-              <span className="font-medium text-gray-600">Price </span>
-              <span className="font-bold">
-                {modalProps?.price || "price"} EGP
-              </span>
+
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold">{modalProps?.name}</h2>
+            <p className="text-sm text-gray-700">{modalProps?.description}</p>
+
+            <div className="text-sm text-gray-500">
+              {t("category")}:{" "}
+              <span className="font-semibold">{categoryName}</span>
             </div>
 
-            <div className="flex gap-5 items-center mb-3">
-              <span className="font-medium text-gray-600">Quantity </span>
+            <div className="flex gap-3 items-center">
+              <span className="text-lg font-bold text-purple-700">
+                {discounted && (
+                  <span className="line-through text-sm text-gray-500 mr-2">
+                    {modalProps.price} {t("egp")}
+                  </span>
+                )}
+                {finalPrice} {t("egp")}
+              </span>
+              {discounted && (
+                <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                  {t("discountApplied")}
+                </span>
+              )}
+            </div>
+
+            <StarRatings
+              rating={modalProps.rate || 0}
+              starRatedColor="#facc15"
+              numberOfStars={5}
+              starDimension="20px"
+              starSpacing="2px"
+              name="rating"
+            />
+
+            <div className="flex gap-4 items-center">
+              <span className="text-sm text-gray-600">{t("quantity")}:</span>
               <button
-                className="bg-gray-400 text-white text-base py-0 p-2"
-                onClick={() => setQuantity((prev) => Math.min(prev + 1, 99))} // تحديد أعلى قيمة لو حبيت
-              >
-                +
-              </button>
-              <input
-                value={quantity}
-                onChange={(e) => {
-                  const value = parseInt(e.target.value);
-                  if (!isNaN(value) && value > 0) {
-                    setQuantity(value);
-                  }
-                }}
-                className="w-10 text-center border rounded"
-                type="text"
-                min={1}
-              />
-              <button
-                className="bg-gray-400 text-white text-base py-0 p-2"
+                className="bg-gray-400 text-white px-2 py-1 rounded"
                 onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}
               >
                 -
               </button>
+              <input
+                type="number"
+                value={quantity}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value);
+                  if (!isNaN(val) && val > 0) setQuantity(val);
+                }}
+                className="w-12 text-center border border-gray-200 rounded"
+              />
+              <button
+                className="bg-gray-400 text-white px-2 py-1 rounded"
+                onClick={() => setQuantity((prev) => Math.min(prev + 1, 99))}
+              >
+                +
+              </button>
             </div>
 
-            <div className="flex gap-5 items-center mb-2">
-              <span className="font-medium text-gray-600">Total Price</span>
-              <span className="font-bold">
-                {(modalProps?.price * quantity || 0).toFixed(2)} EGP
-              </span>
-            </div>
             <button
-              onClick={() => {
-                handleAddToCart(modalProps);
-              }}
-              className="w-1/2 bg-primary text-white rounded px-3 py-2 text-sm sm:text-base hover:bg-primary/90 transition mb-2"
+              onClick={() => handleAddToCart(modalProps)}
+              className="bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800 transition"
             >
-              Add to Cart
+              {t("addToCart")}
             </button>
+
+            <div className="mt-4">
+              <h4 className="font-semibold mb-2">{t("reviews")}:</h4>
+              <div className="space-y-2 max-h-[150px] overflow-y-auto pr-2">
+                {modalProps.review?.length > 0 ? (
+                  modalProps.review.map((rev, idx) => (
+                    <div key={idx} className="border border-gray-200 p-2 rounded-md">
+                      <StarRatings
+                        rating={rev.rating}
+                        starRatedColor="#facc15"
+                        numberOfStars={5}
+                        starDimension="15px"
+                        starSpacing="1px"
+                        name="review-rating"
+                      />
+                      <p className="text-sm mt-1">{rev.review}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500">{t("noReviews")}</p>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -118,7 +118,7 @@ const ResetPassword = () => {
     switch (step) {
       case 1:
         return (
-          <div className="border p-12 rounded-2xl">
+          <div className="border border-gray-200 p-12 rounded-2xl">
             <h2 className="text-2xl font-bold text-center mb-2 text-gray-800 dark:text-white">
               {t("forgotPasswordPage.title")}
             </h2>

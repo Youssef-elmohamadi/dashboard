@@ -194,7 +194,7 @@ export default function UpdateCategory() {
               value={categoryData.description}
               placeholder={t("category.descPlaceholder")}
               onChange={handleChange}
-              className="w-full mt-2 p-2 border outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
+              className="w-full mt-2 p-2 border border-gray-200 outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
               rows={4}
             />
             {errors.description && (
@@ -228,7 +228,7 @@ export default function UpdateCategory() {
         <div className="w-full">
           <Label>{t("category.image")}</Label>
           <div className="flex items-start gap-6">
-            <div className="w-40 h-40 rounded border overflow-hidden">
+            <div className="w-40 h-40 rounded border border-gray-200 overflow-hidden">
               {previewImage ? (
                 <img
                   src={previewImage}
