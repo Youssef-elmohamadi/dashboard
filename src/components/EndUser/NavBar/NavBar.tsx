@@ -9,16 +9,42 @@ import { RiDeleteBin4Fill } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useQuery } from "@tanstack/react-query";
+interface Child {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  childs: [];
+}
+interface Category {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  parent_id: number | null;
+  childs: [];
+}
+
+interface Image {
+  image: string;
+}
+
+interface Item {
+  id: number;
+  title: string;
+  images: Image[];
+  quantity: number;
+}
 const NavBar = React.memo(() => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   //const [Categories, setCategories] = useState<any>();
-  const items = useSelector((state) => state.cart.items);
-  const totalPrice = useSelector((state) => state.cart.totalPrice);
-  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
+  const items = useSelector((state: any) => state.cart.items);
+  const totalPrice = useSelector((state: any) => state.cart.totalPrice);
+  const totalQuantity = useSelector((state: any) => state.cart.totalQuantity);
   const { dir } = useDirectionAndLanguage();
   const dispatch = useDispatch();
-  const dropdownRef = useRef(null);
-  const isOpenCartRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const isOpenCartRef = useRef<HTMLDivElement>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { t } = useTranslation(["EndUserNavBar"]);
   const toggleCartPopup = () => {
@@ -26,7 +52,7 @@ const NavBar = React.memo(() => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: any) => {
       if (
         isOpenCartRef.current &&
         !event.target.closest(".cart") &&
@@ -46,7 +72,7 @@ const NavBar = React.memo(() => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: any) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
@@ -115,7 +141,7 @@ const NavBar = React.memo(() => {
           >
             <ul className="flex flex-col overflow-y-auto max-h-[74vh] scroll-bar-hide relative z-30">
               {categories?.length > 0 ? (
-                categories.map((category, index) => (
+                categories.map((category: Category, index: number) => (
                   <li
                     onClick={toggleDropdown}
                     key={index}
@@ -140,22 +166,24 @@ const NavBar = React.memo(() => {
                           dir === "ltr" ? "left-full" : "right-full"
                         } w-[200%] h-[calc(100vh-11em)] bg-white  invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-y-auto py-2 px-4`}
                       >
-                        {category.childs.map((sub, subIndex) => (
+                        {category.childs.map((sub: Child, subIndex) => (
                           <li key={subIndex} className="p-2">
                             {sub.childs && sub.childs.length > 0 ? (
                               <div>
                                 <div className="font-bold mb-1">{sub.name}</div>
                                 <ul className="pl-4 space-y-1">
-                                  {sub.childs.map((nested, nestedIndex) => (
-                                    <li key={nestedIndex}>
-                                      <Link
-                                        to={`/category/${nested.id}`}
-                                        className="hover:bg-gray-100 block p-1 rounded"
-                                      >
-                                        {nested.name}
-                                      </Link>
-                                    </li>
-                                  ))}
+                                  {sub.childs.map(
+                                    (nested: Child, nestedIndex) => (
+                                      <li key={nestedIndex}>
+                                        <Link
+                                          to={`/category/${nested.id}`}
+                                          className="hover:bg-gray-100 block p-1 rounded"
+                                        >
+                                          {nested.name}
+                                        </Link>
+                                      </li>
+                                    )
+                                  )}
                                 </ul>
                               </div>
                             ) : (
@@ -183,7 +211,7 @@ const NavBar = React.memo(() => {
 
         {/* Static Links */}
         <ul className="flex justify-center lg:justify-start flex-[2] gap-5">
-          {categories?.map((category, i) =>
+          {categories?.map((category: Category, i: number) =>
             i < 4 ? (
               <li key={i} className="text-white py-3">
                 <Link
@@ -221,7 +249,7 @@ const NavBar = React.memo(() => {
               <h3 className="text-lg font-bold mb-2">{t("navbar.yourCart")}</h3>
               <ul className="divide-y max-h-[300px] overflow-y-auto">
                 {items.length > 0 ? (
-                  items?.map((item) => (
+                  items?.map((item: Item) => (
                     <li
                       key={item.id}
                       className="py-2 flex items-center justify-between gap-2 border-b border-gray-200"

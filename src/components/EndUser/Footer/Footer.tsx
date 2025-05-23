@@ -19,26 +19,36 @@ import FooterSection from "./FooterLinks";
 import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
 import { handleLogout } from "../Auth/Logout";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Footer() {
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [sellerAreaOpen, setSellerAreaOpen] = useState(false);
-  const [Categories, setCategories] = useState<any>();
+  // const [Categories, setCategories] = useState<any>();
   const { t } = useTranslation(["EndUserFooter"]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getAllCategories();
-        setCategories(response.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const response = await getAllCategories();
+  //       setCategories(response.data.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchCategories();
+  // }, []);
+
+  const { data: categories, isLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const res = await getAllCategories();
+      return res.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
 
   const iconClass =
     "text-gray-400 hover:text-purple-400 transition duration-300 transform hover:scale-125";
@@ -141,7 +151,7 @@ export default function Footer() {
             setIsOpen={setQuickLinksOpen}
           >
             <ul>
-              {Categories?.slice(0, 4).map((category, i) => (
+              {categories?.slice(0, 4).map((category, i) => (
                 <li key={i}>
                   <Link
                     to={`/category/${category.id}`}

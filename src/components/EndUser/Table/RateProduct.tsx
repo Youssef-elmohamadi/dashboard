@@ -4,15 +4,15 @@ import "font-awesome/css/font-awesome.min.css";
 
 export async function showReviewPopup(
   product_id: number,
-  ratePlaceholder,
-  titleRate,
-  rateError,
-  confirmText,
-  cancelText
+  ratePlaceholder: string,
+  titleRate: string,
+  rateError: string,
+  confirmText: string,
+  cancelText: string
 ) {
   const { value: formValues } = await Swal.fire({
-    confirmButtonText: confirmText, // ✅ نص زر التأكيد
-    cancelButtonText: cancelText, // ✅ نص زر الإلغاء
+    confirmButtonText: confirmText,
+    cancelButtonText: cancelText,
     title: titleRate,
     html: `
       <style>

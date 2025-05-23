@@ -23,7 +23,7 @@ export const alertDelete = async (
     confirmTitle = "Are you sure?",
     confirmText = "You won't be able to revert this!",
     confirmButtonText = "Yes, delete it!",
-    cancelButtonText = "Cancel", // أضف السطر ده
+    cancelButtonText = "Cancel",
     successTitle = "Deleted!",
     successText = "Item has been deleted.",
     errorTitle = "Error!",
@@ -61,7 +61,6 @@ export const alertDelete = async (
       if (status === 401 || status === 403) {
         globalError = "You don't have permission to delete.";
       } else if (status === 422) {
-        // جلب أول رسالة خطأ من الرسائل لو كانت موجودة
         const validationErrors = error?.response?.data?.errors;
         globalError =
           validationErrors && typeof validationErrors === "object"

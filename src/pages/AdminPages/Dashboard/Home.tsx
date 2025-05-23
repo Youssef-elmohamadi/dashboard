@@ -11,6 +11,15 @@ import { GroupIcon } from "../../../icons";
 import { BoxIconLine } from "../../../icons";
 import { useTranslation } from "react-i18next";
 
+interface Product {
+  name: string;
+}
+interface Items {
+  product: Product[];
+}
+interface Order {
+  items: Items[];
+}
 export default function Home() {
   const { t } = useTranslation(["Home"]);
   const [numbersData, setNumbersData] = useState({
@@ -35,7 +44,7 @@ export default function Home() {
           orderPerMonth: homeData.order_count_per_month,
         });
 
-        const mappedOrders = homeData.recent_orders.map((order) => {
+        const mappedOrders = homeData.recent_orders.map((order: Order) => {
           const firstItem = order.items[0]?.product;
           return {
             productName: firstItem?.name || "N/A",
@@ -54,6 +63,7 @@ export default function Home() {
     };
     fetchHomeData();
   }, []);
+  console.log(monthlySalesData);
 
   return (
     <>
@@ -84,18 +94,14 @@ export default function Home() {
         </div>
 
         <div className="col-span-12 xl:col-span-5">
-          <MonthlyTarget />
-        </div>
-
-        <div className="col-span-12">
-          <StatisticsChart />
-        </div>
-
-        <div className="col-span-12 xl:col-span-5">
           <DemographicCard />
         </div>
 
-        <div className="col-span-12 xl:col-span-7">
+        <div className="col-span-12">
+          <StatisticsChart ordersData={monthlySalesData} />
+        </div>
+
+        <div className="col-span-12">
           <RecentOrders orders={recentOrders} />
         </div>
       </div>

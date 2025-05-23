@@ -13,16 +13,11 @@ const VendorSettings = () => {
         title="Tashtiba | Vendor Settings"
         description="Update Your Vendor Information"
       />
-      <PageBreadcrumb
-        pageTitle={t("vendor.vendorProfile")}
-        userType="super_admin"
-      />
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
-        <div className="space-y-6">
-          {/* <UserMetaCard /> */}
-          <VendorEditPage />
-          <UserAddressCard />
-        </div>
+      <PageBreadcrumb pageTitle={t("vendor.vendorProfile")} userType="admin" />
+      <div className="space-y-6">
+        {/* <UserMetaCard /> */}
+        <VendorEditPage />
+        <UserAddressCard />
       </div>
     </>
   );

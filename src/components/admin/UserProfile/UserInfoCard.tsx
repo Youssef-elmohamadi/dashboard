@@ -4,42 +4,118 @@ import Button from "../../ui/button/Button";
 import Input from "../../form/input/InputField";
 import Label from "../../form/Label";
 import { useEffect, useState } from "react";
-import { showUser } from "../../../api/AdminApi/profileApi/_requests";
-import { updateAdmin } from "../../../api/AdminApi/usersApi/_requests";
+import {
+  getAdminById,
+  updateAdmin,
+} from "../../../api/AdminApi/usersApi/_requests";
 import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
-export default function UserInfoCard({ userType }) {
+interface UserData {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  roles: [{ name: string }];
+  avatar: string;
+  password: string;
+}
+
+const initialUserData: UserData = {
+  first_name: "",
+  last_name: "",
+  email: "",
+  phone: "",
+  roles: [{ name: "" }],
+  avatar: "",
+  password: "",
+};
+
+export default function UserInfoCard({ userType }: { userType: string }) {
   const { t } = useTranslation(["UserProfile"]);
   const { isOpen, openModal, closeModal } = useModal();
-  const [dataUser, setDataUser] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone: "",
-    roles: [{ name: "" }],
-    avatar: "",
-    password: "",
-  });
+  const [dataUser, setDataUser] = useState<UserData>(initialUserData);
   const [updateData, setUpdateData] = useState({
     first_name: "",
     last_name: "",
     email: "",
     phone: "",
+    password: "",
   });
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
+
+  const queryClient = useQueryClient();
+
+  // جلب بيانات المستخدم باستخدام useQuery
+  const {
+    data: userData,
+    isLoading,
+    error,
+  } = useQuery<UserData, Error>({
+    queryKey: ["userData"],
+    queryFn: async () => {
+      const storedUserId = localStorage.getItem("aId");
+      if (!storedUserId) throw new Error("User ID not found in localStorage");
+      if (userType === "admin") {
+        const res = await getAdminById(storedUserId);
+        return res.data.data;
+      } else {
+        return {
+          first_name: "Mariam",
+          last_name: "Darouich",
+          email: "Mariam@yahoo.com",
+          phone: "796423522",
+          roles: [{ name: "" }],
+          avatar: "",
+          password: "",
+        };
+      }
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  // تحديث dataUser لما userData تتغير
+  useEffect(() => {
+    if (userData) {
+      setDataUser(userData);
+    }
+  }, [userData]);
+
+  // تنظيف URL الصورة لتجنب تسرب الذاكرة
+  useEffect(() => {
+    return () => {
+      if (selectedImage) {
+        URL.revokeObjectURL(selectedImage);
+      }
+    };
+  }, [selectedImage]);
+
   const handleOpenModal = () => {
     setUpdateData({
       first_name: dataUser.first_name || "",
       last_name: dataUser.last_name || "",
       email: dataUser.email || "",
       phone: dataUser.phone || "",
+      password: "",
     });
+    setSelectedImage(null);
+    setImageFile(null);
+    setValidationErrors({});
     openModal();
   };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!file.type.startsWith("image/")) {
+        toast.error(t("validation.invalid_file_type"));
+        return;
+      }
       setImageFile(file);
       const imageURL = URL.createObjectURL(file);
       setSelectedImage(imageURL);
@@ -54,59 +130,75 @@ export default function UserInfoCard({ userType }) {
     }));
   };
 
-  useEffect(() => {
-    const storedUserId = localStorage.getItem("aId"); // Make sure 'userId' is a string key in localStorage
-    if (storedUserId) {
-      const fetchData = async (id: any) => {
-        try {
-          if (userType === "admin") {
-            const res = await showUser(id);
-            setDataUser(res.data.data);
-          } else {
-            setDataUser({
-              first_name: "Mariam",
-              last_name: "Darouich",
-              email: "Mariam@yahoo.com",
-              phone: "796423522",
-              roles: [{ name: "" }],
-              avatar: "",
-              password: "",
-            });
-          }
-        } catch (error) {
-          console.log("Failed to get data", error);
-        }
-      };
-      fetchData(storedUserId); // Make sure it's converted to a number if needed
-    }
-  }, []);
-  console.log(dataUser);
+  // التحقق من الحقول
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    if (!updateData.first_name)
+      newErrors.first_name = t("validation.first_name");
+    if (!updateData.last_name) newErrors.last_name = t("validation.last_name");
+    if (
+      !updateData.email ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updateData.email)
+    )
+      newErrors.email = t("validation.email_invalid");
+    if (!updateData.phone || !/^\+?\d{10,15}$/.test(updateData.phone))
+      newErrors.phone = t("validation.phone_invalid");
+    setValidationErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-  const handleSave = async (e: any) => {
+  // تحديث بيانات المستخدم باستخدام useMutation
+  const updateUserMutation = useMutation({
+    mutationFn: (formData: FormData) => {
+      const userId = localStorage.getItem("aId");
+      if (!userId) throw new Error("User ID not found in localStorage");
+      return updateAdmin(userId, formData);
+    },
+    onSuccess: () => {
+      toast.success(t("editInfoCard.successUpdate"));
+      queryClient.invalidateQueries({ queryKey: ["userData"] });
+      closeModal();
+      setSelectedImage(null);
+      setImageFile(null);
+    },
+    onError: (error: any) => {
+      toast.error(t("editInfoCard.errorUpdate"));
+      console.error("Failed to update user", error);
+    },
+  });
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("supmit");
+
+    if (!validate()) return;
+
     const formData = new FormData();
     formData.append("first_name", updateData.first_name);
     formData.append("last_name", updateData.last_name);
     formData.append("email", updateData.email);
     formData.append("phone", updateData.phone);
-    formData.append("password", dataUser.password);
+    if (updateData.password) {
+      formData.append("password", updateData.password);
+    }
     formData.append("role", dataUser.roles[0].name);
-
     if (imageFile) {
       formData.append("avatar", imageFile);
     }
 
-    try {
-      const userId = localStorage.getItem("userId");
-      if (!userId) return;
-
-      await updateAdmin(userId, formData); // هذا الAPI المفترض أنك عامله
-      console.log("User updated");
-      closeModal();
-    } catch (error) {
-      console.error("Failed to update user", error);
-    }
+    updateUserMutation.mutate(formData);
   };
+
+  // التحقق من حالة التحميل أو الخطأ
+  if (isLoading) {
+    return <div className="text-center">{t("userInfoCard.loading")}</div>;
+  }
+  if (error) {
+    return (
+      <div className="text-red-600">{t("userInfoCard.errorFetching")}</div>
+    );
+  }
+
   return (
     <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
@@ -124,6 +216,9 @@ export default function UserInfoCard({ userType }) {
                 src={dataUser?.avatar || "/images/default-avatar.jpg"}
                 alt="User"
                 className="w-full h-full object-cover"
+                onError={(e) =>
+                  (e.currentTarget.src = "/images/default-avatar.jpg")
+                }
               />
             </div>
           </div>
@@ -163,15 +258,6 @@ export default function UserInfoCard({ userType }) {
                 {dataUser.phone}
               </p>
             </div>
-
-            {/* <div>
-              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Bio
-              </p>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Team Manager
-              </p>
-            </div> */}
           </div>
         </div>
 
@@ -199,7 +285,7 @@ export default function UserInfoCard({ userType }) {
       </div>
 
       <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
-        <div className=" relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11 h-[700px]">
+        <div className="relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11 h-[700px]">
           <div className="px-2 pr-14">
             <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
               {t("userInfoCard.title")}
@@ -208,7 +294,7 @@ export default function UserInfoCard({ userType }) {
               {t("editInfoCard.editDescription")}
             </p>
           </div>
-          <form className="flex flex-col">
+          <form onSubmit={handleSave} className="flex flex-col">
             <div className="flex flex-col items-center justify-center mb-6">
               <div className="relative">
                 <img
@@ -217,6 +303,7 @@ export default function UserInfoCard({ userType }) {
                   }
                   alt="Profile"
                   className="w-24 h-24 rounded-full object-cover border-2 border-gray-300"
+                  onError={(e) => (e.currentTarget.src = "/default-avatar.png")}
                 />
                 <label
                   htmlFor="profile-image"
@@ -243,39 +330,6 @@ export default function UserInfoCard({ userType }) {
               </p>
             </div>
             <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
-              {/* <div>
-                <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
-                  Social Links
-                </h5>
-
-                <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                  <div>
-                    <Label>Facebook</Label>
-                    <Input
-                      type="text"
-                      value="https://www.facebook.com/PimjoHQ"
-                    />
-                  </div>
-
-                  <div>
-                    <Label>X.com</Label>
-                    <Input type="text" value="https://x.com/PimjoHQ" />
-                  </div>
-
-                  <div>
-                    <Label>Linkedin</Label>
-                    <Input
-                      type="text"
-                      value="https://www.linkedin.com/company/pimjo"
-                    />
-                  </div>
-
-                  <div>
-                    <Label>Instagram</Label>
-                    <Input type="text" value="https://instagram.com/PimjoHQ" />
-                  </div>
-                </div>
-              </div> */}
               <div className="mt-7">
                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
                   {t("userInfoCard.title")}
@@ -290,6 +344,11 @@ export default function UserInfoCard({ userType }) {
                       value={updateData.first_name}
                       onChange={handleChange}
                     />
+                    {validationErrors.first_name && (
+                      <p className="text-red-600 text-sm mt-1">
+                        {validationErrors.first_name}
+                      </p>
+                    )}
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
@@ -300,16 +359,26 @@ export default function UserInfoCard({ userType }) {
                       value={updateData.last_name}
                       onChange={handleChange}
                     />
+                    {validationErrors.last_name && (
+                      <p className="text-red-600 text-sm mt-1">
+                        {validationErrors.last_name}
+                      </p>
+                    )}
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
                     <Label>{t("userInfoCard.email")}</Label>
                     <Input
                       name="email"
-                      type="text"
+                      type="email"
                       value={updateData.email}
                       onChange={handleChange}
                     />
+                    {validationErrors.email && (
+                      <p className="text-red-600 text-sm mt-1">
+                        {validationErrors.email}
+                      </p>
+                    )}
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
@@ -320,6 +389,11 @@ export default function UserInfoCard({ userType }) {
                       value={updateData.phone}
                       onChange={handleChange}
                     />
+                    {validationErrors.phone && (
+                      <p className="text-red-600 text-sm mt-1">
+                        {validationErrors.phone}
+                      </p>
+                    )}
                   </div>
 
                   <div className="col-span-2">
@@ -327,7 +401,7 @@ export default function UserInfoCard({ userType }) {
                     <Input
                       name="password"
                       type="password"
-                      value=""
+                      value={updateData.password}
                       onChange={handleChange}
                     />
                   </div>
@@ -338,9 +412,9 @@ export default function UserInfoCard({ userType }) {
               <Button size="sm" variant="outline" onClick={closeModal}>
                 {t("editInfoCard.close")}
               </Button>
-              <Button size="sm" onClick={handleSave}>
-                {t("editInfoCard.save")}
-              </Button>
+              <button type="submit" onClick={handleSave}>
+                Save Changes
+              </button>
             </div>
           </form>
         </div>

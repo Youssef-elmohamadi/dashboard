@@ -8,6 +8,7 @@ import {
 } from "../../../api/AdminApi/VendorSettingApi/_requests";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Vendor {
   name: string;
@@ -77,15 +78,59 @@ const VendorEditPage: React.FC = () => {
     setUpdatedDocs((prev) => ({ ...prev, [docId]: file }));
   };
 
-  const fetchVendor = async () => {
-    const res = await getVendor();
-    setVendor(res.data.data);
-  };
-  useEffect(() => {
-    fetchVendor();
-  }, []);
+  // const fetchVendor = async () => {
+  //   const res = await getVendor();
+  //   setVendor(res.data.data);
+  // };
+  // useEffect(() => {
+  //   fetchVendor();
+  // }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const { data: vendorData, isLoading } = useQuery<Vendor, Error>({
+    queryKey: ["vendorData"],
+    queryFn: async () => {
+      const res = await getVendor();
+      return res.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  useEffect(() => {
+    if (vendorData) {
+      setVendor(vendorData);
+    }
+  }, [vendorData]);
+
+  const queryClient = useQueryClient();
+
+  const updateVendorMutation = useMutation({
+    mutationFn: (formData: FormData) => updateVendor(formData),
+    onSuccess: () => {
+      toast.success(t("vendor.successUpdate"));
+      queryClient.invalidateQueries({ queryKey: ["vendorData"] });
+      setValidationErrors({});
+    },
+    onError: (error: any) => {
+      console.log(error);
+
+      toast.error(t("vendor.errorUpdate"));
+      const rawErrors = error?.response?.data?.errors;
+      if (Array.isArray(rawErrors)) {
+        const formattedErrors: Record<string, string[]> = {};
+        rawErrors.forEach((err: { code: string; message: string }) => {
+          if (!formattedErrors[err.code]) {
+            formattedErrors[err.code] = [];
+          }
+          formattedErrors[err.code].push(err.message);
+        });
+        setValidationErrors(formattedErrors);
+      } else {
+        setValidationErrors({ general: [t("errors.general")] });
+      }
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
 
@@ -107,169 +152,165 @@ const VendorEditPage: React.FC = () => {
         index++;
       }
     });
-
-    try {
-      const res = await updateVendor(formData);
-      fetchVendor();
-      toast.success(t("vendor.successUpdate"));
-    } catch (error: any) {
-      toast.error(t("vendor.errorUpdate"));
-      console.error("Error updating vendor:", error);
-      const rawErrors = error?.response?.data?.errors;
-      if (Array.isArray(rawErrors)) {
-        const formattedErrors: Record<string, string[]> = {};
-        rawErrors.forEach((err: { code: string; message: string }) => {
-          if (!formattedErrors[err.code]) {
-            formattedErrors[err.code] = [];
-          }
-          formattedErrors[err.code].push(err.message);
-        });
-        setValidationErrors(formattedErrors);
-      } else {
-        setValidationErrors({ general: [t("errors.general")] });
-      }
-    }
+    updateVendorMutation.mutate(formData);
   };
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4 dark:text-white">
-        {t("vendor.edit_title")}
-      </h2>
-      <form onSubmit={handleSubmit}>
-        <div className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label>{t("vendor.name")}</Label>
-            <Input
-              type="text"
-              value={vendor.name}
-              onChange={(e) => handleVendorChange("name", e.target.value)}
-            />
-            {clientErrors.name && (
-              <p className="text-red-600 text-sm">{clientErrors.name}</p>
-            )}
-          </div>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md space-y-8"
+      >
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+            {t("vendor.edit_title")}
+          </h2>
 
-          <div>
-            <Label>{t("vendor.email")}</Label>
-            <Input
-              type="email"
-              value={vendor.email}
-              onChange={(e) => handleVendorChange("email", e.target.value)}
-            />
-            {clientErrors.email && (
-              <p className="text-red-600 text-sm">{clientErrors.email}</p>
-            )}
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <Label>{t("vendor.name")}</Label>
+              <Input
+                type="text"
+                value={vendor?.name}
+                onChange={(e) => handleVendorChange("name", e.target.value)}
+              />
+              {clientErrors.name && (
+                <p className="text-red-600 text-sm mt-1">{clientErrors.name}</p>
+              )}
+            </div>
 
-          <div>
-            <Label>{t("vendor.phone")}</Label>
-            <Input
-              type="text"
-              value={vendor.phone}
-              onChange={(e) => handleVendorChange("phone", e.target.value)}
-            />
-            {clientErrors.phone && (
-              <p className="text-red-600 text-sm">{clientErrors.phone}</p>
-            )}
-          </div>
+            <div>
+              <Label>{t("vendor.email")}</Label>
+              <Input
+                type="email"
+                value={vendor?.email}
+                onChange={(e) => handleVendorChange("email", e.target.value)}
+              />
+              {clientErrors.email && (
+                <p className="text-red-600 text-sm mt-1">
+                  {clientErrors.email}
+                </p>
+              )}
+            </div>
 
-          <div>
-            <Label>{t("vendor.description")}</Label>
-            <TextArea
-              value={vendor.description || ""}
-              onChange={(value) => handleVendorChange("description", value)}
-            />
-            {clientErrors.description && (
-              <p className="text-red-600 text-sm">{clientErrors.description}</p>
-            )}
+            <div>
+              <Label>{t("vendor.phone")}</Label>
+              <Input
+                type="text"
+                value={vendor?.phone}
+                onChange={(e) => handleVendorChange("phone", e.target.value)}
+              />
+              {clientErrors.phone && (
+                <p className="text-red-600 text-sm mt-1">
+                  {clientErrors.phone}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <Label>{t("vendor.description")}</Label>
+              <TextArea
+                value={vendor?.description || ""}
+                onChange={(value) => handleVendorChange("description", value)}
+              />
+              {clientErrors.description && (
+                <p className="text-red-600 text-sm mt-1">
+                  {clientErrors.description}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
-        <hr className="my-6" />
+        <hr className="border-gray-300 dark:border-gray-700" />
 
         <div>
           <h3 className="text-xl font-semibold mb-4 dark:text-white">
             {t("vendor.documents_title")}
           </h3>
-          <div className="space-y-6">
-            {vendor.documents.map((doc) => (
+          <div className="grid gap-6">
+            {vendor?.documents?.map((doc: VendorDocument) => (
               <div
                 key={doc.id}
-                className="border border-gray-200 p-4 rounded bg-gray-50 flex flex-col md:flex-row gap-4 items-start dark:bg-gray-900"
+                className="border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200"
               >
-                <div className="flex-1 space-y-1">
-                  <p className="font-medium dark:text-white">
-                    {t(
-                      documentTypeMap[doc.document_type] ||
-                        `vendor.document_${doc.document_type}`
-                    )}
-                  </p>
-                  <p
-                    className={`text-sm ${
-                      doc.status === "approved"
-                        ? "text-green-600"
-                        : doc.status === "pending"
-                        ? "text-yellow-600"
-                        : "text-red-600"
-                    }`}
-                  >
-                    {t(`vendor.status_${doc.status}`)}
-                  </p>
-
-                  {doc.status !== "approved" && doc.status !== "pending" && (
-                    <div className="mt-2">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) =>
-                          handleFileChange(
-                            doc.id,
-                            e.target.files ? e.target.files[0] : null
-                          )
-                        }
-                        className="dark:text-white"
-                      />
-                      {updatedDocs[doc.id] && (
-                        <>
-                          <p className="text-sm text-gray-600 mt-1">
-                            {t("vendor.selected_file")}:{" "}
-                            {updatedDocs[doc.id]?.name}
-                          </p>
-                          <img
-                            src={URL.createObjectURL(updatedDocs[doc.id]!)}
-                            alt="preview"
-                            className="w-full max-w-xs h-auto object-contain mt-2 rounded border border-gray-200 dark:text-white"
-                          />
-                        </>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex-1">
+                    <p className="text-lg font-medium dark:text-white mb-1">
+                      {t(
+                        documentTypeMap[doc.document_type] ||
+                          `vendor.document_${doc.document_type}`
                       )}
-                    </div>
-                  )}
-
-                  {doc.status === "approved" && (
-                    <p className="mt-2 text-gray-500">
-                      {t("vendor.cannot_edit_approved")}
                     </p>
-                  )}
-                </div>
-                <div>
-                  <img
-                    src={doc.document_name}
-                    alt="document"
-                    className="w-full max-w-xs h-auto object-contain rounded border border-gray-200"
-                  />
+                    <p
+                      className={`text-sm font-medium ${
+                        doc.status === "approved"
+                          ? "text-green-600"
+                          : doc.status === "pending"
+                          ? "text-yellow-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {t(`vendor.status_${doc.status}`)}
+                    </p>
+
+                    {doc.status !== "approved" && doc.status !== "pending" && (
+                      <div className="mt-3">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) =>
+                            handleFileChange(
+                              doc.id,
+                              e.target.files ? e.target.files[0] : null
+                            )
+                          }
+                          className="block w-full text-sm text-gray-700 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+                        />
+                        {updatedDocs[doc.id] && (
+                          <div className="mt-3">
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
+                              {t("vendor.selected_file")}:{" "}
+                              {updatedDocs[doc.id]?.name}
+                            </p>
+                            <img
+                              src={URL.createObjectURL(updatedDocs[doc.id]!)}
+                              alt="preview"
+                              className="mt-2 w-full max-w-xs rounded-lg border border-gray-200 dark:border-gray-600"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {doc.status === "approved" && (
+                      <p className="mt-2 text-sm text-gray-500">
+                        {t("vendor.cannot_edit_approved")}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="w-full md:w-64">
+                    <img
+                      src={doc.document_name}
+                      alt="document"
+                      className="rounded-lg border border-gray-200 dark:border-gray-600 object-contain max-h-64 w-full"
+                    />
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="mt-6 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-        >
-          {t("vendor.save_changes")}
-        </button>
+        <div className="flex justify-end mt-6">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+          >
+            {t("vendor.save_changes")}
+          </button>
+        </div>
       </form>
     </div>
   );
