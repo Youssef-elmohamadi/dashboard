@@ -68,14 +68,14 @@ const Home = () => {
         />
         <FeaturesSection />
         <CircleSlider items={categories} />
-        <AdBanner
+        {/* <AdBanner
           imageUrl="/images/banner-offer.webp"
           linkUrl="/"
           altText="Profit Announcement"
-        />
+        /> */}
       </div>
 
-      <MultiImagesBanner
+      {/* <MultiImagesBanner
         items={[
           {
             title: "youssef",
@@ -93,7 +93,7 @@ const Home = () => {
             imageUrls: ["/images/ad1.webp"],
           },
         ]}
-      />
+      /> */}
 
       <div className="enduser_container">
         {productCategories?.map((category: any) => (

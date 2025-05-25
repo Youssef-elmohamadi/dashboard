@@ -197,7 +197,7 @@ const VendorDetails: React.FC = () => {
                       {documentTypeLabel(doc.document_type)}
                     </p>
                     <p className="text-sm">
-                      {t("vendorsPage.details.status")}:{" "}
+                      {t("vendorsPage.details.status")}:
                       {t(`vendorsPage.status.${doc.status.toLowerCase()}`)}
                     </p>
                     <button
@@ -217,6 +217,19 @@ const VendorDetails: React.FC = () => {
                 {t("vendorsPage.details.noDocuments")}
               </p>
             )}
+          </div>
+          <div className="flex justify-center items-center mt-6">
+            <button
+              onClick={() =>
+                window.open(
+                  `http://127.0.0.1:8000/api/superAdmin/vendors/downloadVendorData/${vendor.id}`,
+                  "_blank"
+                )
+              }
+              className="block px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-green-700 transition"
+            >
+              {t("vendorsPage.details.downloadPdfBtn")}
+            </button>
           </div>
         </section>
       </div>

@@ -1,9 +1,9 @@
 import React from "react";
 type Props = {
-  text: string;
+  text?: string;
   className?: string;
 };
-const Loading = ({ text, className }: Props) => {
+const Loading = ({ text = "Loading Data...", className }: Props) => {
   return (
     <div className="p-3 flex items-center flex-col !w-full">
       <svg

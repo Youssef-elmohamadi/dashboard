@@ -6,6 +6,7 @@
       "pageTitle": "Vendor Details",
       "basicInfo": "Basic Info",
       "name": "Name",
+      "downloadPdfBtn": "Download PDF",
       "email": "Email",
       "phone": "Phone",
       "description": "Description",

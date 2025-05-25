@@ -20,6 +20,11 @@ export const getAllProducts = async (params: Record<string, any> = {}) => {
     params,
   });
 };
+export const getFavoriteProducts = async (params: Record<string, any> = {}) => {
+  return await axiosInstanceEndUser.get("/api/user/products/getFavProducts", {
+    params,
+  });
+};
 
 export const getProductCategoriesById = async (
   params: Record<string, any> = {}

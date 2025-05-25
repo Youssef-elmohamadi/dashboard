@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { CiSearch } from "react-icons/ci";
@@ -20,29 +20,34 @@ import { getProfile } from "../../../api/EndUserApi/endUserAuth/_requests";
 import { handleLogout } from "../../../components/EndUser/Auth/Logout";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useTranslation } from "react-i18next";
-import { QueriesObserver, QueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import NotificationDropdown from "../dropdown/Dropdown";
 
 const AppHeader = () => {
   const uToken = localStorage.getItem("uToken");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  //const [Categories, setCategories] = useState<any>();
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const closeMenu = () => setIsMenuOpen(false);
-  //const [user, setUser] = useState({});
+  const [openNotification, setOpenNotification] = useState(false);
+  const notificationIconRef = useRef<HTMLDivElement>(null); // مرجع جديد لأيقونة الإشعارات
   const { items } = useSelector((state) => state.wishList);
   const { dir } = useDirectionAndLanguage();
   const { t } = useTranslation(["EndUserHeader"]);
-  // useEffect(() => {
-  //   const fetchCategories = async () => {
-  //     try {
-  //       const response = await getAllCategories();
-  //       setCategories(response.data.data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchCategories();
-  // }, []);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
+
+  const onCloseNotification = () => {
+    console.log("Closing notification dropdown");
+    setOpenNotification(false);
+  };
+
+  const toggleNotification = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    console.log("Toggling notification");
+    setOpenNotification((prev) => {
+      console.log("New notification state:", !prev);
+      return !prev;
+    });
+  };
 
   const { data: categories, isLoading } = useQuery({
     queryKey: ["categories"],
@@ -52,17 +57,6 @@ const AppHeader = () => {
     },
     staleTime: 1000 * 60 * 5,
   });
-  // useEffect(() => {
-  //   const fetchProfile = async () => {
-  //     try {
-  //       const response = await getProfile();
-  //       setUser(response.data.data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchProfile();
-  // }, []);
 
   const { data: user, isLoading: isLoadingUser } = useQuery({
     queryKey: ["endUserProfileData"],
@@ -222,12 +216,27 @@ const AppHeader = () => {
                 </div>
                 <Separator />
               </div>
-              <div className="flex gap-4">
-                <div className="flex items-center gap-2">
-                  <NavLink to="/u-notification">
+              <div className="flex gap-4 ">
+                <div className="relative">
+                  <div
+                    ref={notificationIconRef}
+                    onClick={toggleNotification}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
                     <MdNotifications className="text-2xl text-secondary" />
-                  </NavLink>
+                  </div>
+
+                  {openNotification && (
+                    <div className="absolute top-full right-0 z-50">
+                      <NotificationDropdown
+                        open={openNotification}
+                        onClose={onCloseNotification}
+                        notificationIconRef={notificationIconRef} // تمرير المرجع
+                      />
+                    </div>
+                  )}
                 </div>
+
                 <div className="flex items-center gap-2 relative">
                   <NavLink to="/u-favorite">
                     {items && (

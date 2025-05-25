@@ -11,6 +11,7 @@ import { FiUserPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { useCreateAdmin } from "../../../hooks/useVendorAdmins";
 export default function CreateAdmin() {
   const [showPassword, setShowPassword] = useState(false);
   const [options, setOptions] = useState<any[]>([]);
@@ -22,6 +23,8 @@ export default function CreateAdmin() {
     email: [] as string[],
     password: [] as string[],
     role: [] as string[],
+    global: "",
+    general: [] as string[],
   });
   const [clientSideErrors, setClientSideErrors] = useState({
     first_name: "",
@@ -103,43 +106,66 @@ export default function CreateAdmin() {
     };
     fetchData();
   }, []);
+  const { mutateAsync } = useCreateAdmin();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
+    setLoading(true);
+    setErrors({
+      first_name: [],
+      last_name: [],
+      phone: [],
+      email: [],
+      password: [],
+      role: [],
+      global: "",
+      general: [],
+    });
+
     try {
-      await createAdmin(adminData);
+      await mutateAsync(adminData);
       navigate("/admin/admins", {
         state: { successCreate: t("admin.success_message") },
       });
     } catch (error: any) {
       console.error("Error creating admin:", error);
       const status = error?.response?.status;
+
       if (status === 403 || status === 401) {
-        setErrors({
-          ...errors,
+        setErrors((prev) => ({
+          ...prev,
           global: t("admin.errors.global"),
-        });
-        return;
-      }
-      const rawErrors = error?.response?.data.errors;
-
-      if (Array.isArray(rawErrors)) {
-        const formattedErrors: Record<string, string[]> = {};
-
-        rawErrors.forEach((err: { code: string; message: string }) => {
-          if (!formattedErrors[err.code]) {
-            formattedErrors[err.code] = [];
-          }
-          formattedErrors[err.code].push(err.message);
-        });
-
-        setErrors(formattedErrors);
+        }));
       } else {
-        setErrors({ general: [t("admin.errors.general")] });
+        const rawErrors = error?.response?.data.errors;
+
+        if (Array.isArray(rawErrors)) {
+          const formattedErrors: Record<string, string[]> = {};
+
+          rawErrors.forEach((err: { code: string; message: string }) => {
+            if (!formattedErrors[err.code]) {
+              formattedErrors[err.code] = [];
+            }
+            formattedErrors[err.code].push(err.message);
+          });
+
+          setErrors((prev) => ({
+            ...prev,
+            ...formattedErrors,
+          }));
+        } else {
+          setErrors((prev) => ({
+            ...prev,
+            general: [t("admin.errors.general")],
+          }));
+        }
       }
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <div>
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">

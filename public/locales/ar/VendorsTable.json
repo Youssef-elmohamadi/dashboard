@@ -2,7 +2,9 @@
   "vendorsPage": {
     "title": "البائعون",
     "all": "كل البائعون",
+
     "details": {
+      "downloadPdfBtn": "تحميل كملف PDF",
       "pageTitle": "تفاصيل البائع",
       "basicInfo": "المعلومات الأساسية",
       "name": "الاسم",

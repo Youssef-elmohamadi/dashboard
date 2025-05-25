@@ -189,7 +189,6 @@ export default function UserInfoCard({ userType }: { userType: string }) {
     updateUserMutation.mutate(formData);
   };
 
-  // التحقق من حالة التحميل أو الخطأ
   if (isLoading) {
     return <div className="text-center">{t("userInfoCard.loading")}</div>;
   }
@@ -413,7 +412,7 @@ export default function UserInfoCard({ userType }: { userType: string }) {
                 {t("editInfoCard.close")}
               </Button>
               <button type="submit" onClick={handleSave}>
-                Save Changes
+                {t("editInfoCard.save")}
               </button>
             </div>
           </form>

@@ -174,7 +174,13 @@ export const buildColumns = <T extends BaseEntity>(
     columns.push({
       Header: t("table.created_at"),
       accessor: "created_at" as keyof T,
-      Cell: ({ value }: any) => format(new Date(value), "dd/MM/yyyy"),
+      //Cell: ({ value }: any) => format(new Date(value), "dd/MM/yyyy"),
+      Cell: ({ value }: any) => {
+        if (!value) return ""; // أو عرض رسالة بديلة مثلاً "-"
+        const date = new Date(value);
+        if (isNaN(date.getTime())) return ""; // إذا التاريخ غير صالح
+        return format(date, "dd/MM/yyyy");
+      },
     });
   }
   if (options.includeUpdatedAt) {

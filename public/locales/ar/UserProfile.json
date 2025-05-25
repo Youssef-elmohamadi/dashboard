@@ -9,7 +9,19 @@
     "last_name": "اسم العائلة",
     "email": "البريد الالكتروني",
     "phone": "رقم الجوال",
-    "update": "تعديل"
+    "update": "تعديل",
+    "loading": "جاري تحميل المعلومات...",
+    "errorFetch": "فشل تحميل المعلومات."
+  },
+  "validation": {
+    "first_name_required": "الاسم الأول مطلوب.",
+    "last_name_required": "اسم العائلة مطلوب.",
+    "email_required": "البريد الالكتروني مطلوب.",
+    "phone_invalid": "رقم الجوال غير صالح.",
+    "email_invalid": "البريد الالكتروني غير صالح.",
+    "phone_required": "رقم الجوال مطلوب.",
+    "password_short": "كلمة المرور يجب ان تكون 6 احرف على الاقل.",
+    "password_confirmation_mismatch": "كلمة المرور غير متطابقة."
   },
   "editInfoCard": {
     "editDescription": "قم بتحديث بياناتك لإبداع ملفك الشخصي محدثا.",
@@ -17,6 +29,8 @@
     "avatar": "الصورة الشخصية",
     "password": "كلمة المرور",
     "save": "حفظ التغييرات",
-    "close": "اغلاق"
+    "close": "اغلاق",
+    "successUpdate": "تم حفظ التغييرات بنجاح.",
+    "errorUpdate": "فشل حفظ التغييرات."
   }
 }

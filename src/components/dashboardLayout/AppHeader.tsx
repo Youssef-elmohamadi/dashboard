@@ -189,7 +189,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ userType }) => {
             {/* <!-- Dark Mode Toggler --> */}
             <ThemeToggleButton />
             {/* <!-- Dark Mode Toggler --> */}
-            <NotificationDropdown />
+            <NotificationDropdown userType={userType} />
             {/* <!-- Notification Menu Area --> */}
           </div>
           {/* <!-- User Area --> */}
