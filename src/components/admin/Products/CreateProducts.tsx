@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Checkbox from "../../form/input/Checkbox";
-import { getAllCategories } from "../../../api/AdminApi/categoryApi/_requests";
 import FileInput from "../../form/input/FileInput";
-import { createProduct } from "../../../api/AdminApi/products/_requests";
-import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
 import TextArea from "../../form/input/TextArea";
 import { FiDelete } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
+import Select from "../../form/Select";
+import { useCreateProduct } from "../../../hooks/useAdminProducts";
+import { useAllCategories } from "../../../hooks/useCategories";
+import { useAllBrands } from "../../../hooks/useBrands";
 type Attribute = { label: string; value: string };
 type Category = { id: string; name: string };
 type Brand = { id: string; name: string };
@@ -17,6 +18,7 @@ type ProductFormData = {
   name: string;
   description: string;
   price: string;
+  discount_price: string;
   stock_quantity: string;
   category_id: string;
   brand_id: string;
@@ -39,6 +41,8 @@ export default function CreateProducts() {
     stock_quantity: [] as string[],
     status: [] as string[],
     is_featured: [] as string[],
+    general: "" as string,
+    global: "" as string,
   });
   const [clientSideErrors, setClientSideErrors] = useState<
     Record<string, string>
@@ -48,6 +52,7 @@ export default function CreateProducts() {
     name: "",
     description: "",
     price: "",
+    discount_price: "",
     stock_quantity: "",
     category_id: "",
     brand_id: "",
@@ -55,43 +60,27 @@ export default function CreateProducts() {
     is_featured: false,
   });
 
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [brands, setBrands] = useState<Brand[]>([]);
   const navigate = useNavigate();
-
+  const { data: allCategories } = useAllCategories();
+  const categories = allCategories?.data.data?.original;
+  const { data: allBrands } = useAllBrands();
+  const brands = allBrands?.data.data;
   const addTag = () => {
     setTags([...tags, ""]);
   };
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getAllCategories();
-        if (response.data) setCategories(response.data.data.original);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        const response = await getAllBrands();
-        if (response.data) setBrands(response.data.data);
-      } catch (error) {
-        console.error("Error fetching brands:", error);
-      }
-    };
-    fetchBrands();
-  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setProductData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (value: string, name: string) => {
+    setProductData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -145,7 +134,7 @@ export default function CreateProducts() {
     setClientSideErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+  const { mutateAsync } = useCreateProduct();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -171,7 +160,7 @@ export default function CreateProducts() {
       .filter((tag) => tag.trim() !== "")
       .forEach((tag, i) => formData.append(`tags[${i}]`, tag));
     try {
-      await createProduct(formData);
+      await mutateAsync(formData);
       navigate("/admin/products", {
         state: { successCreate: t("success_create") },
       });
@@ -199,7 +188,7 @@ export default function CreateProducts() {
 
         setErrors(formattedErrors);
       } else {
-        setErrors({ general: [t("admin.errors.general")] });
+        setErrors({ ...errors, general: t("admin.errors.general") });
       }
     } finally {
       setLoading(false);
@@ -222,6 +211,7 @@ export default function CreateProducts() {
               value={productData.name}
               placeholder={t("placeholders.name")}
               onChange={handleChange}
+              id="name"
             />
             {clientSideErrors.name && (
               <p className="text-red-500 text-sm mt-1">
@@ -240,6 +230,26 @@ export default function CreateProducts() {
               placeholder={t("placeholders.price")}
               value={productData.price}
               onChange={handleChange}
+              id="price"
+            />
+            {clientSideErrors.price && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.price}
+              </p>
+            )}
+            {errors.price && (
+              <p className="text-red-500 text-sm mt-1">{errors.price[0]}</p>
+            )}
+          </div>
+          <div>
+            <Label htmlFor="discount_price">{t("form.discount_price")}</Label>
+            <Input
+              type="text"
+              name="discount_price"
+              placeholder={t("placeholders.discount_price")}
+              value={productData.discount_price}
+              onChange={handleChange}
+              id="discount_price"
             />
             {clientSideErrors.price && (
               <p className="text-red-500 text-sm mt-1">
@@ -258,6 +268,7 @@ export default function CreateProducts() {
               placeholder={t("placeholders.stock_quantity")}
               value={productData.stock_quantity}
               onChange={handleChange}
+              id="stock_quantity"
             />
             {clientSideErrors.stock_quantity && (
               <p className="text-red-500 text-sm mt-1">
@@ -272,19 +283,15 @@ export default function CreateProducts() {
           </div>
           <div>
             <Label htmlFor="category_id">{t("form.category")}</Label>
-            <select
-              name="category_id"
+            <Select
+              options={categories?.map((category: Category) => ({
+                value: category.id,
+                label: category.name,
+              }))}
+              onChange={(value) => handleSelectChange(value, "category_id")}
               value={productData.category_id}
-              onChange={handleChange}
-              className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full dark:bg-gray-900 dark:text-white"
-            >
-              <option value="">{t("form.select_category")}</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
+              placeholder={t("form.select_category")}
+            />
             {clientSideErrors.category_id && (
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.category_id}
@@ -298,19 +305,15 @@ export default function CreateProducts() {
           </div>
           <div>
             <Label htmlFor="brand_id">{t("form.brand")}</Label>
-            <select
-              name="brand_id"
+            <Select
+              options={brands?.map((brand: Brand) => ({
+                value: brand.id,
+                label: brand.name,
+              }))}
+              onChange={(value) => handleSelectChange(value, "brand_id")}
               value={productData.brand_id}
-              onChange={handleChange}
-              className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full dark:bg-gray-900 dark:text-white"
-            >
-              <option value="">{t("form.select_brand")}</option>
-              {brands.map((brand) => (
-                <option key={brand.id} value={brand.id}>
-                  {brand.name}
-                </option>
-              ))}
-            </select>
+              placeholder={t("form.select_brand")}
+            />
             {clientSideErrors.brand_id && (
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.brand_id}
@@ -322,15 +325,15 @@ export default function CreateProducts() {
           </div>
           <div>
             <Label htmlFor="status">{t("form.status")}</Label>
-            <select
-              name="status"
+            <Select
+              options={[
+                { value: "active", label: t("form.status_active") },
+                { value: "inactive", label: t("form.status_inactive") },
+              ]}
+              onChange={(value) => handleSelectChange(value, "status")}
               value={productData.status}
-              onChange={handleChange}
-              className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full dark:bg-gray-900 dark:text-white"
-            >
-              <option value="active">{t("form.status_active")}</option>
-              <option value="inactive">{t("form.status_inactive")}</option>
-            </select>
+              placeholder={t("form.select_status")}
+            />
             {errors.status && (
               <p className="text-red-500 text-sm mt-1">{errors.status[0]}</p>
             )}
@@ -342,6 +345,7 @@ export default function CreateProducts() {
               onChange={(checked) =>
                 setProductData((prev) => ({ ...prev, is_featured: checked }))
               }
+              id="is_featured"
             />
             {errors.is_featured && (
               <p className="text-red-500 text-sm mt-1">{errors.brand_id[0]}</p>
@@ -350,7 +354,7 @@ export default function CreateProducts() {
         </div>
 
         <div>
-          <Label>{t("form.upload_images")}</Label>
+          <Label htmlFor="">{t("form.upload_images")}</Label>
           <FileInput multiple={true} onChange={handleImageChange} />
           <div className="flex gap-4 mt-2 flex-wrap">
             {imagePreviews.map((src, index) => (

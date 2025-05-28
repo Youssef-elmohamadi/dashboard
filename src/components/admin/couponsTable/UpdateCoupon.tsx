@@ -8,9 +8,10 @@ import {
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
+import { useGetCouponById } from "../../../hooks/useCoupons";
 
 const UpdateCoupon = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateCoupon"]);
 
@@ -42,32 +43,25 @@ const UpdateCoupon = () => {
     expires_at: [] as string[],
   });
 
+  const { data, isError, error } = useGetCouponById(id);
+
+  const coupon = data?.data?.data;
+
   useEffect(() => {
-    const fetchCoupon = async () => {
-      try {
-        if (id) {
-          const res = await showCoupon(id);
-          const data = res.data.data;
-
-          setCouponData({
-            code: data.code || "",
-            type: data.type || "fixed",
-            value: data.value || "",
-            max_discount: data.max_discount || "",
-            min_order_amount: data.min_order_amount || "",
-            usage_limit: data.usage_limit || "",
-            active: data.active?.toString() || "1",
-            start_at: data.start_at || "",
-            expires_at: data.expires_at || "",
-          });
-        }
-      } catch (err) {
-        console.error("Error fetching coupon:", err);
-      }
-    };
-
-    fetchCoupon();
-  }, [id]);
+    if (coupon) {
+      setCouponData({
+        code: coupon.code || "",
+        type: coupon.type || "fixed",
+        value: coupon.value || "",
+        max_discount: coupon.max_discount || "",
+        min_order_amount: coupon.min_order_amount || "",
+        usage_limit: coupon.usage_limit || "",
+        active: coupon.active?.toString() || "1",
+        start_at: coupon.start_at || "",
+        expires_at: coupon.expires_at || "",
+      });
+    }
+  }, [coupon]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -171,7 +165,7 @@ const UpdateCoupon = () => {
               { label: t("coupon.fixed"), value: "fixed" },
               { label: t("coupon.percent"), value: "percent" },
             ]}
-            defaultValue={couponData.type}
+            value={couponData.type}
             onChange={(value) => handleSelectChange(value, "type")}
           />
           {clientSideErrors.type && (
@@ -260,7 +254,7 @@ const UpdateCoupon = () => {
               { label: t("coupon.active"), value: "1" },
               { label: t("coupon.inactive"), value: "0" },
             ]}
-            defaultValue={couponData.active}
+            value={couponData.active}
             onChange={(value) => handleSelectChange(value, "active")}
           />
           {clientSideErrors.active && (

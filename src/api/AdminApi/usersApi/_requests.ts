@@ -11,7 +11,7 @@ export const getAllAdminsPaginate = async (params: {
     params,
   });
 };
-export const getAdminById = async (id: string) => {
+export const getAdminById = async (id: number) => {
   return await axiosJson.get(`/api/vendor/admins/${id}`);
 };
 

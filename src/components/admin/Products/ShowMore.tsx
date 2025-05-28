@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { showProduct } from "../../../api/AdminApi/products/_requests";
+import { useGetProductById } from "../../../hooks/useAdminProducts";
 
 type Category = {
   id: number;
@@ -46,25 +47,12 @@ type Product = {
 };
 
 const ProductDetails: React.FC = () => {
-  const navigate = useNavigate();
   const { t } = useTranslation(["ProductDetails"]);
-  const [loading, setLoading] = useState(true);
-  const [product, setProduct] = useState<Product>();
   const { id }: any = useParams();
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await showProduct(id);
-        setProduct(response.data.data);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProduct();
-  }, [id]);
+  const { data, isError, error, isLoading } = useGetProductById(id);
+
+  const product: Product = data?.data?.data;
 
   const formatDate = (date: string) =>
     new Date(date).toLocaleDateString("en-US", {
@@ -81,7 +69,7 @@ const ProductDetails: React.FC = () => {
     );
   }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-300">
         {t("loading")}

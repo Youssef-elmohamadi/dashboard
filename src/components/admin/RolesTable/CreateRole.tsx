@@ -1,22 +1,17 @@
-import { useEffect, useState, useTransition } from "react";
+import { useState } from "react";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Checkbox from "../../form/input/Checkbox";
-import {
-  createRole,
-  getAllPermissions,
-} from "../../../api/AdminApi/rolesApi/_requests";
 import Loading from "../../common/Loading";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useCreateRole, useGetAllPermissions } from "../../../hooks/useRoles";
 type Permission = {
   id: number;
   name: string;
 };
 
 export default function CreateRole() {
-  const [loading, setLoading] = useState(false);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
   const [roleData, setRoleData] = useState({
     name: "",
     permissions: [] as number[],
@@ -30,22 +25,10 @@ export default function CreateRole() {
 
   const navigate = useNavigate();
   const { t } = useTranslation(["CreateRole"]);
-  useEffect(() => {
-    const fetchPermissions = async () => {
-      setLoading(true);
-      try {
-        const response = await getAllPermissions();
-        if (response?.data?.data) {
-          setPermissions(response.data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching permissions:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPermissions();
-  }, []);
+
+  const { data, isLoading, error, isError } = useGetAllPermissions();
+
+  const permissions = data?.data.data;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -79,6 +62,8 @@ export default function CreateRole() {
     return Object.keys(errors).length === 0;
   };
 
+  const { mutateAsync } = useCreateRole();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -89,12 +74,10 @@ export default function CreateRole() {
     }
 
     try {
-      const response = await createRole(roleData);
-      if (response?.status === 200 || response?.status === 201) {
-        navigate("/admin/roles", {
-          state: { successCreate: t("role.success_message") },
-        });
-      }
+      await mutateAsync(roleData);
+      navigate("/admin/roles", {
+        state: { successCreate: t("role.success_message") },
+      });
     } catch (error: any) {
       const status = error?.response?.status;
 
@@ -110,14 +93,12 @@ export default function CreateRole() {
 
       if (Array.isArray(rawErrors)) {
         const formattedErrors: Record<string, string[]> = {};
-
         rawErrors.forEach((err: { code: string; message: string }) => {
           if (!formattedErrors[err.code]) {
             formattedErrors[err.code] = [];
           }
           formattedErrors[err.code].push(err.message);
         });
-
         setErrors(formattedErrors);
       } else {
         setErrors({ general: [t("role.errors.general")] });
@@ -154,7 +135,7 @@ export default function CreateRole() {
             )}
           </div>
 
-          {loading ? (
+          {isLoading ? (
             <Loading text={t("role.get_permissions")} />
           ) : (
             <div className="col-span-2">
@@ -162,7 +143,7 @@ export default function CreateRole() {
                 {t("role.permission")}
               </h2>
               <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
-                {permissions.map((permission) => (
+                {permissions?.map((permission: Permission) => (
                   <Checkbox
                     key={permission.id}
                     label={permission.name}

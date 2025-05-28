@@ -10,6 +10,7 @@ import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
 import { useAllAdmins, useDeleteAdmin } from "../../../hooks/useVendorAdmins";
+
 const Admins = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
@@ -29,7 +30,6 @@ const Admins = () => {
   useEffect(() => {
     if (isError && error?.response?.status) {
       const status = error.response.status;
-      console.log(status);
       if (status === 403 || status === 401) {
         setUnauthorized(true);
       }
@@ -116,6 +116,7 @@ const Admins = () => {
           { key: "phone", label: "Phone", type: "input" },
         ]}
         setSearchParam={handleSearch}
+        searchValues={searchValues}
       />
       <ComponentCard
         title={t("adminsPage.all")}
@@ -132,8 +133,8 @@ const Admins = () => {
           pageIndex={pageIndex}
           pageSize={pageSize}
           onPageChange={setPageIndex}
-          loadingText={t("adminsPage.table.loadingText")}
           unauthorized={unauthorized}
+          loadingText={t("adminsPage.table.loadingText")}
         />
       </ComponentCard>
     </>

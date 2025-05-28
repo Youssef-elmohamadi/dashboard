@@ -3,27 +3,19 @@ import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
-import TableActions from "../../../components/admin/Tables/TablesActions";
-import {
-  deleteProduct,
-  getProductsPaginate,
-} from "../../../api/AdminApi/products/_requests";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
-import BasicTable from "../../../components/admin/Tables/BasicTable";
+import BasicTable from "../../../components/admin/Tables/BasicTableTS";
 import { useLocation } from "react-router";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
-import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
-import { getAllCategories } from "../../../api/AdminApi/categoryApi/_requests";
 import { useTranslation } from "react-i18next";
 import Alert from "../../../components/ui/alert/Alert";
-type Product = {};
+import {
+  useAllProducts,
+  useDeleteProduct,
+} from "../../../hooks/useAdminProducts";
+import { useAllCategories } from "../../../hooks/useCategories";
+import { useAllBrands } from "../../../hooks/useBrands";
 const Products = () => {
-  const [reload, setReload] = useState(0);
-  const [data, setData] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<Product | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
@@ -37,16 +29,31 @@ const Products = () => {
     status: "",
     name: "",
   });
+  const location = useLocation();
   const { t } = useTranslation(["ProductsTable"]);
+  const {
+    data: products,
+    isLoading,
+    isError,
+    refetch,
+    error,
+  } = useAllProducts(pageIndex, searchValues);
+  const pageSize = products?.per_page ?? 15;
+  useEffect(() => {
+    if (isError && error?.response?.status) {
+      const status = error.response.status;
+      if (status === 403 || status === 401) {
+        setUnauthorized(true);
+      }
+    }
+  }, [isError, error]);
+  const productsData = products?.data ?? [];
+  const totalProducts = products?.total ?? 0;
   const [alertData, setAlertData] = useState<{
     variant: "success" | "error" | "info" | "warning";
     title: string;
     message: string;
   } | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [brands, setBrands] = useState<Brand[]>([]);
-  const location = useLocation();
-
   useEffect(() => {
     if (location.state?.successCreate) {
       setAlertData({
@@ -68,29 +75,6 @@ const Products = () => {
     return () => clearTimeout(timer);
   }, [location.state]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getAllCategories();
-        if (response.data) setCategories(response.data.data.original);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        const response = await getAllBrands();
-        if (response.data) setBrands(response.data.data);
-      } catch (error) {
-        console.error("Error fetching brands:", error);
-      }
-    };
-    fetchBrands();
-  }, []);
   const handleSearch = (key: string, value: string) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -99,74 +83,25 @@ const Products = () => {
     setPageIndex(0);
   };
 
-  const fetchData = async (pageIndex: number = 0) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params: any = {
-        page: pageIndex + 1,
-        ...Object.fromEntries(
-          Object.entries(searchValues).filter(([_, value]) => value !== "")
-        ),
-      };
-      const response = await getProductsPaginate(params);
-      const responseData = response.data;
-
-      const fetchedData = Array.isArray(responseData.data.data)
-        ? responseData.data.data
-        : [];
-      console.log(responseData.data.data);
-      setData(fetchedData);
-      const perPage = responseData.data.per_page || 0;
-
-      return {
-        data: fetchedData,
-        last_page: responseData.data.last_page || 0,
-        total: responseData.data.total || 0,
-        next_page_url: responseData.data.next_page_url,
-        prev_page_url: responseData.data.prev_page_url,
-        perPage,
-      };
-    } catch (error) {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        setUnauthorized(true);
-        setData([]);
-      } else {
-        console.error("Fetching error:", error);
-      }
-      return {
-        data: [],
-        last_page: 0,
-        total: 0,
-        next_page_url: null,
-        prev_page_url: null,
-        perPage: 0,
-      };
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  const { data: allCategories } = useAllCategories();
+  const categories = allCategories?.data.data?.original;
+  const { data: allBrands } = useAllBrands();
+  const brands = allBrands?.data.data;
+  const { mutateAsync: deleteProductMutate } = useDeleteProduct();
   const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(
-      id,
-      deleteProduct,
-      () => fetchData(pageIndex),
-      {
-        confirmTitle: t("productsPage.delete.confirmTitle"),
-        confirmText: t("productsPage.delete.confirmText"),
-        confirmButtonText: t("productsPage.delete.confirmButtonText"),
-        cancelButtonText: t("productsPage.delete.cancelButtonText"),
-        successTitle: t("productsPage.delete.successTitle"),
-        successText: t("productsPage.delete.successText"),
-        errorTitle: t("productsPage.delete.errorTitle"),
-        errorText: t("productsPage.delete.errorText"),
-      }
-    );
-    setReload((prev) => prev + 1);
+    const confirmed = await alertDelete(id, deleteProductMutate, refetch, {
+      confirmTitle: t("productsPage.delete.confirmTitle"),
+      confirmText: t("productsPage.delete.confirmText"),
+      confirmButtonText: t("productsPage.delete.confirmButtonText"),
+      cancelButtonText: t("productsPage.delete.cancelButtonText"),
+      successTitle: t("productsPage.delete.successTitle"),
+      successText: t("productsPage.delete.successText"),
+      errorTitle: t("productsPage.delete.errorTitle"),
+      errorText: t("productsPage.delete.errorText"),
+    });
   };
 
-  const columns = buildColumns<Product>({
+  const columns = buildColumns({
     includeBrandName: false,
     includeImagesAndNameCell: true,
     includeEmail: false,
@@ -199,7 +134,7 @@ const Products = () => {
               key: "category_id",
               label: "Category",
               type: "select",
-              options: categories.map((category) => ({
+              options: categories?.map((category) => ({
                 label: category.name,
                 value: category.id,
               })),
@@ -208,7 +143,7 @@ const Products = () => {
               key: "brand_id",
               label: "Brand",
               type: "select",
-              options: brands.map((brand) => ({
+              options: brands?.map((brand) => ({
                 label: brand.name,
                 value: brand.id,
               })),
@@ -224,6 +159,7 @@ const Products = () => {
             },
           ]}
           setSearchParam={handleSearch}
+          searchValues={searchValues}
         />
       </div>
       <div className="space-y-6">
@@ -234,26 +170,16 @@ const Products = () => {
         >
           <BasicTable
             columns={columns}
-            fetchData={fetchData}
+            data={productsData}
+            totalItems={totalProducts}
+            isLoading={isLoading}
             onDelete={handleDelete}
-            unauthorized={unauthorized}
-            setUnauthorized={setUnauthorized}
-            onEdit={(id) => {
-              const role = data.find((item) => item.id === id);
-              if (role) {
-                setSelectedRole(role);
-                setIsModalOpenEdit(true);
-              }
-            }}
+            onEdit={() => {}}
             isShowMore={true}
-            isModalEdit={false}
-            onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
-            trigger={reload}
-            onDataUpdate={(newData) => setData(newData)}
-            searchValueName={searchValues.name}
-            searchValueCategoryId={searchValues.category_id}
-            searchValueBrandId={searchValues.brand_id}
-            searchValueStatus={searchValues.status}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            onPageChange={setPageIndex}
+            unauthorized={unauthorized}
             loadingText={t("productsPage.table.loadingText")}
           />
         </ComponentCard>

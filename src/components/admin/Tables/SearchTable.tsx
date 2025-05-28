@@ -1,5 +1,8 @@
 import { FaFilter } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import Label from "../../form/Label";
+import Input from "../../form/input/InputField";
+import Select from "../../form/Select";
 
 type Option = { label: string; value: string | number };
 type Field = {
@@ -12,9 +15,11 @@ type Field = {
 const SearchTable = ({
   fields,
   setSearchParam,
+  searchValues,
 }: {
   fields: Field[];
   setSearchParam: (key: string, value: string) => void;
+  searchValues: any;
 }) => {
   const { t } = useTranslation(["SearchTables"]);
 
@@ -32,14 +37,14 @@ const SearchTable = ({
         </h3>
 
         <div className="border-t dark:border-gray-800 border-gray-200 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl p-4">
-          {fields.map((field) => (
+          {fields?.map((field) => (
             <div key={field.key}>
-              <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-gray-200">
+              <Label className="block text-sm font-medium mb-1 text-gray-900 dark:text-gray-200">
                 {getTranslatedLabel(field.label)}
-              </label>
+              </Label>
 
               {field.type === "input" && (
-                <input
+                <Input
                   type="text"
                   onChange={(e) => setSearchParam(field.key, e.target.value)}
                   className="w-full border dark:border-gray-800 border-gray-200 rounded px-3 py-2 text-gray-900 dark:text-gray-200 text-sm outline-none"
@@ -50,32 +55,19 @@ const SearchTable = ({
               )}
 
               {field.type === "select" && (
-                <select
-                  onChange={(e) => setSearchParam(field.key, e.target.value)}
+                <Select
+                  onChange={(value) => setSearchParam(field.key, value)}
                   className="w-full border dark:border-gray-800 border-gray-200 rounded px-3 py-2 text-gray-900 dark:text-gray-200 text-sm outline-none"
-                >
-                  <option
-                    className="text-gray-900 dark:bg-gray-800 dark:text-gray-200 text-sm outline-none"
-                    value=""
-                  >
-                    {t("searchTable.all")}
-                  </option>
-                  {field.options?.map((option) => (
-                    <option
-                      className="text-gray-900 dark:bg-gray-800 dark:text-gray-200 text-sm outline-none"
-                      key={option.value}
-                      value={option.value}
-                    >
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                  options={field.options}
+                  placeholder="All"
+                  value={searchValues[field.key] || ""}
+                />
               )}
 
               {field.key === "from_date" && (
                 <div>
                   <input
-                    type="date"
+                    type="datetime-local"
                     onChange={(e) => setSearchParam(field.key, e.target.value)}
                     className="w-full border border-gray-200 rounded px-3 py-2 dark:text-gray-500"
                   />
@@ -84,7 +76,7 @@ const SearchTable = ({
               {field.key === "to_date" && (
                 <div>
                   <input
-                    type="date"
+                    type="datetime-local"
                     onChange={(e) => setSearchParam(field.key, e.target.value)}
                     className="w-full border border-gray-200 rounded px-3 py-2 dark:text-gray-500"
                   />

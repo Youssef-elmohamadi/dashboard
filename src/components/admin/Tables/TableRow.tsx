@@ -48,8 +48,8 @@ const TableRow: React.FC<TableRowProps> = ({
                 onShip={onShip}
                 isCancel={isCancel}
                 isShipped={isShipped}
-                isModalEdit={isModalEdit}
                 isShowMore={isShowMore}
+                isModalEdit={isModalEdit}
               />
             ) : (
               cell.render("Cell")

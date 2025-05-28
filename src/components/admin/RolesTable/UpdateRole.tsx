@@ -10,13 +10,17 @@ import {
 } from "../../../api/AdminApi/rolesApi/_requests";
 import Loading from "../../common/Loading";
 import { useTranslation } from "react-i18next";
+import {
+  useGetAllPermissions,
+  useGetRoleById,
+  useUpdateRole,
+} from "../../../hooks/useRoles";
 type Permission = {
   id: number;
   name: string;
 };
 
 const UpdateRole: React.FC = () => {
-  const [permissions, setPermissions] = useState<Permission[]>([]);
   const [loading, setLoading] = useState(false);
   const [updateData, setUpdateData] = useState({
     name: "",
@@ -32,37 +36,34 @@ const UpdateRole: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateRole"]);
+  const {
+    data: permissionData,
+    isLoading: isPermissionLoading,
+    error: permissionError,
+    isError: isPermissionError,
+  } = useGetAllPermissions();
 
+  const permissions = permissionData?.data.data;
+
+  const {
+    data: roleData,
+    isLoading: isRoleLoading,
+    isError: isRoleError,
+    error: roleError,
+  } = useGetRoleById(id);
+
+  const role = roleData?.data?.data;
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const permissionsRes = await getAllPermissions();
-        setPermissions(permissionsRes.data.data || []);
+    if (!role) return;
+    const permissionIds = Array.isArray(role.permissions)
+      ? role.permissions.map((perm: any) => perm.id)
+      : [];
 
-        if (id) {
-          const roleRes = await getRoleById(id);
-          const roleData = roleRes.data.data;
-
-          const permissionIds = Array.isArray(roleData.permissions)
-            ? roleData.permissions.map((perm: any) => perm.id)
-            : [];
-
-          setUpdateData({
-            name: roleData.name || "",
-            permissions: permissionIds,
-          });
-        }
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("Something went wrong while loading data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [id]);
+    setUpdateData({
+      name: role.name || "",
+      permissions: permissionIds,
+    });
+  }, [role]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -96,6 +97,8 @@ const UpdateRole: React.FC = () => {
     return Object.keys(errors).length === 0;
   };
 
+  const { mutateAsync } = useUpdateRole(id);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -106,13 +109,14 @@ const UpdateRole: React.FC = () => {
     }
 
     try {
-      await updateRole(updateData, id);
-      navigate("/admin/roles", {
-        state: { successCreate: t("role.success_message") },
-      });
+      if (id) {
+        await mutateAsync({ id: +id, roleData: updateData });
+        navigate("/admin/roles", {
+          state: { successUpdate: t("role.success_message") },
+        });
+      }
     } catch (error: any) {
       const status = error?.response?.status;
-
       if (status === 403 || status === 401) {
         setErrors({
           ...errors,
@@ -122,17 +126,14 @@ const UpdateRole: React.FC = () => {
       }
 
       const rawErrors = error?.response?.data.errors;
-
       if (Array.isArray(rawErrors)) {
         const formattedErrors: Record<string, string[]> = {};
-
         rawErrors.forEach((err: { code: string; message: string }) => {
           if (!formattedErrors[err.code]) {
             formattedErrors[err.code] = [];
           }
           formattedErrors[err.code].push(err.message);
         });
-
         setErrors(formattedErrors);
       } else {
         setErrors({ general: [t("role.errors.general")] });
@@ -173,7 +174,7 @@ const UpdateRole: React.FC = () => {
             )}
           </div>
 
-          {loading ? (
+          {isPermissionLoading ? (
             <Loading text={t("role.get_permissions")} />
           ) : (
             <div className="col-span-2">
@@ -205,10 +206,10 @@ const UpdateRole: React.FC = () => {
         </div>
 
         {errors.global && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
+          <p className="text-red-500 text-sm my-4">{errors.global}</p>
         )}
         {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+          <p className="text-red-500 text-sm my-4">{errors.general}</p>
         )}
 
         <button

@@ -1,14 +1,12 @@
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { shipmentOrder } from "../../../api/AdminApi/ordersApi/_requests";
 import i18n from "../../../i18n"; // أو استخدم useTranslation لو في React component
 import "./ShipmentModal.css";
-import { useTranslation } from "react-i18next";
 
 const MySwal = withReactContent(Swal);
 
-export const openShipmentModal = async (orderId: number) => {
+export const openShipmentModal = async (orderId: number, apiFn: any) => {
   const t = i18n.getFixedT(null, "OrdersTable");
 
   const { value: formValues } = await MySwal.fire({
@@ -68,7 +66,7 @@ export const openShipmentModal = async (orderId: number) => {
 
   if (formValues) {
     try {
-      await shipmentOrder(formValues, orderId);
+      await apiFn({ data: formValues, id: orderId });
       toast.success(t("ordersPage.ship.success_message"));
     } catch (error) {
       console.error(error);

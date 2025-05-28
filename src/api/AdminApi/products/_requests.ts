@@ -5,9 +5,7 @@ export const getAllProducts = async () => {
 };
 
 export const getProductsPaginate = async (params: {
-  pageIndex: number | undefined;
-  pageSize?: number | undefined;
-  name?: string;
+  page: number | undefined;
 }) => {
   return await axiosJson.get("/api/vendor/products/withPaginate", {
     params,

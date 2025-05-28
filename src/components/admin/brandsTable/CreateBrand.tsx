@@ -6,6 +6,7 @@ import Select from "../../form/Select";
 import { useNavigate } from "react-router-dom";
 import BrandImageUpload from "./BrandImageUpload";
 import { createBrand } from "../../../api/AdminApi/brandsApi/_requests";
+import { useCreateBrand } from "../../../hooks/useBrands";
 
 export default function CreateBrand() {
   const { t } = useTranslation(["CreateBrand"]);
@@ -63,6 +64,7 @@ export default function CreateBrand() {
     return Object.values(newErrors).every((error) => error === "");
   };
 
+  const { mutateAsync } = useCreateBrand();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
@@ -76,7 +78,7 @@ export default function CreateBrand() {
         brandFormData.append("image", brandData.image);
       }
 
-      await createBrand(brandFormData);
+      await mutateAsync(brandFormData);
       navigate("/admin/brands", {
         state: { successCreate: t("create_success") },
       });
@@ -148,7 +150,7 @@ export default function CreateBrand() {
               ]}
               onChange={handleSelectChange}
               placeholder={t("status_label")}
-              defaultValue={brandData.status}
+              value={brandData.status}
             />
             {clientSideErrors.status && (
               <p className="text-red-500 text-sm mt-1">

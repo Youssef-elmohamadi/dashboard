@@ -3,7 +3,6 @@ import AdBanner from "../../../components/EndUser/AdBanner/AdBanner";
 import FeaturesSection from "../../../components/EndUser/FeaturedBanner/FeaturedSection";
 import CircleSlider from "../../../components/EndUser/CircleSlider/CircleSlider";
 import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
-import { MultiImagesBanner } from "../../../components/EndUser/MultiImagesBanner/MulltiImagesBanner";
 import HomeProducts from "../../../components/EndUser/HomeProducts/HomeProducts";
 import LatestProducts from "../../../components/EndUser/LatestProducts/HomeLatest";
 import { getProductCategories } from "../../../api/EndUserApi/ensUserProducts/_requests";

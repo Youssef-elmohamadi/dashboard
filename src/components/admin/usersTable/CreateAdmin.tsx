@@ -1,20 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
-import {
-  getAllRoles,
-  createAdmin,
-} from "../../../api/AdminApi/usersApi/_requests";
 import { FiUserPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useCreateAdmin } from "../../../hooks/useVendorAdmins";
+import { useRoles } from "../../../hooks/useRoles";
 export default function CreateAdmin() {
   const [showPassword, setShowPassword] = useState(false);
-  const [options, setOptions] = useState<any[]>([]);
+  // const [options, setOptions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({
     first_name: [] as string[],
@@ -95,17 +92,9 @@ export default function CreateAdmin() {
     }));
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getAllRoles();
-        setOptions(response.data.data);
-      } catch (error) {
-        console.error("Error fetching roles:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  const { data } = useRoles();
+  const options = data?.data.data;
+
   const { mutateAsync } = useCreateAdmin();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -220,11 +209,11 @@ export default function CreateAdmin() {
         <div className="w-full">
           <Label>{t("admin.select_role")}</Label>
           <Select
-            options={options.map((role) => ({
+            options={options?.map((role: { name: string }) => ({
               value: role.name,
               label: role.name,
             }))}
-            defaultValue={adminData.role}
+            value={adminData.role}
             onChange={handleSelectChange}
             placeholder={t("admin.placeholder.select_role")}
             className="dark:bg-dark-900"

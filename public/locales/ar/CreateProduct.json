@@ -3,12 +3,14 @@
   "form": {
     "name": "الاسم",
     "price": "السعر",
+    "discount_price": "سعر الخصم",
     "stock_quantity": "الكمية في المخزون",
     "category": "الفئة",
     "select_category": "حدد الفئة",
     "brand": "العلامة التجارية",
     "select_brand": "حدد العلامة التجارية",
     "status": "الحالة",
+    "select_status": "حدد الحالة",
     "status_active": "نشط",
     "status_inactive": "غير نشط",
     "is_featured": "مميز",
@@ -24,6 +26,7 @@
   "placeholders": {
     "name": "أدخل اسم المنتج",
     "price": "أدخل السعر",
+    "discount_price": "أدخل سعر الخصم",
     "stock_quantity": "أدخل الكمية في المخزون",
     "description": "أدخل وصف المنتج",
     "tag": "وسم",

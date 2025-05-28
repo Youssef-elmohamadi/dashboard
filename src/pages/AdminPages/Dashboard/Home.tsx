@@ -1,15 +1,15 @@
 import EcommerceMetrics from "../../../components/ecommerce/EcommerceMetrics";
 import MonthlySalesChart from "../../../components/ecommerce/MonthlySalesChart";
 import StatisticsChart from "../../../components/ecommerce/StatisticsChart";
-import MonthlyTarget from "../../../components/ecommerce/MonthlyTarget";
 import RecentOrders from "../../../components/ecommerce/RecentOrders";
 import DemographicCard from "../../../components/ecommerce/DemographicCard";
 import PageMeta from "../../../components/common/PageMeta";
 import { useEffect, useState } from "react";
-import { home } from "../../../api/AdminApi/homeApi/_requests";
+import { AdminHomeData } from "../../../api/AdminApi/homeApi/_requests";
 import { GroupIcon } from "../../../icons";
 import { BoxIconLine } from "../../../icons";
 import { useTranslation } from "react-i18next";
+import { useAdminHome } from "../../../hooks/useAdminHome";
 
 interface Product {
   name: string;
@@ -28,42 +28,31 @@ export default function Home() {
   });
   const [monthlySalesData, setMonthlySalesData] = useState({});
   const [recentOrders, setRecentOrders] = useState([]);
-
+  const { data } = useAdminHome();
+  console.log(data?.data.data[0]);
+  const homeData = data?.data.data[0];
   useEffect(() => {
-    const fetchHomeData = async () => {
-      try {
-        const response = await home();
-        const homeData = response.data.data[0];
+    setNumbersData({
+      customerCount: homeData?.customer_count,
+      ordersCount: homeData?.order_count,
+    });
 
-        setNumbersData({
-          customerCount: homeData.customer_count,
-          ordersCount: homeData.order_count,
-        });
-
-        setMonthlySalesData({
-          orderPerMonth: homeData.order_count_per_month,
-        });
-
-        const mappedOrders = homeData.recent_orders.map((order: Order) => {
-          const firstItem = order.items[0]?.product;
-          return {
-            productName: firstItem?.name || "N/A",
-            productImage:
-              firstItem?.images?.[0]?.image || "/images/product/product-01.jpg", // إذا كان هناك صور
-            productCategory: firstItem?.category_id || "N/A",
-            productPrice: firstItem?.price || 0,
-            productStatus: order.status || "N/A",
-          };
-        });
-
-        setRecentOrders(mappedOrders);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchHomeData();
-  }, []);
-  console.log(monthlySalesData);
+    setMonthlySalesData({
+      orderPerMonth: homeData?.order_count_per_month,
+    });
+    const mappedOrders = homeData.recent_orders.map((order: Order) => {
+      const firstItem = order.items[0]?.product;
+      return {
+        productName: firstItem?.name || "N/A",
+        productImage:
+          firstItem?.images?.[0]?.image || "/images/product/product-01.jpg", // إذا كان هناك صور
+        productCategory: firstItem?.category_id || "N/A",
+        productPrice: firstItem?.price || 0,
+        productStatus: order.status || "N/A",
+      };
+    });
+    setRecentOrders(mappedOrders);
+  }, [homeData]);
 
   return (
     <>

@@ -9,6 +9,7 @@ import {
   updateBrand,
   getBrandById,
 } from "../../../api/AdminApi/brandsApi/_requests";
+import { useGetBrandById, useUpdateBrand } from "../../../hooks/useBrands";
 
 type Brand = {
   name: string;
@@ -32,20 +33,16 @@ const UpdateBrandPage = () => {
     status: "",
   });
   const [loading, setLoading] = useState(false);
+  const { data, isError, error } = useGetBrandById(id);
 
+  const brandData = data?.data?.data;
   useEffect(() => {
-    const fetchBrand = async () => {
-      try {
-        const brandData = await getBrandById(id);
-        setUpdateData({
-          name: brandData.data.data.name || "",
-          status: brandData.data.data.status || "active",
-          image: brandData.data.data?.image,
-        });
-      } catch (err) {}
-    };
-    fetchBrand();
-  }, [id, t]);
+    setUpdateData({
+      name: brandData?.name || "",
+      status: brandData?.status || "active",
+      image: brandData?.image,
+    });
+  }, [brandData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -82,7 +79,7 @@ const UpdateBrandPage = () => {
     setClientSideErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");
   };
-
+  const { mutateAsync } = useUpdateBrand(id);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
@@ -97,7 +94,7 @@ const UpdateBrandPage = () => {
         formData.append("image", updateData.image);
       }
 
-      await updateBrand(formData, id);
+      await mutateAsync({ brandData: formData, id: +id });
       navigate("/admin/brands");
     } catch (error: any) {
       console.error("Error creating admin:", error);

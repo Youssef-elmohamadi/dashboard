@@ -14,9 +14,14 @@ interface BasicTableProps<T> {
   pageSize: number;
   onDelete?: (id: number) => void;
   onEdit?: (id: number) => void;
+  onShip?: (id: number) => void;
+  onCancel?: (id: number) => void;
   loadingText?: string;
   onPageChange: (page: number) => void;
   unauthorized?: boolean;
+  isShowMore?: boolean;
+  isShipped?: boolean;
+  isCancel?: boolean;
   unauthorizedMessage?: string;
   noDataMessage?: string;
 }
@@ -30,8 +35,13 @@ const BasicTable = <T extends { id: number }>({
   pageSize,
   onDelete,
   onEdit,
+  onShip,
+  onCancel,
+  isCancel,
+  isShipped,
   loadingText,
   onPageChange,
+  isShowMore,
   unauthorized,
 }: BasicTableProps<T>) => {
   const { t } = useTranslation([""]);
@@ -66,6 +76,11 @@ const BasicTable = <T extends { id: number }>({
                   row={row}
                   onEdit={onEdit}
                   onDelete={onDelete}
+                  isShowMore={isShowMore}
+                  onShip={onShip}
+                  onCancel={onCancel}
+                  isCancel={isCancel}
+                  isShipped={isShipped}
                 />
               );
             })}

@@ -1,7 +1,7 @@
 import axiosJson from "../../axiosInstanceJson";
 import axiosForm from "../../axiosInstanceFormData";
 export const getBrandsPaginate = async (params: {
-  pageIndex: number | undefined;
+  page: number | undefined;
   pageSize?: number | undefined;
   name?: string;
 }) => {

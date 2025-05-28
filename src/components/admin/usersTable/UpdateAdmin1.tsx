@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  getAdminById,
-  getAllRoles,
-  updateAdmin,
-} from "../../../api/AdminApi/usersApi/_requests";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
@@ -12,6 +7,11 @@ import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { FiUserPlus } from "react-icons/fi";
+import {
+  useGetAdminById,
+  useUpdateAdmin,
+} from "../../../hooks/useVendorAdmins";
+import { useRoles } from "../../../hooks/useRoles";
 const UpdateAdmin = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -37,15 +37,15 @@ const UpdateAdmin = () => {
     password: "",
     role: "",
   });
-
-  const [options, setOptions] = useState<any[]>([]);
-  const [errors, setErrors] = useState<Record<string, string[]>>({
-    first_name: [],
-    last_name: [],
-    phone: [],
-    email: [],
-    password: [],
-    role: [],
+  const [errors, setErrors] = useState({
+    first_name: [] as string[],
+    last_name: [] as string[],
+    phone: [] as string[],
+    email: [] as string[],
+    password: [] as string[],
+    role: [] as string[],
+    global: "",
+    general: [] as string[],
   });
 
   const [clientSideErrors, setClientSideErrors] = useState({
@@ -93,50 +93,34 @@ const UpdateAdmin = () => {
   const { t } = useTranslation(["UpdateAdmin"]);
   const { dir } = useDirectionAndLanguage();
 
-  // Fetch admin by ID
+  const { data, isError, error } = useGetAdminById(id);
+
+  const admin = data?.data?.data;
   useEffect(() => {
-    const fetchAdmin = async () => {
-      try {
-        if (id) {
-          const res = await getAdminById(id);
-          const admin = res.data.data;
+    if (!admin) return;
+    setAdminData(admin);
+    setUpdateData({
+      first_name: admin?.first_name || "",
+      last_name: admin?.last_name || "",
+      phone: admin?.phone || "",
+      email: admin?.email || "",
+      password: "",
+      role: admin?.roles?.[0]?.name || "",
+    });
+  }, [admin]);
 
-          setAdminData(admin);
-          setUpdateData({
-            first_name: admin.first_name || "",
-            last_name: admin.last_name || "",
-            phone: admin.phone || "",
-            email: admin.email || "",
-            password: "",
-            role: admin.roles[0]?.name || "",
-          });
-        }
-      } catch (err) {
-        console.error("Error fetching admin:", err);
-        const status = err?.response?.status;
-        if (status === 403 || status === 401) {
-          setErrors({
-            ...errors,
-            global: "You don't have permission to perform this action.",
-          });
-        }
-      }
-    };
-
-    fetchAdmin();
-  }, [id]);
-
+  if (isError) {
+    const status = error?.response?.status;
+    if (status === 403 || status === 401) {
+      setErrors({
+        ...errors,
+        global: t("admin.errors.global"),
+      });
+    }
+  }
   // Fetch roles
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const res = await getAllRoles();
-        setOptions(res.data.data);
-      } catch (err) {}
-    };
-
-    fetchRoles();
-  }, []);
+  const { data: roles } = useRoles();
+  const options = roles?.data.data;
 
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,26 +139,42 @@ const UpdateAdmin = () => {
     }));
   };
 
+  const { mutateAsync } = useUpdateAdmin(id);
+
   // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validate()) return;
     setLoading(true);
+    setErrors({
+      first_name: [],
+      last_name: [],
+      phone: [],
+      email: [],
+      password: [],
+      role: [],
+      global: "",
+      general: [],
+    });
+
     try {
       if (id) {
         const dataToSend = {
           ...updateData,
-          password: updateData.password || adminData.password,
         };
 
-        await updateAdmin(id, dataToSend);
+        if (!dataToSend.password) {
+          delete dataToSend.password;
+        }
+
+        await mutateAsync({ id: +id, adminData: dataToSend });
         navigate("/admin/admins", {
           state: { successEdit: t("admin.success_message") },
         });
       }
-    } catch (err: any) {
-      const status = err?.response?.status;
+    } catch (error: any) {
+      const status = error?.response?.status;
       if (status === 403 || status === 401) {
         setErrors({
           ...errors,
@@ -182,8 +182,7 @@ const UpdateAdmin = () => {
         });
         return;
       }
-      const rawErrors = err?.response?.data?.errors;
-
+      const rawErrors = error?.response?.data?.errors;
       if (Array.isArray(rawErrors)) {
         const formattedErrors: Record<string, string[]> = {};
         rawErrors.forEach((error: { code: string; message: string }) => {
@@ -224,7 +223,7 @@ const UpdateAdmin = () => {
               type="text"
               name="first_name"
               id="first_name"
-              value={updateData.first_name}
+              value={updateData?.first_name}
               placeholder={t("admin.placeholder.first_name")}
               onChange={handleChange}
             />
@@ -248,7 +247,7 @@ const UpdateAdmin = () => {
               type="text"
               name="last_name"
               id="last_name"
-              value={updateData.last_name}
+              value={updateData?.last_name}
               placeholder={t("admin.placeholder.last_name")}
               onChange={handleChange}
             />
@@ -272,7 +271,7 @@ const UpdateAdmin = () => {
               label: role.name,
             }))}
             onChange={handleSelectChange}
-            defaultValue={updateData.role}
+            value={updateData.role}
             placeholder={t("admin.placeholder.select_role")}
           />
           {errors.role?.[0] && (
@@ -289,7 +288,7 @@ const UpdateAdmin = () => {
             type="email"
             name="email"
             id="email"
-            value={updateData.email}
+            value={updateData?.email}
             placeholder={t("admin.placeholder.email")}
             onChange={handleChange}
           />
@@ -310,7 +309,7 @@ const UpdateAdmin = () => {
             type="text"
             name="phone"
             id="phone"
-            value={updateData.phone}
+            value={updateData?.phone}
             placeholder={t("admin.placeholder.phone")}
             onChange={handleChange}
           />
@@ -331,7 +330,7 @@ const UpdateAdmin = () => {
               type={showPassword ? "text" : "password"}
               name="password"
               id="password"
-              value={updateData.password}
+              value={updateData?.password}
               placeholder={t("admin.placeholder.password")}
               onChange={handleChange}
             />

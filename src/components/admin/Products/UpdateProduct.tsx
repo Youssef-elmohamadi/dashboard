@@ -12,6 +12,14 @@ import {
 import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
 import { FiDelete } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
+import Select from "../../form/Select";
+import TextArea from "../../form/input/TextArea";
+import { useAllCategories } from "../../../hooks/useCategories";
+import { useAllBrands } from "../../../hooks/useBrands";
+import {
+  useGetProductById,
+  useUpdateProduct,
+} from "../../../hooks/useAdminProducts";
 type Category = {
   id: number;
   name: string;
@@ -68,7 +76,7 @@ const UpdateProductPage: React.FC = () => {
     status: "",
     is_featured: false,
   });
-  const [categories, setCategories] = useState<Category[]>([]);
+  //const [categories, setCategories] = useState<Category[]>([]);
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>([]);
@@ -86,42 +94,31 @@ const UpdateProductPage: React.FC = () => {
     status: "",
     is_featured: false,
   });
-  const [brands, setBrands] = useState<Brand[]>([]);
+  //const [brands, setBrands] = useState<Brand[]>([]);
 
+  const { data: allCategories } = useAllCategories();
+  const categories = allCategories?.data.data?.original;
+  const { data: allBrands } = useAllBrands();
+  const brands = allBrands?.data.data;
+
+  const { data, isError, error } = useGetProductById(id);
+
+  const product = data?.data?.data;
   useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        const [productRes, categoryRes, brandRes] = await Promise.all([
-          showProduct(Number(id)),
-          getAllCategories(),
-          getAllBrands(),
-        ]);
-
-        const product = productRes.data.data;
-
-        setTags(
-          product.tags.map((tag: any) =>
-            typeof tag === "string" ? tag : tag.name
-          )
-        );
-
-        setProductData(product);
-        setExistingImages(product.images ?? []);
-        setAttributes(
-          product.attributes?.map((attr: any) => ({
-            label: attr.attribute_name,
-            value: attr.attribute_value,
-          }))
-        );
-        setCategories(categoryRes.data.data.original);
-        setBrands(brandRes.data.data);
-      } catch (err) {
-        console.error("Error loading data", err);
-      }
-    };
-    fetchInitialData();
-  }, [id]);
-
+    if (!product) return;
+    setProductData(product);
+    setProductData(product);
+    setExistingImages(product.images ?? []);
+    setAttributes(
+      product.attributes?.map((attr: any) => ({
+        label: attr.attribute_name,
+        value: attr.attribute_value,
+      }))
+    );
+    setTags(
+      product.tags.map((tag: any) => (typeof tag === "string" ? tag : tag.name))
+    );
+  }, [product]);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -129,6 +126,12 @@ const UpdateProductPage: React.FC = () => {
     setProductData((prev) => (prev ? { ...prev, [name]: value } : null));
   };
 
+  const handleSelectChange = (value: string, name) => {
+    setProductData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
@@ -183,6 +186,7 @@ const UpdateProductPage: React.FC = () => {
     setClientSideErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  const { mutateAsync } = useUpdateProduct(id);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -219,9 +223,9 @@ const UpdateProductPage: React.FC = () => {
     });
 
     try {
-      await updateProduct(formData, productData.id);
+      await mutateAsync({ id: +id, productData: formData });
       navigate("/admin/products", {
-        state: { successCreate: t("success_update") },
+        state: { successUpdate: t("success_update") },
       });
     } catch (error: any) {
       const status = error?.response?.status;
@@ -248,7 +252,7 @@ const UpdateProductPage: React.FC = () => {
       } else {
         setErrors({ general: [t("errors.general")] });
       }
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -324,19 +328,15 @@ const UpdateProductPage: React.FC = () => {
           </div>
           <div>
             <Label htmlFor="category_id">{t("form.category")}</Label>
-            <select
-              name="category_id"
-              value={productData.category_id}
-              onChange={handleChange}
-              className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full dark:bg-gray-900 dark:text-white"
-            >
-              <option value="">{t("form.select_category")}</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+            <Select
+              options={categories?.map((category: Category) => ({
+                value: category.id,
+                label: category.name,
+              }))}
+              onChange={(value) => handleSelectChange(value, "category_id")}
+              value={productData?.category_id}
+              placeholder={t("form.select_category")}
+            />
             {errors.category && (
               <p className="text-red-500 text-sm mt-1">{errors.category}</p>
             )}
@@ -348,19 +348,15 @@ const UpdateProductPage: React.FC = () => {
           </div>
           <div>
             <Label htmlFor="brand_id">{t("form.brand")}</Label>
-            <select
-              name="brand_id"
+            <Select
+              options={brands?.map((brand: Brand) => ({
+                value: brand.id,
+                label: brand.name,
+              }))}
+              onChange={(value) => handleSelectChange(value, "brand_id")}
               value={productData.brand_id}
-              onChange={handleChange}
-              className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full dark:bg-gray-900 dark:text-white"
-            >
-              <option value="">{t("form.select_brand")}</option>
-              {brands.map((brand) => (
-                <option key={brand.id} value={brand.id}>
-                  {brand.name}
-                </option>
-              ))}
-            </select>
+              placeholder={t("form.select_brand")}
+            />
             {errors.brand && (
               <p className="text-red-500 text-sm mt-1">{errors.brand}</p>
             )}
@@ -370,35 +366,17 @@ const UpdateProductPage: React.FC = () => {
               </p>
             )}
           </div>
-
-          <div>
-            <Label htmlFor="description">{t("form.description")}</Label>
-            <Input
-              name="description"
-              value={productData.description}
-              onChange={handleChange}
-              placeholder={t("placeholders.description")}
-            />
-            {errors.description && (
-              <p className="text-red-500 text-sm mt-1">{errors.description}</p>
-            )}
-            {clientSideErrors.description && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.description}
-              </p>
-            )}
-          </div>
           <div>
             <Label htmlFor="status">{t("form.status")}</Label>
-            <select
-              name="status"
+            <Select
+              options={[
+                { value: "active", label: t("form.status_active") },
+                { value: "inactive", label: t("form.status_inactive") },
+              ]}
+              onChange={(value) => handleSelectChange(value, "status")}
               value={productData.status}
-              onChange={handleChange}
-              className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full dark:bg-gray-900 dark:text-white"
-            >
-              <option value="active">{t("form.status_active")}</option>
-              <option value="inactive">{t("form.status_inactive")}</option>
-            </select>
+              placeholder={t("form.select_status")}
+            />
             {errors.status && (
               <p className="text-red-500 text-sm mt-1">{errors.status}</p>
             )}
@@ -406,10 +384,11 @@ const UpdateProductPage: React.FC = () => {
           <div className="flex items-center space-x-3 mt-1">
             <Label htmlFor="is_featured">{t("form.is_featured")}</Label>
             <Checkbox
-              checked={productData.is_featured === "1" ? true : false}
+              checked={productData.is_featured}
               onChange={(checked) =>
                 setProductData((prev) => ({ ...prev, is_featured: checked }))
               }
+              id="is_featured"
             />
             {errors.is_featured && (
               <p className="text-red-500 text-sm mt-1">{errors.is_featured}</p>
@@ -420,24 +399,26 @@ const UpdateProductPage: React.FC = () => {
               </p>
             )}
           </div>
-        </div>
-
-        {/* Existing Images */}
-        {existingImages.length > 0 && (
           <div>
-            <Label>{t("form.existing_images")}</Label>
-            <div className="flex gap-3 mt-3 flex-wrap">
-              {existingImages.map((src, i) => (
-                <img
-                  key={i}
-                  src={src}
-                  alt={`Existing ${i}`}
-                  className="w-32 h-32 text-gray-700 dark:text-gray-400 object-cover rounded border dark:border-gray-700"
-                />
-              ))}
-            </div>
+            <Label htmlFor="description">{t("form.description")}</Label>
+            <TextArea
+              name="description"
+              placeholder={t("placeholders.description")}
+              value={productData.description}
+              onChange={(value) =>
+                setProductData((prev) => ({ ...prev, description: value }))
+              }
+            />
+            {errors.description && (
+              <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+            )}
+            {clientSideErrors.description && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.description}
+              </p>
+            )}
           </div>
-        )}
+        </div>
 
         {/* Upload New Images */}
         <div>
@@ -452,6 +433,22 @@ const UpdateProductPage: React.FC = () => {
             </p>
           )}
 
+          {/* Existing Images */}
+          {existingImages.length > 0 && (
+            <div>
+              <Label>{t("form.existing_images")}</Label>
+              <div className="flex gap-3 mt-3 flex-wrap">
+                {existingImages.map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt={`Existing ${i}`}
+                    className="w-32 h-32 text-gray-700 dark:text-gray-400 object-cover rounded border dark:border-gray-700"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
           <div className="flex gap-3 mt-3 flex-wrap">
             {imagePreviews.map((src, i) => (
               <div key={i} className="relative group">

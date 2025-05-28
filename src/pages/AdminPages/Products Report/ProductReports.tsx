@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { productsReport } from "../../../api/AdminApi/productsReportApi/_requests";
+import { useEffect, useState } from "react";
 import EcommerceMetrics from "../../../components/ecommerce/EcommerceMetrics";
 import { GroupIcon } from "../../../icons";
 import { BoxIconLine } from "../../../icons";
@@ -7,6 +6,7 @@ import FilterRangeDate from "../../../components/admin/productReports/FilterRang
 import TopSelligProducts from "../../../components/admin/productReports/TopSellingProducts";
 import { useTranslation } from "react-i18next";
 import PageMeta from "../../../components/common/PageMeta";
+import { useProductData } from "../../../hooks/useProductReport";
 const ProductReports = () => {
   const [totalProductSell, setTotalProductSell] = useState([]);
   const [numbersData, setNumbersData] = useState({
@@ -16,32 +16,6 @@ const ProductReports = () => {
     outOfStockProduct: 0,
     lowStockProduct: 0,
   });
-  useEffect(() => {
-    const fetchHomeData = async () => {
-      try {
-        const response = await productsReport();
-        const productReportData = response.data.data;
-        setNumbersData({
-          allProduct: productReportData.allProduct,
-          activeProduct: productReportData.activeProduct,
-          inactiveProduct: productReportData.inactiveProduct,
-          outOfStockProduct: productReportData.outOfStockProduct,
-          lowStockProduct: productReportData.lowStockProduct,
-        });
-
-        setTotalProductSell(
-          productReportData.topSellingProducts?.map((product: any) => ({
-            productId: product.id,
-            productName: product.name,
-            productSoldCount: product.total_sold,
-          })) || []
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchHomeData();
-  }, []);
   const [searchValues, setSearchValues] = useState<{
     start_date: string;
     end_date: string;
@@ -49,6 +23,23 @@ const ProductReports = () => {
     start_date: "",
     end_date: "",
   });
+  const { data, isLoading, isError, error } = useProductData(searchValues);
+
+  const productsReportsData = data;
+  console.log(productsReportsData);
+
+  useEffect(() => {
+    if (productsReportsData) {
+      setNumbersData({
+        allProduct: productsReportsData.allProduct,
+        activeProduct: productsReportsData.activeProduct,
+        inactiveProduct: productsReportsData.inactiveProduct,
+        outOfStockProduct: productsReportsData.outOfStockProduct,
+        lowStockProduct: productsReportsData.lowStockProduct,
+      });
+      setTotalProductSell(productsReportsData.topSellingProducts);
+    }
+  }, [productsReportsData]);
 
   const handleFilter = (key: string, value: string | number) => {
     setSearchValues((prev) => ({

@@ -1,16 +1,14 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";
 import { createCoupon } from "../../../api/AdminApi/couponsApi/_requests";
-
+import { useCreateCoupon } from "../../../hooks/useCoupons";
 export default function CreateCoupon() {
   const { t } = useTranslation(["CreateCoupon"]);
   const navigate = useNavigate();
-
   const [couponData, setCouponData] = useState({
     code: "",
     type: "fixed",
@@ -32,6 +30,8 @@ export default function CreateCoupon() {
     active: [] as string[],
     start_at: [] as string[],
     expires_at: [] as string[],
+    general: "" as string,
+    global: "" as string,
   });
   const [clientSideErrors, setClientSideErrors] = useState<
     Record<string, string>
@@ -80,12 +80,14 @@ export default function CreateCoupon() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const {mutateAsync }=useCreateCoupon();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
     try {
-      await createCoupon(couponData);
+      await mutateAsync(couponData);
       navigate("/admin/coupons", {
         state: { successCreate: t("coupon.success") },
       });
@@ -113,7 +115,8 @@ export default function CreateCoupon() {
 
         setErrors(formattedErrors);
       } else {
-        setErrors({ general: [t("admin.errors.general")] });
+        setErrors({...errors,
+          general: t("errors.global")});
       }
     }
   };

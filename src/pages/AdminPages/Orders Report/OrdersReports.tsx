@@ -6,6 +6,7 @@ import FilterRangeDate from "../../../components/admin/productReports/FilterRang
 import { ordersReport } from "../../../api/AdminApi/ordersReports/_requests";
 import { useTranslation } from "react-i18next";
 import PageMeta from "../../../components/common/PageMeta";
+import { useOrderData } from "../../../hooks/useOrdersReport";
 const ProductReports = () => {
   const [numbersData, setNumbersData] = useState({
     orderCount: 0,
@@ -14,24 +15,7 @@ const ProductReports = () => {
     totalItemsSold: 0,
     averageOrderValue: 0,
   });
-  useEffect(() => {
-    const fetchHomeData = async () => {
-      try {
-        const response = await ordersReport();
-        const ordersReportsData = response.data.data;
-        setNumbersData({
-          orderCount: ordersReportsData.orderCount,
-          deliveredOrdersCount: ordersReportsData.deliveredOrdersCount,
-          cancelledOrdersCount: ordersReportsData.cancelledOrdersCount,
-          totalItemsSold: ordersReportsData.totalItemsSold,
-          averageOrderValue: ordersReportsData.averageOrderValue,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchHomeData();
-  }, []);
+
   const [searchValues, setSearchValues] = useState<{
     start_date: string;
     end_date: string;
@@ -39,6 +23,20 @@ const ProductReports = () => {
     start_date: "",
     end_date: "",
   });
+  const { data, isLoading, isError, error } = useOrderData(searchValues);
+
+  const ordersReportsData = data;
+  useEffect(() => {
+    if (ordersReportsData) {
+      setNumbersData({
+        orderCount: ordersReportsData.orderCount,
+        deliveredOrdersCount: ordersReportsData.deliveredOrdersCount,
+        cancelledOrdersCount: ordersReportsData.cancelledOrdersCount,
+        totalItemsSold: ordersReportsData.totalItemsSold,
+        averageOrderValue: ordersReportsData.averageOrderValue,
+      });
+    }
+  }, [ordersReportsData]);
 
   const { t } = useTranslation(["OrdersReports"]);
 
@@ -50,7 +48,7 @@ const ProductReports = () => {
   };
   return (
     <>
-          <PageMeta
+      <PageMeta
         title="Tashtiba | Orders Reports"
         description="Show Your Orders Reports"
       />

@@ -9,6 +9,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useUpdateVendor, useVendorData } from "../../../hooks/useVendor";
 
 interface Vendor {
   name: string;
@@ -78,59 +79,44 @@ const VendorEditPage: React.FC = () => {
     setUpdatedDocs((prev) => ({ ...prev, [docId]: file }));
   };
 
-  // const fetchVendor = async () => {
-  //   const res = await getVendor();
-  //   setVendor(res.data.data);
-  // };
-  // useEffect(() => {
-  //   fetchVendor();
-  // }, []);
-
-  const { data: vendorData, isLoading } = useQuery<Vendor, Error>({
-    queryKey: ["vendorData"],
-    queryFn: async () => {
-      const res = await getVendor();
-      return res.data.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
-
+  const { data, isLoading } = useVendorData();
+  const vendorData = data?.data.data;
   useEffect(() => {
     if (vendorData) {
       setVendor(vendorData);
     }
   }, [vendorData]);
 
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
-  const updateVendorMutation = useMutation({
-    mutationFn: (formData: FormData) => updateVendor(formData),
-    onSuccess: () => {
-      toast.success(t("vendor.successUpdate"));
-      queryClient.invalidateQueries({ queryKey: ["vendorData"] });
-      setValidationErrors({});
-    },
-    onError: (error: any) => {
-      console.log(error);
+  // const updateVendorMutation = useMutation({
+  //   mutationFn: (formData: FormData) => updateVendor(formData),
+  //   onSuccess: () => {
+  //     toast.success(t("vendor.successUpdate"));
+  //     setValidationErrors({});
+  //     queryClient.invalidateQueries({ queryKey: ["vendorData"] });
+  //   },
+  //   onError: (error: any) => {
+  //     console.log(error);
 
-      toast.error(t("vendor.errorUpdate"));
-      const rawErrors = error?.response?.data?.errors;
-      if (Array.isArray(rawErrors)) {
-        const formattedErrors: Record<string, string[]> = {};
-        rawErrors.forEach((err: { code: string; message: string }) => {
-          if (!formattedErrors[err.code]) {
-            formattedErrors[err.code] = [];
-          }
-          formattedErrors[err.code].push(err.message);
-        });
-        setValidationErrors(formattedErrors);
-      } else {
-        setValidationErrors({ general: [t("errors.general")] });
-      }
-    },
-  });
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  //     toast.error(t("vendor.errorUpdate"));
+  //     const rawErrors = error?.response?.data?.errors;
+  //     if (Array.isArray(rawErrors)) {
+  //       const formattedErrors: Record<string, string[]> = {};
+  //       rawErrors.forEach((err: { code: string; message: string }) => {
+  //         if (!formattedErrors[err.code]) {
+  //           formattedErrors[err.code] = [];
+  //         }
+  //         formattedErrors[err.code].push(err.message);
+  //       });
+  //       setValidationErrors(formattedErrors);
+  //     } else {
+  //       setValidationErrors({ general: [t("errors.general")] });
+  //     }
+  //   },
+  // });
+  const { mutateAsync: updateVendor } = useUpdateVendor();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
 
@@ -152,7 +138,28 @@ const VendorEditPage: React.FC = () => {
         index++;
       }
     });
-    updateVendorMutation.mutate(formData);
+    try {
+      await updateVendor(formData);
+      toast.success(t("vendor.successUpdate"));
+      setValidationErrors({});
+    } catch (error) {
+      console.log(error);
+
+      toast.error(t("vendor.errorUpdate"));
+      const rawErrors = error?.response?.data?.errors;
+      if (Array.isArray(rawErrors)) {
+        const formattedErrors: Record<string, string[]> = {};
+        rawErrors.forEach((err: { code: string; message: string }) => {
+          if (!formattedErrors[err.code]) {
+            formattedErrors[err.code] = [];
+          }
+          formattedErrors[err.code].push(err.message);
+        });
+        setValidationErrors(formattedErrors);
+      } else {
+        setValidationErrors({ general: [t("errors.general")] });
+      }
+    }
   };
 
   return (

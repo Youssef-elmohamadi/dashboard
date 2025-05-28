@@ -51,7 +51,6 @@ export default function UserInfoCard({ userType }: { userType: string }) {
 
   const queryClient = useQueryClient();
 
-  // جلب بيانات المستخدم باستخدام useQuery
   const {
     data: userData,
     isLoading,
@@ -86,7 +85,6 @@ export default function UserInfoCard({ userType }: { userType: string }) {
     }
   }, [userData]);
 
-  // تنظيف URL الصورة لتجنب تسرب الذاكرة
   useEffect(() => {
     return () => {
       if (selectedImage) {

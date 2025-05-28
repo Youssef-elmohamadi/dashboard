@@ -1,22 +1,15 @@
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import BasicTable from "../../../components/admin/Tables/BasicTable";
+import BasicTable from "../../../components/admin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { getAllAdminsPaginate } from "../../../api/usersApi/_requests";
-import { deleteAdmin } from "../../../api/AdminApi/usersApi/_requests";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns"; // مكان الملف
-import TableActions from "../../../components/admin/Tables/TablesActions";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
-import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
-import {
-  deleteCoupon,
-  getCouponsWithPaginate,
-} from "../../../api/AdminApi/couponsApi/_requests";
 import { useTranslation } from "react-i18next";
+import { useAllCoupons, useDeleteCoupon } from "../../../hooks/useCoupons";
 type User = {
   id: number;
   first_name: string;
@@ -32,12 +25,7 @@ type User = {
 };
 
 const Coupons = () => {
-  const [data, setData] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
-  const [reload, setReload] = useState(0);
-  const location = useLocation();
   const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     active: string;
@@ -52,64 +40,24 @@ const Coupons = () => {
     from_date: "",
     to_date: "",
   });
-  const handleSearch = (key: string, value: string | number) => {
-    setSearchValues((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-    setPageIndex(0);
-  };
-
+  const location = useLocation();
   const { t } = useTranslation(["CouponsTable"]);
-
-  const fetchData = async (pageIndex: number = 0) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params: any = {
-        page: pageIndex + 1,
-        ...Object.fromEntries(
-          Object.entries(searchValues).filter(([_, value]) => value !== "")
-        ),
-      };
-
-      const response = await getCouponsWithPaginate(params);
-      const responseData = response.data.data;
-      console.log(responseData);
-
-      const fetchedData = Array.isArray(responseData.data)
-        ? responseData.data
-        : [];
-
-      const perPage = responseData.per_page || 5;
-
-      return {
-        data: fetchedData,
-        last_page: responseData.last_page || 0,
-        total: responseData.total || 0,
-        next_page_url: responseData.next_page_url,
-        prev_page_url: responseData.prev_page_url,
-        perPage,
-      };
-    } catch (error) {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
+  const { data, isLoading, isError, refetch, error } = useAllCoupons(
+    pageIndex,
+    searchValues
+  );
+  const pageSize = data?.per_page ?? 15;
+  useEffect(() => {
+    if (isError && error?.response?.status) {
+      const status = error.response.status;
+      if (status === 403 || status === 401) {
         setUnauthorized(true);
-        setData([]);
-      } else {
-        console.error("Fetching error:", error);
       }
-      return {
-        data: [],
-        last_page: 0,
-        total: 0,
-        next_page_url: null,
-        prev_page_url: null,
-        perPage: 0,
-      };
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [isError, error]);
+
+  const couponsData = data?.data ?? [];
+  const totalCoupons = data?.total ?? 0;
 
   const [alertData, setAlertData] = useState<{
     variant: "success" | "error" | "info" | "warning";
@@ -141,28 +89,25 @@ const Coupons = () => {
     return () => clearTimeout(timer);
   }, [location.state]);
 
-  const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(
-      id,
-      deleteCoupon,
-      () => fetchData(pageIndex),
-      {
-        confirmTitle: t("couponsPage.delete.confirmTitle"),
-        confirmText: t("couponsPage.delete.confirmText"),
-        confirmButtonText: t("couponsPage.delete.confirmButtonText"),
-        cancelButtonText: t("couponsPage.delete.cancelButtonText"),
-        successTitle: t("couponsPage.delete.successTitle"),
-        successText: t("couponsPage.delete.successText"),
-        errorTitle: t("couponsPage.delete.errorTitle"),
-        errorText: t("couponsPage.delete.errorText"),
-      }
-    );
-    setReload((prev) => prev + 1);
+  const handleSearch = (key: string, value: string | number) => {
+    setSearchValues((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+    setPageIndex(0);
   };
-
-  const handleShip = async (id: number) => {
-    await openShipmentModal(id);
-    setReload((prev) => prev + 1);
+  const { mutateAsync: deleteCouponMutate } = useDeleteCoupon();
+  const handleDelete = async (id: number) => {
+    const confirmed = await alertDelete(id, deleteCouponMutate, refetch, {
+      confirmTitle: t("couponsPage.delete.confirmTitle"),
+      confirmText: t("couponsPage.delete.confirmText"),
+      confirmButtonText: t("couponsPage.delete.confirmButtonText"),
+      cancelButtonText: t("couponsPage.delete.cancelButtonText"),
+      successTitle: t("couponsPage.delete.successTitle"),
+      successText: t("couponsPage.delete.successText"),
+      errorTitle: t("couponsPage.delete.errorTitle"),
+      errorText: t("couponsPage.delete.errorText"),
+    });
   };
 
   const columns = buildColumns<User>({
@@ -216,6 +161,7 @@ const Coupons = () => {
             { key: "to_date", label: "To", type: "date" },
           ]}
           setSearchParam={handleSearch}
+          searchValues={searchValues}
         />
       </div>
       <div className="space-y-6">
@@ -226,21 +172,16 @@ const Coupons = () => {
         >
           <BasicTable
             columns={columns}
-            fetchData={fetchData}
-            isModalEdit={false}
-            isShowMore={true}
+            data={couponsData}
+            totalItems={totalCoupons}
+            isLoading={isLoading}
             onDelete={handleDelete}
+            onEdit={() => {}}
+            isShowMore={true}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            onPageChange={setPageIndex}
             unauthorized={unauthorized}
-            setUnauthorized={setUnauthorized}
-            onEdit={(id) => {}}
-            onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
-            trigger={reload}
-            onDataUpdate={(newData) => setData(newData)}
-            searchValueName={searchValues.code}
-            searchValueType={searchValues.type}
-            searchValueStatus={searchValues.active}
-            searchValueToDate={searchValues.to_date}
-            searchValueFromDate={searchValues.from_date}
             loadingText={t("couponsPage.table.loadingText")}
           />
         </ComponentCard>

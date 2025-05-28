@@ -4,23 +4,14 @@ import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
-import {
-  deleteRole,
-  getAllRolesPaginate,
-} from "../../../api/AdminApi/rolesApi/_requests";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
-import BasicTable from "../../../components/admin/Tables/BasicTable";
+import BasicTable from "../../../components/admin/Tables/BasicTableTS";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
-type Role = {};
+import { useDeleteRole, useRolesPaginate } from "../../../hooks/useRoles";
 
 const Roles = () => {
-  const [data, setData] = useState<Role[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
@@ -28,21 +19,28 @@ const Roles = () => {
   }>({
     name: "",
   });
+  const location = useLocation();
   const { t } = useTranslation(["RolesTable"]);
+  const { data, isLoading, isError, error, refetch } = useRolesPaginate(
+    pageIndex,
+    searchValues
+  );
+  useEffect(() => {
+    if (isError && error?.response?.status) {
+      const status = error.response.status;
+      if (status === 403 || status === 401) {
+        setUnauthorized(true);
+      }
+    }
+  }, [isError, error]);
+  const pageSize = data?.per_page ?? 15;
+  const rolesData = data?.data ?? [];
+  const totalRoles = data?.total ?? 0;
   const [alertData, setAlertData] = useState<{
     variant: "success" | "error" | "info" | "warning";
     title: string;
     message: string;
   } | null>(null);
-  const [reload, setReload] = useState(0);
-  const handleSearch = (key: string, value: string) => {
-    setSearchValues((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-    setPageIndex(0);
-  };
-  const location = useLocation();
 
   useEffect(() => {
     if (location.state?.successCreate) {
@@ -64,72 +62,28 @@ const Roles = () => {
 
     return () => clearTimeout(timer);
   }, [location.state]);
-
-  const fetchData = async (pageIndex: number = 0) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params: any = {
-        page: pageIndex + 1,
-        ...Object.fromEntries(
-          Object.entries(searchValues).filter(([_, value]) => value !== "")
-        ),
-      };
-      const response = await getAllRolesPaginate(params);
-      const responseData = response.data.data;
-      const fetchedData = Array.isArray(responseData.data)
-        ? responseData.data
-        : [];
-      setData(fetchedData);
-      const perPage = responseData.per_page || 5;
-
-      return {
-        data: fetchedData,
-        last_page: responseData.last_page || 0,
-        total: responseData.total || 0,
-        next_page_url: responseData.next_page_url,
-        prev_page_url: responseData.prev_page_url,
-        perPage,
-      };
-    } catch (error) {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        setUnauthorized(true);
-        setData([]);
-      }
-      return {
-        data: [],
-        last_page: 0,
-        total: 0,
-        next_page_url: null,
-        prev_page_url: null,
-        perPage: 0,
-      };
-    } finally {
-      setLoading(false);
-    }
+  const handleSearch = (key: string, value: string) => {
+    setSearchValues((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+    setPageIndex(0);
   };
 
+  const { mutateAsync: deleteRoleMutate } = useDeleteRole();
   const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(
-      id,
-      deleteRole,
-      () => fetchData(pageIndex),
-      {
-        confirmTitle: t("rolesPage.delete.confirmTitle"),
-        confirmText: t("rolesPage.delete.confirmText"),
-        confirmButtonText: t("rolesPage.delete.confirmButtonText"),
-        cancelButtonText: t("rolesPage.delete.cancelButtonText"),
-        successTitle: t("rolesPage.delete.successTitle"),
-        successText: t("rolesPage.delete.successText"),
-        errorTitle: t("rolesPage.delete.errorTitle"),
-        errorText: t("rolesPage.delete.errorText"),
-      }
-    );
-    setReload((prev) => prev + 1);
+    const confirmed = await alertDelete(id, deleteRoleMutate, refetch, {
+      confirmTitle: t("rolesPage.delete.confirmTitle"),
+      confirmText: t("rolesPage.delete.confirmText"),
+      confirmButtonText: t("rolesPage.delete.confirmButtonText"),
+      cancelButtonText: t("rolesPage.delete.cancelButtonText"),
+      successTitle: t("rolesPage.delete.successTitle"),
+      successText: t("rolesPage.delete.successText"),
+      errorTitle: t("rolesPage.delete.errorTitle"),
+      errorText: t("rolesPage.delete.errorText"),
+    });
   };
-  console.log(reload);
-
-  const columns = buildColumns<Role>({
+  const columns = buildColumns({
     includeRoleName: true,
     includeEmail: false,
     includeRoles: false,
@@ -166,21 +120,15 @@ const Roles = () => {
         >
           <BasicTable
             columns={columns}
-            fetchData={fetchData}
+            data={rolesData}
+            totalItems={totalRoles}
+            isLoading={isLoading}
             onDelete={handleDelete}
+            onEdit={() => {}}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            onPageChange={setPageIndex}
             unauthorized={unauthorized}
-            setUnauthorized={setUnauthorized}
-            onEdit={(id) => {
-              const role = data.find((item) => item.id === id);
-              if (role) {
-                setSelectedRole(role);
-                setIsModalOpenEdit(true);
-              }
-            }}
-            onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
-            trigger={reload}
-            onDataUpdate={(newData) => setData(newData)}
-            searchValueName={searchValues.name}
             loadingText={t("rolesPage.table.loadingText")}
           />
         </ComponentCard>

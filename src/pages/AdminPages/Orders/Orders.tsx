@@ -1,19 +1,18 @@
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import BasicTable from "../../../components/admin/Tables/BasicTable";
+import BasicTable from "../../../components/admin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns"; // مكان الملف
-import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
-import {
-  cancelOrder,
-  getOrdersWithPaginate,
-} from "../../../api/AdminApi/ordersApi/_requests";
 import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
 import { useTranslation } from "react-i18next";
+import {
+  useAllOrdersPaginate,
+  useCancelOrder,
+  useShipOrder,
+} from "../../../hooks/useOrders";
 type User = {
   id: number;
   first_name: string;
@@ -29,13 +28,7 @@ type User = {
 };
 
 const Orders = () => {
-  const [data, setData] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
-  const [reload, setReload] = useState(0);
-  const location = useLocation();
-  const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     status: string;
     shipping_status: string;
@@ -49,6 +42,25 @@ const Orders = () => {
     from_date: "",
     to_date: "",
   });
+
+  const [unauthorized, setUnauthorized] = useState(false);
+  const { t } = useTranslation(["OrdersTable"]);
+  const { data, isLoading, isError, refetch, error } = useAllOrdersPaginate(
+    pageIndex,
+    searchValues
+  );
+  const pageSize = data?.per_page ?? 15;
+  useEffect(() => {
+    if (isError && error?.response?.status) {
+      const status = error.response.status;
+      if (status === 403 || status === 401) {
+        setUnauthorized(true);
+      }
+    }
+  }, [isError, error]);
+
+  const ordersData = data?.data ?? [];
+  const totalOrders = data?.total ?? 0;
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -56,110 +68,22 @@ const Orders = () => {
     }));
     setPageIndex(0);
   };
-  console.log(searchValues);
-
-  const { t } = useTranslation(["OrdersTable"]);
-  const fetchData = async (pageIndex: number = 0) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params: any = {
-        page: pageIndex + 1,
-        ...Object.fromEntries(
-          Object.entries(searchValues).filter(([_, value]) => value !== "")
-        ),
-      };
-
-      const response = await getOrdersWithPaginate(params);
-      const responseData = response.data.data;
-      console.log(responseData);
-
-      const fetchedData = Array.isArray(responseData.data)
-        ? responseData.data
-        : [];
-
-      const perPage = responseData.per_page || 5;
-
-      return {
-        data: fetchedData,
-        last_page: responseData.last_page || 0,
-        total: responseData.total || 0,
-        next_page_url: responseData.next_page_url,
-        prev_page_url: responseData.prev_page_url,
-        perPage,
-      };
-    } catch (error) {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        setUnauthorized(true);
-        setData([]);
-      } else {
-        console.error("Fetching error:", error);
-      }
-      return {
-        data: [],
-        last_page: 0,
-        total: 0,
-        next_page_url: null,
-        prev_page_url: null,
-        perPage: 0,
-      };
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const [alertData, setAlertData] = useState<{
-    variant: "success" | "error" | "info" | "warning";
-    title: string;
-    message: string;
-  } | null>(null);
-
-  useEffect(() => {
-    if (location.state?.successCreate) {
-      setAlertData({
-        variant: "success",
-        title: "Admin Created Successfully",
-        message: location.state.successCreate,
-      });
-      window.history.replaceState({}, document.title);
-    } else if (location.state?.successEdit) {
-      setAlertData({
-        variant: "success",
-        title: "Admin Updated Successfully",
-        message: location.state.successEdit,
-      });
-      window.history.replaceState({}, document.title);
-    }
-
-    const timer = setTimeout(() => {
-      setAlertData(null);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [location.state]);
-
+  const { mutateAsync: cancelOrder } = useCancelOrder();
   const handleCancel = async (id: number) => {
-    const confirmed = await alertDelete(
-      id,
-      cancelOrder,
-      () => fetchData(pageIndex),
-      {
-        confirmTitle: t("ordersPage.cancel.confirmTitle"),
-        confirmText: t("ordersPage.cancel.confirmText"),
-        confirmButtonText: t("ordersPage.cancel.confirmButtonText"),
-        cancelButtonText: t("ordersPage.cancel.cancelButtonText"),
-        successTitle: t("ordersPage.cancel.successTitle"),
-        successText: t("ordersPage.cancel.successText"),
-        errorTitle: t("ordersPage.cancel.errorTitle"),
-        errorText: t("ordersPage.cancel.errorText"),
-      }
-    );
-    setReload((prev) => prev + 1);
+    const confirmed = await alertDelete(id, cancelOrder, refetch, {
+      confirmTitle: t("ordersPage.cancel.confirmTitle"),
+      confirmText: t("ordersPage.cancel.confirmText"),
+      confirmButtonText: t("ordersPage.cancel.confirmButtonText"),
+      cancelButtonText: t("ordersPage.cancel.cancelButtonText"),
+      successTitle: t("ordersPage.cancel.successTitle"),
+      successText: t("ordersPage.cancel.successText"),
+      errorTitle: t("ordersPage.cancel.errorTitle"),
+      errorText: t("ordersPage.cancel.errorText"),
+    });
   };
-
+  const { mutateAsync: shipment } = useShipOrder();
   const handleShip = async (id: number) => {
-    await openShipmentModal(id);
-    setReload((prev) => prev + 1);
+    await openShipmentModal(id, shipment);
   };
 
   const columns = buildColumns<User>({
@@ -173,13 +97,6 @@ const Orders = () => {
   });
   return (
     <>
-      {alertData && (
-        <Alert
-          variant={alertData.variant}
-          title={alertData.title}
-          message={alertData.message}
-        />
-      )}
       <PageMeta
         title="Tashtiba | Manege Orders"
         description="Show and Manage Your orders"
@@ -216,29 +133,25 @@ const Orders = () => {
             { key: "to_date", label: "To", type: "date" },
           ]}
           setSearchParam={handleSearch}
+          searchValues={searchValues}
         />
       </div>
       <div className="space-y-6">
         <ComponentCard title={t("ordersPage.all")}>
           <BasicTable
             columns={columns}
-            fetchData={fetchData}
-            isModalEdit={false}
-            isShowMore={true}
+            data={ordersData}
+            totalItems={totalOrders}
+            isLoading={isLoading}
             onCancel={handleCancel}
-            isCancel={true}
             onShip={handleShip}
+            isShowMore={true}
+            isCancel={true}
             isShipped={true}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            onPageChange={setPageIndex}
             unauthorized={unauthorized}
-            setUnauthorized={setUnauthorized}
-            onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
-            trigger={reload}
-            onDataUpdate={(newData) => setData(newData)}
-            searchValueTrackingNumber={searchValues.tracking_number}
-            searchValueShippingStatus={searchValues.shipping_status}
-            searchValueStatus={searchValues.status}
-            searchValueToDate={searchValues.to_date}
-            searchValueFromDate={searchValues.from_date}
             loadingText={t("ordersPage.table.loadingText")}
           />
         </ComponentCard>

@@ -3,12 +3,14 @@
   "form": {
     "name": "Name",
     "price": "Price",
+    "discount_price": "Discount Price",
     "stock_quantity": "Stock Quantity",
     "category": "Category",
     "select_category": "Select category",
     "brand": "Brand",
     "select_brand": "Select brand",
     "status": "Status",
+    "select_status": "Select status",
     "status_active": "Active",
     "status_inactive": "Inactive",
     "is_featured": "Featured",
@@ -19,11 +21,12 @@
     "add_attribute": "+ Add Attribute",
     "add_tag": "+ Add Tag",
     "create_button": "Create Product",
-    "creating_button": "Creating..."
+    "creating_button": "Product Creating..."
   },
   "placeholders": {
     "name": "Enter product name",
     "price": "Enter price",
+    "discount_price": "Enter discount price",
     "stock_quantity": "Enter quantity in stock",
     "description": "Enter product description",
     "tag": "Tag",

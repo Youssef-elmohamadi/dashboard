@@ -1,4 +1,5 @@
 import {
+  QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
@@ -7,17 +8,16 @@ import {
 import {
   createAdmin,
   deleteAdmin,
+  getAdminById,
   getAllAdminsPaginate,
+  updateAdmin,
 } from "../api/AdminApi/usersApi/_requests";
 import { AxiosError } from "axios";
 
-type Admin = {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  roles: string[];
-  created_at: string;
+type ApiResponse<T> = {
+  success: boolean;
+  message: string;
+  data: T;
 };
 
 type PaginatedResponse<T> = {
@@ -27,6 +27,14 @@ type PaginatedResponse<T> = {
   last_page: number;
   per_page: number;
 };
+type Admin = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  roles: string[];
+  created_at: string;
+};
 
 type AdminFilters = {
   name?: string;
@@ -35,6 +43,14 @@ type AdminFilters = {
 };
 
 type CreateAdminInput = {
+  first_name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  password: string;
+  role: string;
+};
+type UpdateAdminInput = {
   first_name: string;
   last_name: string;
   phone: string;
@@ -58,6 +74,15 @@ export const useAllAdmins = (page: number, filters?: AdminFilters) => {
     onError: (error: AxiosError) => {
       console.error("حدث خطأ أثناء جلب المشرفين:", error);
     },
+  });
+};
+
+export const useGetAdminById = (id?: number) => {
+  return useQuery<ApiResponse<PaginatedResponse<Admin>>, Error>({
+    queryKey: ["admin", id],
+    queryFn: () => getAdminById(id!),
+    staleTime: 1000 * 60 * 5,
+    enabled: !!id,
   });
 };
 
@@ -85,6 +110,28 @@ export const useCreateAdmin = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["vendorAdmins"] });
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+};
+
+export const useUpdateAdmin = (id) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      id,
+      adminData,
+    }: {
+      id: number;
+      adminData: UpdateAdminInput;
+    }) => {
+      return await updateAdmin(id, adminData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["vendorAdmins"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", id] });
     },
     onError: (error) => {
       console.error(error);
