@@ -281,8 +281,8 @@ export default function UserInfoCard({ userType }: { userType: string }) {
         </button>
       </div>
 
-      <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
-        <div className="relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11 h-[700px]">
+      <Modal isOpen={isOpen} onClose={closeModal}>
+        <div className="relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
           <div className="px-2 pr-14">
             <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
               {t("userInfoCard.title")}
@@ -291,7 +291,7 @@ export default function UserInfoCard({ userType }: { userType: string }) {
               {t("editInfoCard.editDescription")}
             </p>
           </div>
-          <form onSubmit={handleSave} className="flex flex-col">
+          <form onSubmit={handleSave} className="flex flex-col ">
             <div className="flex flex-col items-center justify-center mb-6">
               <div className="relative">
                 <img
@@ -326,7 +326,7 @@ export default function UserInfoCard({ userType }: { userType: string }) {
                 {t("editInfoCard.change_avatar")}
               </p>
             </div>
-            <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
+            <div className="overflow-y-auto px-2 pb-3">
               <div className="mt-7">
                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
                   {t("userInfoCard.title")}

@@ -40,7 +40,7 @@ export default function Home() {
     setMonthlySalesData({
       orderPerMonth: homeData?.order_count_per_month,
     });
-    const mappedOrders = homeData.recent_orders.map((order: Order) => {
+    const mappedOrders = homeData?.recent_orders.map((order: Order) => {
       const firstItem = order.items[0]?.product;
       return {
         productName: firstItem?.name || "N/A",

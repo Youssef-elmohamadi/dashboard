@@ -6,9 +6,8 @@ import {
   TableRow,
 } from "../ui/table";
 import Badge from "../ui/badge/Badge";
-import { useEffect, useState } from "react";
-import { getAllCategories } from "../../api/AdminApi/categoryApi/_requests";
 import { useTranslation } from "react-i18next";
+import { useAllCategories } from "../../hooks/useCategories";
 
 interface Order {
   productName: string;
@@ -19,20 +18,21 @@ interface Order {
 }
 
 export default function RecentOrders({ orders }: { orders: Order[] }) {
-  const [categories, setCategories] = useState([]);
+  //const [categories, setCategories] = useState([]);
   const { t } = useTranslation(["RecentOrders"]);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getAllCategories();
-        setCategories(response.data.data.original);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  const { data: allCategories } = useAllCategories();
+  const categories = allCategories?.data.data?.original;
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const response = await getAllCategories();
+  //       setCategories(response.data.data.original);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   fetchCategories();
+  // }, []);
 
   const getStatusColor = (status: string) => {
     const s = status.toLowerCase();
@@ -90,7 +90,7 @@ export default function RecentOrders({ orders }: { orders: Order[] }) {
           </TableHeader>
 
           <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
-            {orders.map((order, idx) => (
+            {orders?.map((order, idx) => (
               <TableRow key={idx}>
                 <TableCell className="py-3">
                   <div className="flex items-center gap-3">
@@ -115,7 +115,7 @@ export default function RecentOrders({ orders }: { orders: Order[] }) {
                   </div>
                 </TableCell>
                 <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {categories.find((cat) => cat.id === order.productCategory)
+                  {categories?.find((cat) => cat.id === order.productCategory)
                     ?.name || t("recentOrders.unknown")}
                 </TableCell>
                 <TableCell className="py-3 text-gray-500 text-theme-sm dark:text-gray-400">
