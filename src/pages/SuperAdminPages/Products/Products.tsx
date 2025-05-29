@@ -1,21 +1,19 @@
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import BasicTable from "../../../components/SuperAdmin/Tables/BasicTable";
+import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { alertDelete } from "../../../components/admin/Tables/Alert";
 import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
-import {
-  cancelOrder,
-  getProductsWithPaginate,
-  changeStatus,
-  getProductById,
-} from "../../../api/SuperAdminApi/Products/_requests";
+import { getProductById } from "../../../api/SuperAdminApi/Products/_requests";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
 import { useTranslation } from "react-i18next";
+import {
+  useChangeProductStatus,
+  useGetProductsPaginate,
+} from "../../../hooks/useSuperAdminProductsManage";
 type User = {
   id: number;
   first_name: string;
@@ -31,13 +29,7 @@ type User = {
 };
 
 const Products = () => {
-  const [data, setData] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
-  const [reload, setReload] = useState(0);
-  const location = useLocation();
   const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     name: string;
@@ -48,62 +40,30 @@ const Products = () => {
     email: "",
     phone: "",
   });
+  const location = useLocation();
   const { t } = useTranslation(["ProductsTable"]);
+  const { data, isLoading, isError, refetch, error } = useGetProductsPaginate(
+    pageIndex,
+    searchValues
+  );
+  const pageSize = data?.per_page ?? 15;
+  useEffect(() => {
+    if (isError && error?.response?.status) {
+      const status = error.response.status;
+      if (status === 403 || status === 401) {
+        setUnauthorized(true);
+      }
+    }
+  }, [isError, error]);
+
+  const productsData = data?.data ?? [];
+  const totalProducts = data?.total ?? 0;
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
       ...prev,
       [key]: value,
     }));
     setPageIndex(0);
-  };
-
-  const fetchData = async (pageIndex: number = 0) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params: any = {
-        page: pageIndex + 1,
-        ...Object.fromEntries(
-          Object.entries(searchValues).filter(([_, value]) => value !== "")
-        ),
-      };
-
-      const response = await getProductsWithPaginate(params);
-      const responseData = response.data.data;
-      console.log(responseData);
-
-      const fetchedData = Array.isArray(responseData.data)
-        ? responseData.data
-        : [];
-
-      const perPage = responseData.per_page || 5;
-
-      return {
-        data: fetchedData,
-        last_page: responseData.last_page || 0,
-        total: responseData.total || 0,
-        next_page_url: responseData.next_page_url,
-        prev_page_url: responseData.prev_page_url,
-        perPage,
-      };
-    } catch (error) {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        setUnauthorized(true);
-        setData([]);
-      } else {
-        console.error("Fetching error:", error);
-      }
-      return {
-        data: [],
-        last_page: 0,
-        total: 0,
-        next_page_url: null,
-        prev_page_url: null,
-        perPage: 0,
-      };
-    } finally {
-      setLoading(false);
-    }
   };
 
   const [alertData, setAlertData] = useState<{
@@ -136,34 +96,19 @@ const Products = () => {
     return () => clearTimeout(timer);
   }, [location.state]);
 
-  const handleCancel = async (id: number) => {
-    const confirmed = await alertDelete(
-      id,
-      cancelOrder,
-      () => fetchData(pageIndex),
-      {
-        confirmTitle: "Cancel Order?",
-        confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, Cancel",
-        successTitle: "Canceled!",
-        successText: "Order has been Canceled.",
-        errorTitle: "Error",
-        errorText: "Could not Cancel The Order.",
-      }
-    );
-    setReload((prev) => prev + 1);
-  };
-
   const getStatus = async (id) => {
     const res = await getProductById(id);
     return res.data.data.status;
   };
+  const { mutateAsync: changeStatus } = useChangeProductStatus();
 
   const handleChangeStatus = async (id: number) => {
     await openChangeStatusModal({
       id,
       getStatus,
-      changeStatus,
+      changeStatus: async (id, data) => {
+        return await changeStatus({ id, data });
+      },
       options: {
         Pending: t("productsPage.status.pending"),
         Active: t("productsPage.status.active"),
@@ -180,8 +125,6 @@ const Products = () => {
         cancelButtonText: t("productsPage.changeStatus.cancelButtonText"),
       },
     });
-
-    setReload((prev) => prev + 1);
   };
 
   const columns = buildColumns<User>({
@@ -203,7 +146,10 @@ const Products = () => {
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <PageBreadcrumb pageTitle={t("productsPage.title")} userType="super_admin" />
+      <PageBreadcrumb
+        pageTitle={t("productsPage.title")}
+        userType="super_admin"
+      />
       <div>
         <SearchTable
           fields={[
@@ -212,24 +158,23 @@ const Products = () => {
             { key: "phone", label: "Phone", type: "input" },
           ]}
           setSearchParam={handleSearch}
+          searchValues={searchValues}
         />
       </div>
       <div className="space-y-6">
         <ComponentCard title={t("productsPage.title")}>
           <BasicTable
             columns={columns}
-            fetchData={fetchData}
-            onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
-            trigger={reload}
+            data={productsData}
+            totalItems={totalProducts}
+            isLoading={isLoading}
             isShowMore={true}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
             onChangeStatus={handleChangeStatus}
             isChangeStatus={true}
+            onPageChange={setPageIndex}
             unauthorized={unauthorized}
-            setUnauthorized={setUnauthorized}
-            onDataUpdate={(newData) => setData(newData)}
-            searchValueName={searchValues.name}
-            searchValueEmail={searchValues.email}
-            searchValuePhone={searchValues.phone}
             loadingText={t("productsPage.table.loadingText")}
           />
         </ComponentCard>

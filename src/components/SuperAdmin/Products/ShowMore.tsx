@@ -1,28 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
-import { getProductById } from "../../../api/SuperAdminApi/Products/_requests";
 import { useTranslation } from "react-i18next";
+import { useGetProductById } from "../../../hooks/useSuperAdminProductsManage";
 
 const ProductDetails: React.FC = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  //const [product, setProduct] = useState<any>(null);
+  //const [loading, setLoading] = useState(true);
   const { t } = useTranslation(["ProductDetails"]);
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await getProductById(id);
-        setProduct(response.data.data);
-      } catch (error) {
-        console.error("Error fetching product:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchProduct = async () => {
+  //     try {
+  //       const response = await getProductById(id);
+  //       setProduct(response.data.data);
+  //     } catch (error) {
+  //       console.error("Error fetching product:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    if (id) fetchProduct();
-  }, [id]);
+  //   if (id) fetchProduct();
+  // }, [id]);
+  const { data, isLoading: loading, error, isError } = useGetProductById(id);
+  console.log(data);
 
+  const product = data?.data.data;
   const formatDate = (date: string) =>
     new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
@@ -30,10 +33,10 @@ const ProductDetails: React.FC = () => {
       day: "numeric",
     });
 
-  if (!id)
-    return <div className="p-8 text-center text-gray-500">{t("no_data")}</div>;
   if (loading)
     return <div className="p-8 text-center text-gray-500">{t("loading")}</div>;
+  if (!id)
+    return <div className="p-8 text-center text-gray-500">{t("no_data")}</div>;
   if (!product)
     return (
       <div className="p-8 text-center text-gray-500">{t("not_found")}</div>

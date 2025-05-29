@@ -110,6 +110,7 @@ const Roles = () => {
         <SearchTable
           fields={[{ key: "name", label: "Name", type: "input" }]}
           setSearchParam={handleSearch}
+          searchValues={searchValues}
         />
       </div>
       <div className="space-y-6">

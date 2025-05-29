@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getBrandById } from "../../../api/AdminApi/brandsApi/_requests";
 import { useTranslation } from "react-i18next";
+import { useGetBrandById } from "../../../hooks/useBrands";
 
 interface Brand {
   id: number;
@@ -16,23 +17,30 @@ const BrandDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["BrandDetails"]);
 
-  const [brand, setBrand] = useState<Brand | null>(null);
-  const [loading, setLoading] = useState(true);
+  //const [brand, setBrand] = useState<Brand | null>(null);
+  //const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchBrand = async () => {
-      try {
-        const res = await getBrandById(id as string);
-        setBrand(res.data.data);
-      } catch (error) {
-        console.error("Error fetching brand:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchBrand = async () => {
+  //     try {
+  //       const res = await getBrandById(id as string);
+  //       setBrand(res.data.data);
+  //     } catch (error) {
+  //       console.error("Error fetching brand:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    if (id) fetchBrand();
-  }, [id]);
+  //   if (id) fetchBrand();
+  // }, [id]);
+
+  // console.log(brand);
+
+  const { data, isLoading, error, isError } = useGetBrandById(id);
+  console.log(data);
+
+  const brand = data?.data.data;
 
   const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleString("en-US", {
@@ -50,13 +58,19 @@ const BrandDetails: React.FC = () => {
       </div>
     );
 
-  if (loading)
+  if (isLoading)
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-400">
         {t("loading")}
       </div>
     );
 
+  if (!brand && isError)
+    return (
+      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        حدث خطأ غير متوقع
+      </div>
+    );
   if (!brand)
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-400">

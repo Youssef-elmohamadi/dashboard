@@ -1,22 +1,17 @@
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import BasicTable from "../../../components/SuperAdmin/Tables/BasicTable";
+import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { alertDelete } from "../../../components/admin/Tables/Alert";
 import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
-import {
-  cancelOrder,
-  getBrandById,
-  getBrandsWithPaginate,
-  changeStatus,
-} from "../../../api/SuperAdminApi/Brands/_requests";
-import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
+import { getBrandById } from "../../../api/SuperAdminApi/Brands/_requests";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
 import { useTranslation } from "react-i18next";
+import { useAllBrandsPaginate } from "../../../hooks/useBrands";
+import { useChangeBrandStatus } from "../../../hooks/useSuperAdminBrandsManage";
 type User = {
   id: number;
   first_name: string;
@@ -32,13 +27,7 @@ type User = {
 };
 
 const Brands = () => {
-  const [data, setData] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
-  const [reload, setReload] = useState(0);
-  const location = useLocation();
   const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     name: string;
@@ -49,7 +38,25 @@ const Brands = () => {
     email: "",
     phone: "",
   });
+  const location = useLocation();
   const { t } = useTranslation(["BrandsTable"]);
+  const { data, isLoading, isError, refetch, error } = useAllBrandsPaginate(
+    pageIndex,
+    searchValues
+  );
+  const pageSize = data?.per_page ?? 15;
+  useEffect(() => {
+    if (isError && error?.response?.status) {
+      const status = error.response.status;
+      if (status === 403 || status === 401) {
+        setUnauthorized(true);
+      }
+    }
+  }, [isError, error]);
+
+  const brandsData = data?.data ?? [];
+  const totalBrands = data?.total ?? 0;
+  const [reload, setReload] = useState(0);
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -57,56 +64,6 @@ const Brands = () => {
     }));
     setPageIndex(0);
   };
-
-  const fetchData = async (pageIndex: number = 0) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params: any = {
-        page: pageIndex + 1,
-        ...Object.fromEntries(
-          Object.entries(searchValues).filter(([_, value]) => value !== "")
-        ),
-      };
-
-      const response = await getBrandsWithPaginate(params);
-      const responseData = response.data.data;
-      console.log(responseData);
-
-      const fetchedData = Array.isArray(responseData.data)
-        ? responseData.data
-        : [];
-
-      const perPage = responseData.per_page || 5;
-
-      return {
-        data: fetchedData,
-        last_page: responseData.last_page || 0,
-        total: responseData.total || 0,
-        next_page_url: responseData.next_page_url,
-        prev_page_url: responseData.prev_page_url,
-        perPage,
-      };
-    } catch (error) {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        setUnauthorized(true);
-        setData([]);
-      } else {
-        console.error("Fetching error:", error);
-      }
-      return {
-        data: [],
-        last_page: 0,
-        total: 0,
-        next_page_url: null,
-        prev_page_url: null,
-        perPage: 0,
-      };
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const [alertData, setAlertData] = useState<{
     variant: "success" | "error" | "info" | "warning";
     title: string;
@@ -137,37 +94,18 @@ const Brands = () => {
     return () => clearTimeout(timer);
   }, [location.state]);
 
-  const handleCancel = async (id: number) => {
-    const confirmed = await alertDelete(
-      id,
-      cancelOrder,
-      () => fetchData(pageIndex),
-      {
-        confirmTitle: "Cancel Order?",
-        confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, Cancel",
-        successTitle: "Canceled!",
-        successText: "Order has been Canceled.",
-        errorTitle: "Error",
-        errorText: "Could not Cancel The Order.",
-      }
-    );
-    setReload((prev) => prev + 1);
-  };
-
-  const handleShip = async (id: number) => {
-    await openShipmentModal(id);
-    setReload((prev) => prev + 1);
-  };
   const getStatus = async (id) => {
     const res = await getBrandById(id);
     return res.data.data.status;
   };
+  const { mutateAsync: changeStatus } = useChangeBrandStatus();
   const handleChangeStatus = async (id: number) => {
     await openChangeStatusModal({
       id,
       getStatus,
-      changeStatus,
+      changeStatus: async (id, data) => {
+        return await changeStatus({ id, data });
+      },
       options: {
         Pending: t("brandsPage.status.pending"),
         Active: t("brandsPage.status.active"),
@@ -184,8 +122,6 @@ const Brands = () => {
         cancelButtonText: t("brandsPage.changeStatus.cancelButtonText"),
       },
     });
-
-    setReload((prev) => prev + 1);
   };
 
   const columns = buildColumns<User>({
@@ -219,24 +155,23 @@ const Brands = () => {
             { key: "phone", label: "Phone", type: "input" },
           ]}
           setSearchParam={handleSearch}
+          searchValues={searchValues}
         />
       </div>
       <div className="space-y-6">
         <ComponentCard title={t("brandsPage.all")}>
           <BasicTable
             columns={columns}
-            fetchData={fetchData}
-            onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
-            trigger={reload}
+            data={brandsData}
+            totalItems={totalBrands}
+            isLoading={isLoading}
             isShowMore={true}
-            unauthorized={unauthorized}
-            setUnauthorized={setUnauthorized}
-            onDataUpdate={(newData) => setData(newData)}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
             onChangeStatus={handleChangeStatus}
             isChangeStatus={true}
-            searchValueName={searchValues.name}
-            searchValueEmail={searchValues.email}
-            searchValuePhone={searchValues.phone}
+            onPageChange={setPageIndex}
+            unauthorized={unauthorized}
             loadingText={t("brandsPage.table.loadingText")}
           />
         </ComponentCard>

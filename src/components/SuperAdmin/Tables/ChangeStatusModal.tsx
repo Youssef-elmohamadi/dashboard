@@ -49,14 +49,26 @@ export const openChangeStatusModal = async ({
       newStatus &&
       newStatus.toLowerCase() !== currentStatusRaw.toLowerCase()
     ) {
-      // ✅ إرسال الـ status في كائن يحتوي على مفتاح status كما هو مطلوب
-      await changeStatus(id, { status: newStatus.toLowerCase() });
+      try {
+        
+        await changeStatus(id, {
+          status: newStatus.toLowerCase(),
+        });
 
-      Swal.fire({
-        icon: "success",
-        title: Texts.success.replace("{{status}}", newStatus),
-        confirmButtonText: Texts.confirmButtonText,
-      });
+        Swal.fire({
+          icon: "success",
+          title: Texts.success.replace("{{status}}", newStatus),
+          confirmButtonText: Texts.confirmButtonText,
+        });
+      } catch (error: any) {
+        console.error("Change status failed:", error);
+        Swal.fire({
+          icon: "error",
+          title: Texts.errorResponse,
+          text: error?.response?.data?.message || error?.message || "",
+          confirmButtonText: Texts.confirmButtonText,
+        });
+      }
     } else if (newStatus === matchedKey) {
       Swal.fire({
         icon: "info",
@@ -65,11 +77,11 @@ export const openChangeStatusModal = async ({
       });
     }
   } catch (error: any) {
-    console.error(error);
+    console.error("Modal flow failed:", error);
     Swal.fire({
       icon: "error",
       title: Texts.errorResponse,
-      text: error.response?.data?.message || "",
+      text: error?.response?.data?.message || error?.message || "",
       confirmButtonText: Texts.confirmButtonText,
     });
   }

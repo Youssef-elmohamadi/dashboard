@@ -12,13 +12,25 @@ import {
   useUpdateAdmin,
 } from "../../../hooks/useVendorAdmins";
 import { useRoles } from "../../../hooks/useRoles";
+type Admin = {
+  first_name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  password?: string;
+  roles: {
+    name: string;
+  }[];
+  role: string;
+  avatar: string;
+};
 const UpdateAdmin = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [adminData, setAdminData] = useState({
+  const [adminData, setAdminData] = useState<Admin>({
     first_name: "",
     last_name: "",
     phone: "",
@@ -95,7 +107,7 @@ const UpdateAdmin = () => {
 
   const { data, isError, error } = useGetAdminById(id);
 
-  const admin = data?.data?.data;
+  const admin :Admin = data?.data?.data;
   useEffect(() => {
     if (!admin) return;
     setAdminData(admin);

@@ -23,6 +23,7 @@ interface ColumnBuilderOptions<T extends BaseEntity> {
   includeActions?: boolean;
   includeCommissionRate?: boolean;
   includeStatus?: boolean;
+  includeUpdatedAt?: boolean;
   includeImagesAndNameCell?: boolean;
   categories?: { id: number; name: string }[];
   onDelete?: (id: number) => void;

@@ -32,7 +32,6 @@ const Categories = () => {
   }, [isError, error]);
 
   const categoriesData = data?.original?.data ?? [];
-  console.log(categoriesData);
   const totalCategories = data?.original?.total ?? 0;
 
   const handleSearch = (key: string, value: string | number) => {

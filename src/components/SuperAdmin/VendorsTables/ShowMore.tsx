@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  getVendorById,
-  changeDocumentStatus,
-} from "../../../api/SuperAdminApi/Vendors/_requests";
 import { openChangeStatusModal } from "../Tables/ChangeStatusModal";
 import ModalShowImage from "../Tables/ModalShowImage";
+import {
+  useChangeDocumentStatus,
+  useGetVendorById,
+} from "../../../hooks/useSuperAdminVendorManage";
 
 interface Document {
   id: number;
@@ -31,24 +31,28 @@ interface Vendor {
 const VendorDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["VendorsTable"]);
-  const [vendor, setVendor] = useState<Vendor | null>(null);
-  const [loading, setLoading] = useState(true);
+  //const [vendor, setVendor] = useState<Vendor | null>(null);
+  //const [loading, setLoading] = useState(true);
   const [showImage, setShowImage] = useState(false);
   const [doc, setDoc] = useState({});
 
-  const fetchVendor = async () => {
-    try {
-      const res = await getVendorById(id as string);
-      setVendor(res.data.data);
-    } catch (err) {
-      console.error("Error fetching vendor:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    if (id) fetchVendor();
-  }, [id]);
+  const { data: vendorData, isLoading: loading } = useGetVendorById(id);
+
+  const vendor = vendorData?.data.data;
+
+  // const fetchVendor = async () => {
+  //   try {
+  //     const res = await getVendorById(id as string);
+  //     setVendor(res.data.data);
+  //   } catch (err) {
+  //     console.error("Error fetching vendor:", err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (id) fetchVendor();
+  // }, [id]);
 
   const handleOpenImage = (doc: {}) => {
     setDoc(doc);
@@ -73,19 +77,22 @@ const VendorDetails: React.FC = () => {
     return document?.status || "";
   };
 
-  const changeStatus = async (id: number, status: string) => {
-    await changeDocumentStatus(id, { status });
-    if (vendor?.id) {
-      const updated = await getVendorById(String(vendor.id));
-      setVendor(updated.data.data);
-    }
-  };
+  // const changeStatus = async (id: number, status: string) => {
+  //   await changeDocumentStatus(id, { status });
+  //   if (vendor?.id) {
+  //     const updated = await getVendorById(String(vendor.id));
+  //     setVendor(updated.data.data);
+  //   }
+  // };
+  const { mutateAsync: changeStatusTS } = useChangeDocumentStatus();
 
   const handleChangeStatus = async (id: number) => {
     await openChangeStatusModal({
       id,
       getStatus,
-      changeStatus,
+      changeStatus: async (id, data) => {
+        return await changeStatusTS({ id, data });
+      },
       options: {
         Pending: t("vendorsPage.status.pending"),
         Approved: t("vendorsPage.status.approved"),

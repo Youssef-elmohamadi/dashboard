@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  getAdminById,
-  getAllRoles,
-  updateAdmin,
-} from "../../../api/SuperAdminApi/Admins/_requests";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
@@ -12,6 +7,11 @@ import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { FiUserPlus } from "react-icons/fi";
+import {
+  useGetAdminById,
+  useUpdateAdmin,
+} from "../../../hooks/useSuperAdminAdmins";
+import { useRoles } from "../../../hooks/useSuperAdminRoles";
 const UpdateAdmin = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -37,14 +37,15 @@ const UpdateAdmin = () => {
     role: "",
   });
   const [loading, setLoading] = useState(false);
-  const [options, setOptions] = useState<any[]>([]);
-  const [errors, setErrors] = useState<Record<string, string[]>>({
-    first_name: [],
-    last_name: [],
-    phone: [],
-    email: [],
-    password: [],
-    role: [],
+  const [errors, setErrors] = useState({
+    first_name: [] as string[],
+    last_name: [] as string[],
+    phone: [] as string[],
+    email: [] as string[],
+    password: [] as string[],
+    role: [] as string[],
+    global: "",
+    general: [] as string[],
   });
 
   const [clientSideErrors, setClientSideErrors] = useState({
@@ -90,54 +91,70 @@ const UpdateAdmin = () => {
   };
   const { t } = useTranslation(["UpdateAdmin"]);
   const { dir } = useDirectionAndLanguage();
-  // Fetch admin by ID
+
+  const { data, isError, error } = useGetAdminById(id);
+
+  const admin = data?.data?.data;
   useEffect(() => {
-    const fetchAdmin = async () => {
-      try {
-        if (id) {
-          const res = await getAdminById(id);
-          const admin = res.data.data;
+    if (!admin) return;
+    setAdminData(admin);
+    setUpdateData({
+      first_name: admin?.first_name || "",
+      last_name: admin?.last_name || "",
+      phone: admin?.phone || "",
+      email: admin?.email || "",
+      password: "",
+      role: admin?.roles?.[0]?.name || "",
+    });
+  }, [admin]);
 
-          setAdminData(admin);
-          setUpdateData({
-            first_name: admin.first_name || "",
-            last_name: admin.last_name || "",
-            phone: admin.phone || "",
-            email: admin.email || "",
-            password: "",
-            role: admin.roles[0]?.name || "",
-          });
-        }
-      } catch (err) {
-        console.error("Error fetching admin:", err);
-        const status = err?.response?.status;
-        if (status === 403 || status === 401) {
-          setErrors({
-            ...errors,
-            global: "You don't have permission to perform this action.",
-          });
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
+  if (isError) {
+    const status = error?.response?.status;
+    if (status === 403 || status === 401) {
+      setErrors({
+        ...errors,
+        global: t("admin.errors.global"),
+      });
+    }
+  }
+  // Fetch admin by ID
+  // useEffect(() => {
+  //   const fetchAdmin = async () => {
+  //     try {
+  //       if (id) {
+  //         const res = await getAdminById(id);
+  //         const admin = res.data.data;
 
-    fetchAdmin();
-  }, [id]);
+  //         setAdminData(admin);
+  //         setUpdateData({
+  //           first_name: admin.first_name || "",
+  //           last_name: admin.last_name || "",
+  //           phone: admin.phone || "",
+  //           email: admin.email || "",
+  //           password: "",
+  //           role: admin.roles[0]?.name || "",
+  //         });
+  //       }
+  //     } catch (err) {
+  //       console.error("Error fetching admin:", err);
+  //       const status = err?.response?.status;
+  //       if (status === 403 || status === 401) {
+  //         setErrors({
+  //           ...errors,
+  //           global: "You don't have permission to perform this action.",
+  //         });
+  //       }
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchAdmin();
+  // }, [id]);
 
   // Fetch roles
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const res = await getAllRoles();
-        setOptions(res.data.data);
-      } catch (err) {
-        console.error("Error fetching roles:", err);
-      }
-    };
-
-    fetchRoles();
-  }, []);
+  const { data: roles } = useRoles();
+  const options = roles?.data.data;
 
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,19 +172,33 @@ const UpdateAdmin = () => {
       role: value,
     }));
   };
-
+  const { mutateAsync } = useUpdateAdmin(id);
   // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
+    setLoading(true);
+    setErrors({
+      first_name: [],
+      last_name: [],
+      phone: [],
+      email: [],
+      password: [],
+      role: [],
+      global: "",
+      general: [],
+    });
     try {
       if (id) {
         const dataToSend = {
           ...updateData,
-          password: updateData.password || adminData.password,
         };
 
-        await updateAdmin(id, dataToSend);
+        if (!dataToSend.password) {
+          delete dataToSend.password;
+        }
+
+        await mutateAsync({ id: +id, adminData: dataToSend });
         navigate("/super_admin/admins", {
           state: { successEdit: t("admin.success_message") },
         });
@@ -195,6 +226,8 @@ const UpdateAdmin = () => {
       } else {
         setErrors({ general: [t("admin.errors.general")] });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -266,7 +299,7 @@ const UpdateAdmin = () => {
                 label: role.name,
               }))}
               onChange={handleSelectChange}
-              defaultValue={updateData.role}
+              value={updateData.role}
               placeholder={t("admin.placeholder.select_role")}
             />
             {errors.role?.[0] && (

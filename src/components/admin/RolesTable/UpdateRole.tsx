@@ -3,11 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Checkbox from "../../form/input/Checkbox";
-import {
-  getAllPermissions,
-  getRoleById,
-  updateRole,
-} from "../../../api/AdminApi/rolesApi/_requests";
 import Loading from "../../common/Loading";
 import { useTranslation } from "react-i18next";
 import {
@@ -15,18 +10,12 @@ import {
   useGetRoleById,
   useUpdateRole,
 } from "../../../hooks/useRoles";
-type Permission = {
-  id: number;
-  name: string;
-};
 
 const UpdateRole: React.FC = () => {
-  const [loading, setLoading] = useState(false);
   const [updateData, setUpdateData] = useState({
     name: "",
     permissions: [] as number[],
   });
-  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({}); // إضافة حالة لتخزين الأخطاء
   const [errors, setErrors] = useState({

@@ -20,7 +20,7 @@ export const getCategoryById = async (id: number | string) => {
   return await axiosJson.get(`/api/superAdmin/categories/${id}`);
 };
 
-export const deleteCategory = async (id: number) => {
+export const deleteCategory = async (id: number|string) => {
   return await axiosJson.delete(`/api/superAdmin/categories/${id}`);
 };
 

@@ -10,14 +10,17 @@ import {
 } from "../../../api/SuperAdminApi/Roles/_requests";
 import Loading from "../../common/Loading";
 import { useTranslation } from "react-i18next";
+import {
+  useGetAllPermissions,
+  useGetRoleById,
+  useUpdateRole,
+} from "../../../hooks/useSuperAdminRoles";
 type Permission = {
   id: number;
   name: string;
 };
 
 const UpdateRole: React.FC = () => {
-  const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [loading, setLoading] = useState(false);
   const [updateData, setUpdateData] = useState({
     name: "",
     permissions: [] as number[],
@@ -27,39 +30,37 @@ const UpdateRole: React.FC = () => {
     permissions: [] as string[],
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({}); 
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateRole"]);
+  const {
+    data: permissionData,
+    isLoading: isPermissionLoading,
+    error: permissionError,
+    isError: isPermissionError,
+  } = useGetAllPermissions();
+
+  const permissions: Permission = permissionData?.data.data;
+
+  const {
+    data: roleData,
+    isLoading,
+    isError: isRoleError,
+    error: roleError,
+  } = useGetRoleById(id);
+  const role = roleData?.data?.data;
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const permissionsRes = await getAllPermissions();
-        setPermissions(permissionsRes.data.data || []);
-        if (id) {
-          const roleRes = await getRoleById(id);
-          const roleData = roleRes.data.data;
+    if (!role) return;
+    const permissionIds = Array.isArray(role.permissions)
+      ? role.permissions.map((perm: any) => perm.id)
+      : [];
 
-          const permissionIds = Array.isArray(roleData.permissions)
-            ? roleData.permissions.map((perm: any) => perm.id)
-            : [];
-
-          setUpdateData({
-            name: roleData.name || "",
-            permissions: permissionIds,
-          });
-        }
-      } catch (err) {
-        console.error("Error fetching data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [id]);
-
+    setUpdateData({
+      name: role.name || "",
+      permissions: permissionIds,
+    });
+  }, [role]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUpdateData((prev) => ({
@@ -91,7 +92,7 @@ const UpdateRole: React.FC = () => {
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
+  const { mutateAsync } = useUpdateRole(id);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -102,10 +103,12 @@ const UpdateRole: React.FC = () => {
     }
 
     try {
-      await updateRole(updateData, id);
-      navigate("/super_admin/roles", {
-        state: { successUpdate: t("role.success_message") },
-      });
+      if (id) {
+        await mutateAsync({ id: +id, roleData: updateData });
+        navigate("/super_admin/roles", {
+          state: { successUpdate: t("role.success_message") },
+        });
+      }
     } catch (error: any) {
       const status = error?.response?.status;
 
@@ -171,7 +174,7 @@ const UpdateRole: React.FC = () => {
             )}
           </div>
 
-          {loading ? (
+          {isLoading ? (
             <Loading text={t("role.get_permissions")} />
           ) : (
             <div className="col-span-2">

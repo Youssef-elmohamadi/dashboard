@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FiEdit } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
-import ComponentCard from "../../../components/common/ComponentCard";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";
-import {
-  getAllCategories,
-  getCategoryById,
-  updateCategory,
-} from "../../../api/SuperAdminApi/Categories/_requests";
+import { updateCategory } from "../../../api/SuperAdminApi/Categories/_requests";
 import CategoryImageUpload from "./CategoryImageUpload";
+import {
+  useGetCategoryById,
+  useUpdateCategory,
+} from "../../../hooks/useSuperAdminCategpries";
+import { useAllCategories } from "../../../hooks/useCategories";
 
 export default function UpdateCategory() {
   const { t } = useTranslation(["UpdateCategory"]);
@@ -26,37 +26,63 @@ export default function UpdateCategory() {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [clientErrors, setClientErrors] = useState<any>({});
   const [errors, setErrors] = useState<any>({});
-  const [categories, setCategories] = useState<any[]>([]);
+  //const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
+  const { data: allCategory } = useAllCategories();
+  const categories = allCategory?.data.data.original;
+
+  const { data, isError, error } = useGetCategoryById(id);
+
+  const Category = data?.data.data.original;
 
   useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        const [categoryRes, allCategoriesRes] = await Promise.all([
-          getCategoryById(id),
-          getAllCategories(),
-        ]);
+    if (!Category) return;
+    setCategoryData({
+      name: Category.name || "",
+      description: Category.description || "",
+      commission_rate: Category.commission_rate || "",
+      parent_id: Category.parent_id ? Category.parent_id.toString() : "",
+      image: null,
+    });
+    setPreviewImage(Category.image);
+  }, [Category]);
+  if (isError) {
+    const status = error?.response?.status;
+    if (status === 403 || status === 401) {
+      setErrors({
+        ...errors,
+        global: t("category.errors.global"),
+      });
+    }
+  }
+  // useEffect(() => {
+  //   const fetchInitialData = async () => {
+  //     try {
+  //       const [categoryRes, allCategoriesRes] = await Promise.all([
+  //         getCategoryById(id),
+  //         getAllCategories(),
+  //       ]);
 
-        const data = categoryRes.data.data.original;
-        setCategoryData({
-          name: data.name || "",
-          description: data.description || "",
-          commission_rate: data.commission_rate || "",
-          parent_id: data.parent_id ? data.parent_id.toString() : "",
-          image: null,
-        });
+  //       const data = categoryRes.data.data.original;
+  //       setCategoryData({
+  //         name: data.name || "",
+  //         description: data.description || "",
+  //         commission_rate: data.commission_rate || "",
+  //         parent_id: data.parent_id ? data.parent_id.toString() : "",
+  //         image: null,
+  //       });
 
-        setPreviewImage(data.image);
-        setCategories(allCategoriesRes.data.data.original);
-      } catch (err) {
-        console.error("Error fetching category data", err);
-      }
-    };
+  //       setPreviewImage(data.image);
+  //       //setCategories(allCategoriesRes.data.data.original);
+  //     } catch (err) {
+  //       console.error("Error fetching category data", err);
+  //     }
+  //   };
 
-    fetchInitialData();
-  }, [id]);
+  //   fetchInitialData();
+  // }, [id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -90,7 +116,7 @@ export default function UpdateCategory() {
     setClientErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+  const { mutateAsync } = useUpdateCategory(id);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
@@ -211,11 +237,11 @@ export default function UpdateCategory() {
           <div className="w-full">
             <Label>{t("category.parent")}</Label>
             <Select
-              options={categories.map((cat) => ({
+              options={categories?.map((cat) => ({
                 value: cat.id.toString(),
                 label: cat.name,
               }))}
-              defaultValue={categoryData.parent_id}
+              value={categoryData.parent_id}
               onChange={handleSelectChange}
               placeholder={t("category.selectParent")}
             />

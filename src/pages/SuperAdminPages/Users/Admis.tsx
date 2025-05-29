@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import BasicTable from "../../../components/SuperAdmin/Tables/BasicTable";
+import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useLocation } from "react-router-dom";
-import { getAllAdminsPaginate } from "../../../api/SuperAdminApi/Admins/_requests";
 import { deleteAdmin } from "../../../api/SuperAdminApi/Admins/_requests";
 import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
 import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
@@ -24,13 +23,9 @@ type User = {
   roles: { id: number; name: string }[];
 };
 import { useTranslation } from "react-i18next";
+import { useAllAdmins, useDeleteAdmin } from "../../../hooks/useSuperAdminAdmins";
 const Admins = () => {
-  const [data, setData] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
-  const [reload, setReload] = useState(0);
-  const location = useLocation();
   const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     name: string;
@@ -41,62 +36,24 @@ const Admins = () => {
     email: "",
     phone: "",
   });
-
+  const location = useLocation();
   const { t } = useTranslation(["AdminsTable"]);
-  const handleSearch = (key: string, value: string | number) => {
-    setSearchValues((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-    setPageIndex(0);
-  };
-
-  const fetchData = async (pageIndex: number = 0) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params: any = {
-        page: pageIndex + 1,
-        ...Object.fromEntries(
-          Object.entries(searchValues).filter(([_, value]) => value !== "")
-        ),
-      };
-
-      const response = await getAllAdminsPaginate(params);
-      const responseData = response.data.data;
-
-      const fetchedData = Array.isArray(responseData.data)
-        ? responseData.data
-        : [];
-
-      const perPage = responseData.per_page || 5;
-
-      return {
-        data: fetchedData,
-        last_page: responseData.last_page || 0,
-        total: responseData.total || 0,
-        next_page_url: responseData.next_page_url,
-        prev_page_url: responseData.prev_page_url,
-        perPage,
-      };
-    } catch (error) {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
+  const { data, isLoading, isError, refetch, error } = useAllAdmins(
+    pageIndex,
+    searchValues
+  );
+  const pageSize = data?.per_page ?? 15;
+  useEffect(() => {
+    if (isError && error?.response?.status) {
+      const status = error.response.status;
+      if (status === 403 || status === 401) {
         setUnauthorized(true);
-        setData([]);
       }
-      return {
-        data: [],
-        last_page: 0,
-        total: 0,
-        next_page_url: null,
-        prev_page_url: null,
-        perPage: 0,
-      };
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [isError, error]);
 
+  const adminsData = data?.data ?? [];
+  const totalAdmins = data?.total ?? 0;
   const [alertData, setAlertData] = useState<{
     variant: "success" | "error" | "info" | "warning";
     title: string;
@@ -126,24 +83,25 @@ const Admins = () => {
 
     return () => clearTimeout(timer);
   }, [location.state]);
-
+  const handleSearch = (key: string, value: string | number) => {
+    setSearchValues((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+    setPageIndex(0);
+  };
+  const { mutateAsync: deleteAdminMutate } = useDeleteAdmin();
   const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(
-      id,
-      deleteAdmin,
-      () => fetchData(pageIndex),
-      {
-        confirmTitle: t("adminsPage.delete.confirmTitle"),
-        confirmText: t("adminsPage.delete.confirmText"),
-        confirmButtonText: t("adminsPage.delete.confirmButtonText"),
-        cancelButtonText: t("adminsPage.delete.cancelButtonText"),
-        successTitle: t("adminsPage.delete.successTitle"),
-        successText: t("adminsPage.delete.successText"),
-        errorTitle: t("adminsPage.delete.errorTitle"),
-        errorText: t("adminsPage.delete.errorText"),
-      }
-    );
-    setReload((prev) => prev + 1);
+    const confirmed = await alertDelete(id, deleteAdminMutate, refetch, {
+      confirmTitle: t("adminsPage.delete.confirmTitle"),
+      confirmText: t("adminsPage.delete.confirmText"),
+      confirmButtonText: t("adminsPage.delete.confirmButtonText"),
+      cancelButtonText: t("adminsPage.delete.cancelButtonText"),
+      successTitle: t("adminsPage.delete.successTitle"),
+      successText: t("adminsPage.delete.successText"),
+      errorTitle: t("adminsPage.delete.errorTitle"),
+      errorText: t("adminsPage.delete.errorText"),
+    });
   };
 
   const columns = buildColumns<User>({
@@ -178,6 +136,7 @@ const Admins = () => {
             { key: "phone", label: "Phone", type: "input" },
           ]}
           setSearchParam={handleSearch}
+          searchValues={searchValues}
         />
       </div>
       <div className="space-y-6">
@@ -188,18 +147,15 @@ const Admins = () => {
         >
           <BasicTable
             columns={columns}
-            fetchData={fetchData}
+            data={adminsData}
+            totalItems={totalAdmins}
+            isLoading={isLoading}
             onDelete={handleDelete}
-            onEdit={(id) => {}}
-            isModalEdit={false}
+            onEdit={() => {}}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            onPageChange={setPageIndex}
             unauthorized={unauthorized}
-            setUnauthorized={setUnauthorized}
-            onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
-            trigger={reload}
-            onDataUpdate={(newData) => setData(newData)}
-            searchValueName={searchValues.name}
-            searchValueEmail={searchValues.email}
-            searchValuePhone={searchValues.phone}
             loadingText={t("adminsPage.table.loadingText")}
           />
         </ComponentCard>

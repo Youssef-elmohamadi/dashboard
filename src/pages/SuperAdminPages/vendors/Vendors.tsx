@@ -1,44 +1,22 @@
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import BasicTable from "../../../components/SuperAdmin/Tables/BasicTable";
+import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { alertDelete } from "../../../components/admin/Tables/Alert";
 import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
-import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 import {
-  cancelOrder,
-  getVendorsWithPaginate,
-  changeStatus,
   getVendorById,
 } from "../../../api/SuperAdminApi/Vendors/_requests";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
 import { useTranslation } from "react-i18next";
-type User = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  vendor_id: number;
-  avatar: string;
-  created_at: string;
-  updated_at: string;
-  vendor: { id: number; name: string };
-  roles: { id: number; name: string }[];
-};
+import {
+  useChangeVendorStatus,
+  useGetVendorsPaginate,
+} from "../../../hooks/useSuperAdminVendorManage";
 
 const Vendors = () => {
-  const { t } = useTranslation(["VendorsTable"]);
-  const [data, setData] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [pageIndex, setPageIndex] = useState(0);
-  const [reload, setReload] = useState(0);
-  const location = useLocation();
   const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     name: string;
@@ -49,6 +27,7 @@ const Vendors = () => {
     email: "",
     phone: "",
   });
+  const { t } = useTranslation(["VendorsTable"]);
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -57,113 +36,39 @@ const Vendors = () => {
     setPageIndex(0);
   };
 
-  const fetchData = async (pageIndex: number = 0) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params: any = {
-        page: pageIndex + 1,
-        ...Object.fromEntries(
-          Object.entries(searchValues).filter(([_, value]) => value !== "")
-        ),
-      };
-
-      const response = await getVendorsWithPaginate(params);
-      const responseData = response.data.data;
-      console.log(responseData);
-
-      const fetchedData = Array.isArray(responseData.data)
-        ? responseData.data
-        : [];
-
-      const perPage = responseData.per_page || 5;
-
-      return {
-        data: fetchedData,
-        last_page: responseData.last_page || 0,
-        total: responseData.total || 0,
-        next_page_url: responseData.next_page_url,
-        prev_page_url: responseData.prev_page_url,
-        perPage,
-      };
-    } catch (error) {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        setUnauthorized(true);
-        setData([]);
-      } else {
-        console.error("Fetching error:", error);
-      }
-      return {
-        data: [],
-        last_page: 0,
-        total: 0,
-        next_page_url: null,
-        prev_page_url: null,
-        perPage: 0,
-      };
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const [alertData, setAlertData] = useState<{
-    variant: "success" | "error" | "info" | "warning";
-    title: string;
-    message: string;
-  } | null>(null);
-
+  const { data, isLoading, isError, error, refetch } = useGetVendorsPaginate(
+    pageIndex,
+    searchValues
+  );
   useEffect(() => {
-    if (location.state?.successCreate) {
-      setAlertData({
-        variant: "success",
-        title: "Admin Created Successfully",
-        message: location.state.successCreate,
-      });
-      window.history.replaceState({}, document.title);
-    } else if (location.state?.successEdit) {
-      setAlertData({
-        variant: "success",
-        title: "Admin Updated Successfully",
-        message: location.state.successEdit,
-      });
-      window.history.replaceState({}, document.title);
-    }
-
-    const timer = setTimeout(() => {
-      setAlertData(null);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [location.state]);
-
-  const handleCancel = async (id: number) => {
-    const confirmed = await alertDelete(
-      id,
-      cancelOrder,
-      () => fetchData(pageIndex),
-      {
-        confirmTitle: "Cancel Order?",
-        confirmText: "This action cannot be undone!",
-        confirmButtonText: "Yes, Cancel",
-        successTitle: "Canceled!",
-        successText: "Order has been Canceled.",
-        errorTitle: "Error",
-        errorText: "Could not Cancel The Order.",
+    if (isError && error?.response?.status) {
+      const status = error.response.status;
+      if (status === 403 || status === 401) {
+        setUnauthorized(true);
       }
-    );
-    setReload((prev) => prev + 1);
-  };
+    }
+  }, [isError, error]);
+  const pageSize = data?.per_page ?? 15;
+  const vendorsData = data?.data ?? [];
+  const totalVendors = data?.total ?? 0;
 
   const getStatus = async (id) => {
     const res = await getVendorById(id);
     return res.data.data.status;
   };
 
+  //const {data:vendorData}=useGetVendorById(id);
+
+  const { mutateAsync: changeStatus } = useChangeVendorStatus();
+
   const handleChangeStatus = async (id: number) => {
     await openChangeStatusModal({
       id,
       getStatus,
-      changeStatus,
+      //changeStatus: (id, payload) => changeStatus({ id, payload }),
+      changeStatus: async (id, data) => {
+        return await changeStatus({ id, data });
+      },
       options: {
         Pending: t("vendorsPage.status.pending"),
         Active: t("vendorsPage.status.active"),
@@ -180,11 +85,9 @@ const Vendors = () => {
         cancelButtonText: t("vendorsPage.changeStatus.cancelButtonText"),
       },
     });
-
-    setReload((prev) => prev + 1);
   };
 
-  const columns = buildColumns<User>({
+  const columns = buildColumns({
     includeDateOfCreation: true,
     includeVendorEmail: true,
     includeVendorName: true,
@@ -194,13 +97,6 @@ const Vendors = () => {
   });
   return (
     <>
-      {alertData && (
-        <Alert
-          variant={alertData.variant}
-          title={alertData.title}
-          message={alertData.message}
-        />
-      )}
       <PageMeta
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
@@ -217,24 +113,23 @@ const Vendors = () => {
             { key: "phone", label: "Phone", type: "input" },
           ]}
           setSearchParam={handleSearch}
+          searchValues={searchValues}
         />
       </div>
       <div className="space-y-6">
         <ComponentCard title={t("vendorsPage.all")}>
           <BasicTable
             columns={columns}
-            fetchData={fetchData}
-            onPaginationChange={({ pageIndex }) => setPageIndex(pageIndex)}
-            trigger={reload}
+            data={vendorsData}
             isShowMore={true}
             onChangeStatus={handleChangeStatus}
             isChangeStatus={true}
+            totalItems={totalVendors}
+            isLoading={isLoading}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            onPageChange={setPageIndex}
             unauthorized={unauthorized}
-            setUnauthorized={setUnauthorized}
-            onDataUpdate={(newData) => setData(newData)}
-            searchValueName={searchValues.name}
-            searchValueEmail={searchValues.email}
-            searchValuePhone={searchValues.phone}
             loadingText={t("vendorsPage.table.loadingText")}
           />
         </ComponentCard>

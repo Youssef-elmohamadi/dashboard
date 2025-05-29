@@ -1,19 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
-import {
-  getAllRoles,
-  createAdmin,
-} from "../../../api/SuperAdminApi/Admins/_requests";
 import { FiUserPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { useRoles } from "../../../hooks/useSuperAdminRoles";
+import { useCreateAdmin } from "../../../hooks/useSuperAdminAdmins";
 export default function CreateAdmin() {
   const [showPassword, setShowPassword] = useState(false);
-  const [options, setOptions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({
     first_name: [] as string[],
@@ -92,23 +89,27 @@ export default function CreateAdmin() {
     }));
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getAllRoles();
-        setOptions(response?.data?.data);
-      } catch (error) {
-        console.error("Error fetching roles:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await getAllRoles();
+  //       setOptions(response?.data?.data);
+  //     } catch (error) {
+  //       console.error("Error fetching roles:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
+
+  const { data } = useRoles();
+  const options = data?.data.data;
+  const { mutateAsync } = useCreateAdmin();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-
+    setLoading(true);
     try {
-      await createAdmin(adminData);
+      await mutateAsync(adminData);
       navigate("/super_admin/admins", {
         state: { successCreate: t("admin.success_message") },
       });
@@ -138,6 +139,8 @@ export default function CreateAdmin() {
       } else {
         setErrors({ general: [t("admin.errors.general")] });
       }
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -198,7 +201,7 @@ export default function CreateAdmin() {
               value: role?.name,
               label: role?.name,
             }))}
-            defaultValue={adminData?.role}
+            value={adminData?.role}
             onChange={handleSelectChange}
             placeholder={t("admin.placeholder.select_role")}
             className="dark:bg-dark-900"

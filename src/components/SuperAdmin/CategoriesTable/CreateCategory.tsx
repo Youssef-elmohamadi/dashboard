@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
-import ComponentCard from "../../../components/common/ComponentCard";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";
 import { useNavigate } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
-import {
-  createCategory,
-  getAllCategories,
-} from "../../../api/SuperAdminApi/Categories/_requests";
 import CategoryImageUpload from "./CategoryImageUpload";
 import { useTranslation } from "react-i18next";
+import { useAllCategories } from "../../../hooks/useCategories";
+import { useCreateCategory } from "../../../hooks/useSuperAdminCategpries";
+import TextArea from "../../form/input/TextArea";
 
 export default function CreateCategory() {
   const { t } = useTranslation(["CreateCategory"]);
@@ -24,21 +22,23 @@ export default function CreateCategory() {
 
   const [errors, setErrors] = useState<any>({});
   const [clientErrors, setClientErrors] = useState<any>({});
-  const [categories, setCategories] = useState<any[]>([]);
+  //const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await getAllCategories();
-        setCategories(res.data.data.original);
-      } catch (error) {
-        console.error("Error fetching categories", error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  const { data } = useAllCategories();
+  const categories = data?.data.data.original;
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const res = await getAllCategories();
+  //       setCategories(res.data.data.original);
+  //     } catch (error) {
+  //       console.error("Error fetching categories", error);
+  //     }
+  //   };
+  //   fetchCategories();
+  // }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -71,6 +71,8 @@ export default function CreateCategory() {
     setClientErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
+  const { mutateAsync: createCategory } = useCreateCategory();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,10 +172,13 @@ export default function CreateCategory() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
           <div className="w-full">
             <Label>{t("category.description")}</Label>
-            <textarea
+            <TextArea
               name="description"
               placeholder={t("category.descPlaceholder")}
-              onChange={handleChange}
+              value={categoryData.description}
+              onChange={(value) =>
+                setCategoryData((prev) => ({ ...prev, description: value }))
+              }
               className="w-full mt-2 p-2 border border-gray-200 outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
               rows={4}
             />
@@ -191,11 +196,11 @@ export default function CreateCategory() {
           <div>
             <Label>{t("category.parent")}</Label>
             <Select
-              options={categories.map((cat) => ({
+              options={categories?.map((cat) => ({
                 value: cat.id.toString(),
                 label: cat.name,
               }))}
-              defaultValue={categoryData.parent_id}
+              value={categoryData.parent_id}
               onChange={handleSelectChange}
               placeholder={t("category.selectParent")}
             />
