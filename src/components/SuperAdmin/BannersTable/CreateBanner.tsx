@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { createBanner } from "../../../api/SuperAdminApi/Banners/_requests";
-import { getAllCategories } from "../../../api/SuperAdminApi/Categories/_requests";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../form/Select";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Button from "../../ui/button/Button";
+import { useAllCategories } from "../../../hooks/useCategories";
+import { useCreateBanner } from "../../../hooks/useSuperAdminBanners";
 
 interface Category {
   id: string;
@@ -14,34 +14,37 @@ interface Category {
 }
 
 const CreateBanner = () => {
-    const { t } = useTranslation(["CreateBanner"]);
-    const [bannerData, setBannerData] = useState({
-        title: "",
-        link_type: "external",
-        url: "",
-        link_id: "",
-        position: "",
-        is_active: "1",
-    });
-    const [errors, setErrors] = useState<Record<string, string[] | string>>({});
+  const { t } = useTranslation(["CreateBanner"]);
+  const [bannerData, setBannerData] = useState({
+    title: "",
+    link_type: "external",
+    url: "",
+    link_id: "",
+    position: "",
+    is_active: "1",
+  });
+  const [errors, setErrors] = useState<Record<string, string[] | string>>({});
   const [clientSideErrors, setClientSideErrors] = useState<
     Record<string, string>
   >({});
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
-  const [categories, setCategories] = useState<Category[]>([]);
+  //const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getAllCategories();
-        if (response.data) setCategories(response.data.data.original);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const response = await getAllCategories();
+  //       if (response.data) setCategories(response.data.data.original);
+  //     } catch (error) {
+  //       console.error("Error fetching categories:", error);
+  //     }
+  //   };
+  //   fetchCategories();
+  // }, []);
+
+  const { data: allCategories } = useAllCategories();
+  const categories = allCategories?.data.data.original;
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -64,7 +67,7 @@ const CreateBanner = () => {
     setClientSideErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+const { mutateAsync: createBanner } = useCreateBanner();
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -158,7 +161,7 @@ const CreateBanner = () => {
           <div>
             <Label htmlFor="link_type">{t("banner.linkType")}</Label>
             <Select
-              defaultValue={bannerData.link_type}
+              value={bannerData.link_type}
               onChange={(value) =>
                 setBannerData((prev) => ({ ...prev, link_type: value }))
               }
@@ -210,11 +213,11 @@ const CreateBanner = () => {
             <div>
               <Label htmlFor="link_id">{t("banner.category")}</Label>
               <Select
-                options={categories.map((cat) => ({
+                options={categories?.map((cat) => ({
                   value: cat.id.toString(),
                   label: cat.name,
                 }))}
-                defaultValue={bannerData.link_id}
+                value={bannerData.link_id}
                 onChange={(value) =>
                   setBannerData((prev) => ({ ...prev, link_id: value }))
                 }
@@ -235,11 +238,11 @@ const CreateBanner = () => {
           <div>
             <Label htmlFor="position">{t("banner.position")}</Label>
             <Select
-              defaultValue={bannerData.position}
+              value={bannerData.position}
               onChange={(value) =>
                 setBannerData((prev) => ({ ...prev, position: value }))
               }
-              options={categories.map((cat) => ({
+              options={categories?.map((cat) => ({
                 value: cat.id,
                 label: `Before ${cat.name}`,
               }))}
@@ -258,7 +261,7 @@ const CreateBanner = () => {
           <div>
             <Label htmlFor="is_active">{t("banner.status")}</Label>
             <Select
-              defaultValue={bannerData.is_active}
+              value={bannerData.is_active}
               onChange={(value) =>
                 setBannerData((prev) => ({ ...prev, is_active: value }))
               }

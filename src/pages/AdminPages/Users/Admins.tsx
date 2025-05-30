@@ -10,10 +10,12 @@ import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
 import { useAllAdmins, useDeleteAdmin } from "../../../hooks/useVendorAdmins";
+import { AxiosError } from "axios";
 
 const Admins = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
+  const [globalError, setGlobalError] = useState(false);
   const [searchValues, setSearchValues] = useState({
     name: "",
     email: "",
@@ -26,12 +28,16 @@ const Admins = () => {
     pageIndex,
     searchValues
   );
-  const pageSize = data?.per_page ?? 15;
+  console.log(data);
+  const pageSize = data?.per_page ?? 1;
+
   useEffect(() => {
-    if (isError && error?.response?.status) {
-      const status = error.response.status;
+    if (isError && error instanceof AxiosError) {
+      const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
+      } else if (status === 500) {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
@@ -87,6 +93,7 @@ const Admins = () => {
       successText: t("adminsPage.delete.successText"),
       errorTitle: t("adminsPage.delete.errorTitle"),
       errorText: t("adminsPage.delete.errorText"),
+      lastButton: t("adminsPage.delete.lastButton"),
     });
   };
 
@@ -107,7 +114,7 @@ const Admins = () => {
           message={alertData.message}
         />
       )}
-      <PageMeta title="Tashtiba | Manage Admins" description="Admins" />
+      <PageMeta title={t("adminsPage.mainTitle")} description="Admins" />
       <PageBreadcrumb pageTitle={t("adminsPage.title")} userType="admin" />
       <SearchTable
         fields={[
@@ -134,6 +141,7 @@ const Admins = () => {
           pageSize={pageSize}
           onPageChange={setPageIndex}
           unauthorized={unauthorized}
+          globalError={globalError}
           loadingText={t("adminsPage.table.loadingText")}
         />
       </ComponentCard>

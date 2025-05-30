@@ -7,30 +7,15 @@ import { TbStarHalfFilled } from "react-icons/tb";
 import { BsFillStarFill } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
 import { useModal } from "../../../pages/UserPages/Context/ModalContext";
-import { toast } from "react-toastify";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  addToFavorite,
-  removeFromFavorite,
-} from "../../../api/EndUserApi/ensUserProducts/_requests";
+
 import { useTranslation } from "react-i18next";
+import { useFavoriteProducts } from "../../../hooks/Api/EndUser/useFavoriteProducts";
+import { Product } from "../../../types/Product";
 
 interface LazyImage {
   src: string;
   alt: string;
   className: string;
-}
-interface ProductImage {
-  image: string;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  price: string;
-  images: ProductImage[];
-  rating: number;
-  is_fav?: boolean;
 }
 interface ProductCardProps {
   product: Product;
@@ -67,156 +52,10 @@ const LazyImage = ({ src, alt, className }: LazyImage) => {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const { openModal } = useModal();
-  const isFav = product?.is_fav;
-  const queryClient = useQueryClient();
   const { t } = useTranslation(["EndUserProductCard"]);
-  const mutationAddToFavorite = useMutation({
-    mutationFn: () => addToFavorite(product.id),
-    onSuccess: () => {
-      // homePage
-      queryClient.setQueryData(["homePage"], (old: any) => {
-        if (!old) return old;
-        return {
-          ...old,
-          leatestProducts: old.leatestProducts.map((p: any) =>
-            p.id === product.id ? { ...p, is_fav: true } : p
-          ),
-        };
-      });
+  const { addToFavorite, removeFromFavorite } = useFavoriteProducts(product.id);
 
-      // product-categories
-      queryClient.setQueryData(["product-categories"], (old: any) => {
-        if (!old) return old;
-        return old.map((cat: any) => ({
-          ...cat,
-          products: cat.products.map((p: any) =>
-            p.id === product.id ? { ...p, is_fav: true } : p
-          ),
-        }));
-      });
-
-      // endUserProducts
-      queryClient.setQueriesData(
-        { queryKey: ["endUserProducts"] },
-        (old: any) => {
-          if (!old) return old;
-          return {
-            ...old,
-            pages: old.pages.map((page: any) => ({
-              ...page,
-              data: page.data.map((p: any) =>
-                p.id === product.id ? { ...p, is_fav: true } : p
-              ),
-            })),
-          };
-        }
-      );
-
-      // endUserAllProducts
-      queryClient.setQueriesData(
-        { queryKey: ["endUserAllProducts"] },
-        (old: any) => {
-          if (!old) return old;
-          return {
-            ...old,
-            pages: old.pages.map((page: any) => ({
-              ...page,
-              data: page.data.map((p: any) =>
-                p.id === product.id ? { ...p, is_fav: true } : p
-              ),
-            })),
-          };
-        }
-      );
-
-      toast.success(t("successAddedToFav"));
-    },
-
-    onError: (error) => {
-      if (error?.response?.status === 401) {
-        toast.error(t("noAuth"));
-      } else {
-        toast.error(t("fieldAddedToFav"));
-      }
-    },
-  });
-  const mutationRemoveFromFavorite = useMutation({
-    mutationFn: () => removeFromFavorite(product.id),
-    onSuccess: () => {
-      // homePage
-      queryClient.setQueryData(["homePage"], (old: any) => {
-        if (!old) return old;
-        return {
-          ...old,
-          leatestProducts: old.leatestProducts.map((p: any) =>
-            p.id === product.id ? { ...p, is_fav: false } : p
-          ),
-        };
-      });
-
-      // product-categories
-      queryClient.setQueryData(["product-categories"], (old: any) => {
-        if (!old) return old;
-        return old.map((cat: any) => ({
-          ...cat,
-          products: cat.products.map((p: any) =>
-            p.id === product.id ? { ...p, is_fav: false } : p
-          ),
-        }));
-      });
-
-      // endUserProducts
-      queryClient.setQueriesData(
-        { queryKey: ["endUserProducts"] },
-        (old: any) => {
-          if (!old) return old;
-          return {
-            ...old,
-            pages: old.pages.map((page: any) => ({
-              ...page,
-              data: page.data.map((p: any) =>
-                p.id === product.id ? { ...p, is_fav: false } : p
-              ),
-            })),
-          };
-        }
-      );
-
-      // endUserAllProducts
-      queryClient.setQueriesData(
-        { queryKey: ["endUserAllProducts"] },
-        (old: any) => {
-          if (!old) return old;
-          return {
-            ...old,
-            pages: old.pages.map((page: any) => ({
-              ...page,
-              data: page.data.map((p: any) =>
-                p.id === product.id ? { ...p, is_fav: false } : p
-              ),
-            })),
-          };
-        }
-      );
-
-      toast.success(t("successRemoveFromFav"));
-    },
-
-    onError: (error) => {
-      if (error?.response?.status === 401) {
-        toast.error(t("noAuth"));
-      } else {
-        toast.error(t("fieldRemoveFromFav"));
-      }
-    },
-  });
-
-  const handleAddToFavorite = () => {
-    mutationAddToFavorite.mutate();
-  };
-  const handleRemoveFromFavorite = () => {
-    mutationRemoveFromFavorite.mutate();
-  };
+  const isFav = product?.is_fav;
 
   return (
     <div className="w-full border border-gray-200 rounded p-3 relative">
@@ -227,8 +66,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
           className="w-full h-full object-cover rounded"
         />
       </div>
+
       <button
-        onClick={isFav ? handleRemoveFromFavorite : handleAddToFavorite}
+        onClick={isFav ? removeFromFavorite : addToFavorite}
         className={`absolute top-2 left-2 bg-transparent p-2 rounded-full transition ${
           isFav ? "text-red-500" : "text-gray-300 hover:text-red-500"
         }`}
@@ -250,7 +90,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
         <div className="flex items-center gap-1">
           <StarRatings
-            rating={product.rate || 0}
+            rating={product.rating || 0}
             starDimension="17px"
             starSpacing="1px"
             starRatedColor="#fbbf24"

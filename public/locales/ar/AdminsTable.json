@@ -1,23 +1,24 @@
 {
-    "adminsPage": {
-      "title": "المدراء",
-      "all": "كل المدراء",
-      "addNew": "إضافة مدير جديد",
-      "createdSuccess": "تم إنشاء المدير بنجاح",
-      "updatedSuccess": "تم تعديل بيانات المدير بنجاح",
-      "delete": {
-        "confirmTitle": "حذف المدير؟",
-        "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
-        "confirmButtonText": "نعم، احذف",
-        "cancelButtonText": "الغاء",
-        "successTitle": "تم الحذف!",
-        "successText": "تم حذف المدير.",
-        "errorTitle": "خطأ",
-        "errorText": "تعذر حذف المدير."
-      },
-      "table": {
-        "loadingText": "جاري تحميل بيانات المدراء"
-      }
+  "adminsPage": {
+    "mainTitle": "تاشتيبا | ادارة المدراء",
+    "title": "المدراء",
+    "all": "كل المدراء",
+    "addNew": "إضافة مدير جديد",
+    "createdSuccess": "تم الانشاء",
+    "updatedSuccess": "تم التحديث",
+    "delete": {
+      "confirmTitle": "حذف المدير؟",
+      "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
+      "confirmButtonText": "نعم، احذف",
+      "cancelButtonText": "الغاء",
+      "successTitle": "تم الحذف!",
+      "successText": "تم حذف المدير.",
+      "errorTitle": "خطأ",
+      "errorText": "تعذر حذف المدير.",
+      "lastButton": "حسنا"
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات المدراء"
     }
   }
-  
+}

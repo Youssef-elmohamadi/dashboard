@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getBannerById } from "../../../api/SuperAdminApi/Banners/_requests"; // تأكد من وجود هذا الملف
 import { getAllCategories } from "../../../api/SuperAdminApi/Categories/_requests";
+import { useAllCategories } from "../../../hooks/useCategories";
+import { useGetBannerById } from "../../../hooks/useSuperAdminBanners";
 
 interface Banner {
   id: number;
@@ -20,37 +22,42 @@ interface Banner {
 const BannerDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["BannerDetails"]);
-  const [banner, setBanner] = useState<Banner | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState([]);
+  //const [banner, setBanner] = useState<Banner | null>(null);
+  // const [loading, setLoading] = useState(true);
+  //const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    const fetchBanner = async () => {
-      try {
-        const res = await getBannerById(id as string);
-        setBanner(res.data.data);
-      } catch (error) {
-        console.error("Error fetching banner:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchBanner = async () => {
+  //     try {
+  //       const res = await getBannerById(id as string);
+  //       setBanner(res.data.data);
+  //     } catch (error) {
+  //       console.error("Error fetching banner:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    if (id) fetchBanner();
-  }, [id]);
-  useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const res = await getAllCategories();
-        setCategories(res.data.data.original);
-      } catch (error) {
-        console.error("Error fetching banner:", error);
-      }
-    };
+  //   if (id) fetchBanner();
+  // }, [id]);
 
-    fetchCategory();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCategory = async () => {
+  //     try {
+  //       const res = await getAllCategories();
+  //       setCategories(res.data.data.original);
+  //     } catch (error) {
+  //       console.error("Error fetching banner:", error);
+  //     }
+  //   };
 
+  //   fetchCategory();
+  // }, []);
+
+  const { data: bannerData, isLoading: loading } = useGetBannerById(id);
+  const banner = bannerData?.data.data;
+  const { data: allCategories } = useAllCategories();
+  const categories = allCategories?.data.data?.original;
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleString("en-US", {
       year: "numeric",
@@ -122,21 +129,21 @@ const BannerDetails: React.FC = () => {
             <strong>{t("isActive")}:</strong>{" "}
             {banner.is_active ? t("yes") : t("no")}
           </p>
-<p>
-  <strong>{t("url")}:</strong>{" "}
-  {banner.url ? (
-    <Link
-      className="inline-block px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 transition"
-      to={banner.url}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {t("visitLink")}
-    </Link>
-  ) : (
-    <span className="text-gray-500">{t("notAvailable")}</span>
-  )}
-</p>
+          <p>
+            <strong>{t("url")}:</strong>{" "}
+            {banner.url ? (
+              <Link
+                className="inline-block px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 transition"
+                to={banner.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t("visitLink")}
+              </Link>
+            ) : (
+              <span className="text-gray-500">{t("notAvailable")}</span>
+            )}
+          </p>
         </div>
       </section>
 

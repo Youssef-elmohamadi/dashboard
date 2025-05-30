@@ -1,10 +1,4 @@
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-  UseQueryOptions,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createAdmin,
   deleteAdmin,
@@ -21,11 +15,19 @@ type ApiResponse<T> = {
 };
 
 type PaginatedResponse<T> = {
-  data: T[];
-  total: number;
   current_page: number;
+  data: T[];
+  first_page_url: string;
+  from: number;
   last_page: number;
   per_page: number;
+  prev_page_url: string | null;
+  to: number;
+  total: number;
+  next_page_url: string | null;
+  path: string;
+  last_page_url: string;
+  links: any[];
 };
 type Admin = {
   id: number;
@@ -67,7 +69,6 @@ export const useAllAdmins = (page: number, filters?: AdminFilters) => {
         page: page + 1,
         ...filters,
       });
-
       return response.data.data;
     },
     staleTime: 1000 * 60 * 4,
@@ -78,7 +79,7 @@ export const useAllAdmins = (page: number, filters?: AdminFilters) => {
 };
 
 export const useGetAdminById = (id?: number) => {
-  return useQuery<ApiResponse<PaginatedResponse<Admin>>, Error>({
+  return useQuery<Admin, Error>({
     queryKey: ["admin", id],
     queryFn: () => getAdminById(id!),
     staleTime: 1000 * 60 * 5,

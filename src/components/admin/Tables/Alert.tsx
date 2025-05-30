@@ -12,6 +12,7 @@ interface AlertMessages {
   successText?: string;
   errorTitle?: string;
   errorText?: string;
+  lastButton?: string;
 }
 
 export const alertDelete = async (
@@ -29,6 +30,7 @@ export const alertDelete = async (
     successText = "Item has been deleted.",
     errorTitle = "Error!",
     errorText = "There was an error deleting the item.",
+    lastButton = "OK",
   } = messages || {};
 
   const result = await Swal.fire({
@@ -55,6 +57,7 @@ export const alertDelete = async (
       text: successText,
       icon: "success",
       customClass: { popup: "custom-popup" },
+      confirmButtonText: lastButton,
     });
 
     return true;

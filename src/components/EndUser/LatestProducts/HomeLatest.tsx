@@ -3,23 +3,18 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "./customSwiper.css";
 import ProductCard from "../ProductCard/ProductCard";
 import { useTranslation } from "react-i18next";
-
-type Product = {
-  id: number | string;
-  title: string;
-  images: [];
-  price: number;
-  rating?: number;
-};
+import { useHomeData } from "../../../hooks/Api/EndUser/UseHomeData";
+import { Product } from "../../../types/Product";
 
 interface CategorySliderProps {
   title: string;
   products: Product[];
 }
 
-const LatestProducts: React.FC<CategorySliderProps> = ({ title, products }) => {
+const LatestProducts: React.FC<CategorySliderProps> = ({ title }) => {
   const { t } = useTranslation(["EndUserHome"]);
-
+  const { data: homeData, isLoading: isHomeLoading } = useHomeData();
+  const products = homeData?.leatestProducts;
   return (
     <>
       {products && products.length > 0 && (
@@ -40,7 +35,7 @@ const LatestProducts: React.FC<CategorySliderProps> = ({ title, products }) => {
               0: { slidesPerView: 1 },
             }}
           >
-            {products?.map((product) => (
+            {products?.map((product: Product) => (
               <SwiperSlide key={product?.id}>
                 <ProductCard product={product} />
               </SwiperSlide>

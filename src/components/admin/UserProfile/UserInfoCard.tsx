@@ -300,7 +300,6 @@ export default function UserInfoCard({ userType }: { userType: string }) {
                   }
                   alt="Profile"
                   className="w-24 h-24 rounded-full object-cover border-2 border-gray-300"
-                  onError={(e) => (e.currentTarget.src = "/default-avatar.png")}
                 />
                 <label
                   htmlFor="profile-image"
@@ -409,9 +408,7 @@ export default function UserInfoCard({ userType }: { userType: string }) {
               <Button size="sm" variant="outline" onClick={closeModal}>
                 {t("editInfoCard.close")}
               </Button>
-              <button type="submit" onClick={handleSave}>
-                {t("editInfoCard.save")}
-              </button>
+              <button type="submit">{t("editInfoCard.save")}</button>
             </div>
           </form>
         </div>

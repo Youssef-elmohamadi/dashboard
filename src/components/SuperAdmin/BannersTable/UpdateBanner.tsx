@@ -10,12 +10,14 @@ import Button from "../../ui/button/Button";
 import Input from "../../form/input/InputField";
 import Label from "../../form/Label";
 import Select from "../../form/Select";
+import { useAllCategories } from "../../../hooks/useCategories";
+import { useGetBannerById } from "../../../hooks/useSuperAdminBanners";
 
 const UpdateBanner = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateBanner"]);
-  const [categories, setCategories] = useState([]);
+  //const [categories, setCategories] = useState([]);
   const [errors, setErrors] = useState<Record<string, string[] | string>>({});
   const [clientSideErrors, setClientSideErrors] = useState<
     Record<string, string>
@@ -33,38 +35,65 @@ const UpdateBanner = () => {
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getAllCategories();
-        if (response.data) setCategories(response.data.data.original);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const response = await getAllCategories();
+  //       if (response.data) setCategories(response.data.data.original);
+  //     } catch (error) {
+  //       console.error("Error fetching categories:", error);
+  //     }
+  //   };
+  //   fetchCategories();
+  // }, []);
+  const { data: allCategories } = useAllCategories();
+  const categories = allCategories?.data.data.original;
+  // useEffect(() => {
+  //   const fetchInitialData = async () => {
+  //     try {
+  //       const res = await getBannerById(id);
+  //       const banner = res.data.data;
+  //       setBannerData({
+  //         title: banner.title,
+  //         link_type: banner.link_type,
+  //         url: banner.url || "",
+  //         link_id: banner.link_id || "",
+  //         position: banner.position || "",
+  //         is_active: banner.is_active?.toString() || "1",
+  //       });
+  //       setExistingImage(banner.image); // حفظ الصورة القديمة
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchInitialData();
+  // }, [id]);
+
+  const { data, isError, error } = useGetBannerById(id);
+
+  const banner = data?.data.data;
 
   useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        const res = await getBannerById(id);
-        const banner = res.data.data;
-        setBannerData({
-          title: banner.title,
-          link_type: banner.link_type,
-          url: banner.url || "",
-          link_id: banner.link_id || "",
-          position: banner.position || "",
-          is_active: banner.is_active?.toString() || "1",
-        });
-        setExistingImage(banner.image); // حفظ الصورة القديمة
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchInitialData();
-  }, [id]);
+    if (!banner) return;
+    setBannerData({
+      title: banner.title,
+      link_type: banner.link_type,
+      url: banner.url || "",
+      link_id: banner.link_id || "",
+      position: banner.position || "",
+      is_active: banner.is_active?.toString() || "1",
+    });
+    setExistingImage(banner.image);
+  }, [banner]);
+  if (isError) {
+    const status = error?.response?.status;
+    if (status === 403 || status === 401) {
+      setErrors({
+        ...errors,
+        global: t("category.errors.global"),
+      });
+    }
+  }
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -179,7 +208,7 @@ const UpdateBanner = () => {
           <div>
             <Label htmlFor="link_type">{t("banner.linkType")}</Label>
             <Select
-              defaultValue={bannerData.link_type}
+              value={bannerData.link_type}
               onChange={(value) =>
                 setBannerData((prev) => ({ ...prev, link_type: value }))
               }
@@ -232,11 +261,11 @@ const UpdateBanner = () => {
             <div>
               <Label htmlFor="link_id">{t("banner.category")}</Label>
               <Select
-                options={categories.map((cat) => ({
+                options={categories?.map((cat) => ({
                   value: cat.id.toString(),
                   label: cat.name,
                 }))}
-                defaultValue={bannerData.link_id}
+                value={bannerData.link_id}
                 onChange={(value) =>
                   setBannerData((prev) => ({ ...prev, link_id: value }))
                 }
@@ -257,11 +286,11 @@ const UpdateBanner = () => {
           <div>
             <Label htmlFor="position">{t("banner.position")}</Label>
             <Select
-              defaultValue={bannerData.position}
+              value={bannerData.position}
               onChange={(value) =>
                 setBannerData((prev) => ({ ...prev, position: value }))
               }
-              options={categories.map((cat) => ({
+              options={categories?.map((cat) => ({
                 value: cat.id,
                 label: `Before ${cat.name}`,
               }))}
@@ -280,7 +309,7 @@ const UpdateBanner = () => {
           <div>
             <Label htmlFor="is_active">{t("banner.status")}</Label>
             <Select
-              defaultValue={bannerData.is_active}
+              value={bannerData.is_active}
               onChange={(value) =>
                 setBannerData((prev) => ({ ...prev, is_active: value }))
               }

@@ -1,50 +1,30 @@
-import { useQuery } from "@tanstack/react-query";
 import AdBanner from "../../../components/EndUser/AdBanner/AdBanner";
 import FeaturesSection from "../../../components/EndUser/FeaturedBanner/FeaturedSection";
 import CircleSlider from "../../../components/EndUser/CircleSlider/CircleSlider";
-import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
 import HomeProducts from "../../../components/EndUser/HomeProducts/HomeProducts";
 import LatestProducts from "../../../components/EndUser/LatestProducts/HomeLatest";
-import { getProductCategories } from "../../../api/EndUserApi/ensUserProducts/_requests";
 import ProductModal from "../../../components/EndUser/ProductModal/ProductModal";
 import { useModal } from "../Context/ModalContext";
 import AddToCartModal from "../../../components/EndUser/AddedSuccess/AddToCartModal";
 import { Helmet } from "react-helmet-async";
-import { getHome } from "../../../api/EndUserApi/HomeApi/_requests";
 import { useTranslation } from "react-i18next";
+import {
+  useCategories,
+  useHomeData,
+  useProductForEveryCategory,
+} from "../../../hooks/Api/EndUser/UseHomeData";
 
 const Home = () => {
   const { modalType }: any = useModal();
   const { t } = useTranslation(["EndUserHome"]);
-  // Query: All Categories
-  const { data: categories, isLoading: isCategoriesLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const res = await getAllCategories();
-      return res.data.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+
+  const { data: categories, isLoading: isCategoriesLoading } = useCategories();
 
   // Query: Home Banners & Latest Products
-  const { data: homeData, isLoading: isHomeLoading } = useQuery({
-    queryKey: ["homePage"],
-    queryFn: async () => {
-      const res = await getHome();
-      return res.data.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+  const { data: homeData, isLoading: isHomeLoading } = useHomeData();
 
-  // Query: Product Categories (with their products)
-  const { data: productCategories, isLoading: isProductsLoading } = useQuery({
-    queryKey: ["product-categories"],
-    queryFn: async () => {
-      const res = await getProductCategories();
-      return res.data.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+  const { data: productCategories, isLoading: isProductsLoading } =
+    useProductForEveryCategory();
 
   return (
     <section>

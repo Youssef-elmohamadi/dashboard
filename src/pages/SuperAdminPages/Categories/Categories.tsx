@@ -53,6 +53,7 @@ const Categories = () => {
     title: string;
     message: string;
   } | null>(null);
+  
   useEffect(() => {
     if (location.state?.successCreate) {
       setAlertData({

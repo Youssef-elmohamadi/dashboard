@@ -24,24 +24,39 @@ type Admin = {
   role: string;
   avatar: string;
 };
+
+type UpdateAdmin = {
+  first_name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  password: string;
+  role: string;
+};
+
+type Role = {
+  name: string;
+  value: string;
+};
+
 const UpdateAdmin = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [adminData, setAdminData] = useState<Admin>({
-    first_name: "",
-    last_name: "",
-    phone: "",
-    email: "",
-    password: "",
-    roles: [{ name: "" }],
-    role: "",
-    avatar: "",
-  });
+  // const [adminData, setAdminData] = useState<Admin>({
+  //   first_name: "",
+  //   last_name: "",
+  //   phone: "",
+  //   email: "",
+  //   password: "",
+  //   roles: [{ name: "" }],
+  //   role: "",
+  //   avatar: "",
+  // });
 
-  const [updateData, setUpdateData] = useState({
+  const [updateData, setUpdateData] = useState<UpdateAdmin>({
     first_name: "",
     last_name: "",
     phone: "",
@@ -57,7 +72,7 @@ const UpdateAdmin = () => {
     password: [] as string[],
     role: [] as string[],
     global: "",
-    general: [] as string[],
+    general: "",
   });
 
   const [clientSideErrors, setClientSideErrors] = useState({
@@ -105,12 +120,16 @@ const UpdateAdmin = () => {
   const { t } = useTranslation(["UpdateAdmin"]);
   const { dir } = useDirectionAndLanguage();
 
-  const { data, isError, error } = useGetAdminById(id);
+  const {
+    data,
+    isError: isErrorFetchAdmin,
+    error: errorFetchAdmin,
+  } = useGetAdminById(id);
 
-  const admin :Admin = data?.data?.data;
+  const admin: Admin = data?.data?.data;
   useEffect(() => {
     if (!admin) return;
-    setAdminData(admin);
+    //setAdminData(admin);
     setUpdateData({
       first_name: admin?.first_name || "",
       last_name: admin?.last_name || "",
@@ -121,17 +140,26 @@ const UpdateAdmin = () => {
     });
   }, [admin]);
 
-  if (isError) {
-    const status = error?.response?.status;
+  if (isErrorFetchAdmin) {
+    const status = errorFetchAdmin?.response?.status;
     if (status === 403 || status === 401) {
       setErrors({
         ...errors,
         global: t("admin.errors.global"),
       });
+    } else if (status === 500) {
+      setErrors({
+        ...errors,
+        general: t("admin.errors.general"),
+      });
     }
   }
   // Fetch roles
-  const { data: roles } = useRoles();
+  const {
+    data: roles,
+    isError: isErrorFetchRoles,
+    error: errorFetchRoles,
+  } = useRoles();
   const options = roles?.data.data;
 
   // Handle input change
@@ -157,8 +185,6 @@ const UpdateAdmin = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validate()) return;
-    setLoading(true);
     setErrors({
       first_name: [],
       last_name: [],
@@ -167,8 +193,10 @@ const UpdateAdmin = () => {
       password: [],
       role: [],
       global: "",
-      general: [],
+      general: "",
     });
+    if (!validate()) return;
+    setLoading(true);
 
     try {
       if (id) {
@@ -203,9 +231,9 @@ const UpdateAdmin = () => {
           }
           formattedErrors[error.code].push(error.message);
         });
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ general: [t("admin.errors.general")] });
+        setErrors({ ...errors, general: t("admin.errors.general") });
       }
     } finally {
       setLoading(false);
@@ -278,7 +306,7 @@ const UpdateAdmin = () => {
         <div className="col-span-1 w-full">
           <Label htmlFor="role">{t("admin.select_role")}</Label>
           <Select
-            options={options?.map((role) => ({
+            options={options?.map((role: Role) => ({
               value: role.name,
               label: role.name,
             }))}
@@ -305,7 +333,9 @@ const UpdateAdmin = () => {
             onChange={handleChange}
           />
           {errors.email?.[0] && (
-            <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
+            <p className="text-red-500 text-sm mt-1">
+              {t("admin.errors.email_taken")}
+            </p>
           )}
           {clientSideErrors.email && (
             <p className="text-red-500 text-sm mt-1">
@@ -326,7 +356,9 @@ const UpdateAdmin = () => {
             onChange={handleChange}
           />
           {errors.phone?.[0] && (
-            <p className="text-red-500 text-sm mt-1">{errors.phone[0]}</p>
+            <p className="text-red-500 text-sm mt-1">
+              {t("admin.errors.phone_taken")}
+            </p>
           )}
           {clientSideErrors.phone && (
             <p className="text-red-500 text-sm mt-1">

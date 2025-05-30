@@ -98,9 +98,6 @@ export default function CreateAdmin() {
   const { mutateAsync } = useCreateAdmin();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
-
-    setLoading(true);
     setErrors({
       first_name: [],
       last_name: [],
@@ -111,6 +108,9 @@ export default function CreateAdmin() {
       global: "",
       general: [],
     });
+    if (!validate()) return;
+
+    setLoading(true);
 
     try {
       await mutateAsync(adminData);
@@ -234,8 +234,10 @@ export default function CreateAdmin() {
             placeholder={t("admin.placeholder.email")}
             onChange={handleChange}
           />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
+          {errors.email[0] && (
+            <p className="text-red-500 text-sm mt-1">
+              {t("admin.errors.email_taken")}
+            </p>
           )}
           {clientSideErrors.email && (
             <p className="text-red-500 text-sm mt-1">
@@ -252,8 +254,10 @@ export default function CreateAdmin() {
             placeholder={t("admin.placeholder.phone")}
             onChange={handleChange}
           />
-          {errors.phone && (
-            <p className="text-red-500 text-sm mt-1">{errors.phone[0]}</p>
+          {errors.phone[0] && (
+            <p className="text-red-500 text-sm mt-1">
+              {t("admin.errors.phone_taken")}
+            </p>
           )}
           {clientSideErrors.phone && (
             <p className="text-red-500 text-sm mt-1">

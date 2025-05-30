@@ -1,0 +1,6 @@
+{
+  "loading": "Loading Data...",
+  "noData": "No Data Available",
+  "unAuthorized": "You are not authorized to access this page",
+  "unExpectedError": "An unexpected error has occurred, please try again."
+}
