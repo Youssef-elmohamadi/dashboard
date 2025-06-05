@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { openChangeStatusModal } from "../Tables/ChangeStatusModal";
@@ -6,7 +6,7 @@ import ModalShowImage from "../Tables/ModalShowImage";
 import {
   useChangeDocumentStatus,
   useGetVendorById,
-} from "../../../hooks/useSuperAdminVendorManage";
+} from "../../../hooks/Api/SuperAdmin/useVendorMangement/useSuperAdminVendorManage";
 
 interface Document {
   id: number;
@@ -31,28 +31,12 @@ interface Vendor {
 const VendorDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["VendorsTable"]);
-  //const [vendor, setVendor] = useState<Vendor | null>(null);
-  //const [loading, setLoading] = useState(true);
   const [showImage, setShowImage] = useState(false);
   const [doc, setDoc] = useState({});
 
-  const { data: vendorData, isLoading: loading } = useGetVendorById(id);
+  const { data: vendorData, isLoading: loading } = useGetVendorById(id!!);
 
-  const vendor = vendorData?.data.data;
-
-  // const fetchVendor = async () => {
-  //   try {
-  //     const res = await getVendorById(id as string);
-  //     setVendor(res.data.data);
-  //   } catch (err) {
-  //     console.error("Error fetching vendor:", err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-  // useEffect(() => {
-  //   if (id) fetchVendor();
-  // }, [id]);
+  const vendor: Vendor = vendorData?.data.data;
 
   const handleOpenImage = (doc: {}) => {
     setDoc(doc);
@@ -72,18 +56,15 @@ const VendorDetails: React.FC = () => {
     t(`vendorsPage.details.documentTypes.${type}`) ??
     t("vendorsPage.details.documentTypes.default");
 
-  const getStatus = async (docId: number) => {
-    const document = vendor?.documents.find((doc) => doc.id === docId);
+  const getStatus = (docId: number) => {
+    const document = vendor?.documents.find(
+      (doc: Document) => doc.id === docId
+    );
     return document?.status || "";
   };
 
-  // const changeStatus = async (id: number, status: string) => {
-  //   await changeDocumentStatus(id, { status });
-  //   if (vendor?.id) {
-  //     const updated = await getVendorById(String(vendor.id));
-  //     setVendor(updated.data.data);
-  //   }
-  // };
+  console.log(vendor?.documents[0]);
+
   const { mutateAsync: changeStatusTS } = useChangeDocumentStatus();
 
   const handleChangeStatus = async (id: number) => {
@@ -188,7 +169,7 @@ const VendorDetails: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {vendor.documents.length > 0 ? (
-              vendor.documents.map((doc) => (
+              vendor.documents.map((doc: Document) => (
                 <div
                   key={doc.id}
                   onClick={() => handleOpenImage(doc)}

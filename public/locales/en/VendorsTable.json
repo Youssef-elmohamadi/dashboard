@@ -23,6 +23,19 @@
         "2": "Tax Registration Certificate",
         "default": "Other"
       },
+      "documentStatus": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "modal":{
+        "title":"Document Details",
+         "vendorName":"Vendor Name:",
+         "documentType":"Document Type:",
+         "status":"Status:",
+         "createdAt":"Creation At:",
+         "updatedAt":"Updated At:"
+      },
       "loading": "Loading vendor details...",
       "notFound": "Vendor not found.",
       "noId": "No Vendor ID provided."

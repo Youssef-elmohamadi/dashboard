@@ -3,12 +3,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "./customSwiper.css";
 import ProductCard from "../ProductCard/ProductCard";
 import { useTranslation } from "react-i18next";
-import { useHomeData } from "../../../hooks/Api/EndUser/UseHomeData";
+import { useHomeData } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import { Product } from "../../../types/Product";
 
 interface CategorySliderProps {
   title: string;
-  products: Product[];
 }
 
 const LatestProducts: React.FC<CategorySliderProps> = ({ title }) => {

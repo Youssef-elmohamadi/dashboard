@@ -10,23 +10,17 @@ import { FiUserPlus } from "react-icons/fi";
 import {
   useGetAdminById,
   useUpdateAdmin,
-} from "../../../hooks/useSuperAdminAdmins";
-import { useRoles } from "../../../hooks/useSuperAdminRoles";
+} from "../../../hooks/Api/SuperAdmin/useSuperAdminAdmis/useSuperAdminAdmins";
+import { useRoles } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
+type Role = {
+  name: string;
+  value: string;
+};
 const UpdateAdmin = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
-  const [adminData, setAdminData] = useState({
-    first_name: "",
-    last_name: "",
-    phone: "",
-    email: "",
-    password: "",
-    roles: [{ name: "" }],
-    role: "",
-    avatar: "",
-  });
 
   const [updateData, setUpdateData] = useState({
     first_name: "",
@@ -45,7 +39,7 @@ const UpdateAdmin = () => {
     password: [] as string[],
     role: [] as string[],
     global: "",
-    general: [] as string[],
+    general: "",
   });
 
   const [clientSideErrors, setClientSideErrors] = useState({
@@ -97,7 +91,6 @@ const UpdateAdmin = () => {
   const admin = data?.data?.data;
   useEffect(() => {
     if (!admin) return;
-    setAdminData(admin);
     setUpdateData({
       first_name: admin?.first_name || "",
       last_name: admin?.last_name || "",
@@ -117,40 +110,6 @@ const UpdateAdmin = () => {
       });
     }
   }
-  // Fetch admin by ID
-  // useEffect(() => {
-  //   const fetchAdmin = async () => {
-  //     try {
-  //       if (id) {
-  //         const res = await getAdminById(id);
-  //         const admin = res.data.data;
-
-  //         setAdminData(admin);
-  //         setUpdateData({
-  //           first_name: admin.first_name || "",
-  //           last_name: admin.last_name || "",
-  //           phone: admin.phone || "",
-  //           email: admin.email || "",
-  //           password: "",
-  //           role: admin.roles[0]?.name || "",
-  //         });
-  //       }
-  //     } catch (err) {
-  //       console.error("Error fetching admin:", err);
-  //       const status = err?.response?.status;
-  //       if (status === 403 || status === 401) {
-  //         setErrors({
-  //           ...errors,
-  //           global: "You don't have permission to perform this action.",
-  //         });
-  //       }
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchAdmin();
-  // }, [id]);
 
   // Fetch roles
   const { data: roles } = useRoles();
@@ -172,7 +131,7 @@ const UpdateAdmin = () => {
       role: value,
     }));
   };
-  const { mutateAsync } = useUpdateAdmin(id);
+  const { mutateAsync } = useUpdateAdmin(id!!);
   // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -186,7 +145,7 @@ const UpdateAdmin = () => {
       password: [],
       role: [],
       global: "",
-      general: [],
+      general: "",
     });
     try {
       if (id) {
@@ -222,9 +181,9 @@ const UpdateAdmin = () => {
           }
           formattedErrors[error.code].push(error.message);
         });
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ general: [t("admin.errors.general")] });
+        setErrors((prev) => ({ ...prev, general: t("admin.errors.general") }));
       }
     } finally {
       setLoading(false);
@@ -294,7 +253,7 @@ const UpdateAdmin = () => {
           <div className="col-span-1">
             <Label htmlFor="role">{t("admin.select_role")}</Label>
             <Select
-              options={options?.map((role) => ({
+              options={options?.map((role: Role) => ({
                 value: role.name,
                 label: role.name,
               }))}
@@ -323,7 +282,9 @@ const UpdateAdmin = () => {
               onChange={handleChange}
             />
             {errors.email?.[0] && (
-              <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {t("admin.errors.email_taken")}
+              </p>
             )}
             {clientSideErrors.email && (
               <p className="text-red-500 text-sm mt-1">
@@ -344,7 +305,9 @@ const UpdateAdmin = () => {
               onChange={handleChange}
             />
             {errors.phone?.[0] && (
-              <p className="text-red-500 text-sm mt-1">{errors.phone[0]}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {t("admin.errors.phone_taken")}
+              </p>
             )}
             {clientSideErrors.phone && (
               <p className="text-red-500 text-sm mt-1">

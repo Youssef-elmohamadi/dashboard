@@ -7,47 +7,32 @@ import { useLocation } from "react-router-dom";
 import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
-import { getBrandById } from "../../../api/SuperAdminApi/Brands/_requests";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
 import { useTranslation } from "react-i18next";
-import { useAllBrandsPaginate } from "../../../hooks/useBrands";
-import { useChangeBrandStatus } from "../../../hooks/useSuperAdminBrandsManage";
-type User = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  vendor_id: number;
-  avatar: string;
-  created_at: string;
-  updated_at: string;
-  vendor: { id: number; name: string };
-  roles: { id: number; name: string }[];
-};
+import {
+  useChangeBrandStatus,
+  useGetBrandsPaginate,
+} from "../../../hooks/Api/SuperAdmin/useBrands/useSuperAdminBrandsManage";
+import { AxiosError } from "axios";
 
 const Brands = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     name: string;
-    email: string;
-    phone: string;
   }>({
     name: "",
-    email: "",
-    phone: "",
   });
   const location = useLocation();
   const { t } = useTranslation(["BrandsTable"]);
-  const { data, isLoading, isError, refetch, error } = useAllBrandsPaginate(
+  const { data, isLoading, isError, error } = useGetBrandsPaginate(
     pageIndex,
     searchValues
   );
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
-    if (isError && error?.response?.status) {
-      const status = error.response.status;
+    if (isError && error instanceof AxiosError) {
+      const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
       }
@@ -56,7 +41,6 @@ const Brands = () => {
 
   const brandsData = data?.data ?? [];
   const totalBrands = data?.total ?? 0;
-  const [reload, setReload] = useState(0);
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -94,15 +78,16 @@ const Brands = () => {
     return () => clearTimeout(timer);
   }, [location.state]);
 
-  const getStatus = async (id) => {
-    const res = await getBrandById(id);
-    return res.data.data.status;
+  const handleGetStatus = (id: number) => {
+    const item = brandsData?.find((el: any) => el.id === id);
+    return item?.status;
   };
+
   const { mutateAsync: changeStatus } = useChangeBrandStatus();
   const handleChangeStatus = async (id: number) => {
     await openChangeStatusModal({
       id,
-      getStatus,
+      getStatus: handleGetStatus,
       changeStatus: async (id, data) => {
         return await changeStatus({ id, data });
       },
@@ -124,7 +109,7 @@ const Brands = () => {
     });
   };
 
-  const columns = buildColumns<User>({
+  const columns = buildColumns({
     includeDateOfCreation: true,
     includeImagesAndNameCell: true,
     includeStatus: true,
@@ -149,11 +134,7 @@ const Brands = () => {
       />
       <div>
         <SearchTable
-          fields={[
-            { key: "name", label: "Name", type: "input" },
-            { key: "email", label: "Email", type: "input" },
-            { key: "phone", label: "Phone", type: "input" },
-          ]}
+          fields={[{ key: "name", label: "Name", type: "input" }]}
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />

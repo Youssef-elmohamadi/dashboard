@@ -4,10 +4,9 @@ import "react-inner-image-zoom/src/styles.css";
 import { useModal } from "../../../pages/UserPages/Context/ModalContext";
 import { useDispatch } from "react-redux";
 import { addItem } from "../Redux/cartSlice/CartSlice";
-import { useQuery } from "@tanstack/react-query";
 import StarRatings from "react-star-ratings";
-import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
 import { useTranslation } from "react-i18next";
+import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 
 const ProductModal = () => {
   const [selectedImage, setSelectedImage] = useState("");
@@ -15,14 +14,7 @@ const ProductModal = () => {
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const { t } = useTranslation(["EndUserProductModal"]);
-  const { data: categories } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const res = await getAllCategories();
-      return res.data.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+  const { data: categories } = useCategories();
 
   const handleAddToCart = (item: any) => {
     dispatch(addItem({ item, quantity }));
@@ -156,7 +148,10 @@ const ProductModal = () => {
               <div className="space-y-2 max-h-[150px] overflow-y-auto pr-2">
                 {modalProps.review?.length > 0 ? (
                   modalProps.review.map((rev, idx) => (
-                    <div key={idx} className="border border-gray-200 p-2 rounded-md">
+                    <div
+                      key={idx}
+                      className="border border-gray-200 p-2 rounded-md"
+                    >
                       <StarRatings
                         rating={rev.rating}
                         starRatedColor="#facc15"

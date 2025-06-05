@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import AuthLayout from "./AuthPageLayout";
-import ResetPassword from "../../../components/EndUser/Auth/ForgotPassword";
+import ResetPassword from "../../../components/common/ResetPassword";
 
 import { useNavigate } from "react-router-dom";
 const UserForgotPassword = () => {
@@ -14,7 +14,7 @@ const UserForgotPassword = () => {
   return (
     <div>
       <AuthLayout>
-        <ResetPassword />
+        <ResetPassword type="user" />
       </AuthLayout>
     </div>
   );

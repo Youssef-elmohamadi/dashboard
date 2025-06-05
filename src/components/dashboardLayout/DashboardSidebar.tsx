@@ -3,16 +3,9 @@ import { Link, useLocation } from "react-router";
 import { useDirectionAndLanguage } from "../../context/DirectionContext";
 import {
   BoxCubeIcon,
-  CalenderIcon,
   ChevronDownIcon,
-  GridIcon,
   GroupIcon,
   HorizontaLDots,
-  ListIcon,
-  PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  TableIcon,
   TicketsIcon,
   Order,
   UserCircleIcon,
@@ -23,7 +16,8 @@ import {
 } from "../../icons";
 import { useSidebar } from "../../context/SidebarContext";
 import { PiSignOut } from "react-icons/pi";
-import { handleLogout } from "../../components/admin/auth/Logout";
+import { handleLogout as handleAdminLogout } from "../../components/admin/auth/Logout";
+import { handleLogout as handleSuperAdminLogout } from "../../components/SuperAdmin/Auth/Logout";
 import { useTranslation } from "react-i18next";
 
 type NavItem = {
@@ -69,11 +63,6 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       path: "/admin/orders",
     },
     {
-      icon: <TicketsIcon />,
-      name: t("Coupons"),
-      path: "/admin/coupons",
-    },
-    {
       icon: <Brand />,
       name: t("Brands"),
       path: "/admin/brands",
@@ -103,7 +92,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
     {
       icon: <PiSignOut />,
       name: t("Logout"),
-      action: handleLogout,
+      action: handleAdminLogout,
     },
     // {
     //   icon: <CalenderIcon />,
@@ -164,6 +153,16 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       path: "/super_admin/products",
     },
     {
+      icon: <Order />,
+      name: t("Orders"),
+      path: "/super_admin/orders",
+    },
+    {
+      icon: <TicketsIcon />,
+      name: t("Coupons"),
+      path: "/super_admin/coupons",
+    },
+    {
       icon: <Banners />,
       name: t("bannersManagement"),
       path: "/super_admin/banners",
@@ -176,7 +175,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
     {
       icon: <PiSignOut />,
       name: t("Logout"),
-      action: handleLogout,
+      action: handleSuperAdminLogout,
     },
   ];
   const currentNavItems =

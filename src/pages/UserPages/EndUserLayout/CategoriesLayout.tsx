@@ -1,19 +1,17 @@
 import { useEffect, useState, useRef } from "react";
 import {
-  Link,
   Outlet,
   useLocation,
   useParams,
   useSearchParams,
 } from "react-router-dom";
 import CategoryBreadCrump from "../../../components/EndUser/BreadCrump/CategoryBreadCrump";
-import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
 import { IoIosArrowDown } from "react-icons/io";
-import PriceRangeFilter from "../../../components/EndUser/SpinnerFilter/PriceRangeFilter";
 import { FaFilter } from "react-icons/fa";
 import FilterSidebar from "../../../components/EndUser/CategoryMobile/FilterSidebar";
-import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import Sidebar from "../../../components/EndUser/CategoryLayout/Sidebar";
+import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 
 export default function CategoriesLayout() {
   const [showCategories, setShowCategories] = useState(true);
@@ -53,14 +51,9 @@ export default function CategoriesLayout() {
     setIsMenuOpen(false);
   };
 
-  const { data: categories, isLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const res = await getAllCategories();
-      return res.data.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+  const { data, isLoading } = useAllCategories();
+  console.log(data?.data?.data);
+  const categories = data?.data?.data.original;
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -102,60 +95,12 @@ export default function CategoriesLayout() {
 
       {/* Sidebar */}
 
-      <aside className="w-64 hidden 2xl:block">
-        <div className="border border-gray-200 p-4">
-          {isLoading ? (
-            <div className="text-center py-10">{t("loadingCategories")}</div>
-          ) : (
-            <>
-              <button
-                onClick={() => setShowCategories((prev) => !prev)}
-                className="font-bold w-full flex justify-between items-center"
-              >
-                {t("categories")}
-                <IoIosArrowDown
-                  className={`transition-transform duration-300 ${
-                    showCategories ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {showCategories && (
-                <ul className="mt-4 space-y-2">
-                  <li>
-                    <Link
-                      className={`text-gray-500 hover:text-purple-600 transition ${
-                        !category_id ? "text-purple-600 font-semibold" : ""
-                      }`}
-                      to={`/category/`}
-                    >
-                      {t("allCategories")}
-                    </Link>
-                  </li>
-                  {categories?.map((category) => (
-                    <li
-                      key={category.id}
-                      onClick={() => setCurrentPage(category.name)}
-                    >
-                      <Link
-                        className={`text-gray-500 hover:text-purple-600 transition ${
-                          category.id.toString() === category_id
-                            ? "text-purple-600 font-semibold"
-                            : ""
-                        }`}
-                        to={`/category/${category.id}`}
-                      >
-                        {category.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </>
-          )}
-        </div>
-        <PriceRangeFilter setValuesProp={handlePriceChange} />
-      </aside>
+      <Sidebar
+        setCurrentPage={setCurrentPage}
+        handlePriceChange={handlePriceChange}
+        setShowCategories={setShowCategories}
+        showCategories={showCategories}
+      />
 
       {/* Main Content */}
       <main className="flex-1 p-6">

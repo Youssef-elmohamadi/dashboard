@@ -19,7 +19,9 @@
       "max_discount": "Enter max discount (optional)",
       "min_order_amount": "Enter minimum order amount",
       "usage_limit": "Enter usage limit",
-      "used_count": "Enter used count"
+      "used_count": "Enter used count",
+      "select_type": "Select type",
+      "select_status": "Select status"
     },
     "types": {
       "fixed": "Fixed",
@@ -31,6 +33,8 @@
     },
     "errors": {
       "code": "Code is required",
+      "type": "Type is required",
+      "code_exists": "Coupon code already exists",
       "value": "Value is required",
       "min_order_amount": "Minimum order amount is required",
       "usage_limit": "Usage limit is required",
@@ -38,9 +42,14 @@
       "expires_at": {
         "required": "End date is required",
         "invalid": "End date must be after start date"
-      }
+      },
+      "general": "Something went wrong, please try again",
+      "global": "You are not authorized to perform this action"
     },
-    "button": "Create Coupon",
+    "button": {
+      "submit": "Create Coupon",
+      "submitting": "Creating..."
+    },
     "success": "Coupon Created Successfully",
     "failure": "Failed to create coupon"
   }

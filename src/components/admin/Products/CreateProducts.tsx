@@ -8,9 +8,9 @@ import TextArea from "../../form/input/TextArea";
 import { FiDelete } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import Select from "../../form/Select";
-import { useCreateProduct } from "../../../hooks/useAdminProducts";
-import { useAllCategories } from "../../../hooks/useCategories";
-import { useAllBrands } from "../../../hooks/useBrands";
+import { useCreateProduct } from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
+import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
+import { useAllBrands } from "../../../hooks/Api/Admin/useBrands/useBrands";
 type Attribute = { label: string; value: string };
 type Category = { id: string; name: string };
 type Brand = { id: string; name: string };
@@ -90,6 +90,15 @@ export default function CreateProducts() {
       const previews = files.map((file) => URL.createObjectURL(file));
       setImagePreviews((prev) => [...prev, ...previews]);
     }
+  };
+
+  const removeImage = (index: number) => {
+    const newImages = [...images];
+    const newPreviews = [...imagePreviews];
+    newImages.splice(index, 1);
+    newPreviews.splice(index, 1);
+    setImages(newImages);
+    setImagePreviews(newPreviews);
   };
 
   const handleAttributeChange = (
@@ -186,7 +195,7 @@ export default function CreateProducts() {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, formattedErrors }));
       } else {
         setErrors({ ...errors, general: t("admin.errors.general") });
       }
@@ -358,12 +367,20 @@ export default function CreateProducts() {
           <FileInput multiple={true} onChange={handleImageChange} />
           <div className="flex gap-4 mt-2 flex-wrap">
             {imagePreviews.map((src, index) => (
-              <img
-                key={index}
-                src={src}
-                alt={`Preview ${index}`}
-                className="h-20 rounded"
-              />
+              <div key={index} className="relative inline-block">
+                <img
+                  src={src}
+                  alt={`Preview ${index}`}
+                  className="h-40 w-40 object-cover rounded"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeImage(index)}
+                  className="absolute top-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 rounded-bl"
+                >
+                  <FiDelete />
+                </button>
+              </div>
             ))}
           </div>
         </div>

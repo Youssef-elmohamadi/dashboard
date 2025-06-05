@@ -4,13 +4,13 @@ import {
   useAdminDeleteNotification,
   useAdminMarkAllNotificationsAsRead,
   useAdminMarkAsRead,
-} from "./useAdminNotification";
+} from "./Api/Admin/useNotifications/useAdminNotification";
 import {
   useSuperAdminNotifications,
   useSuperAdminDeleteNotification,
   useSuperAdminMarkAllNotificationsAsRead,
   useSuperAdminMarkAsRead,
-} from "./useSuperAdminNotification";
+} from "./Api/SuperAdmin/useNotification/useSuperAdminNotification";
 
 export function useNotifications(userType: "admin" | "superAdmin") {
   if (userType === "admin") {

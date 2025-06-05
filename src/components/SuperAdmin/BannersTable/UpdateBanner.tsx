@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { getAllCategories } from "../../../api/SuperAdminApi/Categories/_requests";
-import {
-  getBannerById,
-  updateBanner,
-} from "../../../api/SuperAdminApi/Banners/_requests";
 import Button from "../../ui/button/Button";
 import Input from "../../form/input/InputField";
 import Label from "../../form/Label";
 import Select from "../../form/Select";
-import { useAllCategories } from "../../../hooks/useCategories";
-import { useGetBannerById } from "../../../hooks/useSuperAdminBanners";
-
+import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
+import {
+  useGetBannerById,
+  useUpdateBanner,
+} from "../../../hooks/Api/SuperAdmin/useBanners/useSuperAdminBanners";
+interface Category {
+  id: string;
+  name: string;
+}
 const UpdateBanner = () => {
   const { id } = useParams();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateBanner"]);
-  //const [categories, setCategories] = useState([]);
   const [errors, setErrors] = useState<Record<string, string[] | string>>({});
   const [clientSideErrors, setClientSideErrors] = useState<
     Record<string, string>
@@ -34,40 +36,8 @@ const UpdateBanner = () => {
     is_active: "",
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
-
-  // useEffect(() => {
-  //   const fetchCategories = async () => {
-  //     try {
-  //       const response = await getAllCategories();
-  //       if (response.data) setCategories(response.data.data.original);
-  //     } catch (error) {
-  //       console.error("Error fetching categories:", error);
-  //     }
-  //   };
-  //   fetchCategories();
-  // }, []);
   const { data: allCategories } = useAllCategories();
   const categories = allCategories?.data.data.original;
-  // useEffect(() => {
-  //   const fetchInitialData = async () => {
-  //     try {
-  //       const res = await getBannerById(id);
-  //       const banner = res.data.data;
-  //       setBannerData({
-  //         title: banner.title,
-  //         link_type: banner.link_type,
-  //         url: banner.url || "",
-  //         link_id: banner.link_id || "",
-  //         position: banner.position || "",
-  //         is_active: banner.is_active?.toString() || "1",
-  //       });
-  //       setExistingImage(banner.image); // حفظ الصورة القديمة
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchInitialData();
-  // }, [id]);
 
   const { data, isError, error } = useGetBannerById(id);
 
@@ -128,11 +98,15 @@ const UpdateBanner = () => {
       setImagePreview(URL.createObjectURL(file));
     }
   };
-
+  const { mutateAsync } = useUpdateBanner(id!!);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
     setErrors({});
+    setIsSubmitting(true);
+    if (!validate()) {
+      setIsSubmitting(false);
+      return;
+    }
     const formData = new FormData();
     formData.append("title", bannerData.title);
     if (imageFile) formData.append("image", imageFile);
@@ -147,9 +121,9 @@ const UpdateBanner = () => {
     formData.append("position", bannerData.position);
 
     try {
-      await updateBanner(formData, id);
+      await mutateAsync({ id: +id!!, bannerData: formData });
       navigate("/super_admin/banners", {
-        state: { successCreate: t("banner.success") },
+        state: { successUpdate: t("banner.success") },
       });
     } catch (error: any) {
       console.error("Error creating banner:", error);
@@ -174,6 +148,8 @@ const UpdateBanner = () => {
       } else {
         setErrors({ general: t("banner.errors.general") });
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -261,7 +237,7 @@ const UpdateBanner = () => {
             <div>
               <Label htmlFor="link_id">{t("banner.category")}</Label>
               <Select
-                options={categories?.map((cat) => ({
+                options={categories?.map((cat: Category) => ({
                   value: cat.id.toString(),
                   label: cat.name,
                 }))}
@@ -290,7 +266,7 @@ const UpdateBanner = () => {
               onChange={(value) =>
                 setBannerData((prev) => ({ ...prev, position: value }))
               }
-              options={categories?.map((cat) => ({
+              options={categories?.map((cat: Category) => ({
                 value: cat.id,
                 label: `Before ${cat.name}`,
               }))}
@@ -359,8 +335,14 @@ const UpdateBanner = () => {
           <p className="text-red-500 text-sm">{errors.general}</p>
         )}
 
-        <Button type="submit" className="lg:w-1/4 ">
-          {t("banner.submit")}
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ${
+            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          {isSubmitting ? t("banner.submitting") : t("banner.submit")}
         </Button>
       </form>
     </div>

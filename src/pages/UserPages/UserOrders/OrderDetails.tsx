@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { useParams } from "react-router-dom";
-import { getOrderById } from "../../../api/EndUserApi/endUserOrders/_requests";
+import { useNavigate, useParams } from "react-router-dom";
 import { showReviewPopup } from "../../../components/EndUser/Table/RateProduct";
 import { reviewProduct } from "../../../api/EndUserApi/ensUserProducts/_requests";
 import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 import { useTranslation } from "react-i18next";
+import { useGetOrderById } from "../../../hooks/Api/EndUser/useOrders/useOrders";
 
 interface Product {
   id: number;
@@ -80,18 +80,21 @@ const getStatusColor = (status: string) => {
 };
 
 const OrderDetailsPage: React.FC = () => {
-  const [order, setOrder] = useState<Order | null>(null);
+  //const [order, setOrder] = useState<Order | null>(null);
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation(["EndUserOrderHistory"]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchOrder = async () => {
-      if (!id) return;
-      const res = await getOrderById(id);
-      setOrder(res.data.data);
-    };
-    fetchOrder();
-  }, [id]);
+    const token = localStorage.getItem("uToken");
+    if (!token) {
+      navigate("/signin", { replace: true });
+    }
+  }, []);
+
+  const { data, isError, error, isLoading } = useGetOrderById(id);
+
+  const order: Order = data?.data?.data;
 
   const handleRateProduct = async (productId: number) => {
     const result = await showReviewPopup(
@@ -108,8 +111,7 @@ const OrderDetailsPage: React.FC = () => {
         Swal.fire(
           t("common.success"),
           t("orderDetails.reviewSubmitted"),
-          "success",
-          
+          "success"
         );
       } catch (error: any) {
         console.error("Error submitting review:", error);

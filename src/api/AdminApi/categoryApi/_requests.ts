@@ -1,7 +1,7 @@
 import axiosJson from "../../axiosInstanceJson";
 import axiosForm from "../../axiosInstanceFormData";
 export const getCategoriesPaginate = async (params: {
-  pageIndex: number | undefined;
+  page: number | undefined;
   pageSize?: number | undefined;
   status?: string;
   category_id?: number;

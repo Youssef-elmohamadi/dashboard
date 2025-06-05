@@ -59,7 +59,7 @@ const SearchTable = ({
                   onChange={(value) => setSearchParam(field.key, value)}
                   className="w-full border dark:border-gray-800 border-gray-200 rounded px-3 py-2 text-gray-900 dark:text-gray-200 text-sm outline-none"
                   options={field.options}
-                  placeholder="All"
+                  placeholder={t("searchTable.fields.All")}
                   value={searchValues[field.key] || ""}
                 />
               )}
@@ -69,7 +69,7 @@ const SearchTable = ({
                   <input
                     type="datetime-local"
                     onChange={(e) => setSearchParam(field.key, e.target.value)}
-                    className="w-full border border-gray-200 rounded px-3 py-2 dark:text-gray-500"
+                    className="w-full border border-gray-200 dark:border-gray-800 rounded px-3 py-2 dark:text-gray-200 outline-none focus:outline-none"
                   />
                 </div>
               )}
@@ -78,7 +78,7 @@ const SearchTable = ({
                   <input
                     type="datetime-local"
                     onChange={(e) => setSearchParam(field.key, e.target.value)}
-                    className="w-full border border-gray-200 rounded px-3 py-2 dark:text-gray-500"
+                    className="w-full border border-gray-200 dark:border-gray-800 rounded px-3 py-2 dark:text-gray-200 outline-none focus:outline-none"
                   />
                 </div>
               )}

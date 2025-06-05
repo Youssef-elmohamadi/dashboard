@@ -6,7 +6,7 @@ import Calendar from "../../pages/AdminPages/Calendar";
 import Admins from "../../pages/AdminPages/Users/Admins";
 import CreateAdmin from "../../components/admin/usersTable/CreateAdmin";
 import UpdateAdmin1 from "../../components/admin/usersTable/UpdateAdmin1";
-import Roles from "../../pages/AdminPages/Users/Roles";
+import Roles from "../../pages/AdminPages/Roles/Roles";
 import CreateRole from "../../components/admin/RolesTable/CreateRole";
 import UpdateRole from "../../components/admin/RolesTable/UpdateRole";
 import Categories from "../../pages/AdminPages/Categories/Categories";
@@ -19,7 +19,6 @@ import UpdateProduct from "../../components/admin/Products/UpdateProduct";
 import ProductDetails from "../../components/admin/Products/ShowMore";
 import Blank from "../../pages/AdminPages/Blank";
 import FormElements from "../../pages/AdminPages/Forms/FormElements";
-import BasicTables from "../../pages/AdminPages/Tables/BasicTables";
 import LineChart from "../../pages/AdminPages/Charts/LineChart";
 import BarChart from "../../pages/AdminPages/Charts/BarChart";
 import AdminSignIn from "../../pages/AdminPages/AuthPages/AdminSignIn";
@@ -27,10 +26,10 @@ import AdminSignUp from "../../pages/AdminPages/AuthPages/AdminSignUp";
 import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import Orders from "../../pages/AdminPages/Orders/Orders";
 import OrderDetails from "../../components/admin/ordersTable/ShowMore";
-import Coupons from "../../pages/AdminPages/Coupons/Coupons";
-import CreateCoupon from "../../components/admin/couponsTable/CreateCoupon";
-import UpdateCoupon from "../../components/admin/couponsTable/UpdateCoupon";
-import ShowMore from "../../components/admin/couponsTable/ShowMore";
+//import Coupons from "../../pages/AdminPages/Coupons/Coupons";
+//import CreateCoupon from "../../components/admin/couponsTable/CreateCoupon";
+//import UpdateCoupon from "../../components/admin/couponsTable/UpdateCoupon";
+
 import CouponDetails from "../../components/admin/couponsTable/ShowMore";
 import OrdersReports from "../../pages/AdminPages/Orders Report/OrdersReports";
 import ProductReports from "../../pages/AdminPages/Products Report/ProductReports";
@@ -47,7 +46,7 @@ export const adminRoutes = (
         </ProtectedAdminRoute>
       }
     >
-      <Route index element={<Home />} />
+      <Route index element={<Home userType="admin" />} />
       <Route path="profile" element={<UserProfiles />} />
       <Route path="calendar" element={<Calendar />} />
       <Route path="admins" element={<Admins />} />
@@ -66,16 +65,15 @@ export const adminRoutes = (
       <Route path="products/details/:id" element={<ProductDetails />} />
       <Route path="orders" element={<Orders />} />
       <Route path="orders/details/:id" element={<OrderDetails />} />
-      <Route path="coupons" element={<Coupons />} />
+      {/* <Route path="coupons" element={<Coupons />} />
       <Route path="coupons/create" element={<CreateCoupon />} />
-      <Route path="coupons/update/:id" element={<UpdateCoupon />} />
-      <Route path="coupons/details/:id" element={<CouponDetails />} />
+      <Route path="coupons/update/:id" element={<UpdateCoupon />} /> 
+      <Route path="coupons/details/:id" element={<CouponDetails />} />*/}
       <Route path="orders_report" element={<OrdersReports />} />
       <Route path="products_report" element={<ProductReports />} />
       <Route path="settings" element={<VendorSettings />} />
       <Route path="blank" element={<Blank />} />
       <Route path="form-elements" element={<FormElements />} />
-      <Route path="basic-tables" element={<BasicTables />} />
       <Route path="line-chart" element={<LineChart />} />
       <Route path="bar-chart" element={<BarChart />} />
     </Route>

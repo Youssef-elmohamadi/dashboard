@@ -56,7 +56,7 @@ export default function EndUserLayout() {
       </div>
 
       {/* Main content */}
-      <main className="md:pt-[100px] pt-[50px]">
+      <main className="md:pt-[95px] pt-[50px]">
         <Outlet />
       </main>
 

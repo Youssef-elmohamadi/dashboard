@@ -1,8 +1,5 @@
-import React from "react";
 import PageMeta from "../../../components/common/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
-import UserInfoCard from "../../../components/admin/UserProfile/UserInfoCard";
-import UserAddressCard from "../../../components/admin/UserProfile/UserAddressCard";
 import VendorEditPage from "./VendorInfoCard";
 import { useTranslation } from "react-i18next";
 const VendorSettings = () => {
@@ -17,7 +14,6 @@ const VendorSettings = () => {
       <div className="space-y-6">
         {/* <UserMetaCard /> */}
         <VendorEditPage />
-        <UserAddressCard />
       </div>
     </>
   );

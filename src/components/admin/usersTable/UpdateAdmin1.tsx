@@ -10,8 +10,8 @@ import { FiUserPlus } from "react-icons/fi";
 import {
   useGetAdminById,
   useUpdateAdmin,
-} from "../../../hooks/useVendorAdmins";
-import { useRoles } from "../../../hooks/useRoles";
+} from "../../../hooks/Api/Admin/useVendorAdmins/useVendorAdmins";
+import { useRoles } from "../../../hooks/Api/Admin/useRoles/useRoles";
 type Admin = {
   first_name: string;
   last_name: string;
@@ -40,21 +40,11 @@ type Role = {
 };
 
 const UpdateAdmin = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  // const [adminData, setAdminData] = useState<Admin>({
-  //   first_name: "",
-  //   last_name: "",
-  //   phone: "",
-  //   email: "",
-  //   password: "",
-  //   roles: [{ name: "" }],
-  //   role: "",
-  //   avatar: "",
-  // });
 
   const [updateData, setUpdateData] = useState<UpdateAdmin>({
     first_name: "",
@@ -129,7 +119,7 @@ const UpdateAdmin = () => {
   const admin: Admin = data?.data?.data;
   useEffect(() => {
     if (!admin) return;
-    //setAdminData(admin);
+
     setUpdateData({
       first_name: admin?.first_name || "",
       last_name: admin?.last_name || "",
@@ -157,8 +147,6 @@ const UpdateAdmin = () => {
   // Fetch roles
   const {
     data: roles,
-    isError: isErrorFetchRoles,
-    error: errorFetchRoles,
   } = useRoles();
   const options = roles?.data.data;
 

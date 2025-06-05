@@ -3,6 +3,8 @@
     "update_title": "Update Role",
     "name": "Name",
     "permission": "Permission",
+    "loadingRole": "Wait, getting role...",
+
     "placeholder": {
       "name": "Enter the Role Name"
     },
@@ -11,7 +13,9 @@
       "submitting": "Updating..."
     },
     "errors": {
+      "notFound": "Role not found",
       "name": "Name is Required",
+      "name_unique": "This Name already exists",
       "permission": "At least one permission must be selected.",
       "global": "You don't have permission to perform this action.",
       "general": "Something went wrong."

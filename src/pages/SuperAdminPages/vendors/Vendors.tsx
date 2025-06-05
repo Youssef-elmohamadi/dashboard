@@ -5,19 +5,18 @@ import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
 import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
-import {
-  getVendorById,
-} from "../../../api/SuperAdminApi/Vendors/_requests";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
 import { useTranslation } from "react-i18next";
 import {
   useChangeVendorStatus,
   useGetVendorsPaginate,
-} from "../../../hooks/useSuperAdminVendorManage";
+} from "../../../hooks/Api/SuperAdmin/useVendorMangement/useSuperAdminVendorManage";
+import { AxiosError } from "axios";
 
 const Vendors = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
+  const [globalError, setGlobalError] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     name: string;
     email: string;
@@ -36,15 +35,18 @@ const Vendors = () => {
     setPageIndex(0);
   };
 
-  const { data, isLoading, isError, error, refetch } = useGetVendorsPaginate(
+  const { data, isLoading, isError, error } = useGetVendorsPaginate(
     pageIndex,
     searchValues
   );
   useEffect(() => {
-    if (isError && error?.response?.status) {
-      const status = error.response.status;
+    if (isError && error instanceof AxiosError) {
+      const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
+      }
+      if (status === 500) {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
@@ -52,20 +54,17 @@ const Vendors = () => {
   const vendorsData = data?.data ?? [];
   const totalVendors = data?.total ?? 0;
 
-  const getStatus = async (id) => {
-    const res = await getVendorById(id);
-    return res.data.data.status;
+  const handleGetStatus = (id: number) => {
+    const item = vendorsData?.find((el: any) => el.id === id);
+    return item?.status;
   };
-
-  //const {data:vendorData}=useGetVendorById(id);
 
   const { mutateAsync: changeStatus } = useChangeVendorStatus();
 
   const handleChangeStatus = async (id: number) => {
     await openChangeStatusModal({
       id,
-      getStatus,
-      //changeStatus: (id, payload) => changeStatus({ id, payload }),
+      getStatus: handleGetStatus,
       changeStatus: async (id, data) => {
         return await changeStatus({ id, data });
       },
@@ -130,6 +129,7 @@ const Vendors = () => {
             pageSize={pageSize}
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
+            globalError={globalError}
             loadingText={t("vendorsPage.table.loadingText")}
           />
         </ComponentCard>

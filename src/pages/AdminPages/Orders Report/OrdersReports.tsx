@@ -2,13 +2,19 @@ import { useEffect, useState } from "react";
 import EcommerceMetrics from "../../../components/ecommerce/EcommerceMetrics";
 import { GroupIcon } from "../../../icons";
 import { BoxIconLine } from "../../../icons";
-import FilterRangeDate from "../../../components/admin/productReports/FilterRangeDate";
-import { ordersReport } from "../../../api/AdminApi/ordersReports/_requests";
+import FilterRangeDate from "../../../components/admin/reports/FilterRangeDate";
 import { useTranslation } from "react-i18next";
 import PageMeta from "../../../components/common/PageMeta";
-import { useOrderData } from "../../../hooks/useOrdersReport";
+import { useOrderData } from "../../../hooks/Api/Admin/useOrdersReports/useOrdersReport";
+type numbersData = {
+  orderCount: number;
+  deliveredOrdersCount: number;
+  cancelledOrdersCount: number;
+  totalItemsSold: number;
+  averageOrderValue: number;
+};
 const ProductReports = () => {
-  const [numbersData, setNumbersData] = useState({
+  const [numbersData, setNumbersData] = useState<numbersData>({
     orderCount: 0,
     deliveredOrdersCount: 0,
     cancelledOrdersCount: 0,
@@ -83,7 +89,7 @@ const ProductReports = () => {
             },
             {
               label: t("averageOrderValue"),
-              value: numbersData.averageOrderValue.toFixed(2),
+              value: Number(numbersData.averageOrderValue).toFixed(2),
               percentage: -9.05,
               icon: BoxIconLine,
             },

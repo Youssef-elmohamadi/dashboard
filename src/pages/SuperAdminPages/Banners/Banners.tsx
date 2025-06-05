@@ -12,11 +12,13 @@ import Alert from "../../../components/ui/alert/Alert";
 import {
   useBannersWithPaginate,
   useDeleteBanner,
-} from "../../../hooks/useSuperAdminBanners";
-import { useAllCategories } from "../../../hooks/useCategories";
+} from "../../../hooks/Api/SuperAdmin/useBanners/useSuperAdminBanners";
+import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
+import { AxiosError } from "axios";
 const Banners = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
+  const [globalError, setGlobalError] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     category_id: string;
     brand_id: string;
@@ -36,14 +38,16 @@ const Banners = () => {
   );
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
-    if (isError && error?.response?.status) {
-      const status = error.response.status;
+    if (isError && error instanceof AxiosError) {
+      const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
+      } else if (status === 500) {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
-  
+
   const bannersData = data?.data.data ?? [];
   const totalBanners = data?.data?.total ?? 0;
 
@@ -60,11 +64,11 @@ const Banners = () => {
         title: t("bannersPage.createdSuccess"),
         message: location.state.successCreate,
       });
-    } else if (location.state?.successEdit) {
+    } else if (location.state?.successUpdate) {
       setAlertData({
         variant: "success",
         title: t("bannersPage.updatedSuccess"),
-        message: location.state.successEdit,
+        message: location.state.successUpdate,
       });
     }
     const timer = setTimeout(() => {
@@ -74,20 +78,8 @@ const Banners = () => {
     return () => clearTimeout(timer);
   }, [location.state]);
 
-    const { data: allCategories } = useAllCategories();
-    const categories = allCategories?.data.data?.original;
-
-  // useEffect(() => {
-  //   const fetchCategories = async () => {
-  //     try {
-  //       const response = await getAllCategories();
-  //       if (response.data) setCategories(response.data.data.original);
-  //     } catch (error) {
-  //       console.error("Error fetching Banners:", error);
-  //     }
-  //   };
-  //   fetchCategories();
-  // }, []);
+  const { data: allCategories } = useAllCategories();
+  const categories = allCategories?.data.data?.original;
 
   const handleSearch = (key: string, value: string) => {
     setSearchValues((prev) => ({
@@ -99,7 +91,7 @@ const Banners = () => {
   const { mutateAsync: deleteBannerMutate } = useDeleteBanner();
 
   const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(id, deleteBannerMutate, refetch, {
+    await alertDelete(id, deleteBannerMutate, refetch, {
       confirmTitle: t("bannersPage.delete.confirmTitle"),
       confirmText: t("bannersPage.delete.confirmText"),
       confirmButtonText: t("bannersPage.delete.confirmButtonText"),
@@ -107,6 +99,8 @@ const Banners = () => {
       successText: t("bannersPage.delete.successText"),
       errorTitle: t("bannersPage.delete.errorTitle"),
       errorText: t("bannersPage.delete.errorText"),
+      lastButton: t("bannersPage.delete.lastButton"),
+      cancelButtonText: t("bannersPage.delete.cancelButtonText"),
     });
   };
 
@@ -161,6 +155,7 @@ const Banners = () => {
             pageSize={pageSize}
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
+            globalError={globalError}
             loadingText={t("bannersPage.table.loadingText")}
           />
         </ComponentCard>

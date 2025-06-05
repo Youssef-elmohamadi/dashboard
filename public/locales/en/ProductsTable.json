@@ -3,8 +3,10 @@
     "title": "Products",
     "addNew": "Add New Product",
     "all": "All Products",
-    "createdSuccess": "Product Created Successfully",
-    "updatedSuccess": "Product Updated Successfully",
+    "mainTitle": "Tashtiba | Manage Products",
+    "createdSuccess": "Created Successfully",
+    "updatedSuccess": "Updated Successfully",
+    
     "delete": {
       "confirmTitle": "Delete Product?",
       "confirmText": "This action cannot be undone!",
@@ -13,7 +15,8 @@
       "successTitle": "Product Deleted!",
       "successText": "Product has been deleted.",
       "errorTitle": "Error",
-      "errorText": "Could not delete the Product."
+      "errorText": "Could not delete the Product.",
+      "lastButton": "OK"
     },
     "status": {
       "pending": "Pending",

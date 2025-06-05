@@ -25,6 +25,12 @@ import UpdateBanner from "../../components/SuperAdmin/BannersTable/UpdateBanner"
 import BannerDetails from "../../components/SuperAdmin/BannersTable/BannerDetails";
 import SuperAdminForgotPassword from "../../pages/SuperAdminPages/AuthPages/UserForgotPassword";
 import Home from "../../pages/AdminPages/Dashboard/Home";
+import Coupons from "../../pages/SuperAdminPages/Coupons/Coupons";
+import CreateCoupon from "../../components/SuperAdmin/couponsTable/CreateCoupon";
+import UpdateCoupon from "../../components/SuperAdmin/couponsTable/UpdateCoupon";
+import CouponDetails from "../../components/SuperAdmin/couponsTable/ShowMore";
+import Orders from "../../pages/SuperAdminPages/Orders/Orders";
+import OrderDetails from "../../components/SuperAdmin/ordersTable/ShowMore";
 export const SuperAdminRoutes = (
   <>
     <Route
@@ -35,7 +41,7 @@ export const SuperAdminRoutes = (
         </ProtectedSuperAdminRoute>
       }
     >
-      <Route index element={<Home />} />
+      <Route index element={<Home userType="super_admin" />} />
       <Route path="vendors" element={<Vendors />} />
       <Route path="vendors/details/:id" element={<VendorDetails />} />
       <Route path="admins" element={<Admins />} />
@@ -52,6 +58,12 @@ export const SuperAdminRoutes = (
       <Route path="brands/details/:id" element={<BrandDetails />} />
       <Route path="products" element={<Products />} />
       <Route path="products/details/:id" element={<ProductDetails />} />
+      <Route path="coupons" element={<Coupons />} />
+      <Route path="coupons/create" element={<CreateCoupon />} />
+      <Route path="coupons/update/:id" element={<UpdateCoupon />} />
+      <Route path="coupons/details/:id" element={<CouponDetails />} />
+      <Route path="orders" element={<Orders />} />
+      <Route path="orders/details/:id" element={<OrderDetails />} />
       <Route path="banners" element={<Banners />} />
       <Route path="banners/create" element={<CreateBanner />} />
       <Route path="banners/update/:id" element={<UpdateBanner />} />

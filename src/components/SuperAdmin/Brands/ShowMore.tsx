@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
-import { getBrandById } from "../../../api/AdminApi/brandsApi/_requests";
 import { useTranslation } from "react-i18next";
-import { useGetBrandById } from "../../../hooks/useBrands";
+import { useGetBrandById } from "../../../hooks/Api/Admin/useBrands/useBrands";
 
 interface Brand {
   id: number;

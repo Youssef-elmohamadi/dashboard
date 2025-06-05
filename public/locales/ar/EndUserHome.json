@@ -1,4 +1,20 @@
 {
+  "home": {
+    "mainTitle": "تاشتيبا | متجر متعدد المبيعات عبر الانترنت"
+  },
+  "landingSection": {
+    "welcome": {
+      "title": "اهلا بك في ",
+      "subTitle": "تاشتيبا",
+      "description": "وجهتك الشاملة لكل ما تحتاجه — خصومات مميزة، توصيل سريع، وعروض لا تُفوّت! "
+    },
+    "button": {
+      "shopNow": "تسوق الان",
+      "learnMore": "اقرأ المزيد",
+      "signUp": "انشاء حساب",
+      "signIn": "تسجيل الدخول"
+    }
+  },
   "featuredSection": {
     "fastDelivery": {
       "title": "توصيل سريع",

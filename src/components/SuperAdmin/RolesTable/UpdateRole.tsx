@@ -3,18 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Checkbox from "../../form/input/Checkbox";
-import {
-  getAllPermissions,
-  getRoleById,
-  updateRole,
-} from "../../../api/SuperAdminApi/Roles/_requests";
 import Loading from "../../common/Loading";
 import { useTranslation } from "react-i18next";
 import {
   useGetAllPermissions,
   useGetRoleById,
   useUpdateRole,
-} from "../../../hooks/useSuperAdminRoles";
+} from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
 type Permission = {
   id: number;
   name: string;
@@ -28,27 +23,19 @@ const UpdateRole: React.FC = () => {
   const [errors, setErrors] = useState({
     name: [] as string[],
     permissions: [] as string[],
+    global: "" as string,
+    general: "" as string,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateRole"]);
-  const {
-    data: permissionData,
-    isLoading: isPermissionLoading,
-    error: permissionError,
-    isError: isPermissionError,
-  } = useGetAllPermissions();
+  const { data: permissionData } = useGetAllPermissions();
 
-  const permissions: Permission = permissionData?.data.data;
+  const permissions: Permission[] = permissionData?.data.data;
 
-  const {
-    data: roleData,
-    isLoading,
-    isError: isRoleError,
-    error: roleError,
-  } = useGetRoleById(id);
+  const { data: roleData, isLoading } = useGetRoleById(id);
   const role = roleData?.data?.data;
   useEffect(() => {
     if (!role) return;
@@ -132,9 +119,9 @@ const UpdateRole: React.FC = () => {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ general: [t("role.errors.general")] });
+        setErrors({ ...errors, general: t("admin.errors.general") });
       }
     } finally {
       setIsSubmitting(false);
@@ -169,8 +156,10 @@ const UpdateRole: React.FC = () => {
             {formErrors.name && (
               <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
             )}
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
+            {errors.name[0] && (
+              <p className="text-red-500 text-sm mt-1">
+                {t("role.errors.name_unique")}
+              </p>
             )}
           </div>
 
@@ -182,7 +171,7 @@ const UpdateRole: React.FC = () => {
                 {t("role.permission")}
               </h2>
               <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
-                {permissions.map((permission) => (
+                {permissions.map((permission: Permission) => (
                   <Checkbox
                     key={permission.id}
                     label={permission.name}

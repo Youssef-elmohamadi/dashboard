@@ -5,8 +5,7 @@ import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
 import { useNavigate } from "react-router-dom";
 import BrandImageUpload from "./BrandImageUpload";
-import { createBrand } from "../../../api/AdminApi/brandsApi/_requests";
-import { useCreateBrand } from "../../../hooks/useBrands";
+import { useCreateBrand } from "../../../hooks/Api/Admin/useBrands/useBrands";
 
 export default function CreateBrand() {
   const { t } = useTranslation(["CreateBrand"]);
@@ -21,7 +20,13 @@ export default function CreateBrand() {
     image: null,
   });
 
-  const [errors, setErrors] = useState<{ name?: string }>({});
+  const [errors, setErrors] = useState({
+    name: [] as string[],
+    status: [] as string[],
+    image: [] as string[],
+    global: "" as string,
+    general: "" as string,
+  });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [clientSideErrors, setClientSideErrors] = useState({
@@ -104,9 +109,9 @@ export default function CreateBrand() {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ general: [t("errors.general")] });
+        setErrors((prev) => ({ ...prev, general: t("errors.general") }));
       }
     } finally {
       setLoading(false);
@@ -137,8 +142,10 @@ export default function CreateBrand() {
                 {clientSideErrors.name}
               </p>
             )}
-            {errors.name && (
-              <p className="text-red-600 text-sm mt-1">{errors.name}</p>
+            {errors.name[0] && (
+              <p className="text-red-600 text-sm mt-1">
+                {t("errors.name_unique")}
+              </p>
             )}
           </div>
           <div>

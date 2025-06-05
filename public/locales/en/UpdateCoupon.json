@@ -10,7 +10,6 @@
     "status": "Status",
     "startDate": "Start Date",
     "endDate": "End Date",
-    "saveChanges": "Save Changes",
     "fixed": "Fixed",
     "percent": "Percent",
     "active": "Active",
@@ -18,9 +17,34 @@
     "placeholders": {
       "code": "Coupon Code",
       "value": "Value (e.g. 50 or 10%)",
-      "maxDiscount": "Maximum Discount",
-      "minOrderAmount": "Minimum Order Amount",
-      "usageLimit": "Usage Limit"
-    }
+      "max_discount": "Maximum Discount (optional)",
+      "min_order_amount": "Minimum Order Amount",
+      "usage_limit": "Usage Limit",
+      "select_type": "Select type",
+      "select_status": "Select status"
+    },
+    "types": {
+      "fixed": "Fixed",
+      "percent": "Percent"
+    },
+    "statusOptions": {
+      "1": "Active",
+      "0": "Inactive"
+    },
+    "errors": {
+      "code": "Coupon code is required.",
+      "value": "Value is required.",
+      "code_exists": "Coupon code already exists.",
+      "min_order_amount": "Minimum order amount is required.",
+      "usage_limit": "Usage limit is required.",
+      "start_at": "Start date is required.",
+      "expires_at": {
+        "required": "End date is required.",
+        "invalid": "End date must be after start date."
+      },
+      "type": "Type is required.",
+      "status": "Status is required."
+    },
+    "success": "Coupon updated successfully."
   }
 }

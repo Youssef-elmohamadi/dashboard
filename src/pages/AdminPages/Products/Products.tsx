@@ -12,12 +12,22 @@ import Alert from "../../../components/ui/alert/Alert";
 import {
   useAllProducts,
   useDeleteProduct,
-} from "../../../hooks/useAdminProducts";
-import { useAllCategories } from "../../../hooks/useCategories";
-import { useAllBrands } from "../../../hooks/useBrands";
+} from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
+import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
+import { useAllBrands } from "../../../hooks/Api/Admin/useBrands/useBrands";
+import { AxiosError } from "axios";
+type Category = {
+  id: number;
+  name: string;
+};
+type Brand = {
+  id: number;
+  name: string;
+};
 const Products = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
+  const [globalError, setGlobalError] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     category_id: string;
     brand_id: string;
@@ -40,10 +50,12 @@ const Products = () => {
   } = useAllProducts(pageIndex, searchValues);
   const pageSize = products?.per_page ?? 15;
   useEffect(() => {
-    if (isError && error?.response?.status) {
-      const status = error.response.status;
+    if (isError && error instanceof AxiosError) {
+      const status = error?.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
+      } else if (status === 500) {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
@@ -89,7 +101,7 @@ const Products = () => {
   const brands = allBrands?.data.data;
   const { mutateAsync: deleteProductMutate } = useDeleteProduct();
   const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(id, deleteProductMutate, refetch, {
+    await alertDelete(id, deleteProductMutate, refetch, {
       confirmTitle: t("productsPage.delete.confirmTitle"),
       confirmText: t("productsPage.delete.confirmText"),
       confirmButtonText: t("productsPage.delete.confirmButtonText"),
@@ -98,6 +110,7 @@ const Products = () => {
       successText: t("productsPage.delete.successText"),
       errorTitle: t("productsPage.delete.errorTitle"),
       errorText: t("productsPage.delete.errorText"),
+      lastButton: t("productsPage.delete.lastButton"),
     });
   };
 
@@ -115,7 +128,7 @@ const Products = () => {
   return (
     <>
       <PageMeta
-        title="Tashtiba | Manege Products"
+        title={t("productsPage.mainTitle")}
         description="Create and Update Your Products"
       />
       {alertData && (
@@ -134,7 +147,7 @@ const Products = () => {
               key: "category_id",
               label: "Category",
               type: "select",
-              options: categories?.map((category) => ({
+              options: categories?.map((category: Category) => ({
                 label: category.name,
                 value: category.id,
               })),
@@ -143,7 +156,7 @@ const Products = () => {
               key: "brand_id",
               label: "Brand",
               type: "select",
-              options: brands?.map((brand) => ({
+              options: brands?.map((brand: Brand) => ({
                 label: brand.name,
                 value: brand.id,
               })),
@@ -153,8 +166,8 @@ const Products = () => {
               label: "Status",
               type: "select",
               options: [
-                { label: "Active", value: "active" },
-                { label: "Inactive", value: "inactive" },
+                { label: t("productsPage.status.active"), value: "active" },
+                { label: t("productsPage.status.inactive"), value: "inactive" },
               ],
             },
           ]}
@@ -180,6 +193,7 @@ const Products = () => {
             pageSize={pageSize}
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
+            globalError={globalError}
             loadingText={t("productsPage.table.loadingText")}
           />
         </ComponentCard>

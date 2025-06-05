@@ -1,46 +1,41 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import ProductCard from "../../../components/EndUser/ProductCard/ProductCard";
-import {
-  removeItem,
-  clear,
-} from "../../../components/EndUser/Redux/wishListSlice/WishListSlice";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { getFavoriteProducts } from "../../../api/EndUserApi/ensUserProducts/_requests";
+import { removeItem } from "../../../components/EndUser/Redux/wishListSlice/WishListSlice";
+import { useAllFavoriteProducts } from "../../../hooks/Api/EndUser/useProducts/useFavoriteProducts";
+import { useEffect } from "react";
+import { Circles } from "react-loader-spinner";
+import { useNavigate } from "react-router";
 
 const ProductsFavorite = () => {
   const dispatch = useDispatch();
-  // const items = useSelector((state) => state.wishList.items);
+  const navigate = useNavigate();
 
-  
-  const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
-    useInfiniteQuery({
-      queryKey: ["endUserFavoriteProducts"],
-      queryFn: async ({ pageParam = 1 }) => {
-        const response = await getFavoriteProducts({
-          page: pageParam,
-        });
-        return response.data.data;
-      },
-      initialPageParam: 1,
-      getNextPageParam: (lastPage) => {
-        return lastPage.current_page < lastPage.last_page
-          ? lastPage.current_page + 1
-          : undefined;
-        },
-        staleTime: 1000 * 60 * 5,
-      });
-      
-      const products = data?.pages.flatMap((page) => page.data) || [];
-      console.log(products);
-      
-      if (!products || products.length === 0) {
-        return (
-          <p className="text-center text-gray-500">
-            You don't have any products in your WishList
-          </p>
-        );
-      }
+  useEffect(() => {
+    const token = localStorage.getItem("uToken");
+    if (!token) {
+      navigate("/signin", { replace: true });
+    }
+  }, []);
+
+  const { data, isLoading, hasNextPage, fetchNextPage, isFetching } =
+    useAllFavoriteProducts();
+  console.log(data);
+
+  const products = data?.pages.flatMap((page) => page.data) || [];
+  if (isLoading) {
+    return (
+      <div className="flex justify-center">
+        <Circles height="80" width="80" color="#6B46C1" ariaLabel="loading" />
+      </div>
+    );
+  }
+  if (!products || products.length === 0) {
+    return (
+      <p className="text-center text-gray-500">
+        You don't have any products in your WishList
+      </p>
+    );
+  }
   return (
     <div className="p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -61,24 +56,24 @@ const ProductsFavorite = () => {
         ))}
       </div>
 
-<div className="mt-6 flex justify-center gap-4 flex-wrap">
-  {/* <button
+      <div className="mt-6 flex justify-center gap-4 flex-wrap">
+        {/* <button
     onClick={() => dispatch(clear())}
     className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition"
   >
     مسح الكل
   </button> */}
 
-  {hasNextPage && (
-    <button
-      onClick={() => fetchNextPage()}
-      disabled={isFetching}
-      className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-      {isFetching ? "جاري التحميل..." : "عرض المزيد"}
-    </button>
-  )}
-</div>
+        {hasNextPage && (
+          <button
+            onClick={() => fetchNextPage()}
+            disabled={isFetching}
+            className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isFetching ? "جاري التحميل..." : "عرض المزيد"}
+          </button>
+        )}
+      </div>
     </div>
   );
 };

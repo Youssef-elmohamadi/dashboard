@@ -4,24 +4,35 @@ import {
   useMarkAllNotificationsAsRead,
   useMarkAsRead,
   useNotifications,
-} from "../../../hooks/useEndUserNotification";
-import { useTranslation } from "react-i18next";
+} from "../../../hooks/Api/EndUser/useNotification/useEndUserNotification";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router";
+
+interface Notification {
+  id: number;
+  data_id: number | string;
+  created_at: string;
+  title_en: string;
+  title_ar: string;
+  message_en: string;
+  message_ar: string;
+}
+
+interface NotificationDropdownProps {
+  open: boolean;
+  onClose: () => void;
+  notificationIconRef: React.RefObject<HTMLDivElement | null>;
+}
 
 export default function NotificationDropdown({
   open,
   onClose,
   notificationIconRef,
-}: {
-  open: boolean;
-  onClose: () => void;
-  notificationIconRef: React.RefObject<HTMLDivElement>;
-}) {
+}: NotificationDropdownProps) {
   const dropDownRef = useRef<HTMLDivElement>(null);
-
   const { dir, lang } = useDirectionAndLanguage();
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -51,10 +62,9 @@ export default function NotificationDropdown({
     };
   }, [open, onClose, notificationIconRef]);
 
-  const { data, hasNextPage, fetchNextPage, isFetching, isLoading } =
-    useNotifications();
-  //const notificationData = data?.pages.flatMap((page) => page?.data) || [];
-  const notificationData = data?.pages.flatMap((page) => page) || [];
+  const { data, hasNextPage, fetchNextPage } = useNotifications();
+  const notificationData: Notification[] = data?.pages.flatMap((page) => page) || [];
+
   const { mutateAsync: deleteNotificationMutate } = useDeleteNotification();
   const handleDeleteNotification = async (id: number) => {
     await deleteNotificationMutate(id);
@@ -93,10 +103,10 @@ export default function NotificationDropdown({
             )}
           </div>
           <ul className="max-h-60 overflow-y-auto">
-            {notificationData.map((notification, index) => (
+            {notificationData.map((notification) => (
               <li
-                className="flex items-start justify-between gap-1 hover:bg-gray-50 "
-                key={index}
+                className="flex items-start justify-between gap-1 hover:bg-gray-50"
+                key={notification.id}
               >
                 <Link
                   onClick={() => handleItemClick(notification.id)}
@@ -104,25 +114,20 @@ export default function NotificationDropdown({
                   to={`/u-orders/details/${notification.data_id}`}
                 >
                   <h4 className="font-medium text-gray-700">
-                    {notification[`title_${lang}`]}
+                    {notification[`title_${lang}` as "title_en" | "title_ar"]}
                   </h4>
                   <p className="text-sm text-gray-500">
-                    {notification[`message_${lang}`]}
+                    {notification[`message_${lang}` as "message_en" | "message_ar"]}
                   </p>
                   <span className="text-xs text-gray-400">
-                    {formatDistanceToNow(
-                      new Date(`${notification?.created_at}`),
-                      {
-                        addSuffix: true,
-                      }
-                    )}
+                    {formatDistanceToNow(new Date(notification.created_at), {
+                      addSuffix: true,
+                    })}
                   </span>
                 </Link>
                 <button
-                  onClick={() => {
-                    handleDeleteNotification(notification.id);
-                  }}
-                  className={`block text-gray-500 transition dark:text-gray-400 px-1 py-1  ${
+                  onClick={() => handleDeleteNotification(notification.id)}
+                  className={`block text-gray-500 transition dark:text-gray-400 px-1 py-1 ${
                     dir === "ltr" ? "!text-left" : "!text-right"
                   }`}
                 >

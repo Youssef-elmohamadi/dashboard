@@ -4,6 +4,8 @@ export const getAllProducts = async () => {
   return await axiosJson.get("/api/vendor/products");
 };
 
+
+
 export const getProductsPaginate = async (params: {
   page: number | undefined;
 }) => {

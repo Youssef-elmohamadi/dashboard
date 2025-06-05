@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import AuthLayout from "./AuthPageLayout";
-import ResetPasswordSteps from "../../../components/admin/auth/ForgotPassword";
+import ResetPasswordSteps from "../../../components/common/ResetPassword";
 import PageMeta from "../../../components/common/PageMeta";
 
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,7 @@ const AdminForgotPassword = () => {
         description="Verify and reset Your Password"
       />
       <AuthLayout>
-        <ResetPasswordSteps />
+        <ResetPasswordSteps type="admin" />
       </AuthLayout>
     </div>
   );

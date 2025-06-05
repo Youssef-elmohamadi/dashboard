@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { showCoupon } from "../../../api/AdminApi/couponsApi/_requests";
 import { useTranslation } from "react-i18next";
-import { useGetCouponById } from "../../../hooks/useCoupons";
+import { useGetCouponById } from "../../../hooks/Api/Admin/useCoupons/useCoupons";
 
 interface Coupon {
   code: string;

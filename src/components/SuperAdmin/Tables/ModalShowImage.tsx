@@ -1,14 +1,32 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import InnerImageZoom from "react-inner-image-zoom";
 import "react-inner-image-zoom/src/styles.css";
 import { useParams } from "react-router-dom";
 import { getVendorById } from "../../../api/SuperAdminApi/Vendors/_requests";
-const ModalShowImage = ({ showImageModal, setShowImageModal, doc }) => {
+import Badge from "../../ui/badge/Badge";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { useTranslation } from "react-i18next";
+
+interface Vendor {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  description: string | null;
+  created_at: string;
+  updated_at: string;
+  documents: Document[];
+}
+
+const ModalShowImage = ({ showImageModal, setShowImageModal, doc }: any) => {
   const closeImageModal = () => {
     setShowImageModal(false);
   };
-  const [vendor, setVendor] = useState({});
+  const { t } = useTranslation(["VendorsTable"]);
+  const { dir } = useDirectionAndLanguage();
+  const [vendor, setVendor] = useState<Vendor>();
   const { id } = useParams();
+
   useEffect(() => {
     const fetchVendor = async () => {
       try {
@@ -22,37 +40,54 @@ const ModalShowImage = ({ showImageModal, setShowImageModal, doc }) => {
     if (id) fetchVendor();
   }, [id]);
 
-  const documentTypeLabel = (type) => {
+  const documentTypeLabel = (type: number) => {
     switch (type) {
       case 1:
-        return "Commercial Registration";
+        return t("vendorsPage.details.documentTypes.1");
       case 2:
-        return "Tax Registration Certificate";
+        return t("vendorsPage.details.documentTypes.2");
       default:
-        return "Other";
+        return t("vendorsPage.details.documentTypes.default");
     }
   };
-  console.log(doc);
+
+  const getStatusBadgeColor = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case "approved":
+        return "success";
+      case "rejected":
+        return "error";
+      case "pending":
+        return "warning";
+      default:
+        return "light";
+    }
+  };
 
   return showImageModal && doc ? (
     <div
       onClick={closeImageModal}
-      className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center z-[99999]"
+      className="fixed inset-0 bg-[rgba(0,0,0,0.5)] dark:bg-[rgba(0,0,0,0.7)] flex items-center justify-center z-[99999]"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-xl shadow-lg w-full max-w-4xl max-h-[90vh] overflow-auto relative"
+        className="bg-white dark:bg-gray-900 rounded-xl shadow-lg w-full max-w-4xl max-h-[90vh] overflow-auto relative"
       >
-        <div className="flex gap-3 py-4  border-b border-gray-200">
+        <div className="flex gap-3 py-4 border-b border-gray-200 dark:border-gray-700">
           <button
             onClick={closeImageModal}
-            className="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-2xl font-bold"
+            className={`absolute top-3 ${
+              dir === "rtl" ? "left-3" : "right-3"
+            } text-gray-500 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 text-2xl font-bold`}
           >
             &times;
           </button>
-          <div className="px-2">Document Details</div>
+          <div className="px-2 text-lg font-semibold text-gray-800 dark:text-white">
+            {t("vendorsPage.details.modal.title")}
+          </div>
         </div>
-        <div className=" p-6">
+
+        <div className="p-6">
           <div className="flex flex-col md:flex-row gap-6 items-start">
             {/* Image Section */}
             <div className="w-full md:w-7/12 flex justify-center">
@@ -66,24 +101,31 @@ const ModalShowImage = ({ showImageModal, setShowImageModal, doc }) => {
             </div>
 
             {/* Info Section */}
-            <div className="w-full md:w-5/12 text-gray-700 space-y-3">
+            <div className="w-full md:w-5/12 space-y-3 text-gray-700 dark:text-gray-200">
               <p>
-                <strong>Vendor Name:</strong> {vendor.name}
+                <strong>{t("vendorsPage.details.modal.vendorName")}</strong>{" "}
+                {vendor?.name}
               </p>
               <p>
-                <strong>Document Type:</strong>{" "}
+                <strong>{t("vendorsPage.details.modal.documentType")}</strong>{" "}
                 {documentTypeLabel(doc.document_type)}
               </p>
-              <p>
-                <strong>Status:</strong>{" "}
-                <span className="capitalize">{doc.status}</span>
+              <p className="flex items-center gap-2">
+                <strong>{t("vendorsPage.details.modal.status")}</strong>
+                <Badge
+                  variant="light"
+                  size="sm"
+                  color={getStatusBadgeColor(doc.status)}
+                >
+                  {t(`vendorsPage.details.documentStatus.${doc.status}`)}
+                </Badge>
               </p>
               <p>
-                <strong>Creation Date:</strong>{" "}
+                <strong>{t("vendorsPage.details.modal.createdAt")}</strong>{" "}
                 {new Date(doc.created_at).toLocaleString()}
               </p>
               <p>
-                <strong>Update Date:</strong>{" "}
+                <strong>{t("vendorsPage.details.modal.updatedAt")}</strong>{" "}
                 {new Date(doc.updated_at).toLocaleString()}
               </p>
             </div>

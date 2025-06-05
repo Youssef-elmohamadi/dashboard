@@ -3,8 +3,9 @@
     "title": "المنتجات",
     "addNew": "إضافة منتج جديد",
     "all": "كل المنتجات",
-    "createdSuccess": "تم إنشاء المنتج بنجاح",
-    "updatedSuccess": "تم تعديل بيانات المنتج بنجاح",
+    "mainTitle": "تاشتيبا | ادارة المنتجات",
+    "createdSuccess": "تم الانشاء",
+    "updatedSuccess": "تم التحديث",
     "delete": {
       "confirmTitle": "حذف المنتج؟",
       "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
@@ -13,7 +14,8 @@
       "successTitle": "تم الحذف!",
       "successText": "تم حذف المنتج.",
       "errorTitle": "خطأ",
-      "errorText": "تعذر حذف المنتج."
+      "errorText": "تعذر حذف المنتج.",
+      "lastButton": "حسنا"
     },
     "status": {
       "pending": "قيد الانتظار",

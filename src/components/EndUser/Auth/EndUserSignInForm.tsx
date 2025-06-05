@@ -8,6 +8,7 @@ import Checkbox from "../../form/input/Checkbox";
 import { login } from "../../../api/EndUserApi/endUserAuth/_requests";
 
 const EndUserSignInForm = () => {
+  const { t } = useTranslation(["auth"]);
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [email, setEmail] = useState("");
@@ -17,8 +18,6 @@ const EndUserSignInForm = () => {
     password?: string;
     loginError?: string;
   }>({});
-
-  const { t } = useTranslation(["auth"]);
 
   const validateEmail = (email: any) => {
     if (!/\S+@\S+\.\S+/.test(email)) {
@@ -43,7 +42,7 @@ const EndUserSignInForm = () => {
   };
 
   const navigate = useNavigate();
-  
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});

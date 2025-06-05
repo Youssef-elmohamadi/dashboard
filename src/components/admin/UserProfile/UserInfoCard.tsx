@@ -188,7 +188,11 @@ export default function UserInfoCard({ userType }: { userType: string }) {
   };
 
   if (isLoading) {
-    return <div className="text-center">{t("userInfoCard.loading")}</div>;
+    return (
+      <div className="text-center text-gray-600 dark:text-gray-300">
+        {t("userInfoCard.loading")}
+      </div>
+    );
   }
   if (error) {
     return (

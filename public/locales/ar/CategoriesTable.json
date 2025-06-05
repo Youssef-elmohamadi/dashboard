@@ -2,6 +2,7 @@
   "categoriesPage": {
     "title": "الفئات",
     "all": "كل الفئات",
+    "mainTitle": "تاشتيبا | الفئات",
     "addNew": "إضافة فئة جديدة",
     "createdSuccess": "تم انشاء الفئة بنجاح",
     "updatedSuccess": "تم تعديل بيانات الفئة بنجاح",

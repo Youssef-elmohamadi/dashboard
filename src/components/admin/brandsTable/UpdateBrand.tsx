@@ -5,16 +5,12 @@ import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
 import BrandImageUpload from "./BrandImageUpload";
-import {
-  updateBrand,
-  getBrandById,
-} from "../../../api/AdminApi/brandsApi/_requests";
-import { useGetBrandById, useUpdateBrand } from "../../../hooks/useBrands";
+import { useGetBrandById, useUpdateBrand } from "../../../hooks/Api/Admin/useBrands/useBrands";
 
 type Brand = {
   name: string;
   status: string;
-  image: string | File;
+  image: string | File | null;
 };
 
 const UpdateBrandPage = () => {
@@ -22,12 +18,18 @@ const UpdateBrandPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [updateData, setUpdateData] = useState({
+  const [updateData, setUpdateData] = useState<Brand>({
     name: "",
     status: "",
     image: "",
   });
-  const [errors, setErrors] = useState<{ name?: string }>({});
+  const [errors, setErrors] = useState({
+    name: [] as string[],
+    status: [] as string[],
+    image: [] as string[],
+    global: "" as string,
+    general: "" as string,
+  });
   const [clientSideErrors, setClientSideErrors] = useState({
     name: "",
     status: "",
@@ -79,7 +81,7 @@ const UpdateBrandPage = () => {
     setClientSideErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");
   };
-  const { mutateAsync } = useUpdateBrand(id);
+  const { mutateAsync } = useUpdateBrand(id!);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
@@ -94,7 +96,7 @@ const UpdateBrandPage = () => {
         formData.append("image", updateData.image);
       }
 
-      await mutateAsync({ brandData: formData, id: +id });
+      await mutateAsync({ brandData: formData, id: +id! });
       navigate("/admin/brands");
     } catch (error: any) {
       console.error("Error creating admin:", error);
@@ -118,9 +120,9 @@ const UpdateBrandPage = () => {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ general: [t("errors.general")] });
+        setErrors((prev) => ({ ...prev, general: t("errors.general") }));
       }
     } finally {
       setLoading(false);
@@ -152,8 +154,10 @@ const UpdateBrandPage = () => {
                 {clientSideErrors.name}
               </p>
             )}
-            {errors.name && (
-              <p className="text-red-600 text-sm mt-1">{errors.name}</p>
+            {errors.name[0] && (
+              <p className="text-red-600 text-sm mt-1">
+                {t("errors.unique_name")}
+              </p>
             )}
           </div>
 

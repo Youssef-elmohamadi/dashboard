@@ -2,13 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io";
-import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
 import { useSelector, useDispatch } from "react-redux";
 import { removeItem } from "../Redux/cartSlice/CartSlice";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
-import { useQuery } from "@tanstack/react-query";
+import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 interface Child {
   id: number;
   name: string;
@@ -89,27 +88,7 @@ const NavBar = React.memo(() => {
     };
   }, [isDropdownOpen]);
 
-  // useEffect(() => {
-  //   const fetchCategories = async () => {
-  //     try {
-  //       const response = await getAllCategories();
-  //       console.log(response.cached);
-  //       setCategories(response.data.data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchCategories();
-  // }, []);
-
-  const { data: categories, isLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const res = await getAllCategories();
-      return res.data.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+  const { data: categories } = useCategories();
 
   return (
     <nav className="bg-primary w-full md:block hidden">

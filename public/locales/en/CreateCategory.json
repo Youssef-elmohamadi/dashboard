@@ -14,7 +14,9 @@
     "submitting": "Creating...",
     "errors": {
       "name": "Name is required",
+      "nameTaken": "The name is already in use",
       "description": "Description is required",
+      "image": "Category image is required",
       "commissionRequired": "Commission rate is required",
       "commissionMax": "Commission rate cannot exceed 100",
       "parent": "Parent category is invalid",

@@ -9,7 +9,11 @@ import { buildColumns } from "../../../components/admin/Tables/_Colmuns"; // Ù…Ù
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
-import { useAllCoupons, useDeleteCoupon } from "../../../hooks/useCoupons";
+import {
+  useAllCoupons,
+  useDeleteCoupon,
+} from "../../../hooks/Api/Admin/useCoupons/useCoupons";
+import { AxiosError } from "axios";
 type User = {
   id: number;
   first_name: string;
@@ -27,6 +31,7 @@ type User = {
 const Coupons = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
+  const [globalError, setGlobalError] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     active: string;
     code: string;
@@ -48,10 +53,12 @@ const Coupons = () => {
   );
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
-    if (isError && error?.response?.status) {
-      const status = error.response.status;
+    if (isError && error instanceof AxiosError) {
+      const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
+      } else if (status === 500) {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
@@ -98,7 +105,7 @@ const Coupons = () => {
   };
   const { mutateAsync: deleteCouponMutate } = useDeleteCoupon();
   const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(id, deleteCouponMutate, refetch, {
+    await alertDelete(id, deleteCouponMutate, refetch, {
       confirmTitle: t("couponsPage.delete.confirmTitle"),
       confirmText: t("couponsPage.delete.confirmText"),
       confirmButtonText: t("couponsPage.delete.confirmButtonText"),
@@ -107,6 +114,7 @@ const Coupons = () => {
       successText: t("couponsPage.delete.successText"),
       errorTitle: t("couponsPage.delete.errorTitle"),
       errorText: t("couponsPage.delete.errorText"),
+      lastButton: t("couponsPage.delete.lastButton"),
     });
   };
 
@@ -130,7 +138,7 @@ const Coupons = () => {
         />
       )}
       <PageMeta
-        title="Tashtiba | Manege Coupons"
+        title={t("couponsPage.mainTitle")}
         description="Create and Update Your Coupons"
       />
       <PageBreadcrumb pageTitle={t("couponsPage.title")} userType="admin" />
@@ -144,8 +152,8 @@ const Coupons = () => {
               label: "Status",
               type: "select",
               options: [
-                { label: "Active", value: "1" },
-                { label: "Inactive", value: "0" },
+                { label: t("couponsPage.status.active"), value: "1" },
+                { label: t("couponsPage.status.inactive"), value: "0" },
               ],
             },
             {
@@ -153,8 +161,8 @@ const Coupons = () => {
               label: "Type",
               type: "select",
               options: [
-                { label: "Fixed", value: "fixed" },
-                { label: "Percent", value: "percent" },
+                { label: t("couponsPage.types.fixed"), value: "fixed" },
+                { label: t("couponsPage.types.percent"), value: "percent" },
               ],
             },
             { key: "from_date", label: "From", type: "date" },
@@ -182,6 +190,7 @@ const Coupons = () => {
             pageSize={pageSize}
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
+            globalError={globalError}
             loadingText={t("couponsPage.table.loadingText")}
           />
         </ComponentCard>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useGetProductById } from "../../../hooks/useSuperAdminProductsManage";
+import { useGetProductById } from "../../../hooks/Api/SuperAdmin/useProducts/useSuperAdminProductsManage";
 
 const ProductDetails: React.FC = () => {
   const { id } = useParams();

@@ -4,22 +4,16 @@ import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Checkbox from "../../../components/form/input/Checkbox";
 import FileInput from "../../../components/form/input/FileInput";
-import { getAllCategories } from "../../../api/AdminApi/categoryApi/_requests";
-import {
-  showProduct,
-  updateProduct,
-} from "../../../api/AdminApi/products/_requests";
-import { getAllBrands } from "../../../api/AdminApi/brandsApi/_requests";
 import { FiDelete } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import Select from "../../form/Select";
 import TextArea from "../../form/input/TextArea";
-import { useAllCategories } from "../../../hooks/useCategories";
-import { useAllBrands } from "../../../hooks/useBrands";
+import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
+import { useAllBrands } from "../../../hooks/Api/Admin/useBrands/useBrands";
 import {
   useGetProductById,
   useUpdateProduct,
-} from "../../../hooks/useAdminProducts";
+} from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
 type Category = {
   id: number;
   name: string;
@@ -43,9 +37,9 @@ type Product = {
   id?: number;
   vendor_id?: number;
   name?: string;
-  description?: string | number | undefined;
-  category_id?: number | string;
-  brand_id?: number | string;
+  description?: string | undefined;
+  category_id?: string;
+  brand_id?: string;
   price?: number | string;
   discount_price?: number | null;
   stock_quantity?: number | string;
@@ -83,7 +77,21 @@ const UpdateProductPage: React.FC = () => {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState({
+    name: [] as string[],
+    description: [] as string[],
+    price: [] as string[],
+    stock_quantity: [] as string[],
+    category_id: [] as string[],
+    brand_id: [] as string[],
+    status: [] as string[],
+    is_featured: [] as string[],
+    images: [] as string[],
+    attributes: [] as string[],
+    tags: [] as string[],
+    global: "",
+    general: "",
+  });
   const [clientSideErrors, setClientSideErrors] = useState({
     name: "",
     description: "",
@@ -92,7 +100,8 @@ const UpdateProductPage: React.FC = () => {
     category_id: "",
     brand_id: "",
     status: "",
-    is_featured: false,
+    images: "",
+    is_featured: "",
   });
   //const [brands, setBrands] = useState<Brand[]>([]);
 
@@ -123,10 +132,10 @@ const UpdateProductPage: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setProductData((prev) => (prev ? { ...prev, [name]: value } : null));
+    setProductData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSelectChange = (value: string, name) => {
+  const handleSelectChange = (value: string, name: string) => {
     setProductData((prev) => ({
       ...prev,
       [name]: value,
@@ -173,7 +182,17 @@ const UpdateProductPage: React.FC = () => {
     setAttributes([...attributes, { label: "", value: "" }]);
   const addTag = () => setTags([...tags, ""]);
   const validate = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors = {
+      name: "",
+      description: "",
+      price: "",
+      stock_quantity: "",
+      category_id: "",
+      brand_id: "",
+      status: "",
+      images: "",
+      is_featured: "",
+    };
     if (!productData.name) newErrors.name = t("validation.name");
     if (!productData.price) newErrors.price = t("validation.price");
     if (!productData.stock_quantity)
@@ -194,7 +213,21 @@ const UpdateProductPage: React.FC = () => {
       setLoading(false);
       return;
     }
-    setErrors({});
+    setErrors({
+      name: [],
+      description: [],
+      price: [],
+      stock_quantity: [],
+      category_id: [],
+      brand_id: [],
+      status: [],
+      is_featured: [],
+      images: [],
+      attributes: [],
+      tags: [],
+      global: "",
+      general: "",
+    });
 
     const formData = new FormData();
     Object.entries(productData).forEach(([key, value]) => {
@@ -223,7 +256,7 @@ const UpdateProductPage: React.FC = () => {
     });
 
     try {
-      await mutateAsync({ id: +id, productData: formData });
+      await mutateAsync({ id: +id!, productData: formData });
       navigate("/admin/products", {
         state: { successUpdate: t("success_update") },
       });
@@ -248,9 +281,9 @@ const UpdateProductPage: React.FC = () => {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ general: [t("errors.general")] });
+        setErrors({ ...errors, general: t("errors.general") });
       }
     } finally {
       setLoading(false);
@@ -337,8 +370,10 @@ const UpdateProductPage: React.FC = () => {
               value={productData?.category_id}
               placeholder={t("form.select_category")}
             />
-            {errors.category && (
-              <p className="text-red-500 text-sm mt-1">{errors.category}</p>
+            {errors.category_id[0] && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.category_id[0]}
+              </p>
             )}
             {clientSideErrors.category_id && (
               <p className="text-red-500 text-sm mt-1">
@@ -357,8 +392,8 @@ const UpdateProductPage: React.FC = () => {
               value={productData.brand_id}
               placeholder={t("form.select_brand")}
             />
-            {errors.brand && (
-              <p className="text-red-500 text-sm mt-1">{errors.brand}</p>
+            {errors.brand_id && (
+              <p className="text-red-500 text-sm mt-1">{errors.brand_id}</p>
             )}
             {clientSideErrors.brand_id && (
               <p className="text-red-500 text-sm mt-1">
@@ -377,8 +412,8 @@ const UpdateProductPage: React.FC = () => {
               value={productData.status}
               placeholder={t("form.select_status")}
             />
-            {errors.status && (
-              <p className="text-red-500 text-sm mt-1">{errors.status}</p>
+            {errors.status[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.status[0]}</p>
             )}
           </div>
           <div className="flex items-center space-x-3 mt-1">
@@ -424,12 +459,12 @@ const UpdateProductPage: React.FC = () => {
         <div>
           <Label>{t("form.upload_images")}</Label>
           <FileInput multiple onChange={handleImageChange} />
-          {errors.images && (
-            <p className="text-red-500 text-sm mt-1">{errors.images}</p>
+          {errors.images[0] && (
+            <p className="text-red-500 text-sm mt-1">{errors.images[0]}</p>
           )}
           {clientSideErrors?.images && (
             <p className="text-red-500 text-sm mt-1">
-              {clientSideErrors?.imagess}
+              {clientSideErrors?.images}
             </p>
           )}
 
@@ -511,8 +546,8 @@ const UpdateProductPage: React.FC = () => {
           >
             {t("form.add_attribute")}
           </button>
-          {errors.attributes && (
-            <p className="text-red-500 text-sm mt-1">{errors.attributes}</p>
+          {errors.attributes[0] && (
+            <p className="text-red-500 text-sm mt-1">{errors.attributes[0]}</p>
           )}
         </div>
 
@@ -542,8 +577,8 @@ const UpdateProductPage: React.FC = () => {
           >
             {t("form.add_tag")}
           </button>
-          {errors.tags && (
-            <p className="text-red-500 text-sm mt-1">{errors.tags}</p>
+          {errors.tags[0] && (
+            <p className="text-red-500 text-sm mt-1">{errors.tags[0]}</p>
           )}
         </div>
 

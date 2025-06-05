@@ -1,16 +1,22 @@
 {
-    "searchTable": {
-      "title": "بحث",
-      "all": "الكل",
-      "placeholder": "أدخل {{field}}",
-      "fields": {
-        "Name": "الاسم",
-        "Email": "البريد الإلكتروني",
-        "Phone": "رقم الهاتف",
-        "Status": "الحالة",
-        "Category": "الفئة",
-        "Brand": "العلامة التجارية"
-      }
+  "searchTable": {
+    "title": "بحث",
+    "all": "الكل",
+    "placeholder": "أدخل {{field}}",
+    "fields": {
+      "Name": "الاسم",
+      "Email": "البريد الإلكتروني",
+      "Phone": "رقم الهاتف",
+      "Status": "الحالة",
+      "Category": "الفئة",
+      "Brand": "العلامة التجارية",
+      "Tracking Number": "رقم التتبع",
+      "Shipping Status": "حالة الشحن",
+      "From": "من",
+      "To": "إلى",
+      "All": "الكل",
+      "Code": "كود",
+      "Type": "نوع"
     }
   }
-  
+}

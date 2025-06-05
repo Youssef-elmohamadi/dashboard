@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React from "react";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { showProduct } from "../../../api/AdminApi/products/_requests";
-import { useGetProductById } from "../../../hooks/useAdminProducts";
+import { useGetProductById } from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
 
 type Category = {
   id: number;

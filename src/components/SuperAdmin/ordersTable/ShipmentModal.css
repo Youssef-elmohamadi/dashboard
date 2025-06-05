@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+.swal2-container {
+  z-index: 99999 !important;
+}
+
+/*alert delete Dashboard*/
+.custom-popup {
+  @apply bg-white text-gray-800 dark:bg-gray-800 dark:text-white rounded-lg shadow-lg;
+}
+
+.swal2-confirm {
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded;
+}
+
+.swal2-cancel {
+  @apply bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded ml-2;
+}

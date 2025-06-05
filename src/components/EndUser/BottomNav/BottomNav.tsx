@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoHomeOutline } from "react-icons/io5";
 import { BiCategory } from "react-icons/bi";
 import { FiShoppingCart, FiUser, FiBell } from "react-icons/fi";
@@ -8,13 +8,19 @@ import { useTranslation } from "react-i18next";
 
 const BottomNav = () => {
   const location = useLocation();
-  const hiddenRoutes = ["/signin", "/signup"];
-  const { t } = useTranslation(["EndUserBottomNav"]);
+  const navigate = useNavigate();
+  const uToken = localStorage.getItem("uToken");
+  const isLoggedIn = !!uToken;
+  const hiddenRoutes = ["/signin", "/signup", "/reset-password"];
+  const shouldHide = hiddenRoutes.includes(location.pathname);
 
-  if (hiddenRoutes.includes(location.pathname)) {
+  const { t } = useTranslation(["EndUserBottomNav"]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  if (shouldHide) {
     return null;
   }
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <>
       <MenuSidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
@@ -43,30 +49,41 @@ const BottomNav = () => {
           </div>
 
           {/* Cart */}
-          <div className="w-1/5 flex flex-col items-center justify-center text-gray-700">
-            <Link
-              to={"/cart"}
-              className="flex flex-col items-center justify-center"
-            >
-              <FiShoppingCart size={24} />
-              <span className="text-xs mt-1">{t("cart")}</span>
-            </Link>
-          </div>
+          {isLoggedIn && (
+            <div className="w-1/5 flex flex-col items-center justify-center text-gray-700">
+              <Link
+                to={"/cart"}
+                className="flex flex-col items-center justify-center"
+              >
+                <FiShoppingCart size={24} />
+                <span className="text-xs mt-1">{t("cart")}</span>
+              </Link>
+            </div>
+          )}
 
           {/* Notifications */}
-          <div className="w-1/5 flex flex-col items-center justify-center text-gray-700">
-            <Link
-              to={"/u-notification"}
-              className="flex flex-col items-center justify-center"
-            >
-              <FiBell size={24} />
-              <span className="text-xs mt-1">{t("notification")}</span>
-            </Link>
-          </div>
+          {isLoggedIn && (
+            <div className="w-1/5 flex flex-col items-center justify-center text-gray-700">
+              <Link
+                to={"/u-notification"}
+                className="flex flex-col items-center justify-center"
+              >
+                <FiBell size={24} />
+                <span className="text-xs mt-1">{t("notification")}</span>
+              </Link>
+            </div>
+          )}
+
           {/* Profile */}
           <div className="w-1/5 flex flex-col items-center justify-center text-gray-700">
             <button
-              onClick={() => setIsMenuOpen((prev) => !prev)}
+              onClick={() => {
+                if (isLoggedIn) {
+                  setIsMenuOpen((prev) => !prev);
+                } else {
+                  navigate("/signin");
+                }
+              }}
               className="flex flex-col items-center justify-center"
             >
               <FiUser size={24} />

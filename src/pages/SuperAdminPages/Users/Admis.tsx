@@ -4,29 +4,20 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useLocation } from "react-router-dom";
-import { deleteAdmin } from "../../../api/SuperAdminApi/Admins/_requests";
 import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
-type User = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  vendor_id: number;
-  avatar: string;
-  created_at: string;
-  updated_at: string;
-  vendor: { id: number; name: string };
-  roles: { id: number; name: string }[];
-};
 import { useTranslation } from "react-i18next";
-import { useAllAdmins, useDeleteAdmin } from "../../../hooks/useSuperAdminAdmins";
+import {
+  useAllAdmins,
+  useDeleteAdmin,
+} from "../../../hooks/Api/SuperAdmin/useSuperAdminAdmis/useSuperAdminAdmins";
+import { AxiosError } from "axios";
 const Admins = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
+  const [globalError, setGlobalError] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     name: string;
     email: string;
@@ -44,10 +35,13 @@ const Admins = () => {
   );
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
-    if (isError && error?.response?.status) {
-      const status = error.response.status;
+    if (isError && error instanceof AxiosError) {
+      const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
+      }
+      if (status === 500) {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
@@ -92,7 +86,7 @@ const Admins = () => {
   };
   const { mutateAsync: deleteAdminMutate } = useDeleteAdmin();
   const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(id, deleteAdminMutate, refetch, {
+    await alertDelete(id, deleteAdminMutate, refetch, {
       confirmTitle: t("adminsPage.delete.confirmTitle"),
       confirmText: t("adminsPage.delete.confirmText"),
       confirmButtonText: t("adminsPage.delete.confirmButtonText"),
@@ -101,10 +95,13 @@ const Admins = () => {
       successText: t("adminsPage.delete.successText"),
       errorTitle: t("adminsPage.delete.errorTitle"),
       errorText: t("adminsPage.delete.errorText"),
+      unauthorized: t("adminsPage.delete.unauthorized"),
+      generalError: t("adminsPage.delete.generalError"),
+      lastButton: t("adminsPage.delete.lastButton"),
     });
   };
 
-  const columns = buildColumns<User>({
+  const columns = buildColumns({
     includeName: true,
     includeVendorEmail: true,
     includeRoles: true,
@@ -121,8 +118,8 @@ const Admins = () => {
         />
       )}
       <PageMeta
-        title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
-        description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+        title={t("adminsPage.mainTitle")}
+        description="Mange Your Admins"
       />
       <PageBreadcrumb
         pageTitle={t("adminsPage.title")}
@@ -156,6 +153,7 @@ const Admins = () => {
             pageSize={pageSize}
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
+            globalError={globalError}
             loadingText={t("adminsPage.table.loadingText")}
           />
         </ComponentCard>

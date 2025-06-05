@@ -3,55 +3,54 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
-import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
-import { getProductById } from "../../../api/SuperAdminApi/Products/_requests";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
 import { useTranslation } from "react-i18next";
 import {
   useChangeProductStatus,
   useGetProductsPaginate,
-} from "../../../hooks/useSuperAdminProductsManage";
-type User = {
+} from "../../../hooks/Api/SuperAdmin/useProducts/useSuperAdminProductsManage";
+import { useAllCategories } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
+import { useAllBrands } from "../../../hooks/Api/SuperAdmin/useBrands/useSuperAdminBrandsManage";
+import { AxiosError } from "axios";
+type Category = {
   id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  vendor_id: number;
-  avatar: string;
-  created_at: string;
-  updated_at: string;
-  vendor: { id: number; name: string };
-  roles: { id: number; name: string }[];
+  name: string;
+};
+type Brand = {
+  id: number;
+  name: string;
 };
 
 const Products = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
+  const [globalError, setGlobalError] = useState(false);
   const [searchValues, setSearchValues] = useState<{
+    category_id: string;
+    brand_id: string;
+    status: string;
     name: string;
-    email: string;
-    phone: string;
   }>({
+    category_id: "",
+    brand_id: "",
+    status: "",
     name: "",
-    email: "",
-    phone: "",
   });
-  const location = useLocation();
   const { t } = useTranslation(["ProductsTable"]);
-  const { data, isLoading, isError, refetch, error } = useGetProductsPaginate(
+  const { data, isLoading, isError, error } = useGetProductsPaginate(
     pageIndex,
     searchValues
   );
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
-    if (isError && error?.response?.status) {
-      const status = error.response.status;
+    if (isError && error instanceof AxiosError) {
+      const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
+      } else if (status === 500) {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
@@ -66,46 +65,21 @@ const Products = () => {
     setPageIndex(0);
   };
 
-  const [alertData, setAlertData] = useState<{
-    variant: "success" | "error" | "info" | "warning";
-    title: string;
-    message: string;
-  } | null>(null);
-
-  useEffect(() => {
-    if (location.state?.successCreate) {
-      setAlertData({
-        variant: "success",
-        title: "Admin Created Successfully",
-        message: location.state.successCreate,
-      });
-      window.history.replaceState({}, document.title);
-    } else if (location.state?.successEdit) {
-      setAlertData({
-        variant: "success",
-        title: "Admin Updated Successfully",
-        message: location.state.successEdit,
-      });
-      window.history.replaceState({}, document.title);
-    }
-
-    const timer = setTimeout(() => {
-      setAlertData(null);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [location.state]);
-
-  const getStatus = async (id) => {
-    const res = await getProductById(id);
-    return res.data.data.status;
+  const handleGetStatus = (id: number) => {
+    const item = productsData?.find((el: any) => el.id === id);
+    return item?.status;
   };
+
+  const { data: allCategories } = useAllCategories();
+  const categories = allCategories?.data.data?.original;
+  const { data: allBrands } = useAllBrands();
+  const brands = allBrands?.data.data;
   const { mutateAsync: changeStatus } = useChangeProductStatus();
 
   const handleChangeStatus = async (id: number) => {
     await openChangeStatusModal({
       id,
-      getStatus,
+      getStatus: handleGetStatus,
       changeStatus: async (id, data) => {
         return await changeStatus({ id, data });
       },
@@ -127,7 +101,7 @@ const Products = () => {
     });
   };
 
-  const columns = buildColumns<User>({
+  const columns = buildColumns({
     includeDateOfCreation: true,
     includeImagesAndNameCell: true,
     includeStatus: true,
@@ -135,13 +109,6 @@ const Products = () => {
   });
   return (
     <>
-      {alertData && (
-        <Alert
-          variant={alertData.variant}
-          title={alertData.title}
-          message={alertData.message}
-        />
-      )}
       <PageMeta
         title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
@@ -154,8 +121,33 @@ const Products = () => {
         <SearchTable
           fields={[
             { key: "name", label: "Name", type: "input" },
-            { key: "email", label: "Email", type: "input" },
-            { key: "phone", label: "Phone", type: "input" },
+            {
+              key: "category_id",
+              label: "Category",
+              type: "select",
+              options: categories?.map((category: Category) => ({
+                label: category.name,
+                value: category.id,
+              })),
+            },
+            {
+              key: "brand_id",
+              label: "Brand",
+              type: "select",
+              options: brands?.map((brand: Brand) => ({
+                label: brand.name,
+                value: brand.id,
+              })),
+            },
+            {
+              key: "status",
+              label: "Status",
+              type: "select",
+              options: [
+                { label: t("productsPage.status.active"), value: "active" },
+                { label: t("productsPage.status.inactive"), value: "inactive" },
+              ],
+            },
           ]}
           setSearchParam={handleSearch}
           searchValues={searchValues}
@@ -175,6 +167,7 @@ const Products = () => {
             isChangeStatus={true}
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
+            globalError={globalError}
             loadingText={t("productsPage.table.loadingText")}
           />
         </ComponentCard>

@@ -5,17 +5,16 @@ import BasicTable from "../../../components/admin/Tables/BasicTableTS";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import {
-  deleteBrand,
-} from "../../../api/AdminApi/brandsApi/_requests";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
-import {useAllBrandsPaginate } from "../../../hooks/useBrands";
+import { useAllBrandsPaginate, useDeleteBrand } from "../../../hooks/Api/Admin/useBrands/useBrands";
 import Alert from "../../../components/ui/alert/Alert";
+import { AxiosError } from "axios";
 const Brands = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
+  const [globalError, setGlobalError] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     name: string;
   }>({
@@ -29,10 +28,12 @@ const Brands = () => {
   );
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
-    if (isError && error?.response?.status) {
-      const status = error.response.status;
+    if (isError && error instanceof AxiosError) {
+      const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
+      } else if (status === 500) {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
@@ -71,24 +72,23 @@ const Brands = () => {
     }));
     setPageIndex(0);
   };
+  const { mutateAsync } = useDeleteBrand();
   const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(id, deleteBrand, refetch, {
-      confirmTitle: t("brandsTable.delete.confirmTitle"),
-      confirmText: t("brandsTable.delete.confirmText"),
-      confirmButtonText: t("brandsTable.delete.confirmButtonText"),
-      cancelButtonText: t("brandsTable.delete.cancelButtonText"),
-      successTitle: t("brandsTable.delete.successTitle"),
-      successText: t("brandsTable.delete.successText"),
-      errorTitle: t("brandsTable.delete.errorTitle"),
-      errorText: t("brandsTable.delete.errorText"),
+    const confirmed = await alertDelete(id, mutateAsync, refetch, {
+      confirmTitle: t("brandsPage.delete.confirmTitle"),
+      confirmText: t("brandsPage.delete.confirmText"),
+      confirmButtonText: t("brandsPage.delete.confirmButtonText"),
+      cancelButtonText: t("brandsPage.delete.cancelButtonText"),
+      successTitle: t("brandsPage.delete.successTitle"),
+      successText: t("brandsPage.delete.successText"),
+      errorTitle: t("brandsPage.delete.errorTitle"),
+      errorText: t("brandsPage.delete.errorText"),
+      lastButton: t("brandsPage.delete.lastButton"),
     });
   };
 
   const columns = buildColumns({
-    includeBrandName: false,
     includeImageAndNameCell: true,
-    includeEmail: false,
-    includeRoles: false,
     includeStatus: true,
     includeUpdatedAt: true,
     includeCreatedAt: true,
@@ -105,7 +105,7 @@ const Brands = () => {
         />
       )}
       <PageMeta
-        title="Tashtiba | Manege Brands"
+        title={t("brandsPage.mainTitle")}
         description="Create and Update Your Brands"
       />
       <PageBreadcrumb pageTitle={t("brandsPage.title")} userType="admin" />
@@ -133,6 +133,7 @@ const Brands = () => {
             pageSize={pageSize}
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
+            globalError={globalError}
             loadingText={t("brandsPage.table.loadingText")}
           />
         </ComponentCard>

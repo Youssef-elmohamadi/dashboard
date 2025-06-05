@@ -13,6 +13,7 @@
   "create_success": "Brand Created Successfully",
   "errors": {
     "name": "Brand name is required.",
+    "name_unique": "Brand name already exists.",
     "status": "Select brand status.",
     "image": "Brand image is required.",
     "general": "Something went wrong.",

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
-import { getOrderById } from "../../../api/AdminApi/ordersApi/_requests";
 import { useTranslation } from "react-i18next";
-import { useGetOrderById } from "../../../hooks/useOrders";
+import { useGetOrderById } from "../../../hooks/Api/Admin/useOrders/useOrders";
 
 // Interfaces
 interface Product {
@@ -43,6 +42,7 @@ interface Order {
   total: number;
   shipping_status: string;
   tracking_number: number;
+  building_number: number;
   estimated_delivery_date: string;
   created_at: string;
   updated_at: string;
@@ -53,25 +53,10 @@ interface Order {
 const OrderDetails: React.FC = () => {
   const { t } = useTranslation(["OrderDetails"]);
   const { id } = useParams();
-  //const [order, setOrder] = useState<Order | null>(null);
-  const [loading, setLoading] = useState(true);
-  const { data, isError, error, isLoading } = useGetOrderById(id);
+
+  const { data, isLoading } = useGetOrderById(id);
 
   const order: Order = data?.data?.data;
-  // useEffect(() => {
-  //   const fetchOrder = async () => {
-  //     try {
-  //       const response = await getOrderById(id);
-  //       setOrder(response.data.data);
-  //     } catch (error) {
-  //       console.error("Error fetching order:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   if (id) fetchOrder();
-  // }, [id]);
 
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString("en-US", {
@@ -159,7 +144,7 @@ const OrderDetails: React.FC = () => {
           </p>
           {order.order.location && (
             <p>
-              <strong>{t("fields.address")}:</strong>{" "}
+              <strong>{t("fields.address")}:</strong> {order.building_number}
               {order.order.location.street}, {order.order?.location?.city}
             </p>
           )}

@@ -12,12 +12,13 @@ import { useTranslation } from "react-i18next";
 import {
   useDeleteRole,
   useRolesPaginate,
-} from "../../../hooks/useSuperAdminRoles";
-
+} from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
+import { AxiosError } from "axios";
 
 const Roles = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
+  const [globalError, setGlobalError] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     name: string;
   }>({
@@ -30,10 +31,13 @@ const Roles = () => {
     searchValues
   );
   useEffect(() => {
-    if (isError && error?.response?.status) {
-      const status = error.response.status;
+    if (isError && error instanceof AxiosError) {
+      const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
+      }
+      if (status === 500) {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
@@ -56,7 +60,7 @@ const Roles = () => {
       setAlertData({
         variant: "success",
         title: t("rolesPage.updatedSuccess"),
-        message: location.state.successEdit,
+        message: location.state.successUpdate,
       });
     }
     const timer = setTimeout(() => {
@@ -75,7 +79,7 @@ const Roles = () => {
 
   const { mutateAsync: deleteRoleMutate } = useDeleteRole();
   const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(id, deleteRoleMutate, refetch, {
+    await alertDelete(id, deleteRoleMutate, refetch, {
       confirmTitle: t("rolesPage.delete.confirmTitle"),
       confirmText: t("rolesPage.delete.confirmText"),
       confirmButtonText: t("rolesPage.delete.confirmButtonText"),
@@ -84,13 +88,14 @@ const Roles = () => {
       successText: t("rolesPage.delete.successText"),
       errorTitle: t("rolesPage.delete.errorTitle"),
       errorText: t("rolesPage.delete.errorText"),
+      lastButton: t("rolesPage.delete.lastButton"),
+      unauthorized: t("rolesPage.delete.unauthorized"),
+      generalError: t("rolesPage.delete.generalError"),
     });
   };
 
   const columns = buildColumns({
     includeRoleName: true,
-    includeEmail: false,
-    includeRoles: false,
     includeUpdatedAt: true,
     includeDateOfCreation: true,
     includeActions: true,
@@ -134,6 +139,7 @@ const Roles = () => {
             pageSize={pageSize}
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
+            globalError={globalError}
             loadingText={t("rolesPage.table.loadingText")}
           />
         </ComponentCard>

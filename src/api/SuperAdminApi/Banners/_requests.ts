@@ -17,7 +17,7 @@ export const getBannerById = async (id: number | string) => {
   return await axiosJson.get(`/api/superAdmin/banners/${id}`);
 };
 
-export const deleteBanner = async (id: number) => {
+export const deleteBanner = async (id: number | string) => {
   return await axiosJson.delete(`/api/superAdmin/banners/${id}`);
 };
 

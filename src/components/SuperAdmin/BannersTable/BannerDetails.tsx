@@ -3,8 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getBannerById } from "../../../api/SuperAdminApi/Banners/_requests"; // تأكد من وجود هذا الملف
 import { getAllCategories } from "../../../api/SuperAdminApi/Categories/_requests";
-import { useAllCategories } from "../../../hooks/useCategories";
-import { useGetBannerById } from "../../../hooks/useSuperAdminBanners";
+import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
+import { useGetBannerById } from "../../../hooks/Api/SuperAdmin/useBanners/useSuperAdminBanners";
 
 interface Banner {
   id: number;

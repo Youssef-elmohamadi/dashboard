@@ -14,6 +14,7 @@
     "submitting": "Updating...",
     "errors": {
       "name": "Name is required",
+      "nameTaken": "The name is already in use",
       "description": "Description is required",
       "commissionRequired": "Commission rate is required",
       "commissionMax": "Commission rate cannot exceed 100",

@@ -15,6 +15,8 @@
       "successText": "Admin has been deleted.",
       "errorTitle": "Error",
       "errorText": "Could not delete the Admin.",
+      "unauthorized": "You are not authorized to delete this admin.",
+      "generalError": "An error occurred while deleting the admin.",
       "lastButton": "OK"
     },
     "table": {

@@ -2,6 +2,7 @@
   "categoriesPage": {
     "title": "Categories",
     "all": "All Categories",
+    "mainTitle": "Tashtiba | Categories",
     "addNew": "Add New Category",
     "createdSuccess": "Category Created Successfully",
     "updatedSuccess": "Category Updated Successfully",

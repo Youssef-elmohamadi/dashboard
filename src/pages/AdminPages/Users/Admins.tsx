@@ -9,7 +9,10 @@ import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
-import { useAllAdmins, useDeleteAdmin } from "../../../hooks/useVendorAdmins";
+import {
+  useAllAdmins,
+  useDeleteAdmin,
+} from "../../../hooks/Api/Admin/useVendorAdmins/useVendorAdmins";
 import { AxiosError } from "axios";
 
 const Admins = () => {

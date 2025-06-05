@@ -3,8 +3,8 @@
     "title": "Banners",
     "all": "All Banners",
     "addNew": "Add New Banner",
-    "createdSuccess": "Banner Created Successfully",
-    "updatedSuccess": "Banner Updated Successfully",
+    "createdSuccess": "Created Successfully",
+    "updatedSuccess": "Updated Successfully",
     "delete": {
       "confirmTitle": "Delete Banner?",
       "confirmText": "This action cannot be undone!",
@@ -13,7 +13,8 @@
       "successTitle": "Deleted!",
       "successText": "Banner has been deleted.",
       "errorTitle": "Error",
-      "errorText": "Could not delete the Banner."
+      "errorText": "Could not delete the Banner.",
+      "lastButton": "OK"
     },
     "table": {
       "loadingText": "Banners data Loading..."

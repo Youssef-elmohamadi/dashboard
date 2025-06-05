@@ -2,6 +2,14 @@
   "ordersPage": {
     "title": "Orders",
     "all": "All Orders",
+    "mainTitle": "Tashtiba | Orders",
+    "statuses": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "canceled": "Canceled"
+    },
     "cancel": {
       "confirmTitle": "Cancel Order?",
       "confirmText": "This action cannot be undone!",

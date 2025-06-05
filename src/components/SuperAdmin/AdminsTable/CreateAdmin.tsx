@@ -7,8 +7,11 @@ import { FiUserPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
-import { useRoles } from "../../../hooks/useSuperAdminRoles";
-import { useCreateAdmin } from "../../../hooks/useSuperAdminAdmins";
+import { useRoles } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
+import { useCreateAdmin } from "../../../hooks/Api/SuperAdmin/useSuperAdminAdmis/useSuperAdminAdmins";
+type Role = {
+  name: string;
+};
 export default function CreateAdmin() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -19,6 +22,8 @@ export default function CreateAdmin() {
     email: [] as string[],
     password: [] as string[],
     role: [] as string[],
+    global: "" as string,
+    general: "" as string,
   });
   const [adminData, setAdminData] = useState({
     first_name: "",
@@ -89,23 +94,21 @@ export default function CreateAdmin() {
     }));
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await getAllRoles();
-  //       setOptions(response?.data?.data);
-  //     } catch (error) {
-  //       console.error("Error fetching roles:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
-
   const { data } = useRoles();
   const options = data?.data.data;
   const { mutateAsync } = useCreateAdmin();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({
+      first_name: [],
+      last_name: [],
+      phone: [],
+      email: [],
+      password: [],
+      role: [],
+      global: "",
+      general: "",
+    });
     if (!validate()) return;
     setLoading(true);
     try {
@@ -135,9 +138,9 @@ export default function CreateAdmin() {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ general: [t("admin.errors.general")] });
+        setErrors((prev) => ({ ...prev, general: t("admin.errors.general") }));
       }
     } finally {
       setLoading(false);
@@ -197,7 +200,7 @@ export default function CreateAdmin() {
         <div className="w-full">
           <Label>{t("admin.select_role")}</Label>
           <Select
-            options={options?.map((role) => ({
+            options={options?.map((role: Role) => ({
               value: role?.name,
               label: role?.name,
             }))}
@@ -222,8 +225,10 @@ export default function CreateAdmin() {
             placeholder={t("admin.placeholder.email")}
             onChange={handleChange}
           />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
+          {errors.email[0] && (
+            <p className="text-red-500 text-sm mt-1">
+              {t("admin.errors.email_taken")}
+            </p>
           )}
           {clientSideErrors.email && (
             <p className="text-red-500 text-sm mt-1">
@@ -240,8 +245,10 @@ export default function CreateAdmin() {
             placeholder={t("admin.placeholder.phone")}
             onChange={handleChange}
           />
-          {errors.phone && (
-            <p className="text-red-500 text-sm mt-1">{errors.phone[0]}</p>
+          {errors.phone[0] && (
+            <p className="text-red-500 text-sm mt-1">
+              {t("admin.errors.phone_taken")}
+            </p>
           )}
           {clientSideErrors.phone && (
             <p className="text-red-500 text-sm mt-1">

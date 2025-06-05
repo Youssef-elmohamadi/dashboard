@@ -1,10 +1,10 @@
-import { useEffect, useState, useCallback } from "react";
-import { useOutletContext, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import ProductCard from "../../../components/EndUser/ProductCard/ProductCard";
 import { getAllProducts } from "../../../api/EndUserApi/ensUserProducts/_requests";
 import { Circles } from "react-loader-spinner";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { useAllProducts } from "../../../hooks/Api/EndUser/useProducts/useProducts";
 const AllProducts = () => {
   // const [products, setProducts] = useState([]);
   // const [page, setPage] = useState(1);
@@ -60,28 +60,18 @@ const AllProducts = () => {
   //   }
   // };
   const { t } = useTranslation(["EndUserShop"]);
-  const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
-    useInfiniteQuery({
-      queryKey: ["endUserAllProducts", sort, min, max],
-      queryFn: async ({ pageParam = 1 }) => {
-        const response = await getAllProducts({
-          sort,
-          min,
-          max,
-          page: pageParam,
-        });
-        return response.data.data;
-      },
-      initialPageParam: 1,
-      getNextPageParam: (lastPage) => {
-        return lastPage.current_page < lastPage.last_page
-          ? lastPage.current_page + 1
-          : undefined;
-      },
-      staleTime: 1000 * 60 * 5,
-    });
-
-  const products = data?.pages.flatMap((page) => page.data) || [];
+  const {
+    products,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+    isFetching,
+    isError,
+  } = useAllProducts({
+    sort: sort,
+    min: min,
+    max: max,
+  });
 
   return (
     <div className="min-h-[300px] flex flex-col items-center">

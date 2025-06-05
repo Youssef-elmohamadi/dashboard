@@ -20,6 +20,7 @@ interface BasicTableProps<T> {
   loadingText?: string;
   onPageChange: (page: number) => void;
   unauthorized?: boolean;
+  globalError?: boolean;
   isShowMore?: boolean;
   isShipped?: boolean;
   isCancel?: boolean;
@@ -45,11 +46,11 @@ const BasicTable = <T extends { id: number }>({
   loadingText,
   onPageChange,
   onChangeStatus,
-
   isShowMore,
   unauthorized,
+  globalError,
 }: BasicTableProps<T>) => {
-  const { t } = useTranslation([""]);
+  const { t } = useTranslation(["Tables"]);
   const tableInstance = useTable({
     columns,
     data,
@@ -94,13 +95,18 @@ const BasicTable = <T extends { id: number }>({
           </tbody>
         </table>
         {isLoading && <Loading text={loadingText} />}
+        {!isLoading && unauthorized && (
+          <div className="p-4 text-center text-shadow-yellow-500 font-semibold">
+            {t("unAuthorized")}
+          </div>
+        )}
+        {!isLoading && globalError && (
+          <div className="p-4 text-center text-red-500 font-semibold">
+            {t("unExpectedError")}
+          </div>
+        )}
         {!isLoading && data.length === 0 && (
           <div className="p-4 text-center text-gray-500">{t("")}</div>
-        )}
-        {!isLoading && unauthorized && (
-          <div className="p-4 text-center text-red-500 font-semibold">
-            Sorry, You Don't Have Permission
-          </div>
         )}
       </div>
 

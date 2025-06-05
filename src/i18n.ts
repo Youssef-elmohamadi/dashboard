@@ -18,7 +18,7 @@ i18n
     },
 
     ns: [
-      "auth", //✔
+      "auth",
       "BreadCrump",
       "EndUserProductModal",
       "EndUserCheckout",

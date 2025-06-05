@@ -5,14 +5,17 @@ import { useTranslation } from "react-i18next";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";
-import { updateCategory } from "../../../api/SuperAdminApi/Categories/_requests";
 import CategoryImageUpload from "./CategoryImageUpload";
 import {
   useGetCategoryById,
   useUpdateCategory,
-} from "../../../hooks/useSuperAdminCategpries";
-import { useAllCategories } from "../../../hooks/useCategories";
-
+} from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
+import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
+import TextArea from "../../form/input/TextArea";
+type Category = {
+  id: string;
+  name: string;
+};
 export default function UpdateCategory() {
   const { t } = useTranslation(["UpdateCategory"]);
   const [categoryData, setCategoryData] = useState({
@@ -24,9 +27,22 @@ export default function UpdateCategory() {
   });
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [clientErrors, setClientErrors] = useState<any>({});
-  const [errors, setErrors] = useState<any>({});
-  //const [categories, setCategories] = useState<any[]>([]);
+  const [clientErrors, setClientErrors] = useState({
+    name: "",
+    description: "",
+    commission_rate: "",
+    parent_id: "",
+    image: "",
+  });
+  const [errors, setErrors] = useState({
+    name: [] as string[],
+    description: [] as string[],
+    commission_rate: [] as string[],
+    parent_id: [] as string[],
+    image: [] as string[],
+    global: "" as string,
+    general: "" as string,
+  });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -57,32 +73,6 @@ export default function UpdateCategory() {
       });
     }
   }
-  // useEffect(() => {
-  //   const fetchInitialData = async () => {
-  //     try {
-  //       const [categoryRes, allCategoriesRes] = await Promise.all([
-  //         getCategoryById(id),
-  //         getAllCategories(),
-  //       ]);
-
-  //       const data = categoryRes.data.data.original;
-  //       setCategoryData({
-  //         name: data.name || "",
-  //         description: data.description || "",
-  //         commission_rate: data.commission_rate || "",
-  //         parent_id: data.parent_id ? data.parent_id.toString() : "",
-  //         image: null,
-  //       });
-
-  //       setPreviewImage(data.image);
-  //       //setCategories(allCategoriesRes.data.data.original);
-  //     } catch (err) {
-  //       console.error("Error fetching category data", err);
-  //     }
-  //   };
-
-  //   fetchInitialData();
-  // }, [id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -119,6 +109,15 @@ export default function UpdateCategory() {
   const { mutateAsync } = useUpdateCategory(id);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({
+      name: [],
+      description: [],
+      commission_rate: [],
+      parent_id: [],
+      image: [],
+      global: "",
+      general: "",
+    });
     if (!validate()) return;
 
     const formData = new FormData();
@@ -130,7 +129,7 @@ export default function UpdateCategory() {
     if (categoryData.image) formData.append("image", categoryData.image);
     try {
       setLoading(true);
-      await updateCategory(formData, id);
+      await mutateAsync({ id: id!!, categoryData: formData });
       navigate("/super_admin/categories", {
         state: { successUpdate: t("category.success") },
       });
@@ -154,9 +153,12 @@ export default function UpdateCategory() {
           }
           formattedErrors[err.code].push(err.message);
         });
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ general: [t("category.errors.general")] });
+        setErrors((prev) => ({
+          ...prev,
+          general: t("category.errors.general"),
+        }));
       }
     } finally {
       setLoading(false);
@@ -184,8 +186,10 @@ export default function UpdateCategory() {
               onChange={handleChange}
               placeholder={t("category.namePlaceholder")}
             />
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
+            {errors.name[0] && (
+              <p className="text-red-500 text-sm mt-1">
+                {t("category.errors.nameTaken")}
+              </p>
             )}
             {clientErrors.name && (
               <p className="text-red-500 text-sm mt-1">{clientErrors.name}</p>
@@ -215,11 +219,13 @@ export default function UpdateCategory() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
           <div className="w-full">
             <Label>{t("category.description")}</Label>
-            <textarea
+            <TextArea
               name="description"
               value={categoryData.description}
               placeholder={t("category.descPlaceholder")}
-              onChange={handleChange}
+              onChange={(value) =>
+                setCategoryData((prev) => ({ ...prev, description: value }))
+              }
               className="w-full mt-2 p-2 border border-gray-200 outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
               rows={4}
             />
@@ -237,7 +243,7 @@ export default function UpdateCategory() {
           <div className="w-full">
             <Label>{t("category.parent")}</Label>
             <Select
-              options={categories?.map((cat) => ({
+              options={categories?.map((cat: Category) => ({
                 value: cat.id.toString(),
                 label: cat.name,
               }))}
@@ -254,7 +260,7 @@ export default function UpdateCategory() {
         <div className="w-full">
           <Label>{t("category.image")}</Label>
           <div className="flex items-start gap-6">
-            <div className="w-40 h-40 rounded border border-gray-200 overflow-hidden">
+            <div className="w-40 h-40 rounded border border-gray-200 dark:border-gray-800 overflow-hidden">
               {previewImage ? (
                 <img
                   src={previewImage}

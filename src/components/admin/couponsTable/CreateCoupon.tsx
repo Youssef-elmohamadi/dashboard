@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";
-import { createCoupon } from "../../../api/AdminApi/couponsApi/_requests";
-import { useCreateCoupon } from "../../../hooks/useCoupons";
+import { useCreateCoupon } from "../../../hooks/Api/Admin/useCoupons/useCoupons";
 export default function CreateCoupon() {
   const { t } = useTranslation(["CreateCoupon"]);
   const navigate = useNavigate();
@@ -33,6 +32,7 @@ export default function CreateCoupon() {
     general: "" as string,
     global: "" as string,
   });
+  const [loading, setLoading] = useState(false);
   const [clientSideErrors, setClientSideErrors] = useState<
     Record<string, string>
   >({});
@@ -68,6 +68,8 @@ export default function CreateCoupon() {
     if (!couponData.start_at) newErrors.start_at = t("coupon.errors.start_at");
     if (!couponData.expires_at)
       newErrors.expires_at = t("coupon.errors.expires_at.required");
+    if (!couponData.type) newErrors.type = t("coupon.errors.type");
+    if (!couponData.active) newErrors.active = t("coupon.errors.status");
     if (
       couponData.start_at &&
       couponData.expires_at &&
@@ -80,12 +82,14 @@ export default function CreateCoupon() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const {mutateAsync }=useCreateCoupon();
+  const { mutateAsync } = useCreateCoupon();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
+    console.log("submit");
 
+    if (!validate()) return;
+    setLoading(true);
     try {
       await mutateAsync(couponData);
       navigate("/admin/coupons", {
@@ -113,13 +117,15 @@ export default function CreateCoupon() {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({...errors,
-          general: t("errors.global")});
+        setErrors({ ...errors, general: t("errors.global") });
       }
+    } finally {
+      setLoading(false);
     }
   };
+  console.log(errors);
 
   return (
     <div>
@@ -143,8 +149,10 @@ export default function CreateCoupon() {
             {clientSideErrors.code && (
               <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
             )}
-            {errors.code && (
-              <p className="text-red-500 text-sm">{errors.code}</p>
+            {errors.code[0] && (
+              <p className="text-red-500 text-sm">
+                {t("coupon.errors.code_exists")}
+              </p>
             )}
           </div>
 
@@ -155,14 +163,15 @@ export default function CreateCoupon() {
                 { value: "fixed", label: t("coupon.types.fixed") },
                 { value: "percent", label: t("coupon.types.percent") },
               ]}
-              defaultValue={couponData.type}
+              value={couponData.type}
               onChange={(val) => handleSelectChange("type", val)}
+              placeholder={t("coupon.placeholders.select_type")}
             />
             {clientSideErrors.type && (
-              <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
+              <p className="text-red-500 text-sm">{clientSideErrors.type}</p>
             )}
-            {errors.type && (
-              <p className="text-red-500 text-sm">{errors.code}</p>
+            {errors.type[0] && (
+              <p className="text-red-500 text-sm">{errors.type[0]}</p>
             )}
           </div>
 
@@ -178,8 +187,8 @@ export default function CreateCoupon() {
             {clientSideErrors.value && (
               <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
             )}
-            {errors.value && (
-              <p className="text-red-500 text-sm">{errors.code}</p>
+            {errors.value[0] && (
+              <p className="text-red-500 text-sm">{errors.value[0]}</p>
             )}
           </div>
 
@@ -196,8 +205,8 @@ export default function CreateCoupon() {
                 {clientSideErrors.max_discount}
               </p>
             )}
-            {errors.max_discount && (
-              <p className="text-red-500 text-sm">{errors.max_discount}</p>
+            {errors.max_discount[0] && (
+              <p className="text-red-500 text-sm">{errors.max_discount[0]}</p>
             )}
           </div>
 
@@ -212,8 +221,10 @@ export default function CreateCoupon() {
             {clientSideErrors.min_order_amount && (
               <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
             )}
-            {errors.min_order_amount && (
-              <p className="text-red-500 text-sm">{errors.code}</p>
+            {errors.min_order_amount[0] && (
+              <p className="text-red-500 text-sm">
+                {errors.min_order_amount[0]}
+              </p>
             )}
           </div>
 
@@ -230,8 +241,8 @@ export default function CreateCoupon() {
                 {clientSideErrors.usage_limit}
               </p>
             )}
-            {errors.usage_limit && (
-              <p className="text-red-500 text-sm">{errors.usage_limit}</p>
+            {errors.usage_limit[0] && (
+              <p className="text-red-500 text-sm">{errors.usage_limit[0]}</p>
             )}
           </div>
 
@@ -242,14 +253,15 @@ export default function CreateCoupon() {
                 { value: "1", label: t("coupon.statusOptions.1") },
                 { value: "0", label: t("coupon.statusOptions.0") },
               ]}
-              defaultValue={couponData.active}
+              value={couponData.active}
               onChange={(val) => handleSelectChange("active", val)}
+              placeholder={t("coupon.placeholders.select_status")}
             />
             {clientSideErrors.active && (
               <p className="text-red-500 text-sm">{clientSideErrors.active}</p>
             )}
-            {errors.active && (
-              <p className="text-red-500 text-sm">{errors.active}</p>
+            {errors.active[0] && (
+              <p className="text-red-500 text-sm">{errors.active[0]}</p>
             )}
           </div>
 
@@ -265,8 +277,8 @@ export default function CreateCoupon() {
                 {clientSideErrors.start_at}
               </p>
             )}
-            {errors.start_at && (
-              <p className="text-red-500 text-sm">{errors.start_at}</p>
+            {errors.start_at[0] && (
+              <p className="text-red-500 text-sm">{errors.start_at[0]}</p>
             )}
           </div>
 
@@ -282,8 +294,8 @@ export default function CreateCoupon() {
                 {clientSideErrors.expires_at}
               </p>
             )}
-            {errors.expires_at && (
-              <p className="text-red-500 text-sm">{errors.expires_at}</p>
+            {errors.expires_at[0] && (
+              <p className="text-red-500 text-sm">{errors.expires_at[0]}</p>
             )}
           </div>
         </div>
@@ -292,7 +304,7 @@ export default function CreateCoupon() {
           type="submit"
           className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"
         >
-          {t("coupon.button")}
+          {loading ? t("coupon.button.submitting") : t("coupon.button.submit")}
         </button>
       </form>
     </div>

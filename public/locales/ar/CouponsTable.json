@@ -1,10 +1,11 @@
 {
   "couponsPage": {
+    "mainTitle": "تاشتيبا | كوبونات",
     "title": "كوبونات",
     "addNew": "إضافة كوبون جديد",
     "all": "كل الكوبونات",
-    "createdSuccess": "تم إنشاء الكوبون بنجاح",
-    "updatedSuccess": "تم تعديل بيانات الكوبون بنجاح",
+    "createdSuccess": "تم الانشاء",
+    "updatedSuccess": "تم التحديث",
     "delete": {
       "confirmTitle": "حذف الكوبون؟",
       "confirmText": "لا يمكن التراجع عن هذا الاجراء!",
@@ -13,7 +14,16 @@
       "successTitle": "تم حذف الكوبون!",
       "successText": "تم حذف الكوبون.",
       "errorTitle": "خطأ",
-      "errorText": "لا يمكن حذف الكوبون."
+      "errorText": "لا يمكن حذف الكوبون.",
+      "lastButton": "حسنا"
+    },
+    "types": {
+      "fixed": "ثابت",
+      "percent": "نسبة مئوية"
+    },
+    "status": {
+      "active": "مفعل",
+      "inactive": "غير مفعل"
     },
     "table": {
       "loadingText": "جاري تحميل بيانات الكوبونات..."

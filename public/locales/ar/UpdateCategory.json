@@ -14,6 +14,8 @@
     "submitting": "جارٍ الإضافة...",
     "errors": {
       "name": "الاسم مطلوب",
+      "nameTaken": "الاسم مستخدم بالفعل",
+      "image": "صورة التصنيف مطلوبة",
       "description": "الوصف مطلوب",
       "commissionRequired": "نسبة العمولة مطلوبة",
       "commissionMax": "لا يمكن أن تتجاوز نسبة العمولة 100",

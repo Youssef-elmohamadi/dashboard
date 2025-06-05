@@ -5,7 +5,10 @@ import Checkbox from "../../form/input/Checkbox";
 import Loading from "../../common/Loading";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useCreateRole, useGetAllPermissions } from "../../../hooks/useRoles";
+import {
+  useCreateRole,
+  useGetAllPermissions,
+} from "../../../hooks/Api/Admin/useRoles/useRoles";
 type Permission = {
   id: number;
   name: string;
@@ -20,6 +23,8 @@ export default function CreateRole() {
   const [errors, setErrors] = useState({
     name: [] as string[],
     permissions: [] as string[],
+    global: "",
+    general: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -99,9 +104,15 @@ export default function CreateRole() {
           }
           formattedErrors[err.code].push(err.message);
         });
-        setErrors(formattedErrors);
+        setErrors((prev) => ({
+          ...prev,
+          ...formattedErrors,
+        }));
       } else {
-        setErrors({ general: [t("role.errors.general")] });
+        setErrors((prev) => ({
+          ...prev,
+          general: t("admin.errors.general"),
+        }));
       }
     } finally {
       setIsSubmitting(false);
@@ -130,8 +141,10 @@ export default function CreateRole() {
             {formErrors.name && (
               <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
             )}
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
+            {errors.name[0] && (
+              <p className="text-red-500 text-sm mt-1">
+                {t("role.errors.name_unique")}
+              </p>
             )}
           </div>
 

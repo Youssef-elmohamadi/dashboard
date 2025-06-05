@@ -1,5 +1,4 @@
 import axiosJson from "../userAxiosInstanceEndUser";
-
 export const sendOtp = async (data: any) => {
   return await axiosJson.post("/api/general/send_otp_code", data);
 };

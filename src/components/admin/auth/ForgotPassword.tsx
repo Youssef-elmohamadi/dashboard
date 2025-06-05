@@ -9,6 +9,8 @@ import {
 } from "../../../api/OtpApi/_requests";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { EyeCloseIcon, EyeIcon } from "../../../icons";
+import Input from "../../form/input/InputField";
 
 const ResetPassword = () => {
   const [step, setStep] = useState(1);
@@ -21,7 +23,7 @@ const ResetPassword = () => {
   const [phoneError, setPhoneError] = useState("");
   const { t } = useTranslation(["auth"]);
   const navigate = useNavigate();
-
+  const [showPassword, setShowPassword] = useState(false);
   const handleNext = async () => {
     if (step === 1) {
       if (!phone) {
@@ -118,7 +120,7 @@ const ResetPassword = () => {
     switch (step) {
       case 1:
         return (
-          <div className="border border-gray-200 p-12 rounded-2xl">
+          <div className="border border-gray-200 dark:border-gray-800 p-12 rounded-2xl">
             <h2 className="text-2xl font-bold text-center mb-2 text-gray-800 dark:text-white">
               {t("forgotPasswordPage.title")}
             </h2>
@@ -130,7 +132,7 @@ const ResetPassword = () => {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder={t("forgotPasswordPage.phonePlaceholder")}
-              className="w-full px-4 py-2 border dark:text-gray-100 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="w-full px-4 py-2 border dark:text-gray-100 border-gray-300 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             />
             {phoneError && (
               <p className="text-red-500 text-sm mt-2">{phoneError}</p>
@@ -175,23 +177,49 @@ const ResetPassword = () => {
             <p className="text-sm text-gray-500 dark:text-gray-300 text-center mb-6">
               {t("forgotPasswordPage.enterAndConfirmPassword")}
             </p>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder={t("forgotPasswordPage.newPasswordPlaceholder")}
-              className="w-full px-4 py-2 border  border-gray-300 dark:text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            />
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder={t("forgotPasswordPage.confirmPasswordPlaceholder")}
-              className="w-full mt-2 px-4 py-2 dark:text-gray-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            />
-            {passwordError && (
-              <p className="text-red-500 text-sm mt-2">{passwordError}</p>
-            )}
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder={t("forgotPasswordPage.newPasswordPlaceholder")}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
+                  document.documentElement.dir === "rtl" ? "left-4" : "right-4"
+                }`}
+              >
+                {showPassword ? (
+                  <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                ) : (
+                  <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                )}
+              </span>
+            </div>
+            <div className="relative mt-2">
+              <Input
+                type={showPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder={t("forgotPasswordPage.confirmPasswordPlaceholder")}
+              />
+              {passwordError && (
+                <p className="text-red-500 text-sm mt-2">{passwordError}</p>
+              )}
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
+                  document.documentElement.dir === "rtl" ? "left-4" : "right-4"
+                }`}
+              >
+                {showPassword ? (
+                  <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                ) : (
+                  <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                )}
+              </span>
+            </div>
             <button
               onClick={handleNext}
               className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
@@ -213,7 +241,7 @@ const ResetPassword = () => {
         {step > 1 && (
           <button
             onClick={() => setStep(step > 1 ? step - 1 : 1)}
-            className="w-full mt-4 py-2 border dark:text-gray-100 dark:bg-gray-900 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition"
+            className="w-full mt-4 py-2 border dark:text-gray-100 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-700 rounded-lg hover:bg-gray-100 transition"
           >
             {t("forgotPasswordPage.back")}
           </button>

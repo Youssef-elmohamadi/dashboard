@@ -23,7 +23,10 @@ export default function SignUpForm() {
   );
   const [otpError, setOtpError] = useState("");
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({
+    general: "",
+    global: "",
+  });
   const [dataForm, setDataForm] = useState({
     adminInfo: {
       first_name: "",
@@ -161,7 +164,7 @@ export default function SignUpForm() {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
 
         const errorKeys = Object.keys(formattedErrors);
 
@@ -179,8 +182,8 @@ export default function SignUpForm() {
           setStep(2);
         }
       } else {
-        setErrors({ general: [t("errors.general")] });
-        setStep(1); // العودة إلى step 1 إذا كان الخطأ عام
+        setErrors((prev) => ({ ...prev, general: t("errors.general") }));
+        setStep(1);
       }
     }
   };

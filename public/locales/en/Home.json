@@ -1,4 +1,6 @@
 {
   "customers": "Customers",
-  "orders": "Orders"
+  "orders": "Orders",
+  "products": "Products",
+  "vendors": "Vendors"
 }

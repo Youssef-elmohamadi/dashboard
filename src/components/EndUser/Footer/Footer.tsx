@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   FaFacebook,
   FaInstagram,
@@ -16,39 +16,20 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import FooterSection from "./FooterLinks";
-import { getAllCategories } from "../../../api/EndUserApi/endUserCategories/_requests";
 import { handleLogout } from "../Auth/Logout";
 import { useTranslation } from "react-i18next";
-import { useQuery } from "@tanstack/react-query";
-
+import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
+type Category = {
+  id: number;
+  name: string;
+};
 export default function Footer() {
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [sellerAreaOpen, setSellerAreaOpen] = useState(false);
-  // const [Categories, setCategories] = useState<any>();
   const { t } = useTranslation(["EndUserFooter"]);
-
-  // useEffect(() => {
-  //   const fetchCategories = async () => {
-  //     try {
-  //       const response = await getAllCategories();
-  //       setCategories(response.data.data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchCategories();
-  // }, []);
-
-  const { data: categories, isLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const res = await getAllCategories();
-      return res.data.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+  const { data: categories } = useCategories();
 
   const iconClass =
     "text-gray-400 hover:text-purple-400 transition duration-300 transform hover:scale-125";
@@ -151,7 +132,7 @@ export default function Footer() {
             setIsOpen={setQuickLinksOpen}
           >
             <ul>
-              {categories?.slice(0, 4).map((category, i) => (
+              {categories?.slice(0, 4).map((category: Category, i: number) => (
                 <li key={i}>
                   <Link
                     to={`/category/${category.id}`}

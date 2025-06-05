@@ -2,9 +2,10 @@
   "brandsPage": {
     "title": "العلامات التجارية",
     "addNew": "إضافة علامة تجارية جديدة",
+    "mainTitle": "تاشتيبا | العلامات التجارية",
     "all": "كل العلامات التجارية",
-    "createdSuccess": "تم إنشاء العلامة التجارية بنجاح",
-    "updatedSuccess": "تم تعديل بيانات العلامة التجارية بنجاح",
+    "createdSuccess": "تم الانشاء",
+    "updatedSuccess": "تم التحديث",
     "delete": {
       "confirmTitle": "حذف العلامة التجارية؟",
       "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
@@ -13,7 +14,8 @@
       "successTitle": "تم الحذف!",
       "successText": "تم حذف العلامة التجارية.",
       "errorTitle": "خطأ",
-      "errorText": "لا يمكن حذف العلامة التجارية."
+      "errorText": "لا يمكن حذف العلامة التجارية.",
+      "lastButton": "حسنا"
     },
     "changeStatus": {
       "title": "تغيير الحالة",

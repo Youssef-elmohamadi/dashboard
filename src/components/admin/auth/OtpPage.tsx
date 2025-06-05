@@ -80,7 +80,7 @@ const OTPPage: React.FC<OTPPageProps> = ({
 
   return (
     <div className="flex p-4">
-      <div className=" rounded-2xl p-6 w-full max-w-md text-center border border-gray-200">
+      <div className="rounded-2xl p-6 w-full max-w-md text-center border border-gray-200 dark:border-gray-800">
         <h2 className="text-xl font-semibold dark:text-gray-100 mb-2">
           {title}
         </h2>
@@ -107,10 +107,12 @@ const OTPPage: React.FC<OTPPageProps> = ({
           {otp.map((digit, idx) => (
             <input
               key={idx}
-              ref={(el) => (inputRefs.current[idx] = el)}
+              ref={(el) => {
+                inputRefs.current[idx] = el;
+              }}
               type="text"
               maxLength={1}
-              className="md:w-12 md:h-12 h-8 w-8 **: text-center text-xl border dark:border-gray-50 dark:bg-gray-700 dark:text-gray-100 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="md:w-12 md:h-12 h-8 w-8 **: text-center text-xl border  dark:border-gray-800 dark:bg-gray-600 dark:text-gray-100 border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={digit}
               onKeyDown={(e) => handleKeyDown(e, idx)}
               onChange={(e) => handleChange(e.target.value, idx)}

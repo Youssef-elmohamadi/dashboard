@@ -3,12 +3,11 @@ import Input from "../../form/input/InputField";
 import { useTranslation } from "react-i18next";
 
 type Props = {
-  file: File | null;
+  file: string | File | null;
   onFileChange: (file: File | null) => void;
-  endPointImage?: string;
 };
 
-function BrandImageUpload({ file, onFileChange, endPointImage }: Props) {
+function BrandImageUpload({ file, onFileChange }: Props) {
   const [image, setImage] = useState<string | null>(null);
   const { t } = useTranslation(["ImageUpload"]);
 
@@ -18,10 +17,6 @@ function BrandImageUpload({ file, onFileChange, endPointImage }: Props) {
       setImage(objectUrl);
       return () => URL.revokeObjectURL(objectUrl);
     }
-    // لو تحب تستخدم صورة السيرفر لما الملف يختفي، فعّل الكود ده:
-    // else {
-    //   setImage(endPointImage || null);
-    // }
   }, [file]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

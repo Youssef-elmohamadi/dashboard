@@ -3,7 +3,7 @@ import "./alert.css";
 
 type Props = {
   id: number;
-  getStatus: (id: number) => Promise<string>;
+  getStatus: (id: number) => string ;
   changeStatus: (id: number, payload: { status: string }) => Promise<any>;
   options: { [key: string]: string };
   Texts: {
@@ -50,7 +50,6 @@ export const openChangeStatusModal = async ({
       newStatus.toLowerCase() !== currentStatusRaw.toLowerCase()
     ) {
       try {
-        
         await changeStatus(id, {
           status: newStatus.toLowerCase(),
         });

@@ -6,7 +6,8 @@ import BasicTable from "../../../components/admin/Tables/BasicTableTS";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
-import { useAllCategoriesPaginate } from "../../../hooks/useCategories";
+import { useAllCategoriesPaginate } from "../../../hooks/Api/Admin/useCategories/useCategories";
+import { AxiosError } from "axios";
 const Categories = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
@@ -23,8 +24,8 @@ const Categories = () => {
 
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
-    if (isError && error?.response?.status) {
-      const status = error.response.status;
+    if (isError && error instanceof AxiosError) {
+      const status = error?.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
       }
@@ -53,7 +54,7 @@ const Categories = () => {
   return (
     <>
       <PageMeta
-        title="Tashtiba | Categories"
+        title={t("categoriesPage.mainTitle")}
         description="Show all Categories"
       />
       <PageBreadcrumb pageTitle={t("categoriesPage.title")} userType="admin" />

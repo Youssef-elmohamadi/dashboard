@@ -1,33 +1,37 @@
 {
-    "title": "تفاصيل الطلب",
-    "no_id": "لا يوجد معرف للطلب.",
-    "loading": "جاري تحميل تفاصيل الطلب...",
-    "not_found": "الطلب غير موجود.",
-    "egp": "ج.م",
-    "sections": {
-      "order_info": "معلومات الطلب",
-      "customer_info": "معلومات العميل",
-      "products": "المنتجات",
-      "dates": "التواريخ"
-    },
-    "fields": {
-      "order_id": "رقم الطلب",
-      "status": "الحالة",
-      "total": "الإجمالي",
-      "payment_method": "طريقة الدفع",
-      "shipping_status": "حالة الشحن",
-      "tracking_number": "رقم التتبع",
-      "estimated_delivery": "موعد التسليم المتوقع",
-      "name": "الاسم",
-      "email": "البريد الإلكتروني",
-      "phone": "رقم الهاتف",
-      "address": "العنوان",
-      "product_name": "اسم المنتج",
-      "description": "الوصف",
-      "price": "السعر",
-      "quantity": "الكمية",
-      "created_at": "تاريخ الإنشاء",
-      "updated_at": "آخر تحديث"
-    }
+  "title": "تفاصيل الطلب",
+  "no_id": "لا يوجد معرف للطلب.",
+  "loading": "جاري تحميل تفاصيل الطلب...",
+  "not_found": "الطلب غير موجود.",
+  "egp": "ج.م",
+  "sections": {
+    "order_info": "معلومات الطلب",
+    "customer_info": "معلومات العميل",
+    "products": "المنتجات",
+    "dates": "التواريخ",
+    "vendor_order": "طٌلب من البائع"
+  },
+  "fields": {
+    "order_id": "رقم الطلب",
+    "status": "الحالة",
+    "total": "الإجمالي",
+    "payment_method": "طريقة الدفع",
+    "shipping_status": "حالة الشحن",
+    "is_paid": "مدفوع",
+    "tracking_number": "رقم التتبع",
+    "estimated_delivery": "موعد التسليم المتوقع",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+    "address": "العنوان",
+    "floor": "رقم الطابق",
+    "apartment": "رقم الشقة",
+    "landmark": "علامة مميزة",
+    "product_name": "اسم المنتج",
+    "description": "الوصف",
+    "price": "السعر",
+    "quantity": "الكمية",
+    "created_at": "تاريخ الإنشاء",
+    "updated_at": "آخر تحديث"
   }
-  
+}

@@ -2,7 +2,6 @@ import { TfiClose } from "react-icons/tfi";
 import PriceRangeFilter from "../SpinnerFilter/PriceRangeFilter";
 import { Link } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const FilterSidebar = ({

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import AuthLayout from "./AuthPageLayout";
-import ResetPassword from "../../../components/SuperAdmin/Auth/ForgotPassword";
+import ResetPassword from "../../../components/common/ResetPassword";
 import { useNavigate } from "react-router-dom";
 const SuperAdminForgotPassword = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const SuperAdminForgotPassword = () => {
   return (
     <div>
       <AuthLayout>
-        <ResetPassword />
+        <ResetPassword type="super_admin" />
       </AuthLayout>
     </div>
   );

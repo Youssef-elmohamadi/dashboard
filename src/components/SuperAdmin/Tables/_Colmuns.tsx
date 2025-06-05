@@ -16,6 +16,18 @@ interface ColumnBuilderOptions<T extends BaseEntity> {
   includeIsActive?: boolean;
   includeRoles?: boolean;
   includeRoleName?: boolean;
+  includeFullName?: boolean;
+  includeShippedStatus?: boolean;
+  includePaymentMethod?: boolean;
+  includeTotalPrice?: boolean;
+  includeCode?: boolean;
+  includeType?: boolean;
+  includeValue?: boolean;
+  includeLimit?: boolean;
+  includeUsedCount?: boolean;
+  includeExpiresAt?: boolean;
+
+  includeOrderStatus?: boolean;
   includeVendorName?: boolean;
   includeVendorEmail?: boolean;
   includeVendorPhone?: boolean;
@@ -58,6 +70,34 @@ export const buildColumns = <T extends BaseEntity>(
       accessor: "name",
     });
   }
+  if (options.includeFullName) {
+    columns.push({
+      Header: t("table.customer"),
+      accessor: (row: any) => `${row?.location?.full_name}`,
+      id: "customer_name",
+    });
+  }
+
+  if (options.includeOrderStatus) {
+    columns.push({
+      Header: t("table.order_status"),
+      id: "order_status",
+      Cell: ({ row }: any) => (
+        <BrandStatus status={row?.original?.order?.status} />
+      ),
+    });
+  }
+
+  if (options.includeShippedStatus) {
+    columns.push({
+      Header: t("table.shipping_status"),
+      id: "shipping_status",
+      Cell: ({ row }: any) => (
+        <BrandStatus status={row.original?.shipping_status} />
+      ),
+    });
+  }
+
   if (options.includeTitle) {
     columns.push({
       Header: t("table.name"),
@@ -156,18 +196,18 @@ export const buildColumns = <T extends BaseEntity>(
   //     },
   //   });
   // }
-  // if (options.includeTotalPrice) {
-  //   columns.push({
-  //     Header: "Total Amount",
-  //     accessor: "total" as keyof T,
-  //   });
-  // }
-  // if (options.includePaymentMethod) {
-  //   columns.push({
-  //     Header: "Payment Method",
-  //     accessor: (row) => row.order.payment_method,
-  //   });
-  // }
+  if (options.includeTotalPrice) {
+    columns.push({
+      Header: "Total Amount",
+      accessor: (row) => row?.total_amount,
+    });
+  }
+  if (options.includePaymentMethod) {
+    columns.push({
+      Header: "Payment Method",
+      accessor: (row) => row?.payment_method,
+    });
+  }
 
   if (options.includeDateOfCreation) {
     columns.push({
@@ -195,39 +235,39 @@ export const buildColumns = <T extends BaseEntity>(
   //   }
   // }
 
-  // if (options.includeCode) {
-  //   columns.push({
-  //     Header: "Code",
-  //     accessor: "code" as keyof T,
-  //   });
-  // }
-  // if (options.includeType) {
-  //   columns.push({
-  //     Header: "Type",
-  //     accessor: "type" as keyof T,
-  //   });
-  // }
+  if (options.includeCode) {
+    columns.push({
+      Header: "Code",
+      accessor: "code" as keyof T,
+    });
+  }
+  if (options.includeType) {
+    columns.push({
+      Header: "Type",
+      accessor: "type" as keyof T,
+    });
+  }
 
-  // if (options.includeValue) {
-  //   columns.push({
-  //     Header: "Value",
-  //     accessor: "value" as keyof T,
-  //   });
-  // }
+  if (options.includeValue) {
+    columns.push({
+      Header: "Value",
+      accessor: "value" as keyof T,
+    });
+  }
 
-  // if (options.includeLimit) {
-  //   columns.push({
-  //     Header: "Usage Limit",
-  //     accessor: "usage_limit" as keyof T,
-  //   });
-  // }
+  if (options.includeLimit) {
+    columns.push({
+      Header: "Usage Limit",
+      accessor: "usage_limit" as keyof T,
+    });
+  }
 
-  // if (options.includeUsedCount) {
-  //   columns.push({
-  //     Header: "Used Count",
-  //     accessor: "used_count" as keyof T,
-  //   });
-  // }
+  if (options.includeUsedCount) {
+    columns.push({
+      Header: "Used Count",
+      accessor: "used_count" as keyof T,
+    });
+  }
 
   // if (options.includeStartAt) {
   //   columns.push({
@@ -237,18 +277,18 @@ export const buildColumns = <T extends BaseEntity>(
   //   });
   // }
 
-  // if (options.includeExpiresAt) {
-  //   columns.push({
-  //     Header: "Expires At",
-  //     accessor: "expires_at" as keyof T,
-  //     Cell: ({ value }: any) => format(new Date(value), "dd/MM/yyyy"),
-  //   });
-  // }
+  if (options.includeExpiresAt) {
+    columns.push({
+      Header: "Expires At",
+      accessor: "expires_at" as keyof T,
+      Cell: ({ value }: any) => format(new Date(value), "dd/MM/yyyy"),
+    });
+  }
 
   if (options.includeIsActive) {
     columns.push({
       Header: t("table.status"),
-      accessor: "is_active" as keyof T,
+      accessor: "active" as keyof T,
       Cell: ({ value }: any) => (value ? "✅Active" : "❌Inactive"),
     });
   }

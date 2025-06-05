@@ -7,8 +7,8 @@ import { FiUserPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
-import { useCreateAdmin } from "../../../hooks/useVendorAdmins";
-import { useRoles } from "../../../hooks/useRoles";
+import { useCreateAdmin } from "../../../hooks/Api/Admin/useVendorAdmins/useVendorAdmins";
+import { useRoles } from "../../../hooks/Api/Admin/useRoles/useRoles";
 export default function CreateAdmin() {
   const [showPassword, setShowPassword] = useState(false);
   // const [options, setOptions] = useState<any[]>([]);

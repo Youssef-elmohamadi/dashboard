@@ -22,6 +22,6 @@ export const showCoupon = async (id: number | string) => {
 export const createCoupon = async (couponData: any) => {
   return await axiosForm.post(`/api/vendor/cupons`, couponData);
 };
-export const updateCoupon = async (id, couponData: any) => {
+export const updateCoupon = async (id: number | string, couponData: any) => {
   return await axiosForm.post(`/api/vendor/cupons/${id}`, couponData);
 };

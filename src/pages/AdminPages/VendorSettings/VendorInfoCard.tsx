@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import TextArea from "../../../components/form/input/TextArea";
-import {
-  updateVendor,
-  getVendor,
-} from "../../../api/AdminApi/VendorSettingApi/_requests";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useUpdateVendor, useVendorData } from "../../../hooks/useVendor";
+import {
+  useUpdateVendor,
+  useVendorData,
+} from "../../../hooks/Api/Admin/useVendor/useVendor";
+import PageMeta from "../../../components/common/PageMeta";
+import VendorEditSkeleton from "../../../components/admin/vendorSettings/VendorSettingsSkeleton";
 
 interface Vendor {
   name: string;
@@ -162,8 +162,24 @@ const VendorEditPage: React.FC = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <>
+        <PageMeta
+          title="Tashtiba | Home Admin Dashboard"
+          description="Show Your Statistics"
+        />
+        <VendorEditSkeleton />
+      </>
+    );
+  }
+
   return (
     <div>
+      <PageMeta
+        title="Tashtiba | Home Admin Dashboard"
+        description="Show Your Statistics"
+      />
       <form
         onSubmit={handleSubmit}
         className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md space-y-8"

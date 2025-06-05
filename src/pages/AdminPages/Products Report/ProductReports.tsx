@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import EcommerceMetrics from "../../../components/ecommerce/EcommerceMetrics";
 import { GroupIcon } from "../../../icons";
 import { BoxIconLine } from "../../../icons";
-import FilterRangeDate from "../../../components/admin/productReports/FilterRangeDate";
+import FilterRangeDate from "../../../components/admin/reports/FilterRangeDate";
 import TopSelligProducts from "../../../components/admin/productReports/TopSellingProducts";
 import { useTranslation } from "react-i18next";
 import PageMeta from "../../../components/common/PageMeta";
-import { useProductData } from "../../../hooks/useProductReport";
+import { useProductData } from "../../../hooks/Api/Admin/useProductsReports/useProductReport";
 const ProductReports = () => {
   const [totalProductSell, setTotalProductSell] = useState([]);
   const [numbersData, setNumbersData] = useState({

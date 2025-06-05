@@ -6,10 +6,9 @@ import { TiDocumentText } from "react-icons/ti";
 import { NavLink } from "react-router-dom";
 import { handleLogout } from "../Auth/Logout";
 import { handleDeleteAccount } from "../Auth/DeleteAccount";
-import { getProfile } from "../../../api/EndUserApi/endUserAuth/_requests";
-import { useQuery } from "@tanstack/react-query";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useTranslation } from "react-i18next";
+import { useProfile } from "../../../hooks/Api/EndUser/useProfile/useProfile";
 
 interface MenuSidebarProps {
   isMenuOpen: boolean;
@@ -19,14 +18,7 @@ const MenuSidebar = ({ isMenuOpen, setIsMenuOpen }: MenuSidebarProps) => {
   const { dir } = useDirectionAndLanguage();
   const closeMenu = () => setIsMenuOpen(false);
   const { t } = useTranslation(["EndUserHeader"]);
-  const { data: user, isLoading } = useQuery({
-    queryKey: ["endUserProfileData"],
-    queryFn: async () => {
-      const res = await getProfile();
-      return res.data.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+  const { data: user } = useProfile();
 
   return (
     <>

@@ -12,10 +12,12 @@ import Alert from "../../../components/ui/alert/Alert";
 import {
   useDeleteCategory,
   useGetCategories,
-} from "../../../hooks/useSuperAdminCategpries";
+} from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
+import { AxiosError } from "axios";
 const Categories = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
+  const [globalError, setGlobalError] = useState(false);
   const [searchValues, setSearchValues] = useState<{
     category_id: string;
     brand_id: string;
@@ -34,18 +36,20 @@ const Categories = () => {
     searchValues
   );
 
-
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
-    if (isError && error?.response?.status) {
-      const status = error.response.status;
+    if (isError && error instanceof AxiosError) {
+      const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
+      }
+      if (status === 500) {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
 
-  const categoriesData = data?.original?.data?? [];
+  const categoriesData = data?.original?.data ?? [];
   const totalCategories = data?.original?.total ?? 0;
 
   const [alertData, setAlertData] = useState<{
@@ -53,7 +57,7 @@ const Categories = () => {
     title: string;
     message: string;
   } | null>(null);
-  
+
   useEffect(() => {
     if (location.state?.successCreate) {
       setAlertData({
@@ -61,11 +65,11 @@ const Categories = () => {
         title: t("categoriesPage.createdSuccess"),
         message: location.state.successCreate,
       });
-    } else if (location.state?.successEdit) {
+    } else if (location.state?.successUpdate) {
       setAlertData({
         variant: "success",
         title: t("categoriesPage.updatedSuccess"),
-        message: location.state.successEdit,
+        message: location.state.successUpdate,
       });
     }
     const timer = setTimeout(() => {
@@ -84,7 +88,7 @@ const Categories = () => {
   const { mutateAsync: deleteCategoryMutate } = useDeleteCategory();
 
   const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(id, deleteCategoryMutate, refetch, {
+    await alertDelete(id, deleteCategoryMutate, refetch, {
       confirmTitle: t("categoriesPage.delete.confirmTitle"),
       confirmText: t("categoriesPage.delete.confirmText"),
       confirmButtonText: t("categoriesPage.delete.confirmButtonText"),
@@ -92,6 +96,7 @@ const Categories = () => {
       successText: t("categoriesPage.delete.successText"),
       errorTitle: t("categoriesPage.delete.errorTitle"),
       errorText: t("categoriesPage.delete.errorText"),
+      cancelButtonText: t("categoriesPage.delete.cancelButtonText"),
     });
   };
 
@@ -102,7 +107,6 @@ const Categories = () => {
     includeActions: true,
     includeCommissionRate: true,
   });
-  const [reload, setReload] = useState(0);
 
   return (
     <>
@@ -145,6 +149,7 @@ const Categories = () => {
             pageSize={pageSize}
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
+            globalError={globalError}
             loadingText={t("categoriesPage.table.loadingText")}
           />
         </ComponentCard>

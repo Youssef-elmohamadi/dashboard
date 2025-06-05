@@ -166,7 +166,7 @@ export const buildColumns = <T extends BaseEntity>(
   if (options.includePaymentMethod) {
     columns.push({
       Header: t("table.payment_method"),
-      accessor: (row) => row.order?.payment_method,
+      accessor: (row: any) => row.order?.payment_method,
     });
   }
 

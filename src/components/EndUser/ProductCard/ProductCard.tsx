@@ -7,29 +7,29 @@ import { TbStarHalfFilled } from "react-icons/tb";
 import { BsFillStarFill } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
 import { useModal } from "../../../pages/UserPages/Context/ModalContext";
-
 import { useTranslation } from "react-i18next";
-import { useFavoriteProducts } from "../../../hooks/Api/EndUser/useFavoriteProducts";
+import {
+  useAddFavorite,
+  useRemoveFavorite,
+} from "../../../hooks/Api/EndUser/useProducts/useFavoriteProducts";
 import { Product } from "../../../types/Product";
+import { toast } from "react-toastify";
 
-interface LazyImage {
+// Lazy image component
+const LazyImage = ({
+  src,
+  alt,
+  className,
+}: {
   src: string;
   alt: string;
   className: string;
-}
-interface ProductCardProps {
-  product: Product;
-}
-const LazyImage = ({ src, alt, className }: LazyImage) => {
+}) => {
   const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true,
   });
   const [isLoading, setIsLoading] = useState(true);
-
-  const handleImageLoad = () => {
-    setIsLoading(false);
-  };
 
   return (
     <div
@@ -43,19 +43,41 @@ const LazyImage = ({ src, alt, className }: LazyImage) => {
           src={src}
           alt={alt}
           className={className}
-          onLoad={handleImageLoad}
+          onLoad={() => setIsLoading(false)}
         />
       )}
     </div>
   );
 };
 
-const ProductCard = ({ product }: ProductCardProps) => {
+// Product card component
+const ProductCard = ({ product }: { product: Product }) => {
   const { openModal } = useModal();
   const { t } = useTranslation(["EndUserProductCard"]);
-  const { addToFavorite, removeFromFavorite } = useFavoriteProducts(product.id);
+  const [is_fav, setIs_fav] = useState<boolean>(product?.is_fav);
 
-  const isFav = product?.is_fav;
+  const { mutateAsync: addToFavorite } = useAddFavorite();
+  const { mutateAsync: removeFromFavorite } = useRemoveFavorite();
+
+  const handleToggleFavorite = async () => {
+    try {
+      if (is_fav) {
+        await removeFromFavorite(product.id);
+        setIs_fav(false);
+        toast.success(t("successRemoveFromFav"));
+      } else {
+        await addToFavorite(product.id);
+        setIs_fav(true);
+        toast.success(t("successAddedToFav"));
+      }
+    } catch (error: any) {
+      if (error?.response?.status === 401) {
+        toast.error(t("noAuth"));
+      } else {
+        toast.error(t("favError"));
+      }
+    }
+  };
 
   return (
     <div className="w-full border border-gray-200 rounded p-3 relative">
@@ -68,9 +90,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
       </div>
 
       <button
-        onClick={isFav ? removeFromFavorite : addToFavorite}
+        onClick={handleToggleFavorite}
         className={`absolute top-2 left-2 bg-transparent p-2 rounded-full transition ${
-          isFav ? "text-red-500" : "text-gray-300 hover:text-red-500"
+          is_fav ? "text-red-500" : "text-gray-300 hover:text-red-500"
         }`}
       >
         <FaHeart className="text-xl" />

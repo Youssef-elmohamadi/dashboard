@@ -9,8 +9,11 @@ import {
   useGetAllPermissions,
   useGetRoleById,
   useUpdateRole,
-} from "../../../hooks/useRoles";
-
+} from "../../../hooks/Api/Admin/useRoles/useRoles";
+type Permission = {
+  id: number;
+  name: string;
+};
 const UpdateRole: React.FC = () => {
   const [updateData, setUpdateData] = useState({
     name: "",
@@ -21,6 +24,8 @@ const UpdateRole: React.FC = () => {
   const [errors, setErrors] = useState({
     name: [] as string[],
     permissions: [] as string[],
+    general: "",
+    global: "",
   });
   const { id } = useParams();
   const navigate = useNavigate();
@@ -123,16 +128,30 @@ const UpdateRole: React.FC = () => {
           }
           formattedErrors[err.code].push(err.message);
         });
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ general: [t("role.errors.general")] });
+        setErrors({ ...errors, general: t("admin.errors.general") });
       }
     } finally {
       setIsSubmitting(false);
     }
   };
+  if (isRoleLoading) {
+    return (
+      <p className="text-gray-400 text-center p-4">{t("role.loadingRole")}</p>
+    );
+  }
   if (!id) {
-    return <p className="text-red-500 p-4">Invalid role ID</p>;
+    return (
+      <p className="text-gray-400 text-center p-4">
+        {t("role.errors.notFound")}
+      </p>
+    );
+  }
+  if (roleData?.data.success === false) {
+    return (
+      <p className="text-red-500 text-center p-4">{t("role.errors.general")}</p>
+    );
   }
 
   return (
@@ -158,8 +177,10 @@ const UpdateRole: React.FC = () => {
             {formErrors.name && (
               <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
             )}
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
+            {errors.name[0] && (
+              <p className="text-red-500 text-sm mt-1">
+                {t("role.errors.name_unique")}
+              </p>
             )}
           </div>
 
@@ -171,7 +192,7 @@ const UpdateRole: React.FC = () => {
                 {t("role.permission")}
               </h2>
               <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
-                {permissions.map((permission) => (
+                {permissions.map((permission: Permission) => (
                   <Checkbox
                     key={permission.id}
                     label={permission.name}

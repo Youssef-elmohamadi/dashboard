@@ -12,15 +12,15 @@ export const getBrandsPaginate = async (params: {
 export const getAllBrands = async () => {
   return await axiosJson.get("/api/vendor/brands");
 };
-export const getBrandById = async (id: any) => {
+export const getBrandById = async (id: number | string) => {
   return await axiosJson.get(`/api/vendor/brands/${id}`);
 };
 
-export const deleteBrand = async (id: number) => {
+export const deleteBrand = async (id: number | string) => {
   return await axiosJson.delete(`/api/vendor/brands/${id}`);
 };
 
-export const updateBrand = async (updateData: any, id: number) => {
+export const updateBrand = async (updateData: any, id: number | string) => {
   return await axiosForm.post(`/api/vendor/brands/${id}`, updateData);
 };
 export const createBrand = async (data: any) => {

@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  showCoupon,
-  updateCoupon,
-} from "../../../api/AdminApi/couponsApi/_requests";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
-import { useGetCouponById } from "../../../hooks/useCoupons";
+import { useGetCouponById, useUpdateCoupon } from "../../../hooks/Api/Admin/useCoupons/useCoupons";
 
 const UpdateCoupon = () => {
   const { id } = useParams();
+
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateCoupon"]);
-
+  const [loading, setLoading] = useState(false);
   const [couponData, setCouponData] = useState({
     code: "",
     type: "fixed",
@@ -41,6 +38,8 @@ const UpdateCoupon = () => {
     active: [] as string[],
     start_at: [] as string[],
     expires_at: [] as string[],
+    general: "",
+    global: "",
   });
 
   const { data, isError, error } = useGetCouponById(id);
@@ -94,12 +93,27 @@ const UpdateCoupon = () => {
     setClientSideErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  const { mutateAsync } = useUpdateCoupon(id);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({
+      code: [],
+      type: [],
+      value: [],
+      max_discount: [],
+      min_order_amount: [],
+      usage_limit: [],
+      active: [],
+      start_at: [],
+      expires_at: [],
+      general: "",
+      global: "",
+    });
     if (!validate()) return;
+    setLoading(true);
     try {
       if (id) {
-        await updateCoupon(id, couponData);
+        await mutateAsync({ id: +id, couponData: couponData });
         navigate("/admin/coupons", {
           state: { successEdit: t("coupon.successMessage") },
         });
@@ -126,10 +140,12 @@ const UpdateCoupon = () => {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ general: [t("admin.errors.general")] });
+        setErrors({ ...errors, general: t("admin.errors.general") });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -154,7 +170,11 @@ const UpdateCoupon = () => {
           {clientSideErrors.code && (
             <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
           )}
-          {errors.code && <p className="text-red-500 text-sm">{errors.code}</p>}
+          {errors.code[0] && (
+            <p className="text-red-500 text-sm">
+              {t("coupon.errors.code_exists")}
+            </p>
+          )}
         </div>
 
         {/* Type */}
@@ -167,11 +187,14 @@ const UpdateCoupon = () => {
             ]}
             value={couponData.type}
             onChange={(value) => handleSelectChange(value, "type")}
+            placeholder={t("coupon.placeholders.select_type")}
           />
           {clientSideErrors.type && (
             <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
           )}
-          {errors.type && <p className="text-red-500 text-sm">{errors.code}</p>}
+          {errors.type[0] && (
+            <p className="text-red-500 text-sm">{errors.type[0]}</p>
+          )}
         </div>
 
         {/* Value */}
@@ -186,8 +209,8 @@ const UpdateCoupon = () => {
           {clientSideErrors.value && (
             <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
           )}
-          {errors.value && (
-            <p className="text-red-500 text-sm">{errors.code}</p>
+          {errors.value[0] && (
+            <p className="text-red-500 text-sm">{errors.value[0]}</p>
           )}
         </div>
 
@@ -198,15 +221,15 @@ const UpdateCoupon = () => {
             name="max_discount"
             value={couponData.max_discount}
             onChange={handleChange}
-            placeholder={t("coupon.placeholders.maxDiscount")}
+            placeholder={t("coupon.placeholders.max_discount")}
           />
           {clientSideErrors.max_discount && (
             <p className="text-red-500 text-sm">
               {clientSideErrors.max_discount}
             </p>
           )}
-          {errors.max_discount && (
-            <p className="text-red-500 text-sm">{errors.max_discount}</p>
+          {errors.max_discount[0] && (
+            <p className="text-red-500 text-sm">{errors.max_discount[0]}</p>
           )}
         </div>
 
@@ -217,13 +240,13 @@ const UpdateCoupon = () => {
             name="min_order_amount"
             value={couponData.min_order_amount}
             onChange={handleChange}
-            placeholder={t("coupon.placeholders.minOrderAmount")}
+            placeholder={t("coupon.placeholders.min_order_amount")}
           />
           {clientSideErrors.min_order_amount && (
             <p className="text-red-500 text-sm">{clientSideErrors.code}</p>
           )}
-          {errors.min_order_amount && (
-            <p className="text-red-500 text-sm">{errors.code}</p>
+          {errors.min_order_amount[0] && (
+            <p className="text-red-500 text-sm">{errors.min_order_amount[0]}</p>
           )}
         </div>
 
@@ -234,15 +257,15 @@ const UpdateCoupon = () => {
             name="usage_limit"
             value={couponData.usage_limit}
             onChange={handleChange}
-            placeholder={t("coupon.placeholders.usageLimit")}
+            placeholder={t("coupon.placeholders.usage_limit")}
           />
           {clientSideErrors.usage_limit && (
             <p className="text-red-500 text-sm">
               {clientSideErrors.usage_limit}
             </p>
           )}
-          {errors.usage_limit && (
-            <p className="text-red-500 text-sm">{errors.usage_limit}</p>
+          {errors.usage_limit[0] && (
+            <p className="text-red-500 text-sm">{errors.usage_limit[0]}</p>
           )}
         </div>
 
@@ -256,12 +279,13 @@ const UpdateCoupon = () => {
             ]}
             value={couponData.active}
             onChange={(value) => handleSelectChange(value, "active")}
+            placeholder={t("coupon.placeholders.select_status")}
           />
           {clientSideErrors.active && (
             <p className="text-red-500 text-sm">{clientSideErrors.active}</p>
           )}
-          {errors.active && (
-            <p className="text-red-500 text-sm">{errors.active}</p>
+          {errors.active[0] && (
+            <p className="text-red-500 text-sm">{errors.active[0]}</p>
           )}
         </div>
 
@@ -277,8 +301,8 @@ const UpdateCoupon = () => {
           {clientSideErrors.start_at && (
             <p className="text-red-500 text-sm">{clientSideErrors.start_at}</p>
           )}
-          {errors.start_at && (
-            <p className="text-red-500 text-sm">{errors.start_at}</p>
+          {errors.start_at[0] && (
+            <p className="text-red-500 text-sm">{errors.start_at[0]}</p>
           )}
         </div>
 
@@ -296,8 +320,8 @@ const UpdateCoupon = () => {
               {clientSideErrors.expires_at}
             </p>
           )}
-          {errors.expires_at && (
-            <p className="text-red-500 text-sm">{errors.expires_at}</p>
+          {errors.expires_at[0] && (
+            <p className="text-red-500 text-sm">{errors.expires_at[0]}</p>
           )}
         </div>
 
@@ -307,7 +331,9 @@ const UpdateCoupon = () => {
             type="submit"
             className="w-full md:w-auto text-white bg-blue-700 hover:bg-blue-800 px-5 py-2 rounded-lg"
           >
-            {t("coupon.saveChanges")}
+            {loading
+              ? t("coupon.button.submitting")
+              : t("coupon.button.submit")}
           </button>
         </div>
       </form>

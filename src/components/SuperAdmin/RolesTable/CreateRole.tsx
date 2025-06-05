@@ -1,4 +1,4 @@
-import {useState } from "react";
+import { useState } from "react";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Checkbox from "../../form/input/Checkbox";
@@ -8,8 +8,11 @@ import { useTranslation } from "react-i18next";
 import {
   useCreateRole,
   useGetAllPermissions,
-} from "../../../hooks/useSuperAdminRoles";
-
+} from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
+type Permission = {
+  id: number;
+  name: string;
+};
 export default function CreateRole() {
   const [roleData, setRoleData] = useState({
     name: "",
@@ -21,11 +24,13 @@ export default function CreateRole() {
   const [errors, setErrors] = useState({
     name: [] as string[],
     permissions: [] as string[],
+    global: "" as string,
+    general: "" as string,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation(["CreateRole"]);
-  const { data, isLoading, error, isError } = useGetAllPermissions();
+  const { data, isLoading } = useGetAllPermissions();
 
   const permissions = data?.data.data;
 
@@ -97,9 +102,9 @@ export default function CreateRole() {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ general: [t("role.errors.general")] });
+        setErrors((prev) => ({ ...prev, global: t("role.errors.general") }));
       }
     } finally {
       setIsSubmitting(false);
@@ -130,8 +135,10 @@ export default function CreateRole() {
                 {clientSideErrors.name}
               </p>
             )}
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
+            {errors.name[0] && (
+              <p className="text-red-500 text-sm mt-1">
+                {t("role.errors.name_unique")}
+              </p>
             )}
           </div>
 
@@ -143,7 +150,7 @@ export default function CreateRole() {
                 {t("role.permission")}
               </h2>
               <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
-                {permissions.map((permission) => (
+                {permissions.map((permission: Permission) => (
                   <Checkbox
                     key={permission?.id}
                     label={permission?.name}

@@ -10,6 +10,7 @@ import { Circles } from "react-loader-spinner";
 import { useQuery } from "@tanstack/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
+import { useNavigate } from "react-router";
 
 const UserProfile = () => {
   const { t } = useTranslation(["EndUserProfile"]);
@@ -24,6 +25,14 @@ const UserProfile = () => {
     avatar: null as File | null,
   });
   const [existingImage, setExistingImage] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("uToken");
+    if (!token) {
+      navigate("/signin", { replace: true });
+    }
+  }, []);
   // const [userProfileData, setUserProfileData] = useState({
   //   id: "",
   //   first_name: "",

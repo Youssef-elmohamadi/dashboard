@@ -7,5 +7,5 @@ export type Product = {
   images: ProductImage[];
   price: number;
   rating: number;
-  is_fav: string;
+  is_fav: boolean;
 };

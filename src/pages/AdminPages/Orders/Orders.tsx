@@ -12,7 +12,8 @@ import {
   useAllOrdersPaginate,
   useCancelOrder,
   useShipOrder,
-} from "../../../hooks/useOrders";
+} from "../../../hooks/Api/Admin/useOrders/useOrders";
+import { AxiosError } from "axios";
 type User = {
   id: number;
   first_name: string;
@@ -44,6 +45,7 @@ const Orders = () => {
   });
 
   const [unauthorized, setUnauthorized] = useState(false);
+  const [globalError, setGlobalError] = useState(false);
   const { t } = useTranslation(["OrdersTable"]);
   const { data, isLoading, isError, refetch, error } = useAllOrdersPaginate(
     pageIndex,
@@ -51,10 +53,12 @@ const Orders = () => {
   );
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
-    if (isError && error?.response?.status) {
-      const status = error.response.status;
+    if (isError && error instanceof AxiosError) {
+      const status = error?.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
+      } else if (status === 500) {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
@@ -70,7 +74,7 @@ const Orders = () => {
   };
   const { mutateAsync: cancelOrder } = useCancelOrder();
   const handleCancel = async (id: number) => {
-    const confirmed = await alertDelete(id, cancelOrder, refetch, {
+    await alertDelete(id, cancelOrder, refetch, {
       confirmTitle: t("ordersPage.cancel.confirmTitle"),
       confirmText: t("ordersPage.cancel.confirmText"),
       confirmButtonText: t("ordersPage.cancel.confirmButtonText"),
@@ -79,6 +83,7 @@ const Orders = () => {
       successText: t("ordersPage.cancel.successText"),
       errorTitle: t("ordersPage.cancel.errorTitle"),
       errorText: t("ordersPage.cancel.errorText"),
+      lastButton: t("ordersPage.cancel.lastButton"),
     });
   };
   const { mutateAsync: shipment } = useShipOrder();
@@ -98,7 +103,7 @@ const Orders = () => {
   return (
     <>
       <PageMeta
-        title="Tashtiba | Manege Orders"
+        title={t("ordersPage.mainTitle")}
         description="Show and Manage Your orders"
       />
       <PageBreadcrumb pageTitle={t("ordersPage.title")} userType="admin" />
@@ -112,11 +117,17 @@ const Orders = () => {
               label: "Status",
               type: "select",
               options: [
-                { label: "Pending", value: "pending" },
-                { label: "Paid", value: "paid" },
-                { label: "Shipped", value: "shipped" },
-                { label: "Delivered", value: "delivered" },
-                { label: "Cancelled", value: "cancelled" },
+                { label: t("ordersPage.statuses.pending"), value: "pending" },
+                { label: t("ordersPage.statuses.paid"), value: "paid" },
+                { label: t("ordersPage.statuses.shipped"), value: "shipped" },
+                {
+                  label: t("ordersPage.statuses.delivered"),
+                  value: "delivered",
+                },
+                {
+                  label: t("ordersPage.statuses.canceled"),
+                  value: "cancelled",
+                },
               ],
             },
             {
@@ -124,9 +135,12 @@ const Orders = () => {
               label: "Shipping Status",
               type: "select",
               options: [
-                { label: "Pending", value: "pending" },
-                { label: "Shipped", value: "shipped" },
-                { label: "Delivered", value: "delivered" },
+                { label: t("ordersPage.statuses.pending"), value: "pending" },
+                { label: t("ordersPage.statuses.shipped"), value: "shipped" },
+                {
+                  label: t("ordersPage.statuses.delivered"),
+                  value: "delivered",
+                },
               ],
             },
             { key: "from_date", label: "From", type: "date" },
@@ -144,14 +158,13 @@ const Orders = () => {
             totalItems={totalOrders}
             isLoading={isLoading}
             onCancel={handleCancel}
-            onShip={handleShip}
             isShowMore={true}
             isCancel={true}
-            isShipped={true}
             pageIndex={pageIndex}
             pageSize={pageSize}
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
+            globalError={globalError}
             loadingText={t("ordersPage.table.loadingText")}
           />
         </ComponentCard>

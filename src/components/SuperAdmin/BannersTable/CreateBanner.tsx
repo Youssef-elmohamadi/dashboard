@@ -5,8 +5,8 @@ import Select from "../../form/Select";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Button from "../../ui/button/Button";
-import { useAllCategories } from "../../../hooks/useCategories";
-import { useCreateBanner } from "../../../hooks/useSuperAdminBanners";
+import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
+import { useCreateBanner } from "../../../hooks/Api/SuperAdmin/useBanners/useSuperAdminBanners";
 
 interface Category {
   id: string;
@@ -23,25 +23,14 @@ const CreateBanner = () => {
     position: "",
     is_active: "1",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string[] | string>>({});
   const [clientSideErrors, setClientSideErrors] = useState<
     Record<string, string>
   >({});
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
-  //const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   const fetchCategories = async () => {
-  //     try {
-  //       const response = await getAllCategories();
-  //       if (response.data) setCategories(response.data.data.original);
-  //     } catch (error) {
-  //       console.error("Error fetching categories:", error);
-  //     }
-  //   };
-  //   fetchCategories();
-  // }, []);
 
   const { data: allCategories } = useAllCategories();
   const categories = allCategories?.data.data.original;
@@ -67,7 +56,7 @@ const CreateBanner = () => {
     setClientSideErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-const { mutateAsync: createBanner } = useCreateBanner();
+  const { mutateAsync: createBanner } = useCreateBanner();
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -85,7 +74,12 @@ const { mutateAsync: createBanner } = useCreateBanner();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
+    setErrors({});
+    setIsSubmitting(true);
+    if (!validate()) {
+      setIsSubmitting(false);
+      return;
+    }
 
     const formData = new FormData();
     formData.append("title", bannerData.title);
@@ -127,6 +121,8 @@ const { mutateAsync: createBanner } = useCreateBanner();
       } else {
         setErrors({ general: t("banner.errors.general") });
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -213,7 +209,7 @@ const { mutateAsync: createBanner } = useCreateBanner();
             <div>
               <Label htmlFor="link_id">{t("banner.category")}</Label>
               <Select
-                options={categories?.map((cat) => ({
+                options={categories?.map((cat: Category) => ({
                   value: cat.id.toString(),
                   label: cat.name,
                 }))}
@@ -242,7 +238,7 @@ const { mutateAsync: createBanner } = useCreateBanner();
               onChange={(value) =>
                 setBannerData((prev) => ({ ...prev, position: value }))
               }
-              options={categories?.map((cat) => ({
+              options={categories?.map((cat: Category) => ({
                 value: cat.id,
                 label: `Before ${cat.name}`,
               }))}
@@ -310,8 +306,14 @@ const { mutateAsync: createBanner } = useCreateBanner();
           <p className="text-red-500 text-sm">{errors.general}</p>
         )}
 
-        <Button type="submit" className="lg:w-1/4 ">
-          {t("banner.submit")}
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ${
+            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          {isSubmitting ? t("banner.submitting") : t("banner.submit")}
         </Button>
       </form>
     </div>
