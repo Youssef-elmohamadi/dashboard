@@ -37,6 +37,8 @@ const Roles = () => {
         setUnauthorized(true);
       } else if (status === 500) {
         setGlobalError(true);
+      } else {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
@@ -79,7 +81,7 @@ const Roles = () => {
 
   const { mutateAsync: deleteRoleMutate } = useDeleteRole();
   const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(id, deleteRoleMutate, refetch, {
+    await alertDelete(id, deleteRoleMutate, refetch, {
       confirmTitle: t("rolesPage.delete.confirmTitle"),
       confirmText: t("rolesPage.delete.confirmText"),
       confirmButtonText: t("rolesPage.delete.confirmButtonText"),
@@ -110,7 +112,7 @@ const Roles = () => {
         />
       )}
       <PageMeta
-        title="Tashtiba | Manage Roles"
+        title={t("rolesPage.mainTitle")}
         description="This is the roles listing page."
       />
       <PageBreadcrumb pageTitle={t("rolesPage.title")} userType="admin" />

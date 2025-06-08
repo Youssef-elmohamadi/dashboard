@@ -35,9 +35,7 @@ const AppHeader = () => {
 
   const toggleNotification = (event: React.MouseEvent) => {
     event.stopPropagation();
-    console.log("Toggling notification");
     setOpenNotification((prev) => {
-      console.log("New notification state:", !prev);
       return !prev;
     });
   };

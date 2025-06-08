@@ -72,7 +72,6 @@ const OrderDetails: React.FC = () => {
   const { id } = useParams();
   const { data, isError, isLoading } = useGetOrderById(id);
   const order: MainOrder = data?.data.data;
-  console.log(order);
 
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString("en-US", {

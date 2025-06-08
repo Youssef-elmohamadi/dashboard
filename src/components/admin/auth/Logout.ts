@@ -8,6 +8,6 @@ export const handleLogout = () => {
     logout();
     window.location.href = "/admin/signin";
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };

@@ -11,6 +11,7 @@ import Select from "../../form/Select";
 import { useCreateProduct } from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { useAllBrands } from "../../../hooks/Api/Admin/useBrands/useBrands";
+import PageMeta from "../../common/PageMeta";
 type Attribute = { label: string; value: string };
 type Category = { id: string; name: string };
 type Brand = { id: string; name: string };
@@ -56,7 +57,7 @@ export default function CreateProducts() {
     stock_quantity: "",
     category_id: "",
     brand_id: "",
-    status: "active",
+    status: "inactive",
     is_featured: false,
   });
 
@@ -197,7 +198,7 @@ export default function CreateProducts() {
 
         setErrors((prev) => ({ ...prev, formattedErrors }));
       } else {
-        setErrors({ ...errors, general: t("admin.errors.general") });
+        setErrors({ ...errors, general: t("errors.general") });
       }
     } finally {
       setLoading(false);
@@ -206,6 +207,7 @@ export default function CreateProducts() {
 
   return (
     <div className="">
+      <PageMeta title={t("main_title")} description="Update Role" />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("title")}
@@ -332,7 +334,7 @@ export default function CreateProducts() {
               <p className="text-red-500 text-sm mt-1">{errors.brand_id[0]}</p>
             )}
           </div>
-          <div>
+          {/* <div>
             <Label htmlFor="status">{t("form.status")}</Label>
             <Select
               options={[
@@ -346,7 +348,7 @@ export default function CreateProducts() {
             {errors.status && (
               <p className="text-red-500 text-sm mt-1">{errors.status[0]}</p>
             )}
-          </div>
+          </div> */}
           <div className="flex gap-2 items-center">
             <Label htmlFor="is_featured">{t("form.is_featured")}</Label>
             <Checkbox

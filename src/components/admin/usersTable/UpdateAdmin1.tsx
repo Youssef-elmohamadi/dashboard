@@ -12,6 +12,8 @@ import {
   useUpdateAdmin,
 } from "../../../hooks/Api/Admin/useVendorAdmins/useVendorAdmins";
 import { useRoles } from "../../../hooks/Api/Admin/useRoles/useRoles";
+import PageMeta from "../../common/PageMeta";
+
 type Admin = {
   first_name: string;
   last_name: string;
@@ -42,6 +44,9 @@ type Role = {
 const UpdateAdmin = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [fetchingRoleError, setFetchingRoleError] = useState("");
+  const { t } = useTranslation(["UpdateAdmin"]);
+  const { dir } = useDirectionAndLanguage();
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -54,6 +59,7 @@ const UpdateAdmin = () => {
     password: "",
     role: "",
   });
+
   const [errors, setErrors] = useState({
     first_name: [] as string[],
     last_name: [] as string[],
@@ -74,6 +80,65 @@ const UpdateAdmin = () => {
     role: "",
   });
 
+  // Fetch admin by id
+  const {
+    data,
+    isError: isErrorFetchAdmin,
+    error: errorFetchAdmin,
+    isLoading,
+  } = useGetAdminById(id);
+
+  // Set initial form values when admin data loads
+  useEffect(() => {
+    const admin: Admin | undefined = data?.data?.data;
+    if (!admin) return;
+
+    setUpdateData({
+      first_name: admin.first_name || "",
+      last_name: admin.last_name || "",
+      phone: admin.phone || "",
+      email: admin.email || "",
+      password: "",
+      role: admin.roles?.[0]?.name || "",
+    });
+  }, [data]);
+
+  // Handle errors on fetching admin
+  useEffect(() => {
+    if (isErrorFetchAdmin) {
+      const status = errorFetchAdmin?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrors((prev) => ({
+          ...prev,
+          global: t("admin.errors.global"),
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          general: t("admin.errors.fetching_admin"),
+        }));
+      }
+    }
+  }, [isErrorFetchAdmin, errorFetchAdmin, t]);
+
+  // Fetch roles for select options
+  const {
+    data: rolesData,
+    isError: isRoleError,
+    error: roleError,
+  } = useRoles();
+  const options = rolesData?.data.data;
+  useEffect(() => {
+    if (isRoleError) {
+      const status = roleError?.response?.status;
+      if (status === 401 || status === 403) {
+        setFetchingRoleError(t("admin.errors.global"));
+      } else {
+        setFetchingRoleError(t("admin.errors.fetching_roles"));
+      }
+    }
+  }, [isRoleError, roleError, t]);
+  // Client-side validation
   const validate = () => {
     const newErrors = {
       first_name: "",
@@ -83,74 +148,34 @@ const UpdateAdmin = () => {
       password: "",
       role: "",
     };
-    if (!updateData.first_name) {
+
+    if (!updateData.first_name)
       newErrors.first_name = t("admin.errors.first_name");
-    } else if (!updateData.last_name) {
+    if (!updateData.last_name)
       newErrors.last_name = t("admin.errors.last_name");
-    } else if (!updateData.email) {
-      newErrors.email = t("admin.errors.email_required");
-    } else if (
+    if (!updateData.email) newErrors.email = t("admin.errors.email_required");
+    else if (
       !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
         updateData.email
       )
-    ) {
+    )
       newErrors.email = t("admin.errors.email_invalid");
-    } else if (!updateData.phone) {
-      newErrors.phone = t("admin.errors.phone_required");
-    } else if (!/^01[0125][0-9]{8}$/.test(updateData.phone)) {
+
+    if (!updateData.phone) newErrors.phone = t("admin.errors.phone_required");
+    else if (!/^01[0125][0-9]{8}$/.test(updateData.phone))
       newErrors.phone = t("admin.errors.phone_invalid");
-    } else if (!updateData.role) {
-      newErrors.role = t("admin.errors.role");
-    } else if (updateData.password && updateData.password.length < 8) {
+
+    if (!updateData.role) newErrors.role = t("admin.errors.role");
+
+    if (updateData.password && updateData.password.length < 8)
       newErrors.password = t("admin.errors.length_password");
-    }
+
     setClientSideErrors(newErrors);
+
     return Object.values(newErrors).every((error) => error === "");
   };
-  const { t } = useTranslation(["UpdateAdmin"]);
-  const { dir } = useDirectionAndLanguage();
 
-  const {
-    data,
-    isError: isErrorFetchAdmin,
-    error: errorFetchAdmin,
-  } = useGetAdminById(id);
-
-  const admin: Admin = data?.data?.data;
-  useEffect(() => {
-    if (!admin) return;
-
-    setUpdateData({
-      first_name: admin?.first_name || "",
-      last_name: admin?.last_name || "",
-      phone: admin?.phone || "",
-      email: admin?.email || "",
-      password: "",
-      role: admin?.roles?.[0]?.name || "",
-    });
-  }, [admin]);
-
-  if (isErrorFetchAdmin) {
-    const status = errorFetchAdmin?.response?.status;
-    if (status === 403 || status === 401) {
-      setErrors({
-        ...errors,
-        global: t("admin.errors.global"),
-      });
-    } else if (status === 500) {
-      setErrors({
-        ...errors,
-        general: t("admin.errors.general"),
-      });
-    }
-  }
-  // Fetch roles
-  const {
-    data: roles,
-  } = useRoles();
-  const options = roles?.data.data;
-
-  // Handle input change
+  // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUpdateData((prev) => ({
@@ -159,7 +184,7 @@ const UpdateAdmin = () => {
     }));
   };
 
-  // Handle role selection
+  // Handle role select changes
   const handleSelectChange = (value: string) => {
     setUpdateData((prev) => ({
       ...prev,
@@ -167,12 +192,12 @@ const UpdateAdmin = () => {
     }));
   };
 
+  // Update admin mutation
   const { mutateAsync } = useUpdateAdmin(id);
 
-  // Handle form submit
+  // Form submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setErrors({
       first_name: [],
       last_name: [],
@@ -183,18 +208,15 @@ const UpdateAdmin = () => {
       global: "",
       general: "",
     });
+
     if (!validate()) return;
+
     setLoading(true);
 
     try {
       if (id) {
-        const dataToSend = {
-          ...updateData,
-        };
-
-        if (!dataToSend.password) {
-          delete dataToSend.password;
-        }
+        const dataToSend = { ...updateData };
+        if (!dataToSend.password) delete dataToSend.password;
 
         await mutateAsync({ id: +id, adminData: dataToSend });
         navigate("/admin/admins", {
@@ -203,33 +225,45 @@ const UpdateAdmin = () => {
       }
     } catch (error: any) {
       const status = error?.response?.status;
-      if (status === 403 || status === 401) {
-        setErrors({
-          ...errors,
+      if (status === 401 || status === 403) {
+        setErrors((prev) => ({
+          ...prev,
           global: t("admin.errors.global"),
-        });
+        }));
         return;
       }
       const rawErrors = error?.response?.data?.errors;
       if (Array.isArray(rawErrors)) {
         const formattedErrors: Record<string, string[]> = {};
-        rawErrors.forEach((error: { code: string; message: string }) => {
-          if (!formattedErrors[error.code]) {
-            formattedErrors[error.code] = [];
+        rawErrors.forEach(
+          ({ code, message }: { code: string; message: string }) => {
+            if (!formattedErrors[code]) formattedErrors[code] = [];
+            formattedErrors[code].push(message);
           }
-          formattedErrors[error.code].push(error.message);
-        });
+        );
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ ...errors, general: t("admin.errors.general") });
+        setErrors((prev) => ({
+          ...prev,
+          general: t("admin.errors.general"),
+        }));
       }
     } finally {
       setLoading(false);
     }
   };
 
+  if (isLoading)
+    return (
+      <>
+        <PageMeta title={t("admin.main_title")} description="Update Admin" />
+        <p className="text-center mt-5">{t("admin.loading") || "Loading..."}</p>
+      </>
+    );
+
   return (
     <div>
+      <PageMeta title={t("admin.main_title")} description="Update Admin" />
       <div className="p-4 border-b border-gray-200 dark:border-gray-600">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("admin.update_title")}
@@ -243,6 +277,9 @@ const UpdateAdmin = () => {
         {errors.global && (
           <p className="text-error-500 text-sm mt-1">{errors.global}</p>
         )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
           {/* First Name */}
           <div className="col-span-1">
@@ -251,19 +288,13 @@ const UpdateAdmin = () => {
               type="text"
               name="first_name"
               id="first_name"
-              value={updateData?.first_name}
+              value={updateData.first_name}
               placeholder={t("admin.placeholder.first_name")}
               onChange={handleChange}
             />
-
-            {errors.first_name?.[0] && (
+            {(errors.first_name[0] || clientSideErrors.first_name) && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.first_name[0]}
-              </p>
-            )}
-            {clientSideErrors.first_name && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.first_name}
+                {errors.first_name[0] || clientSideErrors.first_name}
               </p>
             )}
           </div>
@@ -275,16 +306,13 @@ const UpdateAdmin = () => {
               type="text"
               name="last_name"
               id="last_name"
-              value={updateData?.last_name}
+              value={updateData.last_name}
               placeholder={t("admin.placeholder.last_name")}
               onChange={handleChange}
             />
-            {errors.last_name?.[0] && (
-              <p className="text-red-500 text-sm mt-1">{errors.last_name[0]}</p>
-            )}
-            {clientSideErrors.last_name && (
+            {(errors.last_name[0] || clientSideErrors.last_name) && (
               <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.last_name}
+                {errors.last_name[0] || clientSideErrors.last_name}
               </p>
             )}
           </div>
@@ -302,13 +330,16 @@ const UpdateAdmin = () => {
             value={updateData.role}
             placeholder={t("admin.placeholder.select_role")}
           />
-          {errors.role?.[0] && (
-            <p className="text-red-500 text-sm mt-1">{errors.role[0]}</p>
+          {(errors.role[0] || clientSideErrors.role) && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.role[0] || clientSideErrors.role}
+            </p>
           )}
-          {clientSideErrors.role && (
-            <p className="text-red-500 text-sm mt-1">{clientSideErrors.role}</p>
+          {fetchingRoleError && (
+            <p className="text-red-500 text-sm mt-1">{fetchingRoleError}</p>
           )}
         </div>
+
         {/* Email */}
         <div className="col-span-1 w-full">
           <Label htmlFor="email">{t("admin.email")}</Label>
@@ -316,11 +347,11 @@ const UpdateAdmin = () => {
             type="email"
             name="email"
             id="email"
-            value={updateData?.email}
+            value={updateData.email}
             placeholder={t("admin.placeholder.email")}
             onChange={handleChange}
           />
-          {errors.email?.[0] && (
+          {errors.email[0] && (
             <p className="text-red-500 text-sm mt-1">
               {t("admin.errors.email_taken")}
             </p>
@@ -339,11 +370,11 @@ const UpdateAdmin = () => {
             type="text"
             name="phone"
             id="phone"
-            value={updateData?.phone}
+            value={updateData.phone}
             placeholder={t("admin.placeholder.phone")}
             onChange={handleChange}
           />
-          {errors.phone?.[0] && (
+          {errors.phone[0] && (
             <p className="text-red-500 text-sm mt-1">
               {t("admin.errors.phone_taken")}
             </p>
@@ -354,6 +385,7 @@ const UpdateAdmin = () => {
             </p>
           )}
         </div>
+
         {/* Password */}
         <div className="col-span-1 w-full">
           <Label htmlFor="password">{t("admin.password")}</Label>
@@ -362,7 +394,7 @@ const UpdateAdmin = () => {
               type={showPassword ? "text" : "password"}
               name="password"
               id="password"
-              value={updateData?.password}
+              value={updateData.password}
               placeholder={t("admin.placeholder.password")}
               onChange={handleChange}
             />
@@ -372,6 +404,7 @@ const UpdateAdmin = () => {
               className={`absolute z-30 -translate-y-1/2 cursor-pointer ${
                 dir === "rtl" ? "left-4" : "right-4"
               } top-1/2`}
+              aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? (
                 <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
@@ -380,21 +413,13 @@ const UpdateAdmin = () => {
               )}
             </button>
           </div>
-          {errors.password?.[0] && (
-            <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>
-          )}
-          {clientSideErrors.password && (
+          {(errors.password[0] || clientSideErrors.password) && (
             <p className="text-red-500 text-sm mt-1">
-              {clientSideErrors.password}
+              {errors.password[0] || clientSideErrors.password}
             </p>
           )}
         </div>
-        {errors.global && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
-        )}
+
         {/* Submit Button */}
         <button
           type="submit"

@@ -37,7 +37,7 @@ const BrandDetails: React.FC = () => {
   // console.log(brand);
 
   const { data, isLoading, error, isError } = useGetBrandById(id);
-  console.log(data);
+
 
   const brand = data?.data.data;
 

@@ -19,7 +19,6 @@ interface UserProviderProps {
 export const AdminProvider = ({ children }: UserProviderProps) => {
   useEffect(() => {
     const storedAdminId = localStorage.getItem("aId");
-    console.log(storedAdminId);
 
     if (storedAdminId) {
       const fetchData = async (id: number) => {
@@ -28,11 +27,10 @@ export const AdminProvider = ({ children }: UserProviderProps) => {
           const role = res.data.data.roles[0].name;
           localStorage.setItem("aRole", role);
         } catch (error: any) {
-          console.log("Failed to get data", error);
+          console.error("Failed to get data", error);
           if (error.response && error.response.status === 401) {
             handleLogout();
           }
-          console.log(error);
         }
       };
       fetchData(Number(storedAdminId));
@@ -42,13 +40,8 @@ export const AdminProvider = ({ children }: UserProviderProps) => {
 
   useEffect(() => {
     const storedAdminId = localStorage.getItem("aId");
-
-    console.log("Stored userId from localStorage:", storedAdminId); // Debugging
-
     if (storedAdminId) {
       setUserId(Number(storedAdminId));
-    } else {
-      console.log("No userId found in localStorage.");
     }
   }, []);
 

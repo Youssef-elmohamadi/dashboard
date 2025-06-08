@@ -52,7 +52,6 @@ export default function CategoriesLayout() {
   };
 
   const { data, isLoading } = useAllCategories();
-  console.log(data?.data?.data);
   const categories = data?.data?.data.original;
 
   useEffect(() => {

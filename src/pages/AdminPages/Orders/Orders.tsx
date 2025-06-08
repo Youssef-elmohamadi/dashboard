@@ -6,12 +6,10 @@ import { useEffect, useState } from "react";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns"; // مكان الملف
 import SearchTable from "../../../components/admin/Tables/SearchTable";
-import { openShipmentModal } from "../../../components/admin/ordersTable/ShipmentModal";
 import { useTranslation } from "react-i18next";
 import {
   useAllOrdersPaginate,
   useCancelOrder,
-  useShipOrder,
 } from "../../../hooks/Api/Admin/useOrders/useOrders";
 import { AxiosError } from "axios";
 type User = {
@@ -59,6 +57,8 @@ const Orders = () => {
         setUnauthorized(true);
       } else if (status === 500) {
         setGlobalError(true);
+      } else {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
@@ -85,10 +85,6 @@ const Orders = () => {
       errorText: t("ordersPage.cancel.errorText"),
       lastButton: t("ordersPage.cancel.lastButton"),
     });
-  };
-  const { mutateAsync: shipment } = useShipOrder();
-  const handleShip = async (id: number) => {
-    await openShipmentModal(id, shipment);
   };
 
   const columns = buildColumns<User>({

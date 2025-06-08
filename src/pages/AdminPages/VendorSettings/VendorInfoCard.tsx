@@ -143,7 +143,7 @@ const VendorEditPage: React.FC = () => {
       toast.success(t("vendor.successUpdate"));
       setValidationErrors({});
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
       toast.error(t("vendor.errorUpdate"));
       const rawErrors = error?.response?.data?.errors;

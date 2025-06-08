@@ -14,6 +14,7 @@ import {
   useGetProductById,
   useUpdateProduct,
 } from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
+import PageMeta from "../../common/PageMeta";
 type Category = {
   id: number;
   name: string;
@@ -77,6 +78,7 @@ const UpdateProductPage: React.FC = () => {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [globalError, setGlobalError] = useState(false);
   const [errors, setErrors] = useState({
     name: [] as string[],
     description: [] as string[],
@@ -110,8 +112,7 @@ const UpdateProductPage: React.FC = () => {
   const { data: allBrands } = useAllBrands();
   const brands = allBrands?.data.data;
 
-  const { data, isError, error } = useGetProductById(id);
-
+  const { data, isLoading, isError, error } = useGetProductById(id);
   const product = data?.data?.data;
   useEffect(() => {
     if (!product) return;
@@ -290,10 +291,63 @@ const UpdateProductPage: React.FC = () => {
     }
   };
 
-  if (!productData) return <div className="p-6">{t("loading")}</div>;
+  useEffect(() => {
+    if (isError) {
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) {
+        setGlobalError(true);
+      } else {
+        setGlobalError(true);
+      }
+    }
+  }, [isError, error, t]);
+
+  if (!id) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Update Product" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("no_data")}
+        </div>
+      </>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Update Product" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("loading")}
+        </div>
+      </>
+    );
+  }
+
+  if (!product && !globalError) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Update Product" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("not_found")}
+        </div>
+      </>
+    );
+  }
+  if (globalError) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Update Product" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("errors.general")}
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="">
+      <PageMeta title={t("main_title")} description="Update Product" />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("title")}

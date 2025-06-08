@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetProductById } from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
+import PageMeta from "../../common/PageMeta";
 
 type Category = {
   id: number;
@@ -50,9 +51,19 @@ const ProductDetails: React.FC = () => {
   const { id }: any = useParams();
 
   const { data, isError, error, isLoading } = useGetProductById(id);
-
+  const [globalError, setGlobalError] = useState(false);
   const product: Product = data?.data?.data;
 
+  useEffect(() => {
+    if (isError) {
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) {
+        setGlobalError(true);
+      } else {
+        setGlobalError(true);
+      }
+    }
+  }, [isError, error, t]);
   const formatDate = (date: string) =>
     new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
@@ -62,30 +73,50 @@ const ProductDetails: React.FC = () => {
 
   if (!id) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-        {t("no_data")}
-      </div>
+      <>
+        <PageMeta title={t("main_title")} description="Update Product" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("no_data")}
+        </div>
+      </>
     );
   }
 
   if (isLoading) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-        {t("loading")}
-      </div>
+      <>
+        <PageMeta title={t("main_title")} description="Update Product" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("loading")}
+        </div>
+      </>
     );
   }
 
-  if (!product) {
+  if (!product && !globalError) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-        {t("not_found")}
-      </div>
+      <>
+        <PageMeta title={t("main_title")} description="Update Product" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("not_found")}
+        </div>
+      </>
+    );
+  }
+  if (globalError) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Update Product" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("global_error")}
+        </div>
+      </>
     );
   }
 
   return (
     <div className="product-details p-6 max-w-6xl mx-auto space-y-10">
+      <PageMeta title={t("main_title")} description="Update Product" />
       <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-4">
         {t("title")}
       </h1>

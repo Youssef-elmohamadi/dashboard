@@ -13,7 +13,7 @@ type numbersData = {
   totalItemsSold: number;
   averageOrderValue: number;
 };
-const ProductReports = () => {
+const OrdersReport = () => {
   const [numbersData, setNumbersData] = useState<numbersData>({
     orderCount: 0,
     deliveredOrdersCount: 0,
@@ -30,7 +30,6 @@ const ProductReports = () => {
     end_date: "",
   });
   const { data, isLoading, isError, error } = useOrderData(searchValues);
-
   const ordersReportsData = data;
   useEffect(() => {
     if (ordersReportsData) {
@@ -52,12 +51,12 @@ const ProductReports = () => {
       [key]: value,
     }));
   };
+  if (isLoading) {
+    return <p className="text-center mt-5">{t("loading")}</p>;
+  }
   return (
     <>
-      <PageMeta
-        title="Tashtiba | Orders Reports"
-        description="Show Your Orders Reports"
-      />
+      <PageMeta title={t("mainTitle")} description="Show Your Orders Reports" />
       <FilterRangeDate setSearchParam={handleFilter} />
       <div className="col-span-6 space-y-6 ">
         <EcommerceMetrics
@@ -100,4 +99,4 @@ const ProductReports = () => {
   );
 };
 
-export default ProductReports;
+export default OrdersReport;

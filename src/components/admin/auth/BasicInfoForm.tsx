@@ -30,7 +30,7 @@ function BasicInfoForm({
   const { t } = useTranslation(["auth"]);
 
   return (
-    <div className="space-y-5">
+    <div className="">
       <div className="mb-5 sm:mb-8">
         <h1 className="mb-2 font-semibold text-sm text-gray-800 dark:text-white/90 sm:text-title-md">
           {t("basicInformation.stepOneHeading")}
@@ -140,11 +140,6 @@ function BasicInfoForm({
             value={adminInfo.password}
             onChange={(e) => handleChange(e, "adminInfo")}
           />
-          {clientErrors.password && (
-            <p className="text-error-500 text-xs mt-1">
-              {clientErrors.password}
-            </p>
-          )}
           <span
             onClick={() => setShowPassword(!showPassword)}
             className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
@@ -157,6 +152,11 @@ function BasicInfoForm({
               <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
             )}
           </span>
+          {clientErrors.password && (
+            <p className="text-error-500 text-xs mt-1">
+              {clientErrors.password}
+            </p>
+          )}
         </div>
       </div>
 
@@ -173,11 +173,6 @@ function BasicInfoForm({
             name="confirm_password"
             onChange={(e) => handleChange(e, "adminInfo")}
           />
-          {clientErrors.confirm_password && (
-            <p className="text-error-500 text-xs mt-1">
-              {clientErrors.confirm_password}
-            </p>
-          )}
           <span
             onClick={() => setShowPassword(!showPassword)}
             className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
@@ -191,6 +186,11 @@ function BasicInfoForm({
             )}
           </span>
         </div>
+        {clientErrors.confirm_password && (
+          <p className="text-error-500 text-xs mt-1">
+            {clientErrors.confirm_password}
+          </p>
+        )}
       </div>
     </div>
   );

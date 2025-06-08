@@ -19,7 +19,6 @@ const ProductsFavorite = () => {
 
   const { data, isLoading, hasNextPage, fetchNextPage, isFetching } =
     useAllFavoriteProducts();
-  console.log(data);
 
   const products = data?.pages.flatMap((page) => page.data) || [];
   if (isLoading) {

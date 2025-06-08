@@ -13,10 +13,6 @@ export default function DefaultInputs() {
     { value: "template", label: "Template" },
     { value: "development", label: "Development" },
   ];
-  const handleSelectChange = (value: string) => {
-    console.log("Selected value:", value);
-  };
-
   return (
     <ComponentCard title="Default Inputs">
       <div className="space-y-6">

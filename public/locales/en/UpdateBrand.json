@@ -1,5 +1,6 @@
 {
   "update_title": "Update Brand",
+  "main_title": "Update Brand",
   "name_label": "Brand Name",
   "name_placeholder_edit": "Edit the Brand Name",
   "name_required": "Brand name is required.",
@@ -11,7 +12,7 @@
   "submit_button": "Save Changes",
   "loading_button": "Updating...",
   "submit_error": "An error occurred while updating the brand.",
-  "load_error": "Failed to load brand data.",
+  "loading": "Loading brand...",
   "errors": {
     "name": "Brand name is required.",
     "status": "Select brand status.",

@@ -6,6 +6,6 @@ export const handleDeleteAccount = () => {
     deleteAccount();
     window.location.href = "/";
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };

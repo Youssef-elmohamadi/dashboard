@@ -7,6 +7,6 @@ export const handleLogout = () => {
     logout();
     window.location.href = "/";
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };

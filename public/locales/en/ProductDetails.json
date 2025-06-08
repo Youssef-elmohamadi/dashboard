@@ -1,40 +1,40 @@
 {
-    "title": "Product Details",
-    "loading": "Loading product details...",
-    "not_found": "No product found.",
-    "no_data": "No product data available.",
-  
-    "sections": {
-      "basic_info": "Basic Information",
-      "pricing_stock": "Pricing & Stock",
-      "category_brand": "Category & Brand",
-      "vendor_info": "Vendor Information",
-      "attributes": "Attributes",
-      "tags": "Tags",
-      "images": "Images",
-      "timestamps": "Timestamps"
-    },
-  
-    "fields": {
-      "name": "Name",
-      "slug": "Slug",
-      "description": "Description",
-      "status": "Status",
-      "featured": "Featured",
-      "price": "Price",
-      "discount_price": "Discount Price",
-      "stock_quantity": "Stock Quantity",
-      "category": "Category",
-      "brand": "Brand",
-      "vendor_name": "Name",
-      "vendor_email": "Email",
-      "vendor_phone": "Phone",
-      "created_at": "Created At",
-      "updated_at": "Updated At"
-    },
-  
-    "yes": "Yes",
-    "no": "No",
-    "egp": "EGP"
-  }
-  
+  "title": "Product Details",
+  "main_title": "Product Details",
+  "loading": "Loading product details...",
+  "not_found": "No product found.",
+  "no_data": "No product data available.",
+  "global_error": "Something went wrong. Please try again later.",
+  "sections": {
+    "basic_info": "Basic Information",
+    "pricing_stock": "Pricing & Stock",
+    "category_brand": "Category & Brand",
+    "vendor_info": "Vendor Information",
+    "attributes": "Attributes",
+    "tags": "Tags",
+    "images": "Images",
+    "timestamps": "Timestamps"
+  },
+
+  "fields": {
+    "name": "Name",
+    "slug": "Slug",
+    "description": "Description",
+    "status": "Status",
+    "featured": "Featured",
+    "price": "Price",
+    "discount_price": "Discount Price",
+    "stock_quantity": "Stock Quantity",
+    "category": "Category",
+    "brand": "Brand",
+    "vendor_name": "Name",
+    "vendor_email": "Email",
+    "vendor_phone": "Phone",
+    "created_at": "Created At",
+    "updated_at": "Updated At"
+  },
+
+  "yes": "Yes",
+  "no": "No",
+  "egp": "EGP"
+}

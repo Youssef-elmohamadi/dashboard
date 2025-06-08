@@ -50,7 +50,7 @@ export const useDeleteCategory = () => {
   return useMutation({
     mutationFn: async (id: number | string) => {
       const res = await deleteCategory(id);
-      console.log("deleteCategory response", res); // 👈 تحقق من هذا
+      console.error("deleteCategory response", res); // 👈 تحقق من هذا
       return res;
     },
     onSuccess: (_, variables) => {

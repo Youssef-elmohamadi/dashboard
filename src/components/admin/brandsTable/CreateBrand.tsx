@@ -6,6 +6,7 @@ import Select from "../../form/Select";
 import { useNavigate } from "react-router-dom";
 import BrandImageUpload from "./BrandImageUpload";
 import { useCreateBrand } from "../../../hooks/Api/Admin/useBrands/useBrands";
+import PageMeta from "../../common/PageMeta";
 
 export default function CreateBrand() {
   const { t } = useTranslation(["CreateBrand"]);
@@ -120,6 +121,7 @@ export default function CreateBrand() {
 
   return (
     <div className="">
+      <PageMeta title={t("main_title")} description="Create Brand" />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("create_title")}

@@ -63,8 +63,6 @@ const VendorDetails: React.FC = () => {
     return document?.status || "";
   };
 
-  console.log(vendor?.documents[0]);
-
   const { mutateAsync: changeStatusTS } = useChangeDocumentStatus();
 
   const handleChangeStatus = async (id: number) => {

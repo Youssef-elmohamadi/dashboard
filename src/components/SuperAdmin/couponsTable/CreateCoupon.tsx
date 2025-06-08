@@ -137,7 +137,6 @@ export default function CreateCoupon() {
       setLoading(false);
     }
   };
-  console.log(errors);
 
   return (
     <div>

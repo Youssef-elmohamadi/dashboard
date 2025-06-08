@@ -1,5 +1,6 @@
 {
   "title": "Create Product",
+  "main_title": "Update Product",
   "form": {
     "name": "Name",
     "price": "Price",
@@ -44,5 +45,7 @@
     "global": "You are not authorized to perform this action."
   },
   "success_message": "Product Updated Successfully",
-  "loading": "Loading..."
+  "loading": "Loading Product...",
+  "not_found": "No product found.",
+  "no_data": "No product data available."
 }

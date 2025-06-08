@@ -13,7 +13,6 @@ const Sidebar = ({
   const { t } = useTranslation(["EndUserShop"]);
   const { category_id } = useParams();
   const { data, isLoading } = useAllCategories();
-  console.log(data?.data?.data);
   const categories = data?.data?.data.original;
   
   return (

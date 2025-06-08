@@ -1,6 +1,6 @@
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-import ChartTab from "../common/ChartTab";
+import { useTranslation } from "react-i18next";
 
 interface StatisticsChartProps {
   ordersData: {
@@ -8,28 +8,20 @@ interface StatisticsChartProps {
   };
 }
 
-export default function StatisticsChart({ ordersData }) {
-  const monthsMap = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+export default function StatisticsChart({ ordersData }: StatisticsChartProps) {
+  const { t } = useTranslation(["Home"]);
+
+  const monthsMap = t("monthlySalesChart.months", {
+    returnObjects: true,
+  }) as Record<string, string>;
 
   const monthlyData = ordersData?.orderPerMonth ?? {};
-  const sortedKeys = Object.keys(monthlyData).sort(); // ["2025-01", "2025-02", ...]
+  const sortedKeys = Object.keys(monthlyData).sort(); // e.g., ["2025-01", "2025-02", ...]
 
   const categories = sortedKeys.map((key) => {
     const [, month] = key.split("-");
-    return monthsMap[parseInt(month, 10) - 1];
+    const paddedMonth = month.padStart(2, "0");
+    return monthsMap[paddedMonth];
   });
 
   const orderValues = sortedKeys.map((key) => monthlyData[key]);
@@ -117,7 +109,7 @@ export default function StatisticsChart({ ordersData }) {
 
   const series = [
     {
-      name: "Orders",
+      name: t("monthlySalesChart.tooltipLabel"),
       data: orderValues,
     },
   ];
@@ -127,10 +119,10 @@ export default function StatisticsChart({ ordersData }) {
       <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
         <div className="w-full">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Statistics
+            {t("statistics.title")}
           </h3>
           <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-            Target you’ve set for each month
+            {t("statistics.subtitle")}
           </p>
         </div>
         <div className="flex items-start w-full gap-3 sm:justify-end">

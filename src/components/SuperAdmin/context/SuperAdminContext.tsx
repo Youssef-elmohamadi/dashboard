@@ -41,12 +41,8 @@ export const SuperAdminProvider = ({ children }: UserProviderProps) => {
   useEffect(() => {
     const storedSuperAdminId = localStorage.getItem("sId");
 
-    console.log("Stored userId from localStorage:", storedSuperAdminId);
-
     if (storedSuperAdminId) {
       setUserId(Number(storedSuperAdminId));
-    } else {
-      console.log("No userId found in localStorage.");
     }
   }, []);
 

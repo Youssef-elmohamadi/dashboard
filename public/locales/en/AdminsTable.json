@@ -20,7 +20,7 @@
       "lastButton": "OK"
     },
     "table": {
-      "loadingText": "Admins data Loading"
+      "loadingText": "Admins data Loading..."
     }
   }
 }

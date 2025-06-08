@@ -30,7 +30,7 @@ import OrderDetails from "../../components/admin/ordersTable/ShowMore";
 //import CreateCoupon from "../../components/admin/couponsTable/CreateCoupon";
 //import UpdateCoupon from "../../components/admin/couponsTable/UpdateCoupon";
 
-import CouponDetails from "../../components/admin/couponsTable/ShowMore";
+//import CouponDetails from "../../components/admin/couponsTable/ShowMore";
 import OrdersReports from "../../pages/AdminPages/Orders Report/OrdersReports";
 import ProductReports from "../../pages/AdminPages/Products Report/ProductReports";
 import AdminForgotPassword from "../../pages/AdminPages/AuthPages/AdminForgotPassword";

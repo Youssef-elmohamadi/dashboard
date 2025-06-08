@@ -1,7 +1,9 @@
 {
-    "ordersCount":"Orders Count",
-    "deliveredOrdersCount":"Delivered Orders Count",
-    "cancelledOrdersCount":"Cancelled Orders Count",
-    "totalItemsSold":"Total Items Sold",
-    "averageOrderValue":"Average Order Value"
+  "ordersCount": "Orders Count",
+  "mainTitle": "Tashtiba | Orders Report",
+  "deliveredOrdersCount": "Delivered Orders Count",
+  "cancelledOrdersCount": "Cancelled Orders Count",
+  "totalItemsSold": "Total Items Sold",
+  "averageOrderValue": "Average Order Value",
+  "loading": "Loading Report..."
 }

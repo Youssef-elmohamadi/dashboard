@@ -31,7 +31,6 @@ const Admins = () => {
     pageIndex,
     searchValues
   );
-  console.log(data);
   const pageSize = data?.per_page ?? 1;
 
   useEffect(() => {
@@ -41,9 +40,12 @@ const Admins = () => {
         setUnauthorized(true);
       } else if (status === 500) {
         setGlobalError(true);
+      } else {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
+
 
   const adminsData = data?.data ?? [];
   const totalAdmins = data?.total ?? 0;
@@ -87,7 +89,7 @@ const Admins = () => {
   const { mutateAsync: deleteAdminMutate } = useDeleteAdmin();
 
   const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(id, deleteAdminMutate, refetch, {
+    await alertDelete(id, deleteAdminMutate, refetch, {
       confirmTitle: t("adminsPage.delete.confirmTitle"),
       confirmText: t("adminsPage.delete.confirmText"),
       confirmButtonText: t("adminsPage.delete.confirmButtonText"),

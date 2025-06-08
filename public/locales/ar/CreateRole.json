@@ -1,6 +1,7 @@
 {
   "role": {
     "create_title": "اضافة دور",
+    "main_title": "انشاء دور جديد",
     "name": "الاسم",
     "permission": "الصلاحيات",
     "placeholder": {

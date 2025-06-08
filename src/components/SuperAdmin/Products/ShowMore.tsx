@@ -23,7 +23,6 @@ const ProductDetails: React.FC = () => {
   //   if (id) fetchProduct();
   // }, [id]);
   const { data, isLoading: loading, error, isError } = useGetProductById(id);
-  console.log(data);
 
   const product = data?.data.data;
   const formatDate = (date: string) =>

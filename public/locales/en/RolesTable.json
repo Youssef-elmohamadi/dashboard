@@ -1,6 +1,7 @@
 {
   "rolesPage": {
     "title": "Roles",
+    "mainTitle": "Tashtiba | Roles",
     "addNew": "Add New Role",
     "all": "All Roles",
     "createdSuccess": "Created Successfully",

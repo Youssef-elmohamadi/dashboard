@@ -1,6 +1,7 @@
 {
   "role": {
     "update_title": "Update Role",
+    "main_title": "Update Role",
     "name": "Name",
     "permission": "Permission",
     "loadingRole": "Wait, getting role...",

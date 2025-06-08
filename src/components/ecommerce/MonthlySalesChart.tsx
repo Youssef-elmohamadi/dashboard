@@ -5,15 +5,23 @@ import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { MoreDotIcon } from "../../icons";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-
-export default function MonthlySalesChart({ OrdersData }) {
+interface StatisticsChartProps {
+  ordersData: {
+    orderPerMonth: Record<string, number>;
+  };
+}
+export default function MonthlySalesChart({
+  ordersData,
+}: StatisticsChartProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { t } = useTranslation(["MonthlySalesChart"]);
+  const { t } = useTranslation(["Home"]);
   const order_count_per_month = {
-    ...OrdersData.orderPerMonth,
+    ...ordersData.orderPerMonth,
   };
 
-  const monthsMap = t("monthlySalesChart.months", { returnObjects: true });
+  const monthsMap = t("monthlySalesChart.months", {
+    returnObjects: true,
+  }) as Record<string, string>;
 
   const sortedEntries = Object.entries(order_count_per_month).sort(([a], [b]) =>
     a.localeCompare(b)

@@ -10,6 +10,7 @@ import {
   useGetRoleById,
   useUpdateRole,
 } from "../../../hooks/Api/Admin/useRoles/useRoles";
+import PageMeta from "../../common/PageMeta";
 type Permission = {
   id: number;
   name: string;
@@ -47,6 +48,22 @@ const UpdateRole: React.FC = () => {
   } = useGetRoleById(id);
 
   const role = roleData?.data?.data;
+  useEffect(() => {
+    if (isRoleError) {
+      const status = roleError?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrors((prev) => ({
+          ...prev,
+          global: t("role.errors.global"),
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          general: t("role.errors.general"),
+        }));
+      }
+    }
+  }, [isRoleError, roleError, t]);
   useEffect(() => {
     if (!role) return;
     const permissionIds = Array.isArray(role.permissions)
@@ -138,24 +155,36 @@ const UpdateRole: React.FC = () => {
   };
   if (isRoleLoading) {
     return (
-      <p className="text-gray-400 text-center p-4">{t("role.loadingRole")}</p>
+      <>
+        <PageMeta title={t("role.main_title")} description="Update Role" />
+        <p className="text-gray-400 text-center p-4">{t("role.loadingRole")}</p>
+      </>
     );
   }
   if (!id) {
     return (
-      <p className="text-gray-400 text-center p-4">
-        {t("role.errors.notFound")}
-      </p>
+      <>
+        <PageMeta title={t("role.main_title")} description="Update Role" />
+        <p className="text-gray-400 text-center p-4">
+          {t("role.errors.notFound")}
+        </p>
+      </>
     );
   }
   if (roleData?.data.success === false) {
     return (
-      <p className="text-red-500 text-center p-4">{t("role.errors.general")}</p>
+      <>
+        <PageMeta title={t("role.main_title")} description="Update Role" />
+        <p className="text-red-500 text-center p-4">
+          {t("role.errors.general")}
+        </p>
+      </>
     );
   }
 
   return (
     <div className="p-6">
+      <PageMeta title={t("role.main_title")} description="Update Role" />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("role.update_title")}

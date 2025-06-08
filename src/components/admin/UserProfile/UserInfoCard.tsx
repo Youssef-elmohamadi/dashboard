@@ -167,7 +167,6 @@ export default function UserInfoCard({ userType }: { userType: string }) {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("supmit");
 
     if (!validate()) return;
 

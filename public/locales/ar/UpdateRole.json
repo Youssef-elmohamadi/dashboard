@@ -1,6 +1,7 @@
 {
   "role": {
     "update_title": "تعديل دور",
+    "main_title": "تعديل دور",
     "name": "الاسم",
     "permission": "الصلاحيات",
     "loadingRole": "انتظر، جارٍ الحصول على الدور...",

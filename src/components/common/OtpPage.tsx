@@ -62,9 +62,6 @@ const OTPPage: React.FC<OTPPageProps> = ({
       inputRefs.current[index - 1]?.focus();
     }
   };
-  useEffect(() => {
-    console.log(inputRefs.current); // اطبع الـ refs للتأكد إنها موجودة
-  }, []);
   const handleResend = async () => {
     try {
       await onResend();

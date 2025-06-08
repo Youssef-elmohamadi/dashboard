@@ -86,7 +86,6 @@ export default function CreateCoupon() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("submit");
 
     if (!validate()) return;
     setLoading(true);
@@ -125,7 +124,6 @@ export default function CreateCoupon() {
       setLoading(false);
     }
   };
-  console.log(errors);
 
   return (
     <div>

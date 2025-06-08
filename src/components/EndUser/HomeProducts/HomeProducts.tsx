@@ -16,8 +16,6 @@ const HomeProducts: React.FC = () => {
     useProductForEveryCategory();
   const { data: homeData, isLoading: isHomeLoading } = useHomeData();
   if (isProductsLoading) return <div>{t("loading")}</div>; // You can replace this with a Skeleton
-  console.log(homeData?.banners);
-  console.log(homeData?.vendors);
 
   return (
     <div className="enduser_container">

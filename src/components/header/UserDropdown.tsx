@@ -4,13 +4,14 @@ import { Dropdown } from "../ui/dropdown/Dropdown";
 import { showUser } from "../../api/AdminApi/profileApi/_requests";
 import { handleLogout } from "../admin/auth/Logout";
 import { useTranslation } from "react-i18next";
+import { useDirectionAndLanguage } from "../../context/DirectionContext";
 interface UserDropDownProps {
   userType: "admin" | "super_admin";
 }
 export default function UserDropdown({ userType }: UserDropDownProps) {
   const { t } = useTranslation(["UserDropdown"]);
   const [isOpen, setIsOpen] = useState(false);
-
+  const { dir } = useDirectionAndLanguage();
   function toggleDropdown() {
     setIsOpen(!isOpen);
   }
@@ -46,7 +47,7 @@ export default function UserDropdown({ userType }: UserDropDownProps) {
           });
         }
       } catch (error) {
-        console.log("Failed to get data", error);
+        console.error("Failed to get data", error);
       }
     };
 
@@ -88,7 +89,9 @@ export default function UserDropdown({ userType }: UserDropDownProps) {
       <Dropdown
         isOpen={isOpen}
         onClose={closeDropdown}
-        className="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
+        className={`absolute ${
+          dir === "ltr" ? "right-0" : "left-0"
+        } mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark`}
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">

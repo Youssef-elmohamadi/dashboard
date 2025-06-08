@@ -1,6 +1,7 @@
 {
   "role": {
     "create_title": "Create Role",
+    "main_title": "Create New Role",
     "name": "Name",
     "permission": "Permission",
     "placeholder": {

@@ -57,7 +57,7 @@ export default function SuperAdminSignInForm() {
         navigate("/super_admin");
       }
     } catch (error: any) {
-      console.log(error.response);
+      console.error(error.response);
 
       if (error.response.status === 422 || 500) {
         setErrors((prevErrors) => ({

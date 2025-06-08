@@ -26,7 +26,6 @@ const ProductReports = () => {
   const { data, isLoading, isError, error } = useProductData(searchValues);
 
   const productsReportsData = data;
-  console.log(productsReportsData);
 
   useEffect(() => {
     if (productsReportsData) {
@@ -49,12 +48,12 @@ const ProductReports = () => {
   };
 
   const { t } = useTranslation(["ProductsReports"]);
+  if (isLoading) {
+    return <p className="text-center mt-5">{t("loading")}</p>;
+  }
   return (
     <>
-      <PageMeta
-        title="Tashtiba | Products Report"
-        description="Show Products Report"
-      />
+      <PageMeta title={t("mainTitle")} description="Show Products Report" />
       <FilterRangeDate setSearchParam={handleFilter} />
       <div className="col-span-6 space-y-6 ">
         <EcommerceMetrics

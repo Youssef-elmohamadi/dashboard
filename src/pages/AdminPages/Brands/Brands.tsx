@@ -74,7 +74,7 @@ const Brands = () => {
   };
   const { mutateAsync } = useDeleteBrand();
   const handleDelete = async (id: number) => {
-    const confirmed = await alertDelete(id, mutateAsync, refetch, {
+    await alertDelete(id, mutateAsync, refetch, {
       confirmTitle: t("brandsPage.delete.confirmTitle"),
       confirmText: t("brandsPage.delete.confirmText"),
       confirmButtonText: t("brandsPage.delete.confirmButtonText"),

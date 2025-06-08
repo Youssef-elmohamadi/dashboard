@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import BasicInfoForm from "./BasicInfoForm";
 import BreadCrump from "./BreadCrump";
 import StoreInfoForm from "./StoreInfoForm";
-
 import { useTranslation } from "react-i18next";
 import { register } from "../../../api/AdminApi/authApi/_requests";
 import { validateAdminForm, validateVendorForm } from "./ValidateForm";
 import convertToFormData from "./convertToFormData";
-import OTPPage from "./OtpPage";
+import OTPPage from "../../common/OtpPage";
 import { sendOtp, verifyOtp } from "../../../api/OtpApi/_requests";
 import { toast } from "react-toastify";
 
@@ -22,11 +20,15 @@ export default function SignUpForm() {
     {}
   );
   const [otpError, setOtpError] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   const [errors, setErrors] = useState({
     general: "",
     global: "",
   });
+
   const [dataForm, setDataForm] = useState({
     adminInfo: {
       first_name: "",
@@ -53,16 +55,18 @@ export default function SignUpForm() {
     ],
   });
 
-  const handleSendOtp = async () => {
+  const handleSendOtp = async (): Promise<boolean> => {
     try {
-      const res = await sendOtp({
+      await sendOtp({
         identifier: dataForm.vendorInfo.phone,
         type: "admin",
       });
       toast.success(t("otp.successSendOtp"));
+      return true;
     } catch (error) {
       console.error("Error sending OTP:", error);
       toast.error(t("otp.failedSendOtp"));
+      return false;
     }
   };
 
@@ -113,6 +117,7 @@ export default function SignUpForm() {
       setStep(step + 1);
     }
   };
+
   const handleSubmitOtp = async () => {
     const enteredOtp = otp.join("");
 
@@ -140,16 +145,26 @@ export default function SignUpForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setErrors({ general: "", global: "" });
     const isValid = validateVendorForm(setClientErrors, dataForm, t);
     if (!isValid) return;
 
     try {
-      const res = await register(formData);
+      if (!isRegistered) {
+        setIsRegistering(true);
+        const res = await register(formData);
 
-      if (res?.status === 200 || res?.status === 201) {
+        if (res?.status === 200 || res?.status === 201) {
+          setIsRegistered(true);
+        } else {
+          return;
+        }
+      }
+
+      setIsSendingOtp(true);
+      const otpSent = await handleSendOtp();
+      if (otpSent) {
         setStep(3);
-        handleSendOtp();
       }
     } catch (error: any) {
       const rawErrors = error?.response?.data.errors;
@@ -174,6 +189,7 @@ export default function SignUpForm() {
         const isVendorStepError =
           errorKeys.some((key) => key.startsWith("vendorInfo.")) ||
           errorKeys.some((key) => key.startsWith("documentInfo."));
+
         if (formattedErrors.general) {
           setStep(1);
         } else if (isAdminStepError) {
@@ -185,11 +201,14 @@ export default function SignUpForm() {
         setErrors((prev) => ({ ...prev, general: t("errors.general") }));
         setStep(1);
       }
+    } finally {
+      setIsRegistering(false);
+      setIsSendingOtp(false);
     }
   };
 
   return (
-    <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
+    <div className="flex flex-col flex-1 w-full h-full lg:w-1/2 mb-3">
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div className="mb-5 sm:mb-8 flex flex-col items-center">
           <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
@@ -201,8 +220,8 @@ export default function SignUpForm() {
 
         <form onSubmit={handleSubmit}>
           {errors.general && (
-            <div className="text-red-600 bg-red-200 p-4 rounded-md mb-4">
-              {errors.general[0]}
+            <div className="text-red-600 bg-red-200 p-4 mt-0.5 rounded-md mb-4">
+              {errors.general}
             </div>
           )}
           {step === 1 && (
@@ -254,9 +273,20 @@ export default function SignUpForm() {
             {step === 2 && (
               <button
                 type="submit"
-                className="w-full bg-brand-500 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700 text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300"
+                disabled={isRegistering || isSendingOtp}
+                className={`w-full ${
+                  isRegistering || isSendingOtp
+                    ? "bg-brand-300 cursor-not-allowed"
+                    : "bg-brand-500 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700"
+                } text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300`}
               >
-                {t("buttons.createButton")}
+                {isRegistering
+                  ? t("buttons.loadingRegister")
+                  : isSendingOtp
+                  ? t("otp.loadingOtp")
+                  : isRegistered
+                  ? t("otp.sendOtpButton")
+                  : t("buttons.createButton")}
               </button>
             )}
           </div>

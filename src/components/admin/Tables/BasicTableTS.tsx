@@ -62,8 +62,8 @@ const BasicTable = <T extends { id: number }>({
       <div className="max-w-full overflow-x-auto border border-gray-100 dark:border-gray-700 m-0.5 rounded">
         <table {...getTableProps()} className="min-w-full">
           <thead className="border-b border-gray-100 dark:border-white/[0.05]">
-            {headerGroups.map((headerGroup: any) => (
-              <TableHeader key={headerGroup.id} headerGroup={headerGroup} />
+            {headerGroups.map((headerGroup: any, i:number) => (
+              <TableHeader key={i} headerGroup={headerGroup}  />
             ))}
           </thead>
           <tbody
@@ -94,13 +94,13 @@ const BasicTable = <T extends { id: number }>({
             {t("unAuthorized")}
           </div>
         )}
+        {!isLoading && data.length === 0 && !globalError && (
+          <div className="p-4 text-center text-gray-500">{t("noData")}</div>
+        )}
         {!isLoading && globalError && (
           <div className="p-4 text-center text-red-500 font-semibold">
             {t("unExpectedError")}
           </div>
-        )}
-        {!isLoading && data.length === 0 && (
-          <div className="p-4 text-center text-gray-500">{t("noData")}</div>
         )}
       </div>
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import AuthLayout from "./AuthPageLayout";
 import ResetPasswordSteps from "../../../components/common/ResetPassword";
 import PageMeta from "../../../components/common/PageMeta";

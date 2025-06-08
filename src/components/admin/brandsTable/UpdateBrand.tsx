@@ -5,7 +5,11 @@ import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
 import BrandImageUpload from "./BrandImageUpload";
-import { useGetBrandById, useUpdateBrand } from "../../../hooks/Api/Admin/useBrands/useBrands";
+import {
+  useGetBrandById,
+  useUpdateBrand,
+} from "../../../hooks/Api/Admin/useBrands/useBrands";
+import PageMeta from "../../common/PageMeta";
 
 type Brand = {
   name: string;
@@ -35,8 +39,23 @@ const UpdateBrandPage = () => {
     status: "",
   });
   const [loading, setLoading] = useState(false);
-  const { data, isError, error } = useGetBrandById(id);
-
+  const { data, isLoading, isError, error } = useGetBrandById(id);
+  useEffect(() => {
+    if (isError) {
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrors((prev) => ({
+          ...prev,
+          global: t("errors.global"),
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          general: t("errors.general"),
+        }));
+      }
+    }
+  }, [isError, error, t]);
   const brandData = data?.data?.data;
   useEffect(() => {
     setUpdateData({
@@ -129,8 +148,18 @@ const UpdateBrandPage = () => {
     }
   };
 
+  if (isLoading)
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Update Brand" />
+        <p className="text-center mt-5">{t("loading")}</p>;
+      </>
+    );
+
   return (
     <div>
+      <PageMeta title={t("main_title")} description="Update Brand" />
+
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("update_title")}

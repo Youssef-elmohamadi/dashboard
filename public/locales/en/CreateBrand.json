@@ -1,5 +1,6 @@
 {
   "create_title": "Create Brand",
+  "main_title": "Create New Brand",
   "name_label": "Brand Name",
   "name_placeholder": "Enter the Brand Name",
   "name_required": "Brand name is required.",
