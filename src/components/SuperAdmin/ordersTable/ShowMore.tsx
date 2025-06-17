@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetOrderById } from "../../../hooks/Api/SuperAdmin/useOrders/useOrders";
+import { AxiosError } from "axios";
+import PageMeta from "../../common/PageMeta";
 
 // Interfaces
 interface Product {
@@ -70,39 +72,71 @@ interface MainOrder {
 const OrderDetails: React.FC = () => {
   const { t } = useTranslation(["OrderDetails"]);
   const { id } = useParams();
-  const { data, isError, isLoading } = useGetOrderById(id);
+  const [globalError, setGlobalError] = useState(false);
+  const { data, isError, isLoading, error } = useGetOrderById(id);
   const order: MainOrder = data?.data.data;
-
+  useEffect(() => {
+    if (isError && error instanceof AxiosError) {
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) {
+        setGlobalError(true);
+      } else {
+        setGlobalError(true);
+      }
+    }
+  }, [isError, error, t]);
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
     });
-
-  if (!id)
+  if (!id) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-white">
-        {t("no_id")}
-      </div>
+      <>
+        <PageMeta title={t("main_title")} description="Order Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("no_data")}
+        </div>
+      </>
     );
+  }
 
-  if (isLoading)
+  if (isLoading) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-white">
-        {t("loading")}
-      </div>
+      <>
+        <PageMeta title={t("main_title")} description="Order Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("loading")}
+        </div>
+      </>
     );
+  }
 
-  if (!order)
+  if (!order && !globalError) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-white">
-        {t("not_found")}
-      </div>
+      <>
+        <PageMeta title={t("main_title")} description="Order Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("not_found")}
+        </div>
+      </>
     );
+  }
+  if (globalError) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Order Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("global_error")}
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="order-details p-6 max-w-6xl mx-auto space-y-10">
+      <PageMeta title={t("main_title")} description="Order Details" />
       <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-4">
         {t("title")}
       </h1>

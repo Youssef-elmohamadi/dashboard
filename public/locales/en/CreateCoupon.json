@@ -1,6 +1,7 @@
 {
   "coupon": {
     "title": "Create Coupon",
+    "main_title": "Create New Coupon",
     "fields": {
       "code": "Code",
       "type": "Type",

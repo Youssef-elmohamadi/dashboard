@@ -12,7 +12,7 @@ const axiosInstanceEndUser = setupCache(
 
 axiosInstanceEndUser.interceptors.request.use(
   (config) => {
-    const token: Token = localStorage.getItem("uToken");
+    const token: Token = localStorage.getItem("end_user_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

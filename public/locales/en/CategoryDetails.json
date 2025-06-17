@@ -1,5 +1,6 @@
 {
   "title": "Category Details",
+  "mainTitle": "Tashtiba | Category Details",
   "basicInfo": "Basic Info",
   "name": "Name",
   "description": "Description",
@@ -18,5 +19,7 @@
   "updatedAt": "Updated At",
   "noId": "No Category ID provided.",
   "loading": "Loading category details...",
-  "notFound": "Category not found."
+  "notFound": "Category not found.",
+  "general_error": "Something went wrong. Please try again later.",
+  "global_error": "You are not authorized to perform this action."
 }

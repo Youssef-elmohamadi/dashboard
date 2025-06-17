@@ -1,5 +1,9 @@
 {
   "loadingCategories": "Loading categories...",
+  "mainTitle": "Tashtiba | Shop All Products",
+  "mainDescription": "Explore a diverse selection of high-quality products at competitive prices with fast delivery. Everything you need is just a click away.",
+  "mainTitleCategory": "Tashtiba | Discover the Best {{categoryName}} Products Online | Great Deals & Trusted Quality",
+  "categoryDescription": "Enjoy a unique shopping experience with our curated collection of {{categoryName}} products. High quality, affordable prices, and fast delivery—all in one place.",
   "categories": "Categories",
   "allCategories": "All Categories",
   "showMore": "Show More",

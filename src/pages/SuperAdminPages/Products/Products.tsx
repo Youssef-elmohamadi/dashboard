@@ -51,6 +51,8 @@ const Products = () => {
         setUnauthorized(true);
       } else if (status === 500) {
         setGlobalError(true);
+      } else {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
@@ -110,7 +112,7 @@ const Products = () => {
   return (
     <>
       <PageMeta
-        title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
+        title={t("productsPage.mainTitle")}
         description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
       <PageBreadcrumb

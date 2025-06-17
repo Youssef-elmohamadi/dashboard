@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "./customSwiper.css";
@@ -15,25 +15,43 @@ const HomeProducts: React.FC = () => {
   const { data: productCategories, isLoading: isProductsLoading } =
     useProductForEveryCategory();
   const { data: homeData, isLoading: isHomeLoading } = useHomeData();
-  if (isProductsLoading) return <div>{t("loading")}</div>; // You can replace this with a Skeleton
+
+  const isLoading = isHomeLoading || isProductsLoading;
+
+  const filteredCategories = useMemo(() => {
+    return productCategories?.filter(
+      (category: any) => category.products && category.products.length > 0
+    );
+  }, [productCategories]);
+
+  if (isLoading) {
+    return (
+      <div className="enduser_container px-4 py-10 text-center text-gray-500">
+        {t("loading")}
+      </div>
+    );
+  }
+
+  if (!filteredCategories || filteredCategories.length === 0) return null;
 
   return (
-    <div className="enduser_container">
-      {productCategories?.map((category: any) => {
-        if (!category.products || category.products.length === 0) return null;
+    <div className="enduser_container px-4 py-10">
+      {filteredCategories.map((category: any) => {
+        const relatedBanners = homeData?.banners?.filter(
+          (banner: any) => banner.position === category.id
+        );
 
         return (
-          <div key={category.id} className="mb-10 px-4 my-10">
-            {homeData?.banners
-              ?.filter((banner: any) => banner.position === category.id)
-              .map((banner: any, idx: number) => (
-                <AdBanner
-                  key={idx}
-                  imageUrl={banner.image}
-                  linkUrl={banner.url ? banner.url : `/category/${category.id}`}
-                  altText="Profit Announcement"
-                />
-              ))}
+          <div key={category.id} className="mb-12">
+            {relatedBanners?.map((banner: any, idx: number) => (
+              <AdBanner
+                key={idx}
+                imageUrl={banner.image}
+                linkUrl={banner.url || `/category/${category.id}`}
+                altText="Category Banner"
+              />
+            ))}
+
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg md:text-xl font-semibold text-gray-800">
                 {category.name}

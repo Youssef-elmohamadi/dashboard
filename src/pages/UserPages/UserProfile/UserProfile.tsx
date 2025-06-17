@@ -1,19 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  getProfile,
-  updateProfile,
-} from "../../../api/EndUserApi/endUserAuth/_requests";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
 import { Circles } from "react-loader-spinner";
-import { useQuery } from "@tanstack/react-query";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import { useNavigate } from "react-router";
+import {
+  useProfile,
+  useUpdateProfile,
+} from "../../../hooks/Api/EndUser/useProfile/useProfile";
 
 const UserProfile = () => {
   const { t } = useTranslation(["EndUserProfile"]);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     id: "",
     first_name: "",
@@ -24,71 +24,31 @@ const UserProfile = () => {
     password_confirmation: "",
     avatar: null as File | null,
   });
+
   const [existingImage, setExistingImage] = useState("");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem("uToken");
-    if (!token) {
-      navigate("/signin", { replace: true });
-    }
-  }, []);
-  // const [userProfileData, setUserProfileData] = useState({
-  //   id: "",
-  //   first_name: "",
-  //   last_name: "",
-  //   email: "",
-  //   phone: "",
-  //   password: "",
-  //   password_confirmation: "",
-  //   avatar: null as File | null,
-  // });
-
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [loadLoading, setLoadLoading] = useState(false);
   const [clientErrors, setClientErrors] = useState<{ [key: string]: string }>(
     {}
   );
-  const [errors, setErrors] = useState<any>();
+  const [errors, setErrors] = useState<Record<string, string[] | string>>({
+    first_name: [] as string[],
+    last_name: [] as string[],
+    email: [] as string[],
+    phone: [] as string[],
+    password: [] as string[],
+    password_confirmation: [] as string[],
+  });
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  // useEffect(() => {
-  //   const fetchProfile = async () => {
-  //     setLoadLoading(true);
-  //     try {
-  //       const res = await getProfile();
-  //       const data = res.data.data;
-  //       setFormData({
-  //         id: data.id,
-  //         first_name: data.first_name,
-  //         last_name: data.last_name,
-  //         email: data.email,
-  //         phone: data.phone,
-  //         password: "",
-  //         password_confirmation: "",
-  //         avatar: null,
-  //       });
-  //       setImageUrl(data.image);
-  //     } catch (error) {
-  //       setLoadLoading(false);
-  //       console.error("Failed to fetch profile:", error);
-  //     } finally {
-  //       setLoadLoading(false);
-  //     }
-  //   };
 
-  //   fetchProfile();
-  // }, []);
+  useEffect(() => {
+    const token = localStorage.getItem("end_user_token");
+    if (!token) {
+      navigate("/signin", { replace: true });
+    }
+  }, [navigate]);
 
-  const { data: userProfileData, isLoading: isLoading } = useQuery({
-    queryKey: ["endUserProfileData"],
-    queryFn: async () => {
-      const res = await getProfile();
-      return res.data.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+  const { data: userProfileData, isLoading } = useProfile();
 
   useEffect(() => {
     if (userProfileData) {
@@ -100,7 +60,7 @@ const UserProfile = () => {
         phone: userProfileData.phone,
         password: "",
         password_confirmation: "",
-        avatar: null as File | null,
+        avatar: null,
       });
       setExistingImage(userProfileData.avatar || "/images/default-avatar.jpg");
     }
@@ -119,9 +79,7 @@ const UserProfile = () => {
   };
 
   const handleImageClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
+    fileInputRef.current?.click();
   };
 
   const validateForm = () => {
@@ -159,15 +117,9 @@ const UserProfile = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const queryClient = useQueryClient();
-
-  const updateProfileMutation = useMutation({
-    mutationFn: async (formData: FormData) => {
-      return await updateProfile(formData);
-    },
+  const { mutate: updateProfileMutation } = useUpdateProfile({
     onSuccess: () => {
       toast.success(t("toast.update_success"));
-      queryClient.invalidateQueries({ queryKey: ["endUserProfileData"] });
     },
     onError: (error: any) => {
       const rawErrors = error?.response?.data?.errors;
@@ -179,16 +131,16 @@ const UserProfile = () => {
           }
           formattedErrors[err.code].push(err.message);
         });
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ general: "" });
+        setErrors({ ...errors, general: t("admin.errors.general") });
       }
 
       toast.error(t("toast.update_fail"));
     },
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const isValid = validateForm();
@@ -204,7 +156,7 @@ const UserProfile = () => {
       }
     });
 
-    updateProfileMutation.mutate(payload);
+    updateProfileMutation(payload);
   };
 
   return (
@@ -245,31 +197,40 @@ const UserProfile = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid md:grid-cols-2 grid-cols-1  gap-3">
-              <div className="col-span-1">
+              <div>
                 <input
                   type="text"
                   name="first_name"
                   value={formData.first_name}
                   onChange={handleChange}
                   placeholder={t("form.first_name")}
-                  className="h-11 w-full rounded-lg  border border-gray-200 appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 focus:border-brand-300 focus:ring-brand-500/20 "
+                  className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20"
                 />
+                {errors.first_name[0] && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.first_name[0]}
+                  </p>
+                )}
                 {clientErrors.first_name && (
                   <p className="text-red-600 text-sm mt-1">
                     {clientErrors.first_name}
                   </p>
                 )}
               </div>
-
-              <div className="col-span-1">
+              <div>
                 <input
                   type="text"
                   name="last_name"
                   value={formData.last_name}
                   onChange={handleChange}
                   placeholder={t("form.last_name")}
-                  className="h-11 w-full rounded-lg  border border-gray-200 appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 focus:border-brand-300 focus:ring-brand-500/20 "
+                  className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20"
                 />
+                {errors.last_name[0] && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.last_name[0]}
+                  </p>
+                )}
                 {clientErrors.last_name && (
                   <p className="text-red-600 text-sm mt-1">
                     {clientErrors.last_name}
@@ -277,6 +238,7 @@ const UserProfile = () => {
                 )}
               </div>
             </div>
+
             <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
               <div>
                 <input
@@ -285,8 +247,13 @@ const UserProfile = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder={t("form.email")}
-                  className="h-11 w-full rounded-lg  border border-gray-200 appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 focus:border-brand-300 focus:ring-brand-500/20 "
+                  className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20"
                 />
+                {errors.email[0] && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {t("backend.emailTaken")}
+                  </p>
+                )}
                 {clientErrors.email && (
                   <p className="text-red-600 text-sm mt-1">
                     {clientErrors.email}
@@ -300,8 +267,13 @@ const UserProfile = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder={t("form.phone")}
-                  className="h-11 w-full rounded-lg  border border-gray-200 appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 focus:border-brand-300 focus:ring-brand-500/20 "
+                  className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20"
                 />
+                {errors.phone[0] && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {t("backend.phoneTaken")}
+                  </p>
+                )}
                 {clientErrors.phone && (
                   <p className="text-red-600 text-sm mt-1">
                     {clientErrors.phone}
@@ -309,72 +281,54 @@ const UserProfile = () => {
                 )}
               </div>
             </div>
-            <div className="grid md:grid-cols-2 grid-cols-1  gap-3">
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder={t("form.password")}
-                  className="h-11 w-full rounded-lg  border border-gray-200 appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 focus:border-brand-300 focus:ring-brand-500/20 "
-                />
-                {clientErrors.password && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {clientErrors.password}
-                  </p>
-                )}
-                <span
-                  onClick={() => setShowPassword(!showPassword)}
-                  className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
-                    document.documentElement.dir === "rtl"
-                      ? "left-4"
-                      : "right-4"
-                  }`}
-                >
-                  {showPassword ? (
-                    <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                  ) : (
-                    <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
+              {["password", "password_confirmation"].map((field) => (
+                <div key={field} className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name={field}
+                    value={
+                      (formData[field as keyof typeof formData] as string) || ""
+                    }
+                    onChange={handleChange}
+                    placeholder={t(`form.${field}`)}
+                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20"
+                  />
+                  {errors[field][0] && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors[field][0]}
+                    </p>
                   )}
-                </span>
-              </div>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password_confirmation"
-                  value={formData.password_confirmation}
-                  onChange={handleChange}
-                  placeholder={t("form.password_confirmation")}
-                  className="h-11 w-full rounded-lg  border border-gray-200 appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 bg-transparent text-gray-800 focus:border-brand-300 focus:ring-brand-500/20 "
-                />
-                {clientErrors.password_confirmation && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {clientErrors.password_confirmation}
-                  </p>
-                )}
-                <span
-                  onClick={() => setShowPassword(!showPassword)}
-                  className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
-                    document.documentElement.dir === "rtl"
-                      ? "left-4"
-                      : "right-4"
-                  }`}
-                >
-                  {showPassword ? (
-                    <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                  ) : (
-                    <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                  {clientErrors[field] && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {clientErrors[field]}
+                    </p>
                   )}
-                </span>
-              </div>
+                  <span
+                    onClick={() => setShowPassword(!showPassword)}
+                    className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
+                      document.documentElement.dir === "rtl"
+                        ? "left-4"
+                        : "right-4"
+                    }`}
+                  >
+                    {showPassword ? (
+                      <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                    ) : (
+                      <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                    )}
+                  </span>
+                </div>
+              ))}
             </div>
+
             <button
               type="submit"
-              disabled={loading}
+              disabled={isLoading}
               className="bg-purple-700 text-white px-4 py-2 rounded md:w-1/4 w-1/2"
             >
-              {loading ? t("form.updating") : t("form.submit")}
+              {isLoading ? t("form.updating") : t("form.submit")}
             </button>
           </form>
         </>

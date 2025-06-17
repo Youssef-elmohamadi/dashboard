@@ -10,6 +10,8 @@ import {
   useGetBannerById,
   useUpdateBanner,
 } from "../../../hooks/Api/SuperAdmin/useBanners/useSuperAdminBanners";
+import { AxiosError } from "axios";
+import PageMeta from "../../common/PageMeta";
 interface Category {
   id: string;
   name: string;
@@ -39,7 +41,7 @@ const UpdateBanner = () => {
   const { data: allCategories } = useAllCategories();
   const categories = allCategories?.data.data.original;
 
-  const { data, isError, error } = useGetBannerById(id);
+  const { data, isError, error, isLoading } = useGetBannerById(id);
 
   const banner = data?.data.data;
 
@@ -55,15 +57,22 @@ const UpdateBanner = () => {
     });
     setExistingImage(banner.image);
   }, [banner]);
-  if (isError) {
-    const status = error?.response?.status;
-    if (status === 403 || status === 401) {
-      setErrors({
-        ...errors,
-        global: t("category.errors.global"),
-      });
+  useEffect(() => {
+    if (isError && error instanceof AxiosError) {
+      const status = error?.response?.status;
+      if (status === 403 || status === 401) {
+        setErrors((prev) => ({
+          ...prev,
+          global: t("banner.errors.global"),
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          general: t("banner.errors.general"),
+        }));
+      }
     }
-  }
+  }, [isError, error, t]);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -152,15 +161,34 @@ const UpdateBanner = () => {
       setIsSubmitting(false);
     }
   };
-
+  if (isLoading)
+    return (
+      <>
+        <PageMeta title={t("banner.mainTitle")} description="Update Banner" />
+        <p className="text-center mt-5">
+          {t("banner.loading") || "Loading..."}
+        </p>
+      </>
+    );
   return (
     <div>
+      <PageMeta title={t("banner.mainTitle")} description="Update Banner" />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("banner.title")}
         </h3>
       </div>
       <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+        {errors.global && (
+          <p className="text-error-500 text-sm mt-4 text-center">
+            {errors.global}
+          </p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errors.general}
+          </p>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
             <Label htmlFor="title">{t("banner.name")}</Label>
@@ -327,13 +355,6 @@ const UpdateBanner = () => {
             />
           )}
         </div>
-
-        {errors.global && (
-          <p className="text-red-500 text-sm">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm">{errors.general}</p>
-        )}
 
         <Button
           type="submit"

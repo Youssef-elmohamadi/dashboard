@@ -12,6 +12,7 @@ import {
 } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import TextArea from "../../form/input/TextArea";
+import PageMeta from "../../common/PageMeta";
 type Category = {
   id: string;
   name: string;
@@ -43,13 +44,28 @@ export default function UpdateCategory() {
     global: "" as string,
     general: "" as string,
   });
+  const [errorFetchingCategories, setErrorFetchingCategories] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
-  const { data: allCategory } = useAllCategories();
-  const categories = allCategory?.data.data.original;
+  const {
+    data: categoriesData,
+    isError: isCategoriesError,
+    error: categoriesError,
+  } = useAllCategories();
+  const categories = categoriesData?.data.data.original;
+  useEffect(() => {
+    if (isCategoriesError) {
+      const status = categoriesError?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrorFetchingCategories(t("category.errors.global"));
+      } else {
+        setErrorFetchingCategories(t("category.errors.fetching_categories"));
+      }
+    }
+  }, [isCategoriesError, categoriesError, t]);
 
-  const { data, isError, error } = useGetCategoryById(id);
+  const { data, isError, error, isLoading } = useGetCategoryById(id);
 
   const Category = data?.data.data.original;
 
@@ -64,15 +80,22 @@ export default function UpdateCategory() {
     });
     setPreviewImage(Category.image);
   }, [Category]);
-  if (isError) {
-    const status = error?.response?.status;
-    if (status === 403 || status === 401) {
-      setErrors({
-        ...errors,
-        global: t("category.errors.global"),
-      });
+  useEffect(() => {
+    if (isError) {
+      const status = error?.response?.status;
+      if (status === 403 || status === 401) {
+        setErrors({
+          ...errors,
+          global: t("category.errors.global"),
+        });
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          general: t("category.errors.general"),
+        }));
+      }
     }
-  }
+  }, [isError, error, t]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -165,8 +188,22 @@ export default function UpdateCategory() {
     }
   };
 
+  if (isLoading)
+    return (
+      <>
+        <PageMeta
+          title={t("category.mainTitle")}
+          description="Update Category"
+        />
+        <p className="text-center mt-5">
+          {t("category.loading") || "Loading..."}
+        </p>
+      </>
+    );
+
   return (
     <div>
+      <PageMeta title={t("category.mainTitle")} description="Update Category" />
       <div className="p-4 border-b border-gray-200 dark:border-gray-600">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("category.title")}
@@ -176,6 +213,12 @@ export default function UpdateCategory() {
         onSubmit={handleSubmit}
         className="space-y-6 w-full mt-8 flex flex-col items-center"
       >
+        {errors.global && (
+          <p className="text-error-500 text-sm mt-1">{errors.global}</p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
           <div>
             <Label>{t("category.name")}</Label>
@@ -251,8 +294,18 @@ export default function UpdateCategory() {
               onChange={handleSelectChange}
               placeholder={t("category.selectParent")}
             />
+            {clientErrors.parent_id && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientErrors.parent_id}
+              </p>
+            )}
             {errors.parent_id && (
               <p className="text-red-500 text-sm mt-1">{errors.parent_id[0]}</p>
+            )}
+            {errorFetchingCategories && (
+              <p className="text-red-500 text-sm mt-1">
+                {errorFetchingCategories}
+              </p>
             )}
           </div>
         </div>

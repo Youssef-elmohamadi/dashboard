@@ -1,6 +1,7 @@
 {
   "coupon": {
     "title": "Coupon Details",
+    "mainTitle": "Tashtiba | Coupon Details",
     "basic_info": "Basic Info",
     "code": "Code",
     "type": "Type",
@@ -21,6 +22,8 @@
     "no_id": "No Coupon ID provided.",
     "loading": "Loading coupon details...",
     "not_found": "Coupon not found.",
-    "no_limit": "No Limit"
+    "no_limit": "No Limit",
+    "general_error": "Something went wrong. Please try again later.",
+    "global_error": "You are not authorized to perform this action."
   }
 }

@@ -44,8 +44,9 @@ const Vendors = () => {
       const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
-      }
-      if (status === 500) {
+      } else if (status === 500) {
+        setGlobalError(true);
+      } else {
         setGlobalError(true);
       }
     }
@@ -97,8 +98,8 @@ const Vendors = () => {
   return (
     <>
       <PageMeta
-        title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
-        description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+        title={t("vendorsPage.mainTitle")}
+        description="Manage Your Vendors"
       />
       <PageBreadcrumb
         pageTitle={t("vendorsPage.title")}

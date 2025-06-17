@@ -4,7 +4,7 @@ import { RiProfileFill } from "react-icons/ri";
 import { TfiClose } from "react-icons/tfi";
 import { TiDocumentText } from "react-icons/ti";
 import { NavLink } from "react-router-dom";
-import { handleLogout } from "../Auth/Logout";
+import { handleLogout } from "../../common/Logout";
 import { handleDeleteAccount } from "../Auth/DeleteAccount";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useTranslation } from "react-i18next";
@@ -116,7 +116,9 @@ const MenuSidebar = ({ isMenuOpen, setIsMenuOpen }: MenuSidebarProps) => {
 
           {/* Logout */}
           <button
-            onClick={handleLogout}
+            onClick={() => {
+              handleLogout("end_user");
+            }}
             className="flex items-center gap-3 p-2 text-red-600 hover:bg-red-100 rounded w-full"
           >
             <BiLogOut className="text-lg text-error-500" />

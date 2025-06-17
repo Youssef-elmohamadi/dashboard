@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { openChangeStatusModal } from "../Tables/ChangeStatusModal";
@@ -7,6 +7,7 @@ import {
   useChangeDocumentStatus,
   useGetVendorById,
 } from "../../../hooks/Api/SuperAdmin/useVendorMangement/useSuperAdminVendorManage";
+import PageMeta from "../../common/PageMeta";
 
 interface Document {
   id: number;
@@ -31,13 +32,28 @@ interface Vendor {
 const VendorDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["VendorsTable"]);
+  const [globalError, setGlobalError] = useState(false);
   const [showImage, setShowImage] = useState(false);
   const [doc, setDoc] = useState({});
 
-  const { data: vendorData, isLoading: loading } = useGetVendorById(id!!);
+  const {
+    data: vendorData,
+    isLoading: loading,
+    isError: isVendorError,
+    error: vendorError,
+  } = useGetVendorById(id!!);
 
   const vendor: Vendor = vendorData?.data.data;
-
+  useEffect(() => {
+    if (isVendorError) {
+      const status = vendorError?.response?.status;
+      if (status === 401 || status === 403) {
+        setGlobalError(true);
+      } else {
+        setGlobalError(true);
+      }
+    }
+  }, [isVendorError, vendorError, t]);
   const handleOpenImage = (doc: {}) => {
     setDoc(doc);
     setShowImage(true);
@@ -93,19 +109,41 @@ const VendorDetails: React.FC = () => {
   if (!id)
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        <PageMeta
+          title={t("vendorsPage.mainTitleDetails")}
+          description="Vendor Details"
+        />
         {t("vendorsPage.details.noId")}
       </div>
     );
   if (loading)
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        <PageMeta
+          title={t("vendorsPage.mainTitleDetails")}
+          description="Vendor Details"
+        />
         {t("vendorsPage.details.loading")}
       </div>
     );
-  if (!vendor)
+  if (!vendor && !globalError)
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        <PageMeta
+          title={t("vendorsPage.mainTitleDetails")}
+          description="Vendor Details"
+        />
         {t("vendorsPage.details.notFound")}
+      </div>
+    );
+  if (globalError)
+    return (
+      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+        <PageMeta
+          title={t("vendorsPage.mainTitleDetails")}
+          description="Vendor Details"
+        />
+        {t("vendorsPage.details.globalError")}
       </div>
     );
 
@@ -115,6 +153,10 @@ const VendorDetails: React.FC = () => {
         showImageModal={showImage}
         setShowImageModal={setShowImage}
         doc={doc}
+      />
+      <PageMeta
+        title={t("vendorsPage.mainTitleDetails")}
+        description="Vendor Details"
       />
       <div className="vendor-details p-6 max-w-5xl mx-auto space-y-8 text-gray-800 dark:text-gray-100">
         <h1 className="text-3xl font-bold text-center mb-6">
@@ -171,7 +213,8 @@ const VendorDetails: React.FC = () => {
                 <div
                   key={doc.id}
                   onClick={() => handleOpenImage(doc)}
-                  className="border border-gray-200 p-4 rounded-md shadow-sm bg-gray-50 dark:bg-gray-900 flex flex-col items-center cursor-pointer"
+                  className="border border-gray-200 dark:border-gray-800
+                   p-4 rounded-md shadow-sm bg-gray-50 dark:bg-gray-900 flex flex-col items-center cursor-pointer"
                 >
                   <img
                     src={doc.document_name}

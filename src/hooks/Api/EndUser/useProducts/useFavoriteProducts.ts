@@ -29,7 +29,7 @@ export const useAllFavoriteProducts = () => {
 
 const updateAllCaches = (
   queryClient: any,
-  productId: string,
+  productId: string | number,
   isFav: boolean
 ) => {
   // homePage
@@ -90,7 +90,8 @@ export const useAddFavorite = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (productId: string) => await addToFavorite(productId),
+    mutationFn: async (productId: string | number) =>
+      await addToFavorite(productId),
     onSuccess: (_, productId) => {
       updateAllCaches(queryClient, productId, true);
       queryClient.invalidateQueries({ queryKey: ["endUserFavoriteProducts"] });
@@ -102,7 +103,7 @@ export const useRemoveFavorite = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (productId: string) =>
+    mutationFn: async (productId: string | number) =>
       await removeFromFavorite(productId),
     onSuccess: (_, productId) => {
       updateAllCaches(queryClient, productId, false);

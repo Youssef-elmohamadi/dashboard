@@ -1,6 +1,7 @@
 {
   "category": {
     "title": "Update Category",
+    "mainTitle": "Update Category",
     "name": "Name",
     "description": "Description",
     "commission": "Commission Rate %",
@@ -12,6 +13,7 @@
     "image": "Category Image",
     "submit": "Update Category",
     "submitting": "Updating...",
+    "loading": "Loading category...",
     "errors": {
       "name": "Name is required",
       "nameTaken": "The name is already in use",
@@ -20,7 +22,8 @@
       "commissionMax": "Commission rate cannot exceed 100",
       "parent": "Parent category is invalid",
       "global": "You are not authorized to perform this action.",
-      "general": "Something went wrong. Please try again later."
+      "general": "Something went wrong. Please try again later.",
+      "fetching_categories": "Failed to fetch categories. Please try again later."
     },
     "success": "Category Updated Successfully"
   }

@@ -17,7 +17,6 @@ import Products from "../../pages/AdminPages/Products/Products";
 import CreateProducts from "../../components/admin/Products/CreateProducts";
 import UpdateProduct from "../../components/admin/Products/UpdateProduct";
 import ProductDetails from "../../components/admin/Products/ShowMore";
-import Blank from "../../pages/AdminPages/Blank";
 import FormElements from "../../pages/AdminPages/Forms/FormElements";
 import LineChart from "../../pages/AdminPages/Charts/LineChart";
 import BarChart from "../../pages/AdminPages/Charts/BarChart";
@@ -72,7 +71,6 @@ export const adminRoutes = (
       <Route path="orders_report" element={<OrdersReports />} />
       <Route path="products_report" element={<ProductReports />} />
       <Route path="settings" element={<VendorSettings />} />
-      <Route path="blank" element={<Blank />} />
       <Route path="form-elements" element={<FormElements />} />
       <Route path="line-chart" element={<LineChart />} />
       <Route path="bar-chart" element={<BarChart />} />

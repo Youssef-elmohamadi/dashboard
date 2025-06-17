@@ -1,18 +1,39 @@
-import { createContext, useContext, useState } from "react";
+// ModalContext.tsx
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  FC,
+} from "react";
 
-export const ModalContext = createContext();
+type ModalContextType = {
+  modalType: string | null;
+  modalProps: Record<string, any>;
+  openModal: (type: string, props?: Record<string, any>) => void;
+  closeModal: () => void;
+};
 
-export const ModalProvider = ({ children }) => {
-  const [modalType, setModalType] = useState(null);
-  const [modalProps, setModalProps] = useState({});
-  const openModal = (type, props = {}) => {
+export const ModalContext = createContext<ModalContextType | undefined>(undefined);
+type ModalProviderProps = {
+  children: ReactNode;
+};
+
+
+export const ModalProvider: FC<ModalProviderProps> = ({ children }) => {
+  const [modalType, setModalType] = useState<string | null>(null);
+  const [modalProps, setModalProps] = useState<Record<string, any>>({});
+
+  const openModal = (type: string, props: Record<string, any> = {}) => {
     setModalType(type);
     setModalProps(props);
   };
+
   const closeModal = () => {
     setModalType(null);
     setModalProps({});
   };
+
   return (
     <ModalContext.Provider value={{ modalType, modalProps, openModal, closeModal }}>
       {children}
@@ -20,6 +41,11 @@ export const ModalProvider = ({ children }) => {
   );
 };
 
-export const useModal = () => {
-  return useContext(ModalContext);
+// 5. hook آمن باستخدام useContext
+export const useModal = (): ModalContextType => {
+  const context = useContext(ModalContext);
+  if (!context) {
+    throw new Error("useModal must be used within a ModalProvider");
+  }
+  return context;
 };

@@ -1,6 +1,8 @@
 {
   "coupon": {
+    "mainTitle": "Update Coupon",
     "editCoupon": "Edit Coupon",
+    "loading": "Loading coupon details...",
     "code": "Code",
     "type": "Type",
     "value": "Value",
@@ -43,7 +45,9 @@
         "invalid": "End date must be after start date."
       },
       "type": "Type is required.",
-      "status": "Status is required."
+      "status": "Status is required.",
+      "general": "Something went wrong, please try again.",
+      "global": "You are not authorized to perform this action."
     },
     "success": "Coupon updated successfully."
   }

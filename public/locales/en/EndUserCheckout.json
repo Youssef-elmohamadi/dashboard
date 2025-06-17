@@ -1,4 +1,6 @@
 {
+  "mainTitle": "Tashtiba | Checkout",
+  "checkoutDescription": "Tashtiba | Complete your purchase now in quick and easy steps. Payment is 100% secure and your order is confirmed immediately. Enjoy excellent customer service and fast delivery to all regions.",
   "checkout": {
     "deliveryDetails": "Delivery Details",
     "full_name": "Full Name",
@@ -26,6 +28,7 @@
     "pay_now": "Pay Now",
     "success_message": "Order placed successfully!",
     "payment_required": "Payment method is required",
+    "toast_validation":"Please make sure all input data is correct",
     "full_name_required": "Full name is required",
     "phone_required": "Phone number is required",
     "city_required": "City is required",

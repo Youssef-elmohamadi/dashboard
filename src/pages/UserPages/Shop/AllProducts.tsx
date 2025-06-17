@@ -1,65 +1,17 @@
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../../../components/EndUser/ProductCard/ProductCard";
-import { getAllProducts } from "../../../api/EndUserApi/ensUserProducts/_requests";
 import { Circles } from "react-loader-spinner";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useAllProducts } from "../../../hooks/Api/EndUser/useProducts/useProducts";
-const AllProducts = () => {
-  // const [products, setProducts] = useState([]);
-  // const [page, setPage] = useState(1);
-  // const [hasMore, setHasMore] = useState(true);
-  // const [loading, setLoading] = useState(true);
-  const [searchParams] = useSearchParams();
+import { Helmet } from "react-helmet-async";
 
+const AllProducts = () => {
+  const [searchParams] = useSearchParams();
   const sort = searchParams.get("sort") || "";
   const min = searchParams.get("min") || "";
   const max = searchParams.get("max") || "";
-
-  // const fetchProducts = useCallback(
-  //   async (pageNumber = 1, isNewQuery = false) => {
-  //     setLoading(true);
-  //     try {
-  //       const response = await getAllProducts({
-  //         sort,
-  //         min,
-  //         max,
-  //         page: pageNumber,
-  //       });
-
-  //       const newProducts = response.data.data.data;
-
-  //       setProducts((prev) =>
-  //         pageNumber === 1 || isNewQuery
-  //           ? newProducts
-  //           : [...prev, ...newProducts]
-  //       );
-
-  //       setHasMore(
-  //         response.data.data.current_page < response.data.data.last_page
-  //       );
-
-  //       setPage(pageNumber);
-  //     } catch (error) {
-  //       console.error(error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   },
-  //   [sort, min, max]
-  // );
-
-  // // تحميل الصفحة الأولى عند الفتح
-  // useEffect(() => {
-  //   fetchProducts(1, true);
-  // }, [sort, min, max]);
-
-  // const loadMore = () => {
-  //   if (hasMore && !loading) {
-  //     fetchProducts(page + 1);
-  //   }
-  // };
   const { t } = useTranslation(["EndUserShop"]);
+
   const {
     products,
     fetchNextPage,
@@ -75,7 +27,23 @@ const AllProducts = () => {
 
   return (
     <div className="min-h-[300px] flex flex-col items-center">
-      {isLoading ? (
+      <Helmet>
+        <title>{t("mainTitle")}</title>
+        <meta
+          name="description"
+          content={t("mainDescription", {
+            defaultValue: "اكتشف مجموعة واسعة من المنتجات المناسبة لجميع احتياجاتك بأسعار تنافسية وجودة عالية.",
+          })}
+        />
+      </Helmet>
+
+      {isError ? (
+        <p className="text-red-500 text-lg font-semibold mt-10">
+          {t("mainContent.fetchError", {
+            defaultValue: "حدث خطأ ما أثناء تحميل المنتجات. حاول مرة أخرى لاحقًا.",
+          })}
+        </p>
+      ) : isLoading ? (
         <Circles height="80" width="80" color="#6B46C1" ariaLabel="loading" />
       ) : products.length === 0 ? (
         <p className="text-gray-500 text-lg font-semibold mt-10">

@@ -5,6 +5,7 @@ import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";
 import { useCreateCoupon } from "../../../hooks/Api/SuperAdmin/useCoupons/useCoupons";
+import PageMeta from "../../common/PageMeta";
 export default function CreateCoupon() {
   const { t } = useTranslation(["CreateCoupon"]);
   const navigate = useNavigate();
@@ -113,7 +114,7 @@ export default function CreateCoupon() {
       if (status === 403 || status === 401) {
         setErrors({
           ...errors,
-          global: t("errors.global"),
+          global: t("coupon.errors.global"),
         });
         return;
       }
@@ -131,7 +132,7 @@ export default function CreateCoupon() {
 
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ ...errors, general: t("errors.global") });
+        setErrors({ ...errors, general: t("coupon.errors.general") });
       }
     } finally {
       setLoading(false);
@@ -140,11 +141,24 @@ export default function CreateCoupon() {
 
   return (
     <div>
+      <PageMeta
+        title={t("coupon.main_title")}
+        description="Create New Coupon"
+      />
       <div className="p-4 border-b border-gray-200 dark:border-gray-600">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("coupon.title")}
         </h3>
       </div>
+
+      {errors.general && (
+        <p className="text-red-500 text-sm text-center mt-4">
+          {errors.general}
+        </p>
+      )}
+      {errors.global && (
+        <p className="text-red-500 text-sm text-center mt-4">{errors.global}</p>
+      )}
       <form
         onSubmit={handleSubmit}
         className="space-y-6 w-full mt-8 flex flex-col items-center"
@@ -310,12 +324,6 @@ export default function CreateCoupon() {
             )}
           </div>
         </div>
-        {errors.general && (
-          <p className="text-red-500 text-sm">{t("coupon.errors.general")}</p>
-        )}
-        {errors.global && (
-          <p className="text-red-500 text-sm">{t("coupon.errors.global")}</p>
-        )}
         <button
           type="submit"
           className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700"

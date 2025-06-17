@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 const BottomNav = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const uToken = localStorage.getItem("uToken");
+  const uToken = localStorage.getItem("end_user_token");
   const isLoggedIn = !!uToken;
   const hiddenRoutes = ["/signin", "/signup", "/reset-password"];
   const shouldHide = hiddenRoutes.includes(location.pathname);

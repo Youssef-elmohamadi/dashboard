@@ -1,24 +1,22 @@
 // ProductDetails.tsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  addToFavorite,
-  removeFromFavorite,
-  showProduct,
-} from "../../../api/EndUserApi/ensUserProducts/_requests";
 import StarRatings from "react-star-ratings";
 import { MdCompareArrows, MdOutlineFavoriteBorder } from "react-icons/md";
-import { TbStarHalfFilled } from "react-icons/tb";
-import { BsFillStarFill } from "react-icons/bs";
 import InnerImageZoom from "react-inner-image-zoom";
 import { Circles } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useModal } from "../Context/ModalContext";
+import { useGetProductById } from "../../../hooks/Api/EndUser/useProducts/useProducts";
+import {
+  useAddFavorite,
+  useRemoveFavorite,
+} from "../../../hooks/Api/EndUser/useProducts/useFavoriteProducts";
+import { Helmet } from "react-helmet-async";
 
 type Product = {
-  id: number;
+  id: number | string;
   name: string;
   description: string;
   price: number;
@@ -36,207 +34,94 @@ type Product = {
 };
 
 const ProductDetails: React.FC = () => {
-  const [selectedImage, setSelectedImage] = useState("");
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+  const numericId = Number(id);
   const { t } = useTranslation(["EndUserProductDetails"]);
   const { openModal } = useModal();
-  const { data: product, isLoading: isProductLoading } = useQuery({
-    queryKey: ["productData", id],
-    queryFn: async () => {
-      const res = await showProduct(id);
-      return res.data.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
-  const isFav = product?.is_fav;
+
+  const { data, isLoading: isProductLoading } = useGetProductById(numericId);
+  const product: Product | undefined = data?.data?.data;
+
+  const [selectedImage, setSelectedImage] = useState<string>("");
+  const [is_fav, setIs_fav] = useState<boolean>(false);
+  const [quantity, setQuantity] = useState<number>(1);
 
   useEffect(() => {
     if (product?.images?.length) {
       setSelectedImage(product.images[0].image);
     }
+    if (typeof product?.is_fav === "boolean") {
+      setIs_fav(product.is_fav);
+    }
   }, [product]);
-  const queryClient = useQueryClient();
-  const mutationAddToFavorite = useMutation({
-    mutationFn: () => addToFavorite(product.id),
-    onSuccess: () => {
-      // homePage
-      queryClient.setQueryData(["homePage"], (old: any) => {
-        if (!old) return old;
-        return {
-          ...old,
-          leatestProducts: old.leatestProducts.map((p: any) =>
-            p.id === product.id ? { ...p, is_fav: true } : p
-          ),
-        };
-      });
 
-      // product-categories
-      queryClient.setQueryData(["product-categories"], (old: any) => {
-        if (!old) return old;
-        return old.map((cat: any) => ({
-          ...cat,
-          products: cat.products.map((p: any) =>
-            p.id === product.id ? { ...p, is_fav: true } : p
-          ),
-        }));
-      });
-      // productData
-      queryClient.setQueryData(["productData", id], (old: any) => {
-        if (!old) return old;
-        return old.id === product.id ? { ...old, is_fav: true } : old;
-      });
+  const { mutateAsync: addToFavorite } = useAddFavorite();
+  const { mutateAsync: removeFromFavorite } = useRemoveFavorite();
 
-      // endUserProducts
-      queryClient.setQueriesData(
-        { queryKey: ["endUserProducts"] },
-        (old: any) => {
-          if (!old) return old;
-          return {
-            ...old,
-            pages: old.pages.map((page: any) => ({
-              ...page,
-              data: page.data.map((p: any) =>
-                p.id === product.id ? { ...p, is_fav: true } : p
-              ),
-            })),
-          };
-        }
-      );
-
-      // endUserAllProducts
-      queryClient.setQueriesData(
-        { queryKey: ["endUserAllProducts"] },
-        (old: any) => {
-          if (!old) return old;
-          return {
-            ...old,
-            pages: old.pages.map((page: any) => ({
-              ...page,
-              data: page.data.map((p: any) =>
-                p.id === product.id ? { ...p, is_fav: true } : p
-              ),
-            })),
-          };
-        }
-      );
-
-      toast.success(t("successAddedToFav"));
-    },
-
-    onError: (error) => {
+  const handleToggleFavorite = async () => {
+    if (!product) return;
+    try {
+      if (is_fav) {
+        await removeFromFavorite(product.id);
+        setIs_fav(false);
+        toast.success(t("successRemoveFromFav"));
+      } else {
+        await addToFavorite(product.id);
+        setIs_fav(true);
+        toast.success(t("successAddedToFav"));
+      }
+    } catch (error: any) {
       if (error?.response?.status === 401) {
         toast.error(t("noAuth"));
       } else {
-        toast.error(t("fieldAddedToFav"));
+        toast.error(t("favError"));
       }
-    },
-  });
-  const mutationRemoveFromFavorite = useMutation({
-    mutationFn: () => removeFromFavorite(product.id),
-    onSuccess: () => {
-      // homePage
-      queryClient.setQueryData(["homePage"], (old: any) => {
-        if (!old) return old;
-        return {
-          ...old,
-          leatestProducts: old.leatestProducts.map((p: any) =>
-            p.id === product.id ? { ...p, is_fav: false } : p
-          ),
-        };
-      });
-
-      // product-categories
-      queryClient.setQueryData(["product-categories"], (old: any) => {
-        if (!old) return old;
-        return old.map((cat: any) => ({
-          ...cat,
-          products: cat.products.map((p: any) =>
-            p.id === product.id ? { ...p, is_fav: false } : p
-          ),
-        }));
-      });
-
-      queryClient.setQueryData(["productData", id], (old: any) => {
-        if (!old) return old;
-        return old.id === product.id ? { ...old, is_fav: false } : old;
-      });
-
-      // endUserProducts
-      queryClient.setQueriesData(
-        { queryKey: ["endUserProducts"] },
-        (old: any) => {
-          if (!old) return old;
-          return {
-            ...old,
-            pages: old.pages.map((page: any) => ({
-              ...page,
-              data: page.data.map((p: any) =>
-                p.id === product.id ? { ...p, is_fav: false } : p
-              ),
-            })),
-          };
-        }
-      );
-
-      // endUserAllProducts
-      queryClient.setQueriesData(
-        { queryKey: ["endUserAllProducts"] },
-        (old: any) => {
-          if (!old) return old;
-          return {
-            ...old,
-            pages: old.pages.map((page: any) => ({
-              ...page,
-              data: page.data.map((p: any) =>
-                p.id === product.id ? { ...p, is_fav: false } : p
-              ),
-            })),
-          };
-        }
-      );
-
-      toast.success(t("successRemoveFromFav"));
-    },
-
-    onError: (error) => {
-      if (error?.response?.status === 401) {
-        toast.error(t("noAuth"));
-      } else {
-        toast.error(t("fieldRemoveFromFav"));
-      }
-    },
-  });
-
-  const handleAddToFavorite = () => {
-    mutationAddToFavorite.mutate();
-  };
-  const handleRemoveFromFavorite = () => {
-    mutationRemoveFromFavorite.mutate();
+    }
   };
 
-  if (isProductLoading)
+  if (isProductLoading) {
     return (
       <div className="flex justify-center items-center my-5">
         <Circles height="80" width="80" color="#6B46C1" ariaLabel="loading" />
       </div>
     );
+  }
+
+  if (!product) {
+    return (
+      <div className="text-center text-gray-600 py-10">
+        {t("productNotFound")}
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-10">
+      <Helmet>
+        <title>{t("mainTitle", { product_name: product.name })}</title>
+        <meta
+          name="description"
+          content={t("productDescription", {
+            product_name: product.name,
+            defaultValue:
+              "تسوق من مجموعة متنوعة من المنتجات داخل هذه الفئة بأسعار تنافسية وجودة عالية.",
+          })}
+        />
+      </Helmet>
       <div className="grid lg:grid-cols-2 gap-10">
         {/* Left: Product Image + Thumbnails */}
         <div>
           <div className="border border-gray-200 rounded-2xl overflow-hidden shadow-md">
-            <InnerImageZoom
-              src={selectedImage}
-              zoomSrc={selectedImage}
-              zoomType="hover"
-              className="w-full h-[350px] object-contain"
-            />
+            {selectedImage && (
+              <InnerImageZoom
+                src={selectedImage}
+                className="w-full h-[350px] object-contain"
+              />
+            )}
           </div>
 
           <div className="mt-4 flex gap-3 flex-wrap">
-            {product.images.slice(0, 5).map((img, i) => (
+            {product.images?.slice(0, 5).map((img, i) => (
               <img
                 key={i}
                 src={img.image}
@@ -264,9 +149,6 @@ const ProductDetails: React.FC = () => {
               starRatedColor="#fbbf24"
               numberOfStars={5}
               name="rating"
-              starEmptyIcon={<MdOutlineFavoriteBorder />}
-              starHalfIcon={<TbStarHalfFilled />}
-              starFullIcon={<BsFillStarFill />}
             />
             <span className="text-sm text-gray-500">
               ({product.review?.length || 0} {t("reviews")})
@@ -284,8 +166,7 @@ const ProductDetails: React.FC = () => {
                   {product.price.toFixed(2)} {t("egp")}
                 </span>
                 <span className="text-purple-600">
-                  {product.discount_price.toFixed(2)}
-                  {t("egp")}
+                  {product.discount_price.toFixed(2)} {t("egp")}
                 </span>
               </>
             ) : (
@@ -298,46 +179,47 @@ const ProductDetails: React.FC = () => {
           {/* Meta Info */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-600">
             <div>
-              <strong>{t("store")}:</strong> {product.vendor?.name}
+              <strong>{t("store")}:</strong> {product.vendor?.name || "-"}
             </div>
             <div>
-              <strong>{t("category")}:</strong> {product.category?.name}
-              {/*"|| "Uncategorized"" */}
+              <strong>{t("category")}:</strong>{" "}
+              {product.category?.name || t("uncategorized")}
             </div>
             <div className="flex items-center gap-2">
               <img
                 src={product.brand?.image}
                 className="w-6 h-6 rounded-full object-cover"
+                alt={product.brand?.name}
               />
               <span>{product.brand?.name}</span>
             </div>
             <div>
-              <strong>{t("store")}:</strong> {product.stock_quantity}{" "}
-              {t("store")}
+              <strong>{t("stock")}:</strong> {product.stock_quantity} {t("pcs")}
             </div>
           </div>
 
           {/* Attributes */}
-          {product.attributes?.length > 0 && (
-            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-              <h3 className="font-semibold text-gray-700 mb-2">
-                {t("specifications")}:
-              </h3>
-              <ul className="text-sm text-gray-600 space-y-1">
-                {product.attributes?.map((attr, i) => (
-                  <li key={i}>
-                    <strong>{attr.attribute_name}:</strong>{" "}
-                    {attr.attribute_value}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          {Array.isArray(product.attributes) &&
+            product.attributes.length > 0 && (
+              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <h3 className="font-semibold text-gray-700 mb-2">
+                  {t("specifications")}:
+                </h3>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  {product.attributes.map((attr, i) => (
+                    <li key={i}>
+                      <strong>{attr.attribute_name}:</strong>{" "}
+                      {attr.attribute_value}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
           {/* Tags */}
-          {product.tags?.length > 0 && (
+          {Array.isArray(product.tags) && product.tags.length > 0 && (
             <div className="flex gap-2 flex-wrap pt-2">
-              {product.tags?.map((tag, i) => (
+              {product.tags.map((tag, i) => (
                 <span
                   key={i}
                   className="bg-purple-100 text-purple-700 px-3 py-1 text-xs rounded-full"
@@ -362,26 +244,29 @@ const ProductDetails: React.FC = () => {
                 type="number"
                 min={1}
                 max={product.stock_quantity}
-                defaultValue={1}
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
                 className="w-20 border border-gray-200 rounded-lg px-2 py-1 text-center"
               />
             </div>
 
             <div className="flex gap-3 mt-2 sm:mt-0">
-              <button  onClick={() => openModal("product", product)}
-              className="bg-purple-700 text-white px-5 py-2 rounded-xl hover:bg-purple-800 transition">
+              <button
+                onClick={() => openModal("product", product)}
+                className="bg-purple-700 text-white px-5 py-2 rounded-xl hover:bg-purple-800 transition"
+              >
                 {t("addToCart")}
               </button>
               <button
-                onClick={isFav ? handleRemoveFromFavorite : handleAddToFavorite}
+                onClick={handleToggleFavorite}
                 className={`left-2 p-2 text-sm rounded-full z-10 transition flex items-center gap-2 ${
-                  isFav
+                  is_fav
                     ? "text-purple-600"
                     : "text-gray-500 hover:text-purple-600"
                 }`}
               >
                 <MdOutlineFavoriteBorder />
-                {t("addToWishlist")}
+                {is_fav ? t("removeFromWishlist") : t("addToWishlist")}
               </button>
             </div>
           </div>

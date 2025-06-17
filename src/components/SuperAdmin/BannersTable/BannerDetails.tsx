@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getBannerById } from "../../../api/SuperAdminApi/Banners/_requests"; // تأكد من وجود هذا الملف
-import { getAllCategories } from "../../../api/SuperAdminApi/Categories/_requests";
-import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
+import { useAllCategories } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
 import { useGetBannerById } from "../../../hooks/Api/SuperAdmin/useBanners/useSuperAdminBanners";
+import { AxiosError } from "axios";
+import PageMeta from "../../common/PageMeta";
 
 interface Banner {
   id: number;
@@ -22,42 +22,26 @@ interface Banner {
 const BannerDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["BannerDetails"]);
-  //const [banner, setBanner] = useState<Banner | null>(null);
-  // const [loading, setLoading] = useState(true);
-  //const [categories, setCategories] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchBanner = async () => {
-  //     try {
-  //       const res = await getBannerById(id as string);
-  //       setBanner(res.data.data);
-  //     } catch (error) {
-  //       console.error("Error fetching banner:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   if (id) fetchBanner();
-  // }, [id]);
-
-  // useEffect(() => {
-  //   const fetchCategory = async () => {
-  //     try {
-  //       const res = await getAllCategories();
-  //       setCategories(res.data.data.original);
-  //     } catch (error) {
-  //       console.error("Error fetching banner:", error);
-  //     }
-  //   };
-
-  //   fetchCategory();
-  // }, []);
-
-  const { data: bannerData, isLoading: loading } = useGetBannerById(id);
-  const banner = bannerData?.data.data;
+  const [globalError, setGlobalError] = useState("");
   const { data: allCategories } = useAllCategories();
   const categories = allCategories?.data.data?.original;
+  const {
+    data: bannerData,
+    isLoading: loading,
+    isError,
+    error,
+  } = useGetBannerById(id);
+  const banner = bannerData?.data.data;
+  useEffect(() => {
+    if (isError && error instanceof AxiosError) {
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) {
+        setGlobalError(t("global_error"));
+      } else {
+        setGlobalError(t("general_error"));
+      }
+    }
+  }, [isError, error, t]);
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleString("en-US", {
       year: "numeric",
@@ -67,30 +51,52 @@ const BannerDetails: React.FC = () => {
       minute: "2-digit",
     });
   };
-
-  if (!id)
+  if (!id) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        {t("noId")}
-      </div>
+      <>
+        <PageMeta title={t("main_title")} description="Product Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("noData")}
+        </div>
+      </>
     );
+  }
 
-  if (loading)
+  if (loading) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        {t("loading")}
-      </div>
+      <>
+        <PageMeta title={t("mainTitle")} description="Product Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("loading")}
+        </div>
+      </>
     );
+  }
 
-  if (!banner)
+  if (!banner && !globalError) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        {t("notFound")}
-      </div>
+      <>
+        <PageMeta title={t("mainTitle")} description="Product Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("notFound")}
+        </div>
+      </>
     );
-
+  }
+  if (globalError) {
+    return (
+      <>
+        <PageMeta title={t("mainTitle")} description="Product Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {globalError}
+        </div>
+      </>
+    );
+  }
   return (
     <div className="banner-details p-6 max-w-5xl mx-auto space-y-8">
+      <PageMeta title={t("mainTitle")} description="Product Details" />
+
       <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
         {t("title")}
       </h1>

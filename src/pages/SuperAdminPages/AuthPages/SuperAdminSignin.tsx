@@ -1,14 +1,12 @@
 import PageMeta from "../../../components/common/PageMeta";
-import AuthLayout from "./AuthPageLayout";
-import AdminSignInForm from "../../../components/admin/auth/AdminSignInForm";
-import SuperAdminSignInForm from "../../../components/SuperAdmin/Auth/SuperAdminSignInForm";
-
+import AuthLayout from "../../../components/common/AuthPageLayout";
+import SignInForm from "../../../components/common/SignInForm";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 export default function SuperAdminSignIn() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
-    const token = localStorage.getItem("sToken");
+    const token = localStorage.getItem("super_admin_token");
     if (token) {
       navigate("/super_admin");
     }
@@ -19,8 +17,8 @@ export default function SuperAdminSignIn() {
         title="React.js SignIn Dashboard | TailAdmin - Next.js Admin Dashboard Template"
         description="This is React.js SignIn Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <AuthLayout>
-        <SuperAdminSignInForm />
+      <AuthLayout userType="super_admin">
+        <SignInForm userType="super_admin" />
       </AuthLayout>
     </>
   );

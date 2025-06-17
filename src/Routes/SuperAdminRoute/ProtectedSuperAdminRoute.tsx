@@ -6,7 +6,7 @@ const ProtectedSuperAdminRoute = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const sToken = localStorage.getItem("sToken");
+  const sToken = localStorage.getItem("super_admin_token");
   if (!sToken) {
     return <Navigate to="/super_admin/signin" replace />;
   } else {

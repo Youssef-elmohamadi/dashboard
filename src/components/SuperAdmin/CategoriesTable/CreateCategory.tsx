@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";
@@ -23,6 +23,8 @@ export default function CreateCategory() {
     image: null as File | null,
   });
 
+  const [errorFetchingCategories, setErrorFetchingCategories] = useState("");
+
   const [errors, setErrors] = useState({
     name: [] as string[],
     description: [] as string[],
@@ -42,9 +44,22 @@ export default function CreateCategory() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const { data } = useAllCategories();
+  const {
+    data,
+    isError: isCategoriesError,
+    error: categoriesError,
+  } = useAllCategories();
   const categories = data?.data.data.original;
-
+  useEffect(() => {
+    if (isCategoriesError) {
+      const status = categoriesError?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrorFetchingCategories(t("category.errors.global"));
+      } else {
+        setErrorFetchingCategories(t("category.errors.fetching_categories"));
+      }
+    }
+  }, [isCategoriesError, categoriesError, t]);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -231,6 +246,11 @@ export default function CreateCategory() {
             )}
             {errors.parent_id && (
               <p className="text-red-500 text-sm mt-1">{errors.parent_id[0]}</p>
+            )}
+            {errorFetchingCategories && (
+              <p className="text-red-500 text-sm mt-1">
+                {errorFetchingCategories}
+              </p>
             )}
           </div>
         </div>

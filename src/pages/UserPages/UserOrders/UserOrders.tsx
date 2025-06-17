@@ -11,19 +11,6 @@ import {
   useCancelOrder,
 } from "../../../hooks/Api/EndUser/useOrders/useOrders";
 import { AxiosError } from "axios";
-type User = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  vendor_id: number;
-  avatar: string;
-  created_at: string;
-  updated_at: string;
-  vendor: { id: number; name: string };
-  roles: { id: number; name: string }[];
-};
 
 const Orders = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -40,6 +27,8 @@ const Orders = () => {
         setUnauthorized(true);
       } else if (status === 500) {
         setGlobalError(true);
+      } else {
+        setGlobalError(true);
       }
     }
   }, [isError, error]);
@@ -47,7 +36,7 @@ const Orders = () => {
   const ordersData = data?.data ?? [];
   const totalOrders = data?.total ?? 0;
   useEffect(() => {
-    const token = localStorage.getItem("uToken");
+    const token = localStorage.getItem("end_user_token");
     if (!token) {
       navigate("/signin", { replace: true });
     }
@@ -55,7 +44,7 @@ const Orders = () => {
   const { t } = useTranslation(["EndUserOrderHistory"]);
   const { mutateAsync: cancelOrder } = useCancelOrder();
   const handleCancel = async (id: number) => {
-    const confirmed = await alertDelete(id, cancelOrder, refetch, {
+    await alertDelete(id, cancelOrder, refetch, {
       confirmTitle: t("cancelAlert.cancelTitle"),
       confirmText: t("cancelAlert.cancelText"),
       confirmButtonText: t("cancelAlert.confirmButtonText"),
@@ -67,7 +56,7 @@ const Orders = () => {
     });
   };
 
-  const columns = buildOrderColumns<User>({
+  const columns = buildOrderColumns({
     includeOrderStatus: true, // Enable the Order Status column
     includeActions: true, // Optionally include actions
     includeCreatedAt: true,

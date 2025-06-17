@@ -40,5 +40,10 @@
     "france": "France",
     "usa_customers": "{{count}} Customers",
     "france_customers": "{{count}} Customers"
+  },
+  "metrics": {
+    "all": "All",
+    "active": "Active",
+    "inactive": "Inactive"
   }
 }

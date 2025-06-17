@@ -11,29 +11,73 @@ import { SweetAlert } from "../../common/SweetAlert";
 import { clearCart } from "../Redux/cartSlice/CartSlice";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+
+// ✅ أنواع البيانات
+type LocationType = {
+  full_name: string;
+  phone: string;
+  city: string;
+  area: string;
+  street: string;
+  building_number: string;
+  floor_number: string;
+  apartment_number: string;
+  landmark: string;
+  notes: string;
+};
+
+type CartItem = {
+  id: number;
+  quantity: number;
+};
+
+type CheckoutFormType = {
+  items: { product_id: number; quantity: number }[];
+  payment_method: string;
+  location: LocationType;
+  save_info: boolean;
+  newsletter: boolean;
+};
+
+type ClientSideErrorsType = {
+  payment_method: string;
+  location: { [K in keyof LocationType]: string };
+  save_info: boolean;
+  newsletter: boolean;
+};
+
+type RootState = {
+  cart: {
+    items: CartItem[];
+  };
+};
 
 const CheckoutForm: React.FC = () => {
   const { t } = useTranslation(["EndUserCheckout"]);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [clientSideErrors, setClientSideErrors] = useState({
-    payment_method: "",
-    location: {
-      full_name: "",
-      phone: "",
-      city: "",
-      area: "",
-      street: "",
-      building_number: "",
-      floor_number: "",
-      apartment_number: "",
-      landmark: "",
-      notes: "",
-    },
-    save_info: false,
-    newsletter: false,
-  });
-  const [checkoutForm, setCheckoutForm] = useState({
+
+  const [clientSideErrors, setClientSideErrors] =
+    useState<ClientSideErrorsType>({
+      payment_method: "",
+      location: {
+        full_name: "",
+        phone: "",
+        city: "",
+        area: "",
+        street: "",
+        building_number: "",
+        floor_number: "",
+        apartment_number: "",
+        landmark: "",
+        notes: "",
+      },
+      save_info: false,
+      newsletter: false,
+    });
+
+  const [checkoutForm, setCheckoutForm] = useState<CheckoutFormType>({
     items: [],
     payment_method: "",
     location: {
@@ -52,19 +96,15 @@ const CheckoutForm: React.FC = () => {
     newsletter: false,
   });
 
-  const items = useSelector((state: any) => state.cart.items);
+  const items = useSelector((state: RootState) => state.cart.items);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const validate = () => {
     const fieldErrors: Record<string, string[]> = {};
-
-    if (!checkoutForm.payment_method) {
-      fieldErrors.payment_method = [t("checkout.payment_required")];
-    }
-
     const loc = checkoutForm.location;
-    [
+
+    const locationFields: (keyof LocationType)[] = [
       "full_name",
       "phone",
       "city",
@@ -73,24 +113,39 @@ const CheckoutForm: React.FC = () => {
       "building_number",
       "floor_number",
       "apartment_number",
-    ].forEach((field) => {
-      if (!loc[field as keyof typeof loc]) {
+    ];
+
+    locationFields.forEach((field) => {
+      if (!loc[field]) {
         fieldErrors[field] = [t(`checkout.${field}_required`)];
-      } else if (!/^01[0125][0-9]{8}$/.test(loc.phone)) {
+      }
+
+      if (
+        field === "phone" &&
+        loc.phone &&
+        !/^01[0125][0-9]{8}$/.test(loc.phone)
+      ) {
         fieldErrors["phone"] = [t("checkout.phone_invalid")];
       }
     });
 
+    if (!checkoutForm.payment_method) {
+      fieldErrors.payment_method = [t("checkout.payment_required")];
+    }
+
     setClientSideErrors((prev) => ({
       ...prev,
       location: {
-        ...prev.location,
-        ...Object.fromEntries(
-          Object.entries(loc).map(([key, value]) => [
-            key,
-            fieldErrors[key] ? fieldErrors[key][0] : "",
-          ])
-        ),
+        full_name: fieldErrors.full_name?.[0] || "",
+        phone: fieldErrors.phone?.[0] || "",
+        city: fieldErrors.city?.[0] || "",
+        area: fieldErrors.area?.[0] || "",
+        street: fieldErrors.street?.[0] || "",
+        building_number: fieldErrors.building_number?.[0] || "",
+        floor_number: fieldErrors.floor_number?.[0] || "",
+        apartment_number: fieldErrors.apartment_number?.[0] || "",
+        landmark: fieldErrors.landmark?.[0] || "",
+        notes: fieldErrors.notes?.[0] || "",
       },
       payment_method: fieldErrors.payment_method?.[0] || "",
     }));
@@ -99,7 +154,7 @@ const CheckoutForm: React.FC = () => {
   };
 
   useEffect(() => {
-    const updatedItems = items.map((item: any) => ({
+    const updatedItems = items.map((item) => ({
       product_id: item.id,
       quantity: item.quantity,
     }));
@@ -117,19 +172,19 @@ const CheckoutForm: React.FC = () => {
       ...prev,
       location: {
         ...prev.location,
-        [name]: value,
+        [name as keyof LocationType]: value,
       },
     }));
   };
 
-  const handleRadio = (name: string, value: string) => {
+  const handleRadio = (name: keyof CheckoutFormType, value: string) => {
     setCheckoutForm((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleCheckBox = (id: string, checked: boolean) => {
+  const handleCheckBox = (id: "save_info" | "newsletter", checked: boolean) => {
     setCheckoutForm((prev) => ({ ...prev, [id]: checked }));
   };
 
@@ -142,7 +197,10 @@ const CheckoutForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitted(true);
-    if (!validate()) return;
+    if (!validate()) {
+      toast.error(t("checkout.toast_validation"));
+      return;
+    }
 
     try {
       await checkout(checkoutForm);
@@ -162,7 +220,7 @@ const CheckoutForm: React.FC = () => {
 
         setErrors(formattedErrors);
       } else {
-        setErrors({ general: [t("general")] });
+        setErrors({ general: [t("checkout.general")] });
       }
     }
   };
@@ -176,16 +234,18 @@ const CheckoutForm: React.FC = () => {
         <p className="text-red-500 text-sm mt-1">{errors.general}</p>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {[
-          "full_name",
-          "phone",
-          "city",
-          "area",
-          "street",
-          "building_number",
-          "floor_number",
-          "apartment_number",
-        ].map((name) => (
+        {(
+          [
+            "full_name",
+            "phone",
+            "city",
+            "area",
+            "street",
+            "building_number",
+            "floor_number",
+            "apartment_number",
+          ] as const
+        ).map((name) => (
           <div key={name}>
             <Label className="dark:!text-gray-700">
               {t(`checkout.${name}`)}
@@ -195,11 +255,7 @@ const CheckoutForm: React.FC = () => {
               name={name}
               className="dark:!bg-transparent dark:placeholder:!text-gray-400 !placeholder:text-gray-400 text-gray-800 dark:!border-gray-200 dark:!text-gray-800"
               placeholder={t(`checkout.${name}`)}
-              value={
-                checkoutForm.location[
-                  name as keyof typeof checkoutForm.location
-                ]
-              }
+              value={checkoutForm.location[name]}
               onChange={handleChangeLocation}
             />
             {clientSideErrors.location[name] && (
@@ -207,7 +263,7 @@ const CheckoutForm: React.FC = () => {
                 {clientSideErrors.location[name]}
               </p>
             )}
-            {errors[name] && (
+            {errors[name] && !clientSideErrors.location[name] && (
               <p className="text-red-500 text-sm mt-1">{errors[name][0]}</p>
             )}
           </div>

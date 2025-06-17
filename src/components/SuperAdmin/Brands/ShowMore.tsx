@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useGetBrandById } from "../../../hooks/Api/Admin/useBrands/useBrands";
+import { useGetBrandById } from "../../../hooks/Api/SuperAdmin/useBrands/useSuperAdminBrandsManage";
+import PageMeta from "../../common/PageMeta";
+import { AxiosError } from "axios";
 
 interface Brand {
   id: number;
@@ -15,32 +17,64 @@ interface Brand {
 const BrandDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["BrandDetails"]);
-
-  //const [brand, setBrand] = useState<Brand | null>(null);
-  //const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   const fetchBrand = async () => {
-  //     try {
-  //       const res = await getBrandById(id as string);
-  //       setBrand(res.data.data);
-  //     } catch (error) {
-  //       console.error("Error fetching brand:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   if (id) fetchBrand();
-  // }, [id]);
-
-  // console.log(brand);
+  const [globalError, setGlobalError] = useState("");
 
   const { data, isLoading, error, isError } = useGetBrandById(id);
 
-
   const brand = data?.data.data;
 
+  useEffect(() => {
+    if (isError && error instanceof AxiosError) {
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) {
+        setGlobalError(t("global_error"));
+      } else {
+        setGlobalError(t("general_error"));
+      }
+    }
+  }, [isError, error, t]);
+  if (!id) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Product Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("no_data")}
+        </div>
+      </>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <>
+        <PageMeta title={t("mainTitle")} description="Product Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("loading")}
+        </div>
+      </>
+    );
+  }
+
+  if (!brand && !globalError) {
+    return (
+      <>
+        <PageMeta title={t("mainTitle")} description="Product Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("not_found")}
+        </div>
+      </>
+    );
+  }
+  if (globalError) {
+    return (
+      <>
+        <PageMeta title={t("mainTitle")} description="Product Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {globalError}
+        </div>
+      </>
+    );
+  }
   const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleString("en-US", {
       year: "numeric",
@@ -49,36 +83,9 @@ const BrandDetails: React.FC = () => {
       hour: "2-digit",
       minute: "2-digit",
     });
-
-  if (!id)
-    return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        {t("noId")}
-      </div>
-    );
-
-  if (isLoading)
-    return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        {t("loading")}
-      </div>
-    );
-
-  if (!brand && isError)
-    return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        حدث خطأ غير متوقع
-      </div>
-    );
-  if (!brand)
-    return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        {t("notFound")}
-      </div>
-    );
-
   return (
     <div className="brand-details p-6 max-w-3xl mx-auto space-y-8">
+      <PageMeta title={t("mainTitle")} description="Product Details" />
       <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
         {t("title")}
       </h1>

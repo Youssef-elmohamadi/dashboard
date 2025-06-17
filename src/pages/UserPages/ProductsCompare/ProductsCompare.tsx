@@ -5,7 +5,7 @@ const ProductsCompare = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("uToken");
+    const token = localStorage.getItem("end_user_token");
     if (!token) {
       navigate("/signin", { replace: true });
     }

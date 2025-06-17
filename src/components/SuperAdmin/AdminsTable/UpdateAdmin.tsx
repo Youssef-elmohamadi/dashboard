@@ -12,6 +12,7 @@ import {
   useUpdateAdmin,
 } from "../../../hooks/Api/SuperAdmin/useSuperAdminAdmis/useSuperAdminAdmins";
 import { useRoles } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
+import PageMeta from "../../common/PageMeta";
 type Role = {
   name: string;
   value: string;
@@ -21,6 +22,7 @@ const UpdateAdmin = () => {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [fetchingRoleError, setFetchingRoleError] = useState("");
 
   const [updateData, setUpdateData] = useState({
     first_name: "",
@@ -86,7 +88,12 @@ const UpdateAdmin = () => {
   const { t } = useTranslation(["UpdateAdmin"]);
   const { dir } = useDirectionAndLanguage();
 
-  const { data, isError, error } = useGetAdminById(id);
+  const {
+    data,
+    isError: isErrorFetchAdmin,
+    error: errorFetchAdmin,
+    isLoading,
+  } = useGetAdminById(id);
 
   const admin = data?.data?.data;
   useEffect(() => {
@@ -101,20 +108,36 @@ const UpdateAdmin = () => {
     });
   }, [admin]);
 
-  if (isError) {
-    const status = error?.response?.status;
-    if (status === 403 || status === 401) {
-      setErrors({
-        ...errors,
-        global: t("admin.errors.global"),
-      });
+  useEffect(() => {
+    if (isErrorFetchAdmin) {
+      const status = errorFetchAdmin?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrors((prev) => ({
+          ...prev,
+          global: t("admin.errors.global"),
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          general: t("admin.errors.fetching_admin"),
+        }));
+      }
     }
-  }
+  }, [isErrorFetchAdmin, errorFetchAdmin, t]);
 
   // Fetch roles
-  const { data: roles } = useRoles();
+  const { data: roles, isError: isRoleError, error: roleError } = useRoles();
   const options = roles?.data.data;
-
+  useEffect(() => {
+    if (isRoleError) {
+      const status = roleError?.response?.status;
+      if (status === 401 || status === 403) {
+        setFetchingRoleError(t("admin.errors.global"));
+      } else {
+        setFetchingRoleError(t("admin.errors.fetching_roles"));
+      }
+    }
+  }, [isRoleError, roleError, t]);
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -190,9 +213,18 @@ const UpdateAdmin = () => {
     }
   };
 
+  if (isLoading)
+    return (
+      <>
+        <PageMeta title={t("admin.main_title")} description="Update Admin" />
+        <p className="text-center mt-5">{t("admin.loading") || "Loading..."}</p>
+      </>
+    );
+
   return (
     <div>
       <div className="p-4 border-b border-gray-200 dark:border-gray-600">
+        <PageMeta title={t("admin.main_title")} description="Update Admin" />
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("admin.update_title")}
         </h3>
@@ -204,6 +236,9 @@ const UpdateAdmin = () => {
       >
         {errors.global && (
           <p className="text-error-500 text-sm mt-1">{errors.global}</p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
           {/* First Name */}
@@ -268,6 +303,9 @@ const UpdateAdmin = () => {
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.role}
               </p>
+            )}
+            {fetchingRoleError && (
+              <p className="text-red-500 text-sm mt-1">{fetchingRoleError}</p>
             )}
           </div>
           {/* Email */}
@@ -351,12 +389,6 @@ const UpdateAdmin = () => {
             )}
           </div>
         </div>
-        {errors.global && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
-        )}
         {/* Submit Button */}
         <button
           type="submit"

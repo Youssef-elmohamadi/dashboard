@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetCouponById } from "../../../hooks/Api/SuperAdmin/useCoupons/useCoupons";
+import { AxiosError } from "axios";
+import PageMeta from "../../common/PageMeta";
 
 interface Coupon {
   code: string;
@@ -19,17 +21,28 @@ interface Coupon {
 const CouponDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["CouponDetails"]);
-  const [couponData, setCouponData] = useState<Coupon | null>(null);
+  //const [couponData, setCouponData] = useState<Coupon | null>(null);
+  const [globalError, setGlobalError] = useState("");
+  const { data, isLoading, isError, error } = useGetCouponById(id!!);
 
-  const { data, isLoading } = useGetCouponById(id!!);
+  const couponData = data?.data?.data;
 
-  const coupon = data?.data?.data;
+  // useEffect(() => {
+  //   if (coupon) {
+  //     setCouponData(coupon);
+  //   }
+  // }, [coupon]);
 
   useEffect(() => {
-    if (coupon) {
-      setCouponData(coupon);
+    if (isError && error instanceof AxiosError) {
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) {
+        setGlobalError(t("coupon.global_error"));
+      } else {
+        setGlobalError(t("coupon.general_error"));
+      }
     }
-  }, [coupon]);
+  }, [isError, error, t]);
 
   const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleString("en-US", {
@@ -40,29 +53,52 @@ const CouponDetails: React.FC = () => {
       minute: "2-digit",
     });
 
-  if (!id)
+  if (!id) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-white">
-        {t("coupon.no_id")}
-      </div>
+      <>
+        <PageMeta title={t("mainTitle")} description="Category Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("no_data")}
+        </div>
+      </>
     );
+  }
 
-  if (isLoading)
+  if (isLoading) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-white">
-        {t("coupon.loading")}
-      </div>
+      <>
+        <PageMeta title={t("coupon.mainTitle")} description="Category Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("coupon.loading")}
+        </div>
+      </>
     );
+  }
 
-  if (!couponData)
+  if (!couponData && !globalError) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-white">
-        {t("coupon.not_found")}
-      </div>
+      <>
+        <PageMeta title={t("coupon.mainTitle")} description="Category Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("coupon.not_found")}
+        </div>
+      </>
     );
+  }
+  if (globalError) {
+    return (
+      <>
+        <PageMeta title={t("coupon.mainTitle")} description="Category Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {globalError}
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="coupon-details py-6 max-w-4xl mx-auto space-y-8">
+      <PageMeta title={t("coupon.mainTitle")} description="Category Details" />
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-6 dark:text-white">
         {t("coupon.title")}
       </h1>

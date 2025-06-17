@@ -3,7 +3,7 @@ import "./alert.css";
 
 type Props = {
   id: number;
-  getStatus: (id: number) => string ;
+  getStatus: (id: number) => string;
   changeStatus: (id: number, payload: { status: string }) => Promise<any>;
   options: { [key: string]: string };
   Texts: {
@@ -58,6 +58,7 @@ export const openChangeStatusModal = async ({
           icon: "success",
           title: Texts.success.replace("{{status}}", newStatus),
           confirmButtonText: Texts.confirmButtonText,
+          customClass: { popup: "custom-popup" },
         });
       } catch (error: any) {
         console.error("Change status failed:", error);
@@ -66,6 +67,7 @@ export const openChangeStatusModal = async ({
           title: Texts.errorResponse,
           text: error?.response?.data?.message || error?.message || "",
           confirmButtonText: Texts.confirmButtonText,
+          customClass: { popup: "custom-popup" },
         });
       }
     } else if (newStatus === matchedKey) {
@@ -73,6 +75,7 @@ export const openChangeStatusModal = async ({
         icon: "info",
         title: Texts.noChangeMessage,
         confirmButtonText: Texts.confirmButtonText,
+        customClass: { popup: "custom-popup" },
       });
     }
   } catch (error: any) {
@@ -82,6 +85,7 @@ export const openChangeStatusModal = async ({
       title: Texts.errorResponse,
       text: error?.response?.data?.message || error?.message || "",
       confirmButtonText: Texts.confirmButtonText,
+      customClass: { popup: "custom-popup" },
     });
   }
 };

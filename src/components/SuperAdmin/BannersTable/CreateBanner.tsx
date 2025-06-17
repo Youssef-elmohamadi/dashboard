@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../form/Select";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Button from "../../ui/button/Button";
-import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
+import { useAllCategories } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
 import { useCreateBanner } from "../../../hooks/Api/SuperAdmin/useBanners/useSuperAdminBanners";
+import { AxiosError } from "axios";
 
 interface Category {
   id: string;
@@ -23,6 +24,7 @@ const CreateBanner = () => {
     position: "",
     is_active: "1",
   });
+  const [fetchingCategoriesError, setFetchingCategoriesError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string[] | string>>({});
   const [clientSideErrors, setClientSideErrors] = useState<
@@ -32,9 +34,22 @@ const CreateBanner = () => {
   const [imagePreview, setImagePreview] = useState<string>("");
   const navigate = useNavigate();
 
-  const { data: allCategories } = useAllCategories();
+  const {
+    data: allCategories,
+    isError: isErrorFetchingCategories,
+    error: categoriesError,
+  } = useAllCategories();
   const categories = allCategories?.data.data.original;
-
+  useEffect(() => {
+    if (isErrorFetchingCategories && categoriesError instanceof AxiosError) {
+      const status = categoriesError?.response?.status;
+      if (status === 401 || status === 403) {
+        setFetchingCategoriesError(t("banner.errors.global"));
+      } else {
+        setFetchingCategoriesError(t("banner.errors.fetching_categories"));
+      }
+    }
+  }, [isErrorFetchingCategories, categoriesError, t]);
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!bannerData.title) newErrors.title = t("banner.errors.name");
@@ -226,6 +241,11 @@ const CreateBanner = () => {
               {clientSideErrors.link_id && (
                 <p className="text-red-500 text-sm mt-1">
                   {clientSideErrors.link_id}
+                </p>
+              )}
+              {fetchingCategoriesError && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fetchingCategoriesError}
                 </p>
               )}
             </div>

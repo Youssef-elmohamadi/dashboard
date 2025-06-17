@@ -1,12 +1,18 @@
-import React from "react";
+import { Link } from "react-router-dom";
 
 const CheckoutHeader = () => {
   return (
-    <div className="mx-auto py-4 px-2 bg-white">
-      <div className="w-full flex justify-center">
-        <img src="/images/logo/logo.png" className="w-[100px]" alt="" />
+    <header className="bg-white shadow-sm border-b border-b-purple-600 py-4">
+      <div className="container mx-auto px-4 flex justify-center">
+        <Link to="/">
+          <img
+            src="/images/logo/logo.png"
+            alt="Logo"
+            className="w-[120px] hover:opacity-90 transition duration-300"
+          />
+        </Link>
       </div>
-    </div>
+    </header>
   );
 };
 

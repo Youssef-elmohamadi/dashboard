@@ -1,7 +1,6 @@
 import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { getProfile } from "../../../api/EndUserApi/endUserAuth/_requests";
-import { handleLogout } from "../../../components/EndUser/Auth/Logout";
-
+import { handleLogout } from "../../common/Logout";
 interface UserContextType {
   userId: number | null;
   setUserId: (id: number) => void;
@@ -18,7 +17,7 @@ interface UserProviderProps {
 
 export const EndUserProvider = ({ children }: UserProviderProps) => {
   useEffect(() => {
-    const token = localStorage.getItem("uToken");
+    const token = localStorage.getItem("end_user_token");
     if (token) {
       const fetchData = async () => {
         try {
@@ -26,7 +25,7 @@ export const EndUserProvider = ({ children }: UserProviderProps) => {
         } catch (error: any) {
           console.error("Failed to get data", error);
           if (error.response && error.response.status === 401) {
-            handleLogout();
+            handleLogout("end_user");
           }
           console.error(error);
         }
@@ -37,7 +36,7 @@ export const EndUserProvider = ({ children }: UserProviderProps) => {
   const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
-    const storedAdminId = localStorage.getItem("uId");
+    const storedAdminId = localStorage.getItem("end_user_id");
 
     if (storedAdminId) {
       setUserId(Number(storedAdminId));

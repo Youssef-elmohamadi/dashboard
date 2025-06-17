@@ -34,6 +34,7 @@ i18n
       "EndUserSignUp",
       "EndUserSignUpErrors",
       "EndUserSignIn",
+      "EndUserFavProducts",
       "DashboardSidebar",
       "UserDropdown",
       "Header",

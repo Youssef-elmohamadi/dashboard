@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Label from "../../../components/form/Label";
 import Input from "../../../components/form/input/InputField";
 import Select from "../../../components/form/Select";
@@ -9,12 +9,14 @@ import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useRoles } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
 import { useCreateAdmin } from "../../../hooks/Api/SuperAdmin/useSuperAdminAdmis/useSuperAdminAdmins";
+import PageMeta from "../../common/PageMeta";
 type Role = {
   name: string;
 };
 export default function CreateAdmin() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fetchingRoleError, setFetchingRoleError] = useState("");
   const [errors, setErrors] = useState({
     first_name: [] as string[],
     last_name: [] as string[],
@@ -94,8 +96,20 @@ export default function CreateAdmin() {
     }));
   };
 
-  const { data } = useRoles();
+  const { data, isError: isRoleError, error: roleError } = useRoles();
   const options = data?.data.data;
+  useEffect(() => {
+    if (isRoleError) {
+      const status = roleError?.response?.status;
+      if (status === 401 || status === 403) {
+        setFetchingRoleError(t("admin.errors.global"));
+      } else {
+        setFetchingRoleError(t("admin.errors.fetching_roles"));
+      }
+    }
+  }, [isRoleError, roleError, t]);
+  console.log(fetchingRoleError);
+
   const { mutateAsync } = useCreateAdmin();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -148,6 +162,7 @@ export default function CreateAdmin() {
   };
   return (
     <div>
+      <PageMeta title={t("admin.main_title")} description="Create New Admin" />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("admin.create_title")}
@@ -209,6 +224,9 @@ export default function CreateAdmin() {
             placeholder={t("admin.placeholder.select_role")}
             className="dark:bg-dark-900"
           />
+          {fetchingRoleError && (
+            <p className="text-red-500 text-sm mt-1">{fetchingRoleError}</p>
+          )}
           {errors.role && (
             <p className="text-red-500 text-sm mt-1">{errors.role[0]}</p>
           )}

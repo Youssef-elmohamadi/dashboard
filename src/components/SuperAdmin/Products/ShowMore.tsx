@@ -1,30 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetProductById } from "../../../hooks/Api/SuperAdmin/useProducts/useSuperAdminProductsManage";
+import PageMeta from "../../common/PageMeta";
 
 const ProductDetails: React.FC = () => {
   const { id } = useParams();
-  //const [product, setProduct] = useState<any>(null);
-  //const [loading, setLoading] = useState(true);
   const { t } = useTranslation(["ProductDetails"]);
-  // useEffect(() => {
-  //   const fetchProduct = async () => {
-  //     try {
-  //       const response = await getProductById(id);
-  //       setProduct(response.data.data);
-  //     } catch (error) {
-  //       console.error("Error fetching product:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   if (id) fetchProduct();
-  // }, [id]);
+  const [globalError, setGlobalError] = useState(false);
   const { data, isLoading: loading, error, isError } = useGetProductById(id);
 
   const product = data?.data.data;
+  useEffect(() => {
+    if (isError) {
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) {
+        setGlobalError(true);
+      } else {
+        setGlobalError(true);
+      }
+    }
+  }, [isError, error, t]);
   const formatDate = (date: string) =>
     new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
@@ -32,17 +28,52 @@ const ProductDetails: React.FC = () => {
       day: "numeric",
     });
 
-  if (loading)
-    return <div className="p-8 text-center text-gray-500">{t("loading")}</div>;
-  if (!id)
-    return <div className="p-8 text-center text-gray-500">{t("no_data")}</div>;
-  if (!product)
+  if (!id) {
     return (
-      <div className="p-8 text-center text-gray-500">{t("not_found")}</div>
+      <>
+        <PageMeta title={t("main_title")} description="Update Product" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("no_data")}
+        </div>
+      </>
     );
+  }
+
+  if (loading) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Update Product" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("loading")}
+        </div>
+      </>
+    );
+  }
+
+  if (!product && !globalError) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Update Product" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("not_found")}
+        </div>
+      </>
+    );
+  }
+  if (globalError) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Update Product" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("global_error")}
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="product-details p-6 max-w-6xl mx-auto space-y-10">
+      <PageMeta title={t("main_title")} description="Update Product" />
       <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-4">
         {t("title")}
       </h1>

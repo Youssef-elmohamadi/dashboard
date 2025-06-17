@@ -35,8 +35,9 @@ const Roles = () => {
       const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
-      }
-      if (status === 500) {
+      } else if (status === 500) {
+        setGlobalError(true);
+      } else {
         setGlobalError(true);
       }
     }
@@ -111,10 +112,10 @@ const Roles = () => {
         />
       )}
       <PageMeta
-        title="Roles Dashboard"
+        title={t("rolesPage.mainTitle")}
         description="This is the roles listing page."
       />
-      <PageBreadcrumb pageTitle="Roles" userType="super_admin" />
+      <PageBreadcrumb pageTitle={t("rolesPage.title")} userType="super_admin" />
       <div>
         <SearchTable
           fields={[{ key: "name", label: "Name", type: "input" }]}

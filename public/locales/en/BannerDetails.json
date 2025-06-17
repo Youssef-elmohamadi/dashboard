@@ -1,5 +1,6 @@
 {
   "title": "Banner Details",
+  "mainTitle": "Banner Details",
   "basicInfo": "Basic Information",
   "bannerTitle": "Title",
   "linkType": "Link Type",
@@ -17,5 +18,8 @@
   "updatedAt": "Updated At",
   "noId": "No banner ID provided.",
   "loading": "Loading banner data...",
-  "notFound": "Banner not found."
+  "notFound": "Banner not found.",
+  "noData": "No banner data available.",
+  "general_error": "Something went wrong. Please try again later.",
+  "global_error": "You are not authorized to perform this action."
 }

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
-  getAllCategories,
-  getCategoryById,
-} from "../../../api/SuperAdminApi/Categories/_requests";
+  useGetCategoryById,
+  useAllCategories,
+} from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
 import { useTranslation } from "react-i18next";
-
+import PageMeta from "../../common/PageMeta";
+import { AxiosError } from "axios";
 interface Category {
   id: number;
   name: string;
@@ -24,38 +25,27 @@ interface Category {
 const CategoryDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["CategoryDetails"]);
+  const [globalError, setGlobalError] = useState("");
+  //const [category, setCategory] = useState<Category | null>(null);
+  //const [categories, setCategories] = useState<Category[] | null>(null);
+  //const [loading, setLoading] = useState(true);
+  const { data, isLoading: loading, error, isError } = useGetCategoryById(id);
 
-  const [category, setCategory] = useState<Category | null>(null);
-  const [categories, setCategories] = useState<Category[] | null>(null);
-  const [loading, setLoading] = useState(true);
-
+  const category = data?.data.data;
   useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const res = await getCategoryById(id as string);
-        setCategory(res.data.data.original);
-      } catch (error) {
-        console.error("Error fetching category:", error);
-      } finally {
-        setLoading(false);
+    if (isError && error instanceof AxiosError) {
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) {
+        setGlobalError(t("global_error"));
+      } else {
+        setGlobalError(t("general_error"));
       }
-    };
+    }
+  }, [isError, error, t]);
 
-    if (id) fetchCategory();
-  }, [id]);
+  const { data: categoriesData } = useAllCategories();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await getAllCategories();
-        setCategories(res.data.data);
-      } catch (error) {
-        console.error("Error fetching all categories:", error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
+  const categories = categoriesData?.data.data;
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return "N/A";
@@ -68,29 +58,52 @@ const CategoryDetails: React.FC = () => {
     });
   };
 
-  if (!id)
+  if (!id) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        {t("noId")}
-      </div>
+      <>
+        <PageMeta title={t("mainTitle")} description="Category Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("no_data")}
+        </div>
+      </>
     );
+  }
 
-  if (loading)
+  if (loading) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        {t("loading")}
-      </div>
+      <>
+        <PageMeta title={t("mainTitle")} description="Category Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("loading")}
+        </div>
+      </>
     );
+  }
 
-  if (!category)
+  if (!category && !globalError) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        {t("notFound")}
-      </div>
+      <>
+        <PageMeta title={t("mainTitle")} description="Category Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("not_found")}
+        </div>
+      </>
     );
+  }
+  if (globalError) {
+    return (
+      <>
+        <PageMeta title={t("mainTitle")} description="Category Details" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {globalError}
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="category-details p-6 max-w-5xl mx-auto space-y-8">
+      <PageMeta title={t("mainTitle")} description="Category Details" />
       <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
         {t("title")}
       </h1>
@@ -123,8 +136,9 @@ const CategoryDetails: React.FC = () => {
           <p>
             <strong>{t("parentId")}:</strong>{" "}
             {category.parent_id
-              ? categories?.find((cat) => cat.id === category.parent_id)
-                  ?.name || t("unknown")
+              ? categories?.find(
+                  (cat: Category) => cat.id === category.parent_id
+                )?.name || t("unknown")
               : t("none")}
           </p>
         </div>

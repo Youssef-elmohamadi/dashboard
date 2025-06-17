@@ -1,4 +1,6 @@
 {
+  "mainTitle": "تاشتيبا | تفاصيل {{product_name}}",
+  "productDescription": "اشتري {{product_name}} بالسعر الافضل، توصيل لجميع المدن في مصر، منتجات عالية الجودة",
   "reviews": "المراجعات",
   "egp": "جنيه",
   "category": "القسم",
@@ -12,7 +14,7 @@
   "addToCompare": "اضف للمقارنة",
   "quantity": "الكمية",
   "addToCart": "اضف للسلة",
-    "successAddedToFav": "تمت إضافة المنتج إلى المفضلة",
+  "successAddedToFav": "تمت إضافة المنتج إلى المفضلة",
   "successRemoveFromFav": "تمت حذف المنتج إلى المفضلة",
   "fieldAddedToFav": "حدث خطأ اثناء اضافة المنتج  للسلة",
   "fieldRemoveFromFav": "حدث خطأ اثناء حذف المنتج  من السلة",

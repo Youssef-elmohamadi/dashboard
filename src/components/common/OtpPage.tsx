@@ -40,12 +40,10 @@ const OTPPage: React.FC<OTPPageProps> = ({
   }, [timer]);
   const handleChange = (value: string, index: number) => {
     if (!/^\d*$/.test(value)) return;
-
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
     setOtpError?.("");
-
     if (value && index < otp.length - 1 && inputRefs.current[index + 1]) {
       inputRefs.current[index + 1]!.focus();
     }

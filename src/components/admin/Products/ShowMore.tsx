@@ -3,13 +3,13 @@ import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetProductById } from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
 import PageMeta from "../../common/PageMeta";
+import { AxiosError } from "axios";
 
 type Category = {
   id: number;
   name: string;
   description: string;
 };
-
 type Brand = {
   id: number;
   name: string;
@@ -55,7 +55,7 @@ const ProductDetails: React.FC = () => {
   const product: Product = data?.data?.data;
 
   useEffect(() => {
-    if (isError) {
+    if (isError && error instanceof AxiosError) {
       const status = error?.response?.status;
       if (status === 401 || status === 403) {
         setGlobalError(true);

@@ -21,7 +21,8 @@
       "commissionMax": "Commission rate cannot exceed 100",
       "parent": "Parent category is invalid",
       "global": "You are not authorized to perform this action.",
-      "general": "Something went wrong. Please try again later."
+      "general": "Something went wrong. Please try again later.",
+      "fetching_categories": "Failed to fetch categories. Please try again later."
     },
     "success": "Category Created Successfully"
   }

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
 import StarRatings from "react-star-ratings";
 import { MdOutlineStarBorder } from "react-icons/md";
@@ -14,41 +13,9 @@ import {
 } from "../../../hooks/Api/EndUser/useProducts/useFavoriteProducts";
 import { Product } from "../../../types/Product";
 import { toast } from "react-toastify";
+import LazyImage from "../../common/LazyImage";
 
 // Lazy image component
-const LazyImage = ({
-  src,
-  alt,
-  className,
-}: {
-  src: string;
-  alt: string;
-  className: string;
-}) => {
-  const { ref, inView } = useInView({
-    threshold: 0.1,
-    triggerOnce: true,
-  });
-  const [isLoading, setIsLoading] = useState(true);
-
-  return (
-    <div
-      ref={ref}
-      className={`w-full h-full ${
-        isLoading ? "bg-gray-100 animate-pulse" : ""
-      }`}
-    >
-      {inView && (
-        <img
-          src={src}
-          alt={alt}
-          className={className}
-          onLoad={() => setIsLoading(false)}
-        />
-      )}
-    </div>
-  );
-};
 
 // Product card component
 const ProductCard = ({ product }: { product: Product }) => {

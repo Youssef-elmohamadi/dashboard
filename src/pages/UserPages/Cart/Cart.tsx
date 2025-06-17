@@ -1,34 +1,67 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  addItem,
   applyDiscount,
   removeItem,
   updateQuantity,
 } from "../../../components/EndUser/Redux/cartSlice/CartSlice";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { applyCoupon } from "../../../api/EndUserApi/ensUserProducts/_requests";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { useApplyCoupon } from "../../../hooks/Api/EndUser/useCopouns/useCopouns";
+import type { RootState } from "../../../components/EndUser/Redux/Store"; // تأكد أن عندك type للـ store
+import { Helmet } from "react-helmet-async";
 
-const Cart = () => {
+// ==========================
+// Types
+// ==========================
+
+interface CartItem {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+  tax?: number;
+  images?: { image: string }[];
+}
+
+interface CouponFormData {
+  code: string;
+  order_total: number;
+}
+
+interface CouponStatus {
+  success: boolean;
+  message: string;
+}
+
+// ==========================
+// Cart Component
+// ==========================
+
+const Cart: React.FC = () => {
   const { t } = useTranslation(["EndUserCart"]);
   const dispatch = useDispatch();
-  const items = useSelector((state) => state.cart.items);
-  const totalPrice = useSelector((state) => state.cart.totalPrice);
-  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
-  const discount = useSelector((state) => state.cart.discount);
+  const items = useSelector(
+    (state: RootState) => state.cart.items
+  ) as CartItem[];
+  const totalPrice = useSelector((state: RootState) => state.cart.totalPrice);
+  const totalQuantity = useSelector(
+    (state: RootState) => state.cart.totalQuantity
+  );
+  const discount = useSelector((state: RootState) => state.cart.discount);
   const navigate = useNavigate();
 
-  const [cuponData, setCuponData] = useState({
+  const [cuponData, setCuponData] = useState<CouponFormData>({
     code: "",
     order_total: totalPrice,
   });
-  const [couponStatus, setCouponStatus] = useState(null);
+
+  const [couponStatus, setCouponStatus] = useState<CouponStatus | null>(null);
 
   const handleCheckoutButton = () => {
-    const token = localStorage.getItem("uToken");
+    const token = localStorage.getItem("end_user_token");
 
     if (!token) {
       toast.error(t("please_login"));
@@ -43,19 +76,21 @@ const Cart = () => {
     navigate("/checkout");
   };
 
-  const handleQuantityChange = (item, quantity) => {
+  const handleQuantityChange = (item: CartItem, quantity: number) => {
     if (quantity > 0) {
       dispatch(updateQuantity({ id: item.id, quantity }));
     }
   };
 
+  const { mutateAsync: applyCouponMutate } = useApplyCoupon();
+
   const handleSubmitCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await applyCoupon(cuponData);
-      dispatch(applyDiscount(res.data.discount));
-      setCouponStatus({ success: true, message: res.data.message });
-    } catch (error) {
+      const res = await applyCouponMutate(cuponData);
+      dispatch(applyDiscount(res.discount));
+      setCouponStatus({ success: true, message: res.message });
+    } catch (error: any) {
       setCouponStatus({
         success: false,
         message: error?.response?.data?.message || t("coupon_error"),
@@ -67,6 +102,16 @@ const Cart = () => {
 
   return (
     <div className="container mx-auto p-4 py-6 flex flex-col lg:flex-row gap-6">
+      <Helmet>
+        <title>{t("mainTitle")}</title>
+        <meta
+          name="description"
+          content={t("CartDescription", {
+            defaultValue:
+              "تسوق من مجموعة متنوعة من المنتجات داخل هذه الفئة بأسعار تنافسية وجودة عالية.",
+          })}
+        />
+      </Helmet>
       {/* Order Summary */}
       <div className="lg:w-1/3 w-full bg-white rounded-2xl shadow p-4">
         <h2 className="text-lg font-semibold border-b border-gray-200 pb-2 mb-4">
@@ -94,7 +139,9 @@ const Cart = () => {
         </div>
         <div className="flex justify-between text-lg font-bold border-t border-gray-200 pt-2 mt-2">
           <span>{t("total")}</span>
-          <span>{finalPrice ? finalPrice.toFixed(2) : totalPrice} {t("egp")}</span>
+          <span>
+            {finalPrice ? finalPrice.toFixed(2) : totalPrice} {t("egp")}
+          </span>
         </div>
 
         {/* Coupon Form */}

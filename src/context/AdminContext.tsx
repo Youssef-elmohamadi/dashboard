@@ -1,6 +1,6 @@
-import React, { createContext, useState, ReactNode, useEffect } from "react";
+import { createContext, useState, ReactNode, useEffect } from "react";
 import { showUser } from "../api/AdminApi/profileApi/_requests";
-import { handleLogout } from "../components/admin/auth/Logout";
+import { handleLogout } from "../components/common/Logout";
 
 interface UserContextType {
   userId: number | null;
@@ -18,7 +18,7 @@ interface UserProviderProps {
 
 export const AdminProvider = ({ children }: UserProviderProps) => {
   useEffect(() => {
-    const storedAdminId = localStorage.getItem("aId");
+    const storedAdminId = localStorage.getItem("admin_id");
 
     if (storedAdminId) {
       const fetchData = async (id: number) => {
@@ -29,7 +29,7 @@ export const AdminProvider = ({ children }: UserProviderProps) => {
         } catch (error: any) {
           console.error("Failed to get data", error);
           if (error.response && error.response.status === 401) {
-            handleLogout();
+            handleLogout("admin");
           }
         }
       };
@@ -39,7 +39,7 @@ export const AdminProvider = ({ children }: UserProviderProps) => {
   const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
-    const storedAdminId = localStorage.getItem("aId");
+    const storedAdminId = localStorage.getItem("admin_id");
     if (storedAdminId) {
       setUserId(Number(storedAdminId));
     }

@@ -5,7 +5,7 @@ import { register } from "../../../api/EndUserApi/endUserAuth/_requests";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
-import OTPPage from "./OtpPage";
+import OTPPage from "../../common/OtpPage";
 import { sendOtp, verifyOtp } from "../../../api/OtpApi/_requests";
 import { toast } from "react-toastify";
 export default function SignUpForm() {
@@ -15,7 +15,7 @@ export default function SignUpForm() {
   const [clientErrors, setClientErrors] = useState<{ [key: string]: string }>(
     {}
   );
-  const [serverErrors, setServerErrors] = useState<{ [key: string]: string }>(
+  const [serverErrors, setServerErrors] = useState<{ [key: string]: string[] }>(
     {}
   );
   const [otp, setOtp] = useState(Array(6).fill(""));
@@ -37,16 +37,18 @@ export default function SignUpForm() {
     setClientErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleSendOtp = async () => {
+  const handleSendOtp = async (): Promise<boolean> => {
     try {
-      const res = await sendOtp({
+      await sendOtp({
         identifier: dataForm.phone,
         type: "user",
       });
       toast.success(t("otp.successSendOtp"));
+      return true;
     } catch (error) {
       console.error("Error sending OTP:", error);
       toast.error(t("otp.failedSendOtp"));
+      return false;
     }
   };
   const handleSubmitOtp = async () => {

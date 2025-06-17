@@ -30,7 +30,6 @@ const BasicTable = <T extends { id: number }>({
   isLoading,
   pageIndex,
   pageSize,
-
   onCancel,
   isCancel,
   loadingText,
@@ -52,7 +51,7 @@ const BasicTable = <T extends { id: number }>({
 
   return (
     <div>
-      <div className="max-w-full overflow-x-auto border border-gray-100 dark:border-gray-700 m-0.5 rounded">
+      <div className="max-w-full overflow-x-auto border border-gray-200 dark:border-gray-200 m-0.5 rounded">
         <table {...getTableProps()} className="min-w-full">
           <thead className="border-b border-gray-100 dark:border-white/[0.05]">
             {headerGroups.map((headerGroup: any) => (
@@ -77,19 +76,21 @@ const BasicTable = <T extends { id: number }>({
             })}
           </tbody>
         </table>
-        {isLoading && <Loading text={loadingText} />}
+        {isLoading && (
+          <Loading className="dark:!text-gray-700" text={loadingText} />
+        )}
         {!isLoading && unauthorized && (
           <div className="p-4 text-center text-shadow-yellow-500 font-semibold">
             {t("unAuthorized")}
           </div>
         )}
+            {!isLoading && data.length === 0 && !globalError && (
+              <div className="p-4 text-center text-gray-700">{t("noData")}</div>
+            )}
         {!isLoading && globalError && (
           <div className="p-4 text-center text-red-500 font-semibold">
             {t("unExpectedError")}
           </div>
-        )}
-        {!isLoading && data.length === 0 && (
-          <div className="p-4 text-center text-gray-500">{t("noData")}</div>
         )}
       </div>
 

@@ -12,10 +12,10 @@ import LandingSection from "../../../components/EndUser/Landing/LandingSection";
 import VendorsCarousel from "../../../components/EndUser/VendorsBar/VendorsBar";
 
 const Home = () => {
-  const { modalType }: any = useModal();
+  const { modalType } = useModal();
   const { t } = useTranslation(["EndUserHome"]);
 
-  const { data: categories, isLoading: isCategoriesLoading } = useCategories();
+  const { data: categories } = useCategories();
 
   return (
     <section>
@@ -26,11 +26,11 @@ const Home = () => {
           content="Discover thousands of products on Tashtiba — your trusted multi-vendor marketplace for fashion, electronics, home goods, and more. Shop easily and securely from top sellers"
         />
       </Helmet>
+      <LandingSection />
 
       {modalType === "product" && <ProductModal />}
       {modalType === "addtocart" && <AddToCartModal />}
 
-      <LandingSection />
       <div className="enduser_container">
         <FeaturesSection />
         <CircleSlider items={categories} />

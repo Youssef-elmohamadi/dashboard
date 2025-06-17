@@ -18,7 +18,7 @@ export default function AppRoutes() {
           {adminRoutes}
           {EndUserRoutes}
           {SuperAdminRoutes}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<NotFound  />} />
         </Route>
       </Routes>
     </>

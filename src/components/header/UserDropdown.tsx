@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { showUser } from "../../api/AdminApi/profileApi/_requests";
-import { handleLogout } from "../admin/auth/Logout";
+import { handleLogout } from "../common/Logout";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../context/DirectionContext";
 interface UserDropDownProps {
@@ -29,7 +29,7 @@ export default function UserDropdown({ userType }: UserDropDownProps) {
   });
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem("aId");
+    const storedUserId = localStorage.getItem("admin_id");
     if (!storedUserId) return;
 
     const fetchData = async (id: string) => {
@@ -180,7 +180,9 @@ export default function UserDropdown({ userType }: UserDropDownProps) {
           </li>
         </ul>
         <button
-          onClick={handleLogout}
+          onClick={() => {
+            handleLogout(userType);
+          }}
           className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
         >
           <svg

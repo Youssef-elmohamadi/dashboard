@@ -10,7 +10,7 @@ const SuperAdminAxiosInstanceJson = axios.create({
 
 SuperAdminAxiosInstanceJson.interceptors.request.use(
   (config) => {
-    const token: Token = localStorage.getItem("sToken");
+    const token: Token = localStorage.getItem("super_admin_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

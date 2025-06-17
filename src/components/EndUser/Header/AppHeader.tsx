@@ -10,7 +10,7 @@ import {
   MdNotifications,
   MdOutlineCompareArrows,
 } from "react-icons/md";
-import { handleLogout } from "../../../components/EndUser/Auth/Logout";
+import { handleLogout } from "../../common/Logout";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useTranslation } from "react-i18next";
 import NotificationDropdown from "../dropdown/Dropdown";
@@ -19,7 +19,7 @@ import { useProfile } from "../../../hooks/Api/EndUser/useProfile/useProfile";
 import MobileMenu from "./MobileMenu";
 import { useAllFavoriteProducts } from "../../../hooks/Api/EndUser/useProducts/useFavoriteProducts";
 const AppHeader = () => {
-  const uToken = localStorage.getItem("uToken");
+  const uToken = localStorage.getItem("end_user_token");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [openNotification, setOpenNotification] = useState(false);
   const notificationIconRef = useRef<HTMLDivElement>(null); // مرجع جديد لأيقونة الإشعارات
@@ -97,7 +97,12 @@ const AppHeader = () => {
                   </div>
                   {/* القائمة المنسدلة */}
                   <div className="absolute border border-gray-200 right-0 top-[90%] mt-1 bg-white shadow-lg rounded-md w-56 py-3 px-2 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
-                    <HeaderListDropDown handleLogout={handleLogout} dir={dir} />
+                    <HeaderListDropDown
+                      handleLogout={() => {
+                        handleLogout("end_user");
+                      }}
+                      dir={dir}
+                    />
                   </div>
                 </div>
                 <Separator />
@@ -172,7 +177,9 @@ const AppHeader = () => {
         isMenuOpen={isMenuOpen}
         closeMenu={closeMenu}
         uToken={uToken}
-        handleLogout={handleLogout}
+        handleLogout={() => {
+          handleLogout("end_user");
+        }}
       />
     </div>
   );

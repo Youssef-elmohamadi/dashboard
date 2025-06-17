@@ -1,12 +1,14 @@
 import PageMeta from "../../../components/common/PageMeta";
-import AuthLayout from "./AuthPageLayout";
-import EndUserSignInForm from "../../../components/EndUser/Auth/EndUserSignInForm";
+import AuthLayout from "../../../components/common/AuthPageLayout";
+import SignInForm from "../../../components/common/SignInForm";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 export default function EndUserSignIn() {
-    const navigate = useNavigate();
+  const { t } = useTranslation(["auth"]);
+  const navigate = useNavigate();
   useEffect(() => {
-    const token = localStorage.getItem("uToken");
+    const token = localStorage.getItem("end_user_token");
     if (token) {
       navigate("/");
     }
@@ -14,11 +16,11 @@ export default function EndUserSignIn() {
   return (
     <>
       <PageMeta
-        title="React.js SignIn Dashboard | TailAdmin - Next.js Admin Dashboard Template"
-        description="This is React.js SignIn Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+        title={t("mainTitleSignIn")}
+        description={t("endUserLayoutText")}
       />
-      <AuthLayout>
-        <EndUserSignInForm />
+      <AuthLayout userType="end_user">
+        <SignInForm userType="end_user" />
       </AuthLayout>
     </>
   );

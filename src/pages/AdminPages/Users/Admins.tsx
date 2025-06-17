@@ -46,7 +46,6 @@ const Admins = () => {
     }
   }, [isError, error]);
 
-
   const adminsData = data?.data ?? [];
   const totalAdmins = data?.total ?? 0;
   const [alertData, setAlertData] = useState<{

@@ -1,7 +1,8 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   getAllProducts,
   getProductCategoriesById,
+  showProduct,
 } from "../../../../api/EndUserApi/ensUserProducts/_requests";
 
 interface UseAllProductsProps {
@@ -89,4 +90,14 @@ export const useProductsByCategory = ({
     isLoading,
     isError,
   };
+};
+
+
+export const useGetProductById = (id?: number | string) => {
+  return useQuery({
+    queryKey: ["productData", id],
+    queryFn: () => showProduct(id!),
+    staleTime: 1000 * 60 * 5,
+    enabled: !!id,
+  })
 };

@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 import { useTranslation } from "react-i18next";
 import { useGetOrderById } from "../../../hooks/Api/EndUser/useOrders/useOrders";
+import { AxiosError } from "axios";
 
 interface Product {
   id: number;
@@ -83,10 +84,11 @@ const OrderDetailsPage: React.FC = () => {
   //const [order, setOrder] = useState<Order | null>(null);
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation(["EndUserOrderHistory"]);
+  const [globalError, setGlobalError] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("uToken");
+    const token = localStorage.getItem("end_user_token");
     if (!token) {
       navigate("/signin", { replace: true });
     }
@@ -95,7 +97,16 @@ const OrderDetailsPage: React.FC = () => {
   const { data, isError, error, isLoading } = useGetOrderById(id);
 
   const order: Order = data?.data?.data;
-
+  useEffect(() => {
+    if (isError && error instanceof AxiosError) {
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) {
+        setGlobalError(true);
+      } else {
+        setGlobalError(true);
+      }
+    }
+  }, [isError, error, t]);
   const handleRateProduct = async (productId: number) => {
     const result = await showReviewPopup(
       productId,
@@ -119,10 +130,23 @@ const OrderDetailsPage: React.FC = () => {
       }
     }
   };
+  if (!id)
+    return <div className="p-8 text-center text-gray-500 ">{t("no_id")}</div>;
 
-  if (!order)
-    return <p className="text-center mt-10">{t("orderDetails.loading")}</p>;
+  if (isLoading)
+    return <div className="p-8 text-center text-gray-500">{t("loading")}</div>;
 
+  if (!order && !globalError)
+    return (
+      <div className="p-8 text-center text-gray-500 ">{t("not_found")}</div>
+    );
+  if (globalError) {
+    return (
+      <>
+        <div className="p-8 text-center text-red-500">{t("global_error")}</div>
+      </>
+    );
+  }
   return (
     <div className="max-w-7xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">{t("orderDetails.title")}</h2>

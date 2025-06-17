@@ -17,29 +17,10 @@ interface UserProviderProps {
 }
 
 export const SuperAdminProvider = ({ children }: UserProviderProps) => {
-  // useEffect(() => {
-  //   const storedSuperAdminId = localStorage.getItem("sId");
-  //   console.log(storedSuperAdminId);
-
-  //   if (storedSuperAdminId) {
-  //     const fetchData = async (id: number) => {
-  //       try {
-  //         const res = await showUser(id);
-  //       } catch (error: any) {
-  //         console.log("Failed to get data", error);
-  //         if (error.response && error.response.status === 401) {
-  //           handleLogout();
-  //         }
-  //         console.log(error);
-  //       }
-  //     };
-  //     fetchData(Number(storedSuperAdminId));
-  //   }
-  // }, []);
   const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
-    const storedSuperAdminId = localStorage.getItem("sId");
+    const storedSuperAdminId = localStorage.getItem("super_admin_token");
 
     if (storedSuperAdminId) {
       setUserId(Number(storedSuperAdminId));

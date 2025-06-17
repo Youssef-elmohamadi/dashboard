@@ -13,18 +13,30 @@ import { useTranslation } from "react-i18next";
 import Sidebar from "../../../components/EndUser/CategoryLayout/Sidebar";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 
+// Define category type based on your API response
+interface Category {
+  id: number;
+  name: string;
+  [key: string]: any;
+}
+
+interface PriceChangeParams {
+  min: string;
+  max: string;
+}
+
 export default function CategoriesLayout() {
-  const [showCategories, setShowCategories] = useState(true);
-  //const [categories, setCategories] = useState([]);
+  const [showCategories, setShowCategories] = useState<boolean>(true);
   const { t } = useTranslation(["EndUserShop"]);
-  const [currentPage, setCurrentPage] = useState(t("allCategories"));
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const menuRef = useRef(null);
+  const [currentPage, setCurrentPage] = useState<string>(t("allCategories"));
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const { category_id } = useParams();
+  const { category_id } = useParams<{ category_id?: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedSort = searchParams.get("sort");
+
   const sortOptions = [
     { label: t("sortByMenu.title"), value: "" },
     { label: t("sortByMenu.newest"), value: "newest" },
@@ -32,7 +44,7 @@ export default function CategoriesLayout() {
   ];
 
   // Handle price range update
-  const handlePriceChange = ({ min, max }) => {
+  const handlePriceChange = ({ min, max }: PriceChangeParams) => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set("min", min);
     newParams.set("max", max);
@@ -40,7 +52,7 @@ export default function CategoriesLayout() {
   };
 
   // Handle sort option update
-  const handleSortChange = (value) => {
+  const handleSortChange = (value: string) => {
     const newParams = new URLSearchParams(searchParams);
     if (value) {
       newParams.set("sort", value);
@@ -51,12 +63,12 @@ export default function CategoriesLayout() {
     setIsMenuOpen(false);
   };
 
-  const { data, isLoading } = useAllCategories();
-  const categories = data?.data?.data.original;
+  const { data } = useAllCategories();
+  const categories: Category[] | undefined = data?.data?.data.original;
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
     }
@@ -78,7 +90,7 @@ export default function CategoriesLayout() {
         setCurrentPage(category.name);
       }
     }
-  }, [category_id, categories]);
+  }, [category_id, categories, location.pathname, t]);
 
   return (
     <div className="flex flex-row min-h-screen enduser_container my-10">
@@ -93,7 +105,6 @@ export default function CategoriesLayout() {
       />
 
       {/* Sidebar */}
-
       <Sidebar
         setCurrentPage={setCurrentPage}
         handlePriceChange={handlePriceChange}

@@ -198,13 +198,13 @@ export const buildColumns = <T extends BaseEntity>(
   // }
   if (options.includeTotalPrice) {
     columns.push({
-      Header: "Total Amount",
+      Header: t("table.total_amount"),
       accessor: (row) => row?.total_amount,
     });
   }
   if (options.includePaymentMethod) {
     columns.push({
-      Header: "Payment Method",
+      Header: t("table.payment_method"),
       accessor: (row) => row?.payment_method,
     });
   }
@@ -237,34 +237,34 @@ export const buildColumns = <T extends BaseEntity>(
 
   if (options.includeCode) {
     columns.push({
-      Header: "Code",
+      Header: t("table.code"),
       accessor: "code" as keyof T,
     });
   }
   if (options.includeType) {
     columns.push({
-      Header: "Type",
+      Header: t("table.type"),
       accessor: "type" as keyof T,
     });
   }
 
   if (options.includeValue) {
     columns.push({
-      Header: "Value",
+      Header: t("table.value"),
       accessor: "value" as keyof T,
     });
   }
 
   if (options.includeLimit) {
     columns.push({
-      Header: "Usage Limit",
+      Header: t("table.usage_limit"),
       accessor: "usage_limit" as keyof T,
     });
   }
 
   if (options.includeUsedCount) {
     columns.push({
-      Header: "Used Count",
+      Header: t("table.used_count"),
       accessor: "used_count" as keyof T,
     });
   }
@@ -279,7 +279,7 @@ export const buildColumns = <T extends BaseEntity>(
 
   if (options.includeExpiresAt) {
     columns.push({
-      Header: "Expires At",
+      Header: t("table.expires_at"),
       accessor: "expires_at" as keyof T,
       Cell: ({ value }: any) => format(new Date(value), "dd/MM/yyyy"),
     });
@@ -288,7 +288,7 @@ export const buildColumns = <T extends BaseEntity>(
   if (options.includeIsActive) {
     columns.push({
       Header: t("table.status"),
-      accessor: "active" as keyof T,
+      accessor: "is_active" as keyof T,
       Cell: ({ value }: any) => (value ? "✅Active" : "❌Inactive"),
     });
   }

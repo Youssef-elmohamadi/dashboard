@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Checkbox from "../../form/input/Checkbox";
@@ -9,6 +9,7 @@ import {
   useCreateRole,
   useGetAllPermissions,
 } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
+import PageMeta from "../../common/PageMeta";
 type Permission = {
   id: number;
   name: string;
@@ -30,9 +31,31 @@ export default function CreateRole() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation(["CreateRole"]);
-  const { data, isLoading } = useGetAllPermissions();
+  const {
+    data,
+    isLoading,
+    error: permissionError,
+    isError: isPermissionError,
+  } = useGetAllPermissions();
 
   const permissions = data?.data.data;
+
+  useEffect(() => {
+    if (isPermissionError) {
+      const status = permissionError?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrors((prev) => ({
+          ...prev,
+          global: t("role.errors.global"),
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          general: t("role.errors.general"),
+        }));
+      }
+    }
+  }, [isPermissionError, permissionError, t]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -113,6 +136,7 @@ export default function CreateRole() {
 
   return (
     <div className=" p-6">
+      <PageMeta title={t("role.main_title")} description="Create New Role" />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("role.create_title")}

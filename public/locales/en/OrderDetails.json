@@ -2,6 +2,8 @@
   "title": "Order Details",
   "no_id": "No Order ID provided.",
   "loading": "Loading order details...",
+  "main_title": "Tashtiba | Order Details",
+  "global_error": "Something went wrong. Please try again later.",
   "not_found": "Order not found.",
   "egp": "EGP",
   "sections": {

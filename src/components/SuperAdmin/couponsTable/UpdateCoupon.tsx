@@ -8,6 +8,7 @@ import {
   useGetCouponById,
   useUpdateCoupon,
 } from "../../../hooks/Api/SuperAdmin/useCoupons/useCoupons";
+import PageMeta from "../../common/PageMeta";
 
 const UpdateCoupon = () => {
   const { id } = useParams();
@@ -45,9 +46,26 @@ const UpdateCoupon = () => {
     global: "",
   });
 
-  const { data, isError, error } = useGetCouponById(id!!);
+  const { data, isError, error, isLoading } = useGetCouponById(id!!);
 
   const coupon = data?.data?.data;
+
+  useEffect(() => {
+    if (isError) {
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrors((prev) => ({
+          ...prev,
+          global: t("coupon.errors.global"),
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          general: t("coupon.errors.general"),
+        }));
+      }
+    }
+  }, [isError, error, t]);
 
   useEffect(() => {
     if (coupon) {
@@ -127,7 +145,7 @@ const UpdateCoupon = () => {
       if (status === 403 || status === 401) {
         setErrors({
           ...errors,
-          global: t("errors.global"),
+          global: t("coupon.errors.global"),
         });
         return;
       }
@@ -145,18 +163,39 @@ const UpdateCoupon = () => {
 
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ ...errors, general: t("admin.errors.general") });
+        setErrors({ ...errors, general: t("coupon.errors.general") });
       }
     } finally {
       setLoading(false);
     }
   };
 
+  if (isLoading)
+    return (
+      <>
+        <PageMeta title={t("coupon.mainTitle")} description="Update Coupon" />
+        <p className="text-center mt-5">
+          {t("coupon.loading") || "Loading..."}
+        </p>
+      </>
+    );
+
   return (
     <div className="p-4">
+      <PageMeta title={t("coupon.mainTitle")} description="Update Coupon" />
       <h3 className="text-lg font-semibold mb-4 dark:text-white">
         {t("coupon.editCoupon")}
       </h3>
+      {errors.global && (
+        <p className="text-error-500 text-sm mt-4 text-center">
+          {errors.global}
+        </p>
+      )}
+      {errors.general && (
+        <p className="text-red-500 text-sm mt-4 text-center">
+          {errors.general}
+        </p>
+      )}
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"

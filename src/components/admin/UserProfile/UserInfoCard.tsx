@@ -58,7 +58,7 @@ export default function UserInfoCard({ userType }: { userType: string }) {
   } = useQuery<UserData, Error>({
     queryKey: ["userData"],
     queryFn: async () => {
-      const storedUserId = localStorage.getItem("aId");
+      const storedUserId = localStorage.getItem("admin_id");
       if (!storedUserId) throw new Error("User ID not found in localStorage");
       if (userType === "admin") {
         const res = await getAdminById(storedUserId);
@@ -148,7 +148,7 @@ export default function UserInfoCard({ userType }: { userType: string }) {
   // تحديث بيانات المستخدم باستخدام useMutation
   const updateUserMutation = useMutation({
     mutationFn: (formData: FormData) => {
-      const userId = localStorage.getItem("aId");
+      const userId = localStorage.getItem("admin_id");
       if (!userId) throw new Error("User ID not found in localStorage");
       return updateAdmin(userId, formData);
     },

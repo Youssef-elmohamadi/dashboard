@@ -1,6 +1,7 @@
 {
   "banner": {
     "title": "Update Banner",
+    "mainTitle": "Update Banner",
     "name": "Title",
     "linkType": "Link Type",
     "url": "Enter URL",
@@ -35,6 +36,7 @@
       "global": "You are not authorized to perform this action.",
       "general": "Something went wrong. Please try again later."
     },
-    "success": "Banner Updated Successfully"
+    "success": "Banner Updated Successfully",
+    "loading": "Loading banner details..."
   }
 }

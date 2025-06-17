@@ -16,8 +16,7 @@ import {
 } from "../../icons";
 import { useSidebar } from "../../context/SidebarContext";
 import { PiSignOut } from "react-icons/pi";
-import { handleLogout as handleAdminLogout } from "../../components/admin/auth/Logout";
-import { handleLogout as handleSuperAdminLogout } from "../../components/SuperAdmin/Auth/Logout";
+import { handleLogout } from "../common/Logout";
 import { useTranslation } from "react-i18next";
 
 type NavItem = {
@@ -92,7 +91,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
     {
       icon: <PiSignOut />,
       name: t("Logout"),
-      action: handleAdminLogout,
+      action: handleLogout("admin"),
     },
     // {
     //   icon: <CalenderIcon />,
@@ -175,7 +174,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
     {
       icon: <PiSignOut />,
       name: t("Logout"),
-      action: handleSuperAdminLogout,
+      action: handleLogout("super_admin"),
     },
   ];
   const currentNavItems =

@@ -1,4 +1,9 @@
 {
+  "mainTitle": "Tashtiba | Order History",
+  "loading": "Loading order...",
+  "no_id": "No Order ID provided.",
+  "not_found": "Order not found.",
+  "global_error": "Something went wrong. Please try again.",
   "orderDetails": {
     "title": "Order Summary",
     "orderId": "Order ID",

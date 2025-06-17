@@ -1,7 +1,10 @@
 {
   "vendorsPage": {
     "title": "Vendors",
+    "mainTitle": "Tashtiba | Vendors",
+
     "all": "All Vendors",
+    "mainTitleDetails": "Tashtiba | Vendor Details",
     "details": {
       "pageTitle": "Vendor Details",
       "basicInfo": "Basic Info",
@@ -28,17 +31,18 @@
         "approved": "Approved",
         "rejected": "Rejected"
       },
-      "modal":{
-        "title":"Document Details",
-         "vendorName":"Vendor Name:",
-         "documentType":"Document Type:",
-         "status":"Status:",
-         "createdAt":"Creation At:",
-         "updatedAt":"Updated At:"
+      "modal": {
+        "title": "Document Details",
+        "vendorName": "Vendor Name:",
+        "documentType": "Document Type:",
+        "status": "Status:",
+        "createdAt": "Creation At:",
+        "updatedAt": "Updated At:"
       },
       "loading": "Loading vendor details...",
       "notFound": "Vendor not found.",
-      "noId": "No Vendor ID provided."
+      "noId": "No Vendor ID provided.",
+      "globalError": "Something went wrong. Please try again later."
     },
     "status": {
       "pending": "Pending",

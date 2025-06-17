@@ -33,7 +33,8 @@
       "image": "Banner image is required",
       "invalidImage": "Invalid image file",
       "global": "You are not authorized to perform this action.",
-      "general": "Something went wrong. Please try again later."
+      "general": "Something went wrong. Please try again later.",
+      "fetching_categories": "Failed to fetch categories. Please try again later."
     },
     "success": "Banner created successfully"
   }

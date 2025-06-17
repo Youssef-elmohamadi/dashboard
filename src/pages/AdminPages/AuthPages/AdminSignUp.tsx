@@ -1,5 +1,5 @@
 import PageMeta from "../../../components/common/PageMeta";
-import AuthLayout from "./AuthPageLayout";
+import AuthLayout from "../../../components/common/AuthPageLayout";
 import SignUpForm from "../../../components/admin/auth/SignUpForm";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,7 @@ export default function AdminSignUp() {
   const { t } = useTranslation(["auth"]);
   const navigate = useNavigate();
   useEffect(() => {
-    const token = localStorage.getItem("aToken");
+    const token = localStorage.getItem("admin_token");
     if (token) {
       navigate("/admin");
     }
@@ -19,7 +19,7 @@ export default function AdminSignUp() {
         title={t("mainTitleSignUp")}
         description="Register as a New Admin Manege your Store"
       />
-      <AuthLayout>
+      <AuthLayout userType="admin">
         <SignUpForm />
       </AuthLayout>
     </>

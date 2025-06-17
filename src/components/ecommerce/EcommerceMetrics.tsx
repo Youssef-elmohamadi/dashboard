@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { ArrowDownIcon, ArrowUpIcon } from "../../icons";
 import Badge from "../ui/badge/Badge";
 import { FC } from "react";
@@ -28,6 +29,7 @@ const EcommerceMetrics: FC<EcommerceMetricsProps> = ({
   metrics,
   parentClassName,
 }) => {
+  const { t } = useTranslation("Home");
   return (
     <div className={parentClassName}>
       {metrics?.map((metric, index) => {
@@ -70,8 +72,8 @@ const EcommerceMetrics: FC<EcommerceMetricsProps> = ({
                             key={key}
                             className="flex flex-col items-center text-sm font-medium"
                           >
-                            <span className="capitalize text-gray-500 dark:text-gray-400">
-                              {key}
+                            <span className="capitalize text-gray-500 dark:text-gray-400 py-1 px-0.5">
+                              {t(`metrics.${key}`)}
                             </span>
                             <Badge color={color}>{val}</Badge>
                           </div>

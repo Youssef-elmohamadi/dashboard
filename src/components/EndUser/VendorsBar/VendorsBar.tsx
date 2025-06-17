@@ -1,12 +1,14 @@
 // components/VendorsCarousel.tsx
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useHomeData } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
+import LazyImage from "../../common/LazyImage";
 type Vendor = {
   id: string | number;
   name: string;
   description: string;
   logo: string;
 };
+
 const VendorsCarousel = () => {
   const { data: homeData, isLoading: isHomeLoading } = useHomeData();
   const vendors = homeData?.vendors;
@@ -34,7 +36,7 @@ const VendorsCarousel = () => {
               <div className="group bg-white dark:bg-gray-900 rounded-2xl p-6 min-h-[300px] flex flex-col items-center justify-between text-center transition-transform duration-300 hover:scale-105 border border-gray-200">
                 {/* Logo */}
                 <div className="w-24 h-24 mb-4 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden flex items-center justify-center">
-                  <img
+                  <LazyImage
                     src={vendor.logo || "/images/apple.jpg"}
                     alt={vendor.name}
                     className="object-cover w-full h-full"

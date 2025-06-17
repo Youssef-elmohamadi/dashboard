@@ -3,21 +3,13 @@ import { Link, useLocation } from "react-router";
 import { useDirectionAndLanguage } from "../context/DirectionContext";
 import {
   BoxCubeIcon,
-  CalenderIcon,
   ChevronDownIcon,
-  GridIcon,
   GroupIcon,
   HorizontaLDots,
-  ListIcon,
-  PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  TableIcon,
   UserCircleIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import { PiSignOut } from "react-icons/pi";
-import { logout } from "../api/authApi/_requests";
 import { handleLogout } from "../components/admin/auth/Logout";
 //import SidebarWidget from "./SidebarWidget";
 

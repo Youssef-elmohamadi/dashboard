@@ -40,5 +40,10 @@
     "france": "فرنسا",
     "usa_customers": "{{count}} عميل",
     "france_customers": "{{count}} عميل"
+  },
+  "metrics": {
+    "all": "الكل",
+    "active": "نشط",
+    "inactive": "غير نشط"
   }
 }

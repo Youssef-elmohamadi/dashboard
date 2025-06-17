@@ -51,8 +51,8 @@ const EndUserSignInForm = () => {
       const res = await login(email, password);
 
       if (res?.status === 200) {
-        localStorage.setItem("uToken", res.data.data.token);
-        localStorage.setItem("uId", res.data.data.id);
+        localStorage.setItem("end_user_token", res.data.data.token);
+        localStorage.setItem("end_user_id", res.data.data.id);
         navigate("/");
       }
     } catch (error: any) {

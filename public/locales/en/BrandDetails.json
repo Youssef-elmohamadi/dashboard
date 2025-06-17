@@ -1,5 +1,6 @@
 {
   "title": "Brand Details",
+  "mainTitle": "Tashtiba | Brand Details",
   "basicInfo": "Basic Info",
   "name": "Name",
   "status": "Status",
@@ -10,5 +11,7 @@
   "updatedAt": "Updated Date",
   "loading": "Loading brand details...",
   "notFound": "Brand not found.",
-  "noId": "No Brand ID provided."
+  "noId": "No Brand ID provided.",
+  "general_error": "Something went wrong. Please try again later.",
+  "global_error": "You are not authorized to perform this action."
 }

@@ -1,8 +1,7 @@
-import { Outlet, Link, NavLink } from "react-router-dom";
-import { TiDocumentText, TiInfoLargeOutline, TiSupport } from "react-icons/ti";
+import { Outlet, NavLink } from "react-router-dom";
+import { TiDocumentText } from "react-icons/ti";
 import { getProfile } from "../../../api/EndUserApi/endUserAuth/_requests";
-import { useEffect, useState } from "react";
-import { handleLogout } from "../../../components/EndUser/Auth/Logout";
+import { handleLogout } from "../../../components/common/Logout";
 import { handleDeleteAccount } from "../../../components/EndUser/Auth/DeleteAccount";
 import { RiProfileFill } from "react-icons/ri";
 import { MdCompareArrows, MdDelete, MdFavorite } from "react-icons/md";
@@ -10,19 +9,6 @@ import { BiLogOut } from "react-icons/bi";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 export default function UserControlLayout() {
-  //const [user, setUser] = useState({});
-  // useEffect(() => {
-  //   const fetchProfile = async () => {
-  //     try {
-  //       const response = await getProfile();
-  //       setUser(response.data.data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchProfile();
-  // }, []);
-
   const { data: user, isLoading: isLoadingUser } = useQuery({
     queryKey: ["endUserProfileData"],
     queryFn: async () => {
@@ -137,7 +123,9 @@ export default function UserControlLayout() {
               {t("favorite_products")}
             </NavLink>
             <button
-              onClick={handleLogout}
+              onClick={() => {
+                handleLogout("end_user");
+              }}
               className="flex items-center group gap-3 transition-all duration-400 px-4 py-2 rounded-3xl hover:bg-red-300 cursor-pointer pl-2 hover:pl-4 w-full"
             >
               <BiLogOut className="text-lg text-gray-500 transition duration-400  " />

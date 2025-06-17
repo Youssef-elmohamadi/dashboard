@@ -39,8 +39,9 @@ const Admins = () => {
       const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
-      }
-      if (status === 500) {
+      }else if (status === 500) {
+        setGlobalError(true);
+      } else {
         setGlobalError(true);
       }
     }
