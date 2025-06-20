@@ -4,44 +4,46 @@ import { useTranslation } from "react-i18next";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
-import BrandImageUpload from "./BrandImageUpload";
+import ImageUpload from "../../common/ImageUpload";
 import {
   useGetBrandById,
   useUpdateBrand,
 } from "../../../hooks/Api/Admin/useBrands/useBrands";
 import PageMeta from "../../common/PageMeta";
-
-type Brand = {
-  name: string;
-  status: string;
-  image: string | File | null;
-};
+import { AxiosError } from "axios";
+import {
+  BrandApiError,
+  BrandClientSideErrors,
+  BrandFormErrors,
+  MutateBrand,
+} from "../../../types/Brands";
 
 const UpdateBrandPage = () => {
   const { t } = useTranslation("UpdateBrand");
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [updateData, setUpdateData] = useState<Brand>({
+  const [updateData, setUpdateData] = useState<MutateBrand>({
     name: "",
-    status: "",
+    status: "active",
     image: "",
   });
-  const [errors, setErrors] = useState({
-    name: [] as string[],
-    status: [] as string[],
-    image: [] as string[],
-    global: "" as string,
-    general: "" as string,
+  const [errors, setErrors] = useState<BrandFormErrors>({
+    name: [],
+    status: [],
+    image: [],
+    global: "",
+    general: "",
   });
-  const [clientSideErrors, setClientSideErrors] = useState({
-    name: "",
-    status: "",
-  });
+  const [clientSideErrors, setClientSideErrors] =
+    useState<BrandClientSideErrors>({
+      name: "",
+      status: "",
+    });
   const [loading, setLoading] = useState(false);
   const { data, isLoading, isError, error } = useGetBrandById(id);
   useEffect(() => {
-    if (isError) {
+    if (isError && error instanceof AxiosError) {
       const status = error?.response?.status;
       if (status === 401 || status === 403) {
         setErrors((prev) => ({
@@ -83,7 +85,7 @@ const UpdateBrandPage = () => {
   const handleSelectChange = (value: string) => {
     setUpdateData((prev) => ({
       ...prev,
-      status: value,
+      status: value as "active" | "inactive",
     }));
   };
 
@@ -115,7 +117,7 @@ const UpdateBrandPage = () => {
         formData.append("image", updateData.image);
       }
 
-      await mutateAsync({ brandData: formData, id: +id! });
+      await mutateAsync({ brandData: formData, id: id! });
       navigate("/admin/brands");
     } catch (error: any) {
       console.error("Error creating admin:", error);
@@ -132,7 +134,7 @@ const UpdateBrandPage = () => {
       if (Array.isArray(rawErrors)) {
         const formattedErrors: Record<string, string[]> = {};
 
-        rawErrors.forEach((err: { code: string; message: string }) => {
+        rawErrors.forEach((err: BrandApiError) => {
           if (!formattedErrors[err.code]) {
             formattedErrors[err.code] = [];
           }
@@ -166,6 +168,14 @@ const UpdateBrandPage = () => {
         </h3>
       </div>
 
+      {errors.global && (
+        <p className="text-red-500 text-sm mt-4 text-center">{errors.global}</p>
+      )}
+      {errors.general && (
+        <p className="text-red-500 text-sm mt-4 text-center">
+          {errors.general}
+        </p>
+      )}
       <form onSubmit={handleSubmit} className="space-y-6 mt-4">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
@@ -212,7 +222,7 @@ const UpdateBrandPage = () => {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div className="w-full">
             <Label>{t("image_label")}</Label>
-            <BrandImageUpload
+            <ImageUpload
               file={updateData.image}
               onFileChange={handleFileChange}
             />
@@ -233,13 +243,6 @@ const UpdateBrandPage = () => {
             )}
           </div>
         </div>
-
-        {errors.global && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
-        )}
 
         <button
           type="submit"

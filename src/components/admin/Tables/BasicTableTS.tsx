@@ -4,18 +4,20 @@ import TableRow from "./TableRow";
 import Pagination from "./Pagination";
 import Loading from "../../common/Loading";
 import { useTranslation } from "react-i18next";
+import { ID } from "../../../types/Common";
+import { Brand } from "../../../types/Brands";
 
 interface BasicTableProps<T> {
   columns: any;
-  data: T[];
+  data: Brand[];
   totalItems: number;
   isLoading: boolean;
   pageIndex: number;
   pageSize: number;
-  onDelete?: (id: number) => void;
-  onEdit?: (id: number) => void;
-  onShip?: (id: number) => void;
-  onCancel?: (id: number) => void;
+  onDelete?: (id: ID) => void;
+  onEdit?: (id: ID) => void;
+  onShip?: (id: ID) => void;
+  onCancel?: (id: ID) => void;
   loadingText?: string;
   onPageChange: (page: number) => void;
   unauthorized?: boolean;
@@ -62,8 +64,8 @@ const BasicTable = <T extends { id: number }>({
       <div className="max-w-full overflow-x-auto border border-gray-100 dark:border-gray-700 m-0.5 rounded">
         <table {...getTableProps()} className="min-w-full">
           <thead className="border-b border-gray-100 dark:border-white/[0.05]">
-            {headerGroups.map((headerGroup: any, i:number) => (
-              <TableHeader key={i} headerGroup={headerGroup}  />
+            {headerGroups.map((headerGroup: any, i: number) => (
+              <TableHeader key={i} headerGroup={headerGroup} />
             ))}
           </thead>
           <tbody

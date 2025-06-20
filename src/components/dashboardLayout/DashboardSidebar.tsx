@@ -91,7 +91,9 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
     {
       icon: <PiSignOut />,
       name: t("Logout"),
-      action: handleLogout("admin"),
+      action: () => {
+        handleLogout("admin");
+      },
     },
     // {
     //   icon: <CalenderIcon />,
@@ -174,7 +176,9 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
     {
       icon: <PiSignOut />,
       name: t("Logout"),
-      action: handleLogout("super_admin"),
+      action: () => {
+        handleLogout("super_admin");
+      },
     },
   ];
   const currentNavItems =

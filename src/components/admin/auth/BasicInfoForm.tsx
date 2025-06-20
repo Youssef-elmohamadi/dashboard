@@ -3,28 +3,13 @@ import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import { useTranslation } from "react-i18next";
-type Props = {
-  adminInfo: {
-    first_name: string;
-    last_name: string;
-    phone: string;
-    email: string;
-    password: string;
-    confirm_password: string;
-  };
-  serverErrors: any;
-  handleChange: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    section: string
-  ) => void;
-  clientErrors: { [key: string]: string };
-};
+import { BasicInfoFormProps } from "../../../types/Auth";
 function BasicInfoForm({
   adminInfo,
   handleChange,
   clientErrors,
   serverErrors,
-}: Props) {
+}: BasicInfoFormProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const { t } = useTranslation(["auth"]);
@@ -96,7 +81,7 @@ function BasicInfoForm({
             {clientErrors.phoneAdmin}
           </p>
         )}
-        {serverErrors["adminInfo.phone"] && (
+        {serverErrors.errors["adminInfo.phone"] && (
           <p className="text-error-500 text-xs mt-1">
             {t("errors.adminPhoneTaken")}
           </p>
@@ -121,7 +106,7 @@ function BasicInfoForm({
             {clientErrors.emailAdmin}
           </p>
         )}
-        {serverErrors["adminInfo.email"] && (
+        {serverErrors.errors["adminInfo.email"] && (
           <p className="text-error-500 text-xs mt-1">
             {t("errors.adminEmailTaken")}
           </p>

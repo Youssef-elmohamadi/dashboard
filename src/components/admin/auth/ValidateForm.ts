@@ -1,4 +1,6 @@
-export const validateAdminForm = (setErrors: any, dataForm: any, t: any) => {
+import { FormDataType, SetErrorsFn } from "../../../types/Auth";
+
+export const validateAdminForm = (setErrors:SetErrorsFn , dataForm: FormDataType, t: any) => {
   // First Name
   if (!dataForm.adminInfo.first_name.trim()) {
     setErrors({ firstName: t("errors.firstNameError") });

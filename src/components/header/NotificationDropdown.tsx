@@ -74,7 +74,9 @@ export default function NotificationDropdown({ userType }) {
         isOpen={isOpen}
         onClose={closeDropdown}
         className={`absolute ${
-          dir === "ltr" ? "!right-0" : "!left-0"
+          dir === "ltr"
+            ? "left-0 lg:left-auto lg:right-0"
+            : "right-0 lg:right-auto lg:left-0"
         } mt-[17px] flex min-h-[150px] max-h-[480px] w-[350px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark sm:w-[361px]`}
       >
         <div className="flex items-center justify-between pb-3 mb-3 border-b border-gray-100 dark:border-gray-700">

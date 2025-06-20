@@ -1,25 +1,23 @@
+import {
+  ClientErrors,
+  DocumentInfo,
+  HandleChangeFn,
+  HandleFileChangeFn,
+  ServerErrors,
+  VendorInfo,
+} from "../../../types/Auth";
 import Input from "../../form/input/InputField";
 import Label from "../../form/Label";
 import ImageUploader from "./ImageUploader";
 import { useTranslation } from "react-i18next";
 
 type Props = {
-  vendorInfo: {
-    name: string;
-    email: string;
-    phone: string;
-  };
-  documentInfo: {
-    document_file: File | null;
-    document_type: string;
-  }[];
-  handleFileChange: (file: File | null, file_type: "1" | "2") => void;
-  clientErrors: { [key: string]: string };
-  handleChange: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    section: string
-  ) => void;
-  serverErrors: any;
+  vendorInfo: VendorInfo;
+  documentInfo: DocumentInfo[];
+  handleFileChange: HandleFileChangeFn;
+  clientErrors: ClientErrors;
+  handleChange: HandleChangeFn;
+  serverErrors: ServerErrors;
 };
 
 const StoreInfoForm = ({
@@ -57,7 +55,6 @@ const StoreInfoForm = ({
             {clientErrors.storeName}
           </p>
         )}
-
       </div>
       <div>
         <Label>
@@ -77,7 +74,7 @@ const StoreInfoForm = ({
             {t("errors.storeEmailError")}
           </p>
         )}
-                {serverErrors["vendorInfo.email"] && (
+        {serverErrors.errors["vendorInfo.email"] && (
           <p className="text-error-500 text-xs mt-1">
             {t("errors.storeEmailTaken")}
           </p>
@@ -101,7 +98,7 @@ const StoreInfoForm = ({
             {t("errors.storePhoneError")}
           </p>
         )}
-        {serverErrors["vendorInfo.phone"] && (
+        {serverErrors.errors["vendorInfo.phone"] && (
           <p className="text-error-500 text-xs mt-1">
             {t("errors.storePhoneTaken")}
           </p>
@@ -123,7 +120,7 @@ const StoreInfoForm = ({
             {t("errors.commercialRegisterDocumentError")}
           </p>
         )}
-        {serverErrors["documentInfo.0.document_file"] && (
+        {serverErrors.errors["documentInfo.0.document_file"] && (
           <p className="text-error-500 text-xs mt-1">
             {t("errors.invalidDocument")}
           </p>
@@ -146,7 +143,7 @@ const StoreInfoForm = ({
             {t("errors.taxRegisterDocumentError")}
           </p>
         )}
-        {serverErrors["documentInfo.1.document_file"] && (
+        {serverErrors.errors["documentInfo.1.document_file"] && (
           <p className="text-error-500 text-xs mt-1">
             {t("errors.invalidDocument")}
           </p>

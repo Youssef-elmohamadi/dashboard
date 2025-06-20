@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Input from "../../form/input/InputField";
+import Input from "../form/input/InputField";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -7,7 +7,7 @@ type Props = {
   onFileChange: (file: File | null) => void;
 };
 
-function BrandImageUpload({ file, onFileChange }: Props) {
+function ImageUpload({ file, onFileChange }: Props) {
   const [image, setImage] = useState<string | null>(null);
   const { t } = useTranslation(["ImageUpload"]);
 
@@ -90,4 +90,4 @@ function BrandImageUpload({ file, onFileChange }: Props) {
   );
 }
 
-export default BrandImageUpload;
+export default ImageUpload;

@@ -1,0 +1,11 @@
+{
+  "active": "Active",
+  "delivered": "Delivered",
+  "inactive": "Inactive",
+  "pending": "Pending",
+  "unpaid": "Unpaid",
+  "shipped": "Shipped",
+  "paid": "Paid",
+  "cancelled": "Cancelled",
+  "processing": "Processing"
+}

@@ -4,36 +4,38 @@ import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
 import { useNavigate } from "react-router-dom";
-import BrandImageUpload from "./BrandImageUpload";
+import ImageUpload from "../../common/ImageUpload";
 import { useCreateBrand } from "../../../hooks/Api/Admin/useBrands/useBrands";
 import PageMeta from "../../common/PageMeta";
+import {
+  BrandClientSideErrors,
+  BrandFormErrors,
+  MutateBrand,
+} from "../../../types/Brands";
 
 export default function CreateBrand() {
   const { t } = useTranslation(["CreateBrand"]);
 
-  const [brandData, setBrandData] = useState<{
-    name: string;
-    status: string;
-    image: File | null;
-  }>({
+  const [brandData, setBrandData] = useState<MutateBrand>({
     name: "",
     status: "",
     image: null,
   });
 
-  const [errors, setErrors] = useState({
-    name: [] as string[],
-    status: [] as string[],
-    image: [] as string[],
-    global: "" as string,
-    general: "" as string,
+  const [errors, setErrors] = useState<BrandFormErrors>({
+    name: [],
+    status: [],
+    image: [],
+    global: "",
+    general: "",
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [clientSideErrors, setClientSideErrors] = useState({
-    name: "",
-    status: "",
-  });
+  const [clientSideErrors, setClientSideErrors] =
+    useState<BrandClientSideErrors>({
+      name: "",
+      status: "",
+    });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setBrandData((prev) => ({
@@ -127,6 +129,12 @@ export default function CreateBrand() {
           {t("create_title")}
         </h3>
       </div>
+      {errors.global && (
+        <p className="text-red-500 text-sm mt-4 text-center">{errors.global}</p>
+      )}
+      {errors.general && (
+        <p className="text-red-500 text-sm mt-4 text-center">{errors.general}</p>
+      )}
       <form onSubmit={handleSubmit} className="space-y-6 pt-3">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
@@ -171,18 +179,8 @@ export default function CreateBrand() {
 
         <div>
           <Label>{t("image_label")}</Label>
-          <BrandImageUpload
-            file={brandData.image}
-            onFileChange={handleFileChange}
-          />
+          <ImageUpload file={brandData.image} onFileChange={handleFileChange} />
         </div>
-
-        {errors.global && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
-        )}
 
         <button
           type="submit"

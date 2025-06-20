@@ -5,14 +5,14 @@ import { useGetBrandById } from "../../../hooks/Api/SuperAdmin/useBrands/useSupe
 import PageMeta from "../../common/PageMeta";
 import { AxiosError } from "axios";
 
-interface Brand {
-  id: number;
-  name: string;
-  image: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-}
+// interface Brand {
+//   id: number;
+//   name: string;
+//   image: string;
+//   status: string;
+//   created_at: string;
+//   updated_at: string;
+// }
 
 const BrandDetails: React.FC = () => {
   const { id } = useParams();

@@ -22,6 +22,7 @@ i18n
       "BreadCrump",
       "EndUserProductModal",
       "EndUserCheckout",
+      "Status",
       "EndUserCart",
       "EndUserShop",
       "AddedToCartModel",

@@ -10,26 +10,26 @@ import convertToFormData from "./convertToFormData";
 import OTPPage from "../../common/OtpPage";
 import { sendOtp, verifyOtp } from "../../../api/OtpApi/_requests";
 import { toast } from "react-toastify";
+import { ClientErrors, FormDataType, ServerErrors } from "../../../types/Auth";
 
 export default function SignUpForm() {
   const navigate = useNavigate();
   const { t } = useTranslation(["auth"]);
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [step, setStep] = useState(1);
-  const [clientErrors, setClientErrors] = useState<{ [key: string]: string }>(
-    {}
-  );
+  const [clientErrors, setClientErrors] = useState<ClientErrors>({});
   const [otpError, setOtpError] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
 
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<ServerErrors>({
     general: "",
     global: "",
+    errors: {},
   });
 
-  const [dataForm, setDataForm] = useState({
+  const [dataForm, setDataForm] = useState<FormDataType>({
     adminInfo: {
       first_name: "",
       last_name: "",
@@ -45,11 +45,11 @@ export default function SignUpForm() {
     },
     documentInfo: [
       {
-        document_file: null as File | null,
+        document_file: null,
         document_type: "1",
       },
       {
-        document_file: null as File | null,
+        document_file: null,
         document_type: "2",
       },
     ],
@@ -145,7 +145,7 @@ export default function SignUpForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrors({ general: "", global: "" });
+    setErrors({ general: "", global: "", errors: {} });
     const isValid = validateVendorForm(setClientErrors, dataForm, t);
     if (!isValid) return;
 
@@ -171,7 +171,6 @@ export default function SignUpForm() {
 
       if (Array.isArray(rawErrors)) {
         const formattedErrors: Record<string, string[]> = {};
-
         rawErrors.forEach((err: { code: string; message: string }) => {
           if (!formattedErrors[err.code]) {
             formattedErrors[err.code] = [];

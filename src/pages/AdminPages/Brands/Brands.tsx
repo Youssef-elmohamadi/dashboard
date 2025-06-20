@@ -8,16 +8,19 @@ import { useLocation } from "react-router-dom";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
-import { useAllBrandsPaginate, useDeleteBrand } from "../../../hooks/Api/Admin/useBrands/useBrands";
+import {
+  useAllBrandsPaginate,
+  useDeleteBrand,
+} from "../../../hooks/Api/Admin/useBrands/useBrands";
 import Alert from "../../../components/ui/alert/Alert";
 import { AxiosError } from "axios";
+import { SearchValues } from "../../../types/Brands";
+import { ID, TableAlert } from "../../../types/Common";
 const Brands = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-  const [searchValues, setSearchValues] = useState<{
-    name: string;
-  }>({
+  const [searchValues, setSearchValues] = useState<SearchValues>({
     name: "",
   });
   const location = useLocation();
@@ -26,7 +29,11 @@ const Brands = () => {
     pageIndex,
     searchValues
   );
+  console.log(data);
+
   const pageSize = data?.per_page ?? 15;
+  const brandsData = data?.data ?? [];
+  const totalBrands = data?.total ?? 0;
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
       const status = error.response?.status;
@@ -38,13 +45,7 @@ const Brands = () => {
     }
   }, [isError, error]);
 
-  const brandsData = data?.data ?? [];
-  const totalBrands = data?.total ?? 0;
-  const [alertData, setAlertData] = useState<{
-    variant: "success" | "error" | "info" | "warning";
-    title: string;
-    message: string;
-  } | null>(null);
+  const [alertData, setAlertData] = useState<TableAlert | null>(null);
   useEffect(() => {
     if (location.state?.successCreate) {
       setAlertData({
@@ -73,7 +74,7 @@ const Brands = () => {
     setPageIndex(0);
   };
   const { mutateAsync } = useDeleteBrand();
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: ID) => {
     await alertDelete(id, mutateAsync, refetch, {
       confirmTitle: t("brandsPage.delete.confirmTitle"),
       confirmText: t("brandsPage.delete.confirmText"),

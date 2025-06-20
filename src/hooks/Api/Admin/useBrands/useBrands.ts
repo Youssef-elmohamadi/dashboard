@@ -7,10 +7,16 @@ import {
   getBrandsPaginate,
   updateBrand,
 } from "../../../../api/AdminApi/brandsApi/_requests";
-import { AxiosError } from "axios";
+// import { AxiosError } from "axios";
+import {
+  PaginatedBrandsData,
+  UpdateBrandParams,
+} from "../../../../types/Brands";
+import { ID } from "../../../../types/Common";
 type BrandFilters = {
   name?: string;
 };
+
 export const useAllBrands = () => {
   return useQuery({
     queryKey: ["brands", "all"],
@@ -20,7 +26,7 @@ export const useAllBrands = () => {
 };
 
 export const useAllBrandsPaginate = (page: number, filters?: BrandFilters) => {
-  return useQuery({
+  return useQuery<PaginatedBrandsData>({
     queryKey: ["brands", page, filters],
     queryFn: async () => {
       const response = await getBrandsPaginate({
@@ -31,9 +37,6 @@ export const useAllBrandsPaginate = (page: number, filters?: BrandFilters) => {
       return response.data.data;
     },
     staleTime: 1000 * 60 * 4,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطأ أثناء جلب العلامة التجارية:", error);
-    },
   });
 };
 
@@ -41,7 +44,7 @@ export const useDeleteBrand = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number | string) => {
+    mutationFn: async (id: ID) => {
       return await deleteBrand(id);
     },
     onSuccess: () => {
@@ -57,7 +60,7 @@ export const useDeleteBrand = () => {
 export const useCreateBrand = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (brandData: any) => {
+    mutationFn: async (brandData: FormData) => {
       return await createBrand(brandData);
     },
 
@@ -71,7 +74,7 @@ export const useCreateBrand = () => {
   });
 };
 
-export const useGetBrandById = (id?: number | string) => {
+export const useGetBrandById = (id: string | undefined) => {
   return useQuery({
     queryKey: ["brand", id],
     queryFn: () => getBrandById(id!),
@@ -80,16 +83,10 @@ export const useGetBrandById = (id?: number | string) => {
   });
 };
 
-export const useUpdateBrand = (id: number | string) => {
+export const useUpdateBrand = (id: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({
-      brandData,
-      id,
-    }: {
-      brandData: any;
-      id: number | string;
-    }) => {
+    mutationFn: async ({ brandData, id }: UpdateBrandParams) => {
       return await updateBrand(brandData, id);
     },
     onSuccess: () => {

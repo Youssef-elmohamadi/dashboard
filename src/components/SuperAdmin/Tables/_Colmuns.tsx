@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import BrandCell from "./BrandCell";
-import BrandStatus from "./BrandStatus";
+import TableStatus from "../../common/TableStatus";
 
 type BaseEntity = {
   id: number;
@@ -83,7 +83,7 @@ export const buildColumns = <T extends BaseEntity>(
       Header: t("table.order_status"),
       id: "order_status",
       Cell: ({ row }: any) => (
-        <BrandStatus status={row?.original?.order?.status} />
+        <TableStatus status={row?.original?.order?.status} />
       ),
     });
   }
@@ -93,7 +93,7 @@ export const buildColumns = <T extends BaseEntity>(
       Header: t("table.shipping_status"),
       id: "shipping_status",
       Cell: ({ row }: any) => (
-        <BrandStatus status={row.original?.shipping_status} />
+        <TableStatus status={row.original?.shipping_status} />
       ),
     });
   }
@@ -131,7 +131,7 @@ export const buildColumns = <T extends BaseEntity>(
     columns.push({
       Header: t("table.status"),
       id: "status",
-      Cell: ({ row }: any) => <BrandStatus status={row.original.status} />,
+      Cell: ({ row }: any) => <TableStatus status={row.original.status} />,
     });
   }
   // if (options.includeOrderStatus) {
@@ -139,7 +139,7 @@ export const buildColumns = <T extends BaseEntity>(
   //     Header: "Order Status",
   //     id: "order_status",
   //     Cell: ({ row }: any) => (
-  //       <BrandStatus status={row.original.order.status} />
+  //       <TableStatus status={row.original.order.status} />
   //     ),
   //   });
   // }
@@ -149,7 +149,7 @@ export const buildColumns = <T extends BaseEntity>(
   //     Header: "Shipping Status",
   //     id: "shipping_status",
   //     Cell: ({ row }: any) => (
-  //       <BrandStatus status={row.original.shipping_status} />
+  //       <TableStatus status={row.original.shipping_status} />
   //     ),
   //   });
   // }

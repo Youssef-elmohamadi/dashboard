@@ -1,4 +1,6 @@
-const convertToFormData = (data: any) => {
+import { FormDataType } from "../../../types/Auth";
+
+const convertToFormData = (data: FormDataType) => {
   const formData = new FormData();
 
 

@@ -2,6 +2,7 @@ import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 import "./alert.css";
 import { AxiosError } from "axios";
+import { ID } from "../../../types/Common";
 
 interface AlertMessages {
   confirmTitle?: string;
@@ -18,8 +19,8 @@ interface AlertMessages {
 }
 
 export const alertDelete = async (
-  id: number,
-  apiFn: (id: number) => Promise<any>,
+  id: ID,
+  apiFn: (id: ID) => Promise<any>,
   refetchFn?: () => Promise<any>,
   messages?: AlertMessages
 ): Promise<any> => {

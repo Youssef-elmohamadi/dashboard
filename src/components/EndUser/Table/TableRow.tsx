@@ -18,15 +18,18 @@ const TableRow: React.FC<TableRowProps> = ({
 }) => {
   const rowData = row.original;
 
+  const { key: rowKey, ...restOfRowProps } = row.getRowProps();
+
   return (
-    <tr {...row.getRowProps()}>
+    <tr key={rowKey} {...restOfRowProps}>
       {row.cells.map((cell: any) => {
-        const cellProps = cell.getCellProps();
+        const { key: cellKey, ...restOfCellProps } = cell.getCellProps();
         const isActionsColumn = cell.column.id === actionsColumnId;
 
         return (
           <td
-            {...cellProps}
+            key={cellKey}
+            {...restOfCellProps}
             className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs"
           >
             {isActionsColumn ? (
