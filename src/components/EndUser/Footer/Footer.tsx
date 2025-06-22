@@ -14,7 +14,7 @@ import {
   FaStore,
   FaRocket,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FooterSection from "./FooterLinks";
 import { handleLogout } from "../../common/Logout";
 import { useTranslation } from "react-i18next";
@@ -31,6 +31,7 @@ export default function Footer() {
   const [contactOpen, setContactOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [sellerAreaOpen, setSellerAreaOpen] = useState(false);
+  const navigate = useNavigate();
   const { t } = useTranslation(["EndUserFooter"]);
   const { data: categories } = useCategories();
 
@@ -190,7 +191,7 @@ export default function Footer() {
                 <FaSignOutAlt className="text-purple-400" />
                 <button
                   onClick={() => {
-                    handleLogout("end_user");
+                    handleLogout("end_user", navigate);
                   }}
                   className="hover:text-red-500"
                   aria-label="Logout"

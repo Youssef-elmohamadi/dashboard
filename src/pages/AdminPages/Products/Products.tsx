@@ -16,24 +16,16 @@ import {
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { useAllBrands } from "../../../hooks/Api/Admin/useBrands/useBrands";
 import { AxiosError } from "axios";
-type Category = {
-  id: number;
-  name: string;
-};
-type Brand = {
-  id: number;
-  name: string;
-};
+import { ID } from "../../../types/Common";
+import { SearchValues } from "../../../types/Product";
+import { Brand } from "../../../types/Brands";
+import { Category } from "../../../types/Categories";
+
 const Products = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-  const [searchValues, setSearchValues] = useState<{
-    category_id: string;
-    brand_id: string;
-    status: string;
-    name: string;
-  }>({
+  const [searchValues, setSearchValues] = useState<SearchValues>({
     category_id: "",
     brand_id: "",
     status: "",
@@ -48,6 +40,8 @@ const Products = () => {
     refetch,
     error,
   } = useAllProducts(pageIndex, searchValues);
+  console.log("Products data:", products);
+
   const pageSize = products?.per_page ?? 15;
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
@@ -98,11 +92,14 @@ const Products = () => {
   };
 
   const { data: allCategories } = useAllCategories();
-  const categories = allCategories?.data.data?.original;
+
+  const categories = allCategories?.original;
+
   const { data: allBrands } = useAllBrands();
-  const brands = allBrands?.data.data;
+  const brands = allBrands?.data;
+  
   const { mutateAsync: deleteProductMutate } = useDeleteProduct();
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: ID) => {
     await alertDelete(id, deleteProductMutate, refetch, {
       confirmTitle: t("productsPage.delete.confirmTitle"),
       confirmText: t("productsPage.delete.confirmText"),
@@ -117,10 +114,7 @@ const Products = () => {
   };
 
   const columns = buildColumns({
-    includeBrandName: false,
     includeImagesAndNameCell: true,
-    includeEmail: false,
-    includeRoles: false,
     includeStatus: true,
     includeUpdatedAt: true,
     includeCreatedAt: true,
@@ -160,7 +154,7 @@ const Products = () => {
               type: "select",
               options: brands?.map((brand: Brand) => ({
                 label: brand.name,
-                value: brand.id,
+                value: String(brand.id),
               })),
             },
             {

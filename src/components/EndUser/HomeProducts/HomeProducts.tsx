@@ -9,6 +9,7 @@ import {
   useProductForEveryCategory,
 } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import AdBanner from "../AdBanner/AdBanner";
+import LazyImage from "../../common/LazyImage";
 
 const HomeProducts: React.FC = () => {
   const { t } = useTranslation(["EndUserHome"]);
@@ -26,8 +27,15 @@ const HomeProducts: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="enduser_container px-4 py-10 text-center text-gray-500">
-        {t("loading")}
+      <div className="enduser_container flex flex-col items-center justify-center px-4 py-10 text-gray-500 min-h-[50vh]">
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <LazyImage
+            src="images/product/placeholder-image.jpg"
+            alt={t("homeProducts.loadingAlt", "Loading products...")}
+            className="w-24 h-24 mb-4 animate-pulse mx-auto"
+          />
+          <span className="text-base">{t("loading", "Loading products...")}</span>
+        </div>
       </div>
     );
   }

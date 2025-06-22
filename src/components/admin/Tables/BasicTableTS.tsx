@@ -5,11 +5,10 @@ import Pagination from "./Pagination";
 import Loading from "../../common/Loading";
 import { useTranslation } from "react-i18next";
 import { ID } from "../../../types/Common";
-import { Brand } from "../../../types/Brands";
 
 interface BasicTableProps<T> {
   columns: any;
-  data: Brand[];
+  data: any[];
   totalItems: number;
   isLoading: boolean;
   pageIndex: number;

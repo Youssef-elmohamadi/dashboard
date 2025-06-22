@@ -22,7 +22,7 @@ const UpdateBrandPage = () => {
   const { t } = useTranslation("UpdateBrand");
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const [globalError, setGlobalError] = useState(false);
   const [updateData, setUpdateData] = useState<MutateBrand>({
     name: "",
     status: "active",
@@ -42,19 +42,14 @@ const UpdateBrandPage = () => {
     });
   const [loading, setLoading] = useState(false);
   const { data, isLoading, isError, error } = useGetBrandById(id);
+
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
       const status = error?.response?.status;
       if (status === 401 || status === 403) {
-        setErrors((prev) => ({
-          ...prev,
-          global: t("errors.global"),
-        }));
+        setGlobalError(true);
       } else {
-        setErrors((prev) => ({
-          ...prev,
-          general: t("errors.general"),
-        }));
+        setGlobalError(true);
       }
     }
   }, [isError, error, t]);
@@ -150,13 +145,45 @@ const UpdateBrandPage = () => {
     }
   };
 
+  if (!id) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Update Brand" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("no_data")}
+        </div>
+      </>
+    );
+  }
+
   if (isLoading)
     return (
       <>
         <PageMeta title={t("main_title")} description="Update Brand" />
-        <p className="text-center mt-5">{t("loading")}</p>;
+        <p className="text-center mt-5">{t("loading")}</p>
       </>
     );
+
+  if (!brandData && !globalError) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Update Brand" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("not_found")}
+        </div>
+      </>
+    );
+  }
+  if (globalError) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Update Brand" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("errors.general")}
+        </div>
+      </>
+    );
+  }
 
   return (
     <div>

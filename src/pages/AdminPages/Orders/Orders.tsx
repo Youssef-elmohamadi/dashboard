@@ -4,7 +4,7 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/admin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
 import { alertDelete } from "../../../components/admin/Tables/Alert";
-import { buildColumns } from "../../../components/admin/Tables/_Colmuns"; // مكان الملف
+import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
 import SearchTable from "../../../components/admin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
 import {
@@ -12,29 +12,12 @@ import {
   useCancelOrder,
 } from "../../../hooks/Api/Admin/useOrders/useOrders";
 import { AxiosError } from "axios";
-type User = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  vendor_id: number;
-  avatar: string;
-  created_at: string;
-  updated_at: string;
-  vendor: { id: number; name: string };
-  roles: { id: number; name: string }[];
-};
+import { ID } from "../../../types/Common";
+import { SearchValuesOrders } from "../../../types/Orders";
 
 const Orders = () => {
   const [pageIndex, setPageIndex] = useState(0);
-  const [searchValues, setSearchValues] = useState<{
-    status: string;
-    shipping_status: string;
-    tracking_number: string;
-    from_date: string;
-    to_date: string;
-  }>({
+  const [searchValues, setSearchValues] = useState<SearchValuesOrders>({
     status: "",
     shipping_status: "",
     tracking_number: "",
@@ -49,6 +32,7 @@ const Orders = () => {
     pageIndex,
     searchValues
   );
+
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
@@ -73,7 +57,7 @@ const Orders = () => {
     setPageIndex(0);
   };
   const { mutateAsync: cancelOrder } = useCancelOrder();
-  const handleCancel = async (id: number) => {
+  const handleCancel = async (id: ID) => {
     await alertDelete(id, cancelOrder, refetch, {
       confirmTitle: t("ordersPage.cancel.confirmTitle"),
       confirmText: t("ordersPage.cancel.confirmText"),
@@ -87,7 +71,7 @@ const Orders = () => {
     });
   };
 
-  const columns = buildColumns<User>({
+  const columns = buildColumns({
     includeFullName: true,
     includeCreatedAt: true,
     includeOrderStatus: true,

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { CiSearch } from "react-icons/ci";
 import { FaRegCircleUser } from "react-icons/fa6";
@@ -25,6 +25,7 @@ const AppHeader = () => {
   const notificationIconRef = useRef<HTMLDivElement>(null); // مرجع جديد لأيقونة الإشعارات
   const { items } = useSelector((state: any) => state.wishList);
   const { dir } = useDirectionAndLanguage();
+  const navigate = useNavigate();
   const { t } = useTranslation(["EndUserHeader"]);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
@@ -99,7 +100,7 @@ const AppHeader = () => {
                   <div className="absolute border border-gray-200 right-0 top-[90%] mt-1 bg-white shadow-lg rounded-md w-56 py-3 px-2 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
                     <HeaderListDropDown
                       handleLogout={() => {
-                        handleLogout("end_user");
+                        handleLogout("end_user", navigate);
                       }}
                       dir={dir}
                     />
@@ -178,7 +179,7 @@ const AppHeader = () => {
         closeMenu={closeMenu}
         uToken={uToken}
         handleLogout={() => {
-          handleLogout("end_user");
+          handleLogout("end_user", navigate);
         }}
       />
     </div>

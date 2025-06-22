@@ -12,9 +12,10 @@ import { useCreateProduct } from "../../../hooks/Api/Admin/useProducts/useAdminP
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { useAllBrands } from "../../../hooks/Api/Admin/useBrands/useBrands";
 import PageMeta from "../../common/PageMeta";
+import { Category } from "../../../types/Categories";
+import { Brand } from "../../../types/Brands";
 type Attribute = { label: string; value: string };
-type Category = { id: string; name: string };
-type Brand = { id: string; name: string };
+
 type ProductFormData = {
   name: string;
   description: string;
@@ -63,9 +64,9 @@ export default function CreateProducts() {
 
   const navigate = useNavigate();
   const { data: allCategories } = useAllCategories();
-  const categories = allCategories?.data.data?.original;
+  const categories = allCategories?.original;
   const { data: allBrands } = useAllBrands();
-  const brands = allBrands?.data.data;
+  const brands = allBrands?.data;
   const addTag = () => {
     setTags([...tags, ""]);
   };
@@ -318,8 +319,8 @@ export default function CreateProducts() {
             <Label htmlFor="brand_id">{t("form.brand")}</Label>
             <Select
               options={brands?.map((brand: Brand) => ({
-                value: brand.id,
                 label: brand.name,
+                value: String(brand.id),
               }))}
               onChange={(value) => handleSelectChange(value, "brand_id")}
               value={productData.brand_id}

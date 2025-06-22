@@ -3,7 +3,6 @@ import axiosForm from "../../axiosInstanceFormData";
 import {
   BrandParams,
   GetBrandsPaginateApiResponse,
-  UpdateBrand,
 } from "../../../types/Brands";
 import { ID } from "../../../types/Common";
 

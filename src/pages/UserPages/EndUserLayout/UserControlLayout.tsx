@@ -1,4 +1,4 @@
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { TiDocumentText } from "react-icons/ti";
 import { getProfile } from "../../../api/EndUserApi/endUserAuth/_requests";
 import { handleLogout } from "../../../components/common/Logout";
@@ -18,6 +18,7 @@ export default function UserControlLayout() {
     staleTime: 1000 * 60 * 5,
   });
   const { t } = useTranslation(["EndUserControlMenu"]);
+  const navigate = useNavigate();
   return (
     <div className="flex flex-row min-h-screen">
       <aside className="w-72 bg-white p-4 border-r border-gray-200 shadow hidden lg:block ">
@@ -34,13 +35,6 @@ export default function UserControlLayout() {
             <div className="text-sm text-gray-500">{user?.email}</div>
           </div>
           <nav className="space-y-2 mt-6">
-            {/* <Link
-              to="/u-dashboard"
-              className="p-2 rounded hover:bg-gray-100 flex items-center gap-2"
-            >
-              <AiOutlineHome className="text-lg text-gray-500" />
-              Dashboard
-            </Link> */}
             <NavLink
               to="/u-profile"
               className={({ isActive }) =>
@@ -124,7 +118,7 @@ export default function UserControlLayout() {
             </NavLink>
             <button
               onClick={() => {
-                handleLogout("end_user");
+                handleLogout("end_user", navigate);
               }}
               className="flex items-center group gap-3 transition-all duration-400 px-4 py-2 rounded-3xl hover:bg-red-300 cursor-pointer pl-2 hover:pl-4 w-full"
             >

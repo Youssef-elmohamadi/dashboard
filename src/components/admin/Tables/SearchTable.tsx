@@ -4,12 +4,12 @@ import Label from "../../form/Label";
 import Input from "../../form/input/InputField";
 import Select from "../../form/Select";
 
-type Option = { label: string; value: string | number };
+type Option = { label: string; value: string | number | undefined };
 type Field = {
   key: string;
   label: string;
   type: "input" | "select" | "date";
-  options?: Option[];
+  options?: Option[] | undefined ;
 };
 
 const SearchTable = ({

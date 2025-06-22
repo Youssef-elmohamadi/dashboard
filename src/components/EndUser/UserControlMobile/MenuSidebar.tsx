@@ -3,7 +3,7 @@ import { MdCompareArrows, MdDelete, MdFavorite } from "react-icons/md";
 import { RiProfileFill } from "react-icons/ri";
 import { TfiClose } from "react-icons/tfi";
 import { TiDocumentText } from "react-icons/ti";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { handleLogout } from "../../common/Logout";
 import { handleDeleteAccount } from "../Auth/DeleteAccount";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
@@ -19,6 +19,7 @@ const MenuSidebar = ({ isMenuOpen, setIsMenuOpen }: MenuSidebarProps) => {
   const closeMenu = () => setIsMenuOpen(false);
   const { t } = useTranslation(["EndUserHeader"]);
   const { data: user } = useProfile();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -117,7 +118,7 @@ const MenuSidebar = ({ isMenuOpen, setIsMenuOpen }: MenuSidebarProps) => {
           {/* Logout */}
           <button
             onClick={() => {
-              handleLogout("end_user");
+              handleLogout("end_user", navigate);
             }}
             className="flex items-center gap-3 p-2 text-red-600 hover:bg-red-100 rounded w-full"
           >

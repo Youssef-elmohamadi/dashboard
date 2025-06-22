@@ -8,14 +8,12 @@ import SearchTable from "../../../components/admin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
 import { useAllCategoriesPaginate } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { AxiosError } from "axios";
+import { SearchValues } from "../../../types/Categories";
 const Categories = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-
-  const [searchValues, setSearchValues] = useState<{
-    name: string;
-  }>({
+  const [searchValues, setSearchValues] = useState<SearchValues>({
     name: "",
   });
   const { t } = useTranslation(["CategoriesTable"]);
@@ -23,8 +21,8 @@ const Categories = () => {
     pageIndex,
     searchValues
   );
+  const pageSize = data?.original.per_page ?? 15;
 
-  const pageSize = data?.per_page ?? 15;
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
       const status = error?.response?.status;
@@ -51,10 +49,9 @@ const Categories = () => {
   const columns = buildColumns({
     includeImageAndNameCell: true,
     includeStatus: true,
+    includeCommissionRate: true,
     includeUpdatedAt: true,
     includeCreatedAt: true,
-    includeActions: false,
-    includeCommissionRate: true,
   });
 
   return (

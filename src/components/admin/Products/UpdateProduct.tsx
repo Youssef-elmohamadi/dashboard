@@ -15,48 +15,11 @@ import {
   useUpdateProduct,
 } from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
 import PageMeta from "../../common/PageMeta";
-type Category = {
-  id: number;
-  name: string;
-  description: string | number | null;
-  image?: [] | null;
-};
+import { AxiosError } from "axios";
+import { Category } from "../../../types/Categories";
+import { Brand } from "../../../types/Brands";
+import { Attribute, Product } from "../../../types/Product";
 
-type Brand = {
-  id: number;
-  name: string;
-  status: string;
-  images: string;
-};
-
-type Attribute = {
-  label: string;
-  value: string;
-};
-
-type Product = {
-  id?: number;
-  vendor_id?: number;
-  name?: string;
-  description?: string | undefined;
-  category_id?: string;
-  brand_id?: string;
-  price?: number | string;
-  discount_price?: number | null;
-  stock_quantity?: number | string;
-  status?: string;
-  is_featured: boolean;
-  rating?: number | null;
-  views_count?: number | null;
-  created_at?: string;
-  updated_at?: string;
-  category?: Category;
-  brand?: Brand;
-  attributes?: any[];
-  images?: string[];
-  tags?: string[];
-  variants?: any[];
-};
 const UpdateProductPage: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -70,6 +33,11 @@ const UpdateProductPage: React.FC = () => {
     brand_id: "",
     status: "",
     is_featured: false,
+    created_at: "",
+    updated_at: "",
+    attributes: [],
+    images: [],
+    tags: [],
   });
   //const [categories, setCategories] = useState<Category[]>([]);
   const [images, setImages] = useState<File[]>([]);
@@ -79,22 +47,24 @@ const UpdateProductPage: React.FC = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-  const [errors, setErrors] = useState({
-    name: [] as string[],
-    description: [] as string[],
-    price: [] as string[],
-    stock_quantity: [] as string[],
-    category_id: [] as string[],
-    brand_id: [] as string[],
-    status: [] as string[],
-    is_featured: [] as string[],
-    images: [] as string[],
-    attributes: [] as string[],
-    tags: [] as string[],
+  const [errors, setErrors] = useState<Record<string, string[] | string>>({
+    name: [],
+    description: [],
+    price: [],
+    stock_quantity: [],
+    category_id: [],
+    brand_id: [],
+    status: [],
+    is_featured: [],
+    images: [],
+    attributes: [],
+    tags: [],
     global: "",
     general: "",
   });
-  const [clientSideErrors, setClientSideErrors] = useState({
+  const [clientSideErrors, setClientSideErrors] = useState<
+    Record<string, string>
+  >({
     name: "",
     description: "",
     price: "",
@@ -105,12 +75,11 @@ const UpdateProductPage: React.FC = () => {
     images: "",
     is_featured: "",
   });
-  //const [brands, setBrands] = useState<Brand[]>([]);
 
   const { data: allCategories } = useAllCategories();
-  const categories = allCategories?.data.data?.original;
+  const categories = allCategories?.original;
   const { data: allBrands } = useAllBrands();
-  const brands = allBrands?.data.data;
+  const brands = allBrands?.data;
 
   const { data, isLoading, isError, error } = useGetProductById(id);
   const product = data?.data?.data;
@@ -121,8 +90,8 @@ const UpdateProductPage: React.FC = () => {
     setExistingImages(product.images ?? []);
     setAttributes(
       product.attributes?.map((attr: any) => ({
-        label: attr.attribute_name,
-        value: attr.attribute_value,
+        attribute_name: attr.attribute_name,
+        attribute_value: attr.attribute_value,
       }))
     );
     setTags(
@@ -153,7 +122,7 @@ const UpdateProductPage: React.FC = () => {
 
   const handleAttributeChange = (
     index: number,
-    field: keyof Attribute,
+    field: "attribute_name" | "attribute_value",
     value: string
   ) => {
     const updated = [...attributes];
@@ -180,7 +149,13 @@ const UpdateProductPage: React.FC = () => {
   };
 
   const addAttribute = () =>
-    setAttributes([...attributes, { label: "", value: "" }]);
+    setAttributes([
+      ...attributes,
+      {
+        attribute_name: "",
+        attribute_value: "",
+      },
+    ]);
   const addTag = () => setTags([...tags, ""]);
   const validate = () => {
     const newErrors = {
@@ -204,7 +179,7 @@ const UpdateProductPage: React.FC = () => {
     if (!productData.description)
       newErrors.description = t("validation.description");
     setClientSideErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.values(newErrors).every((err) => err === "");
   };
   const { mutateAsync } = useUpdateProduct(id);
   const handleSubmit = async (e: React.FormEvent) => {
@@ -249,8 +224,8 @@ const UpdateProductPage: React.FC = () => {
       images.forEach((image) => formData.append("images[]", image));
     }
     attributes.forEach((attr, i) => {
-      formData.append(`attributes[${i}][name]`, attr.label);
-      formData.append(`attributes[${i}][value]`, attr.value);
+      formData.append(`attributes[${i}][name]`, attr.attribute_name);
+      formData.append(`attributes[${i}][value]`, attr.attribute_value);
     });
     tags.forEach((tag) => {
       formData.append("tags[]", tag);
@@ -292,7 +267,7 @@ const UpdateProductPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (isError) {
+    if (isError && error instanceof AxiosError) {
       const status = error?.response?.status;
       if (status === 401 || status === 403) {
         setGlobalError(true);
@@ -439,7 +414,7 @@ const UpdateProductPage: React.FC = () => {
             <Label htmlFor="brand_id">{t("form.brand")}</Label>
             <Select
               options={brands?.map((brand: Brand) => ({
-                value: brand.id,
+                value: String(brand.id),
                 label: brand.name,
               }))}
               onChange={(value) => handleSelectChange(value, "brand_id")}
@@ -572,16 +547,16 @@ const UpdateProductPage: React.FC = () => {
             <div key={i} className="flex gap-2 mb-2 items-center">
               <Input
                 placeholder={t("placeholders.attribute_label")}
-                value={attr.label}
+                value={attr.attribute_name}
                 onChange={(e) =>
-                  handleAttributeChange(i, "label", e.target.value)
+                  handleAttributeChange(i, "attribute_name", e.target.value)
                 }
               />
               <Input
                 placeholder={t("placeholders.attribute_value")}
-                value={attr.value}
+                value={attr.attribute_value}
                 onChange={(e) =>
-                  handleAttributeChange(i, "value", e.target.value)
+                  handleAttributeChange(i, "attribute_value", e.target.value)
                 }
               />
               <button

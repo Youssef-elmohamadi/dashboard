@@ -1,5 +1,6 @@
 import axiosJson from "../../axiosInstanceJson";
 import axiosForm from "../../axiosInstanceFormData";
+import { ID } from "../../../types/Common";
 export const getAllProducts = async () => {
   return await axiosJson.get("/api/vendor/products");
 };
@@ -18,7 +19,7 @@ export const showProduct = async (id: number | string) => {
   return await axiosJson.get(`/api/vendor/products/${id}`);
 };
 
-export const deleteProduct = async (id: number) => {
+export const deleteProduct = async (id: ID) => {
   return await axiosJson.delete(`/api/vendor/products/${id}`);
 };
 

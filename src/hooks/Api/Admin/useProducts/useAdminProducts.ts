@@ -6,14 +6,9 @@ import {
   deleteProduct,
   showProduct,
 } from "../../../../api/AdminApi/products/_requests";
-import { AxiosError } from "axios";
+import { ProductFilters } from "../../../../types/Product";
+import { ID } from "../../../../types/Common";
 
-type ProductFilters = {
-  category_id?: string;
-  brand_id?: string;
-  status?: string;
-  name?: string;
-};
 export const useAllProducts = (page: number, filters?: ProductFilters) => {
   return useQuery({
     queryKey: ["adminProducts", page, filters],
@@ -26,9 +21,6 @@ export const useAllProducts = (page: number, filters?: ProductFilters) => {
       return response.data.data;
     },
     staleTime: 1000 * 60 * 4,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطأ أثناء جلب المنتجات:", error);
-    },
   });
 };
 
@@ -36,7 +28,7 @@ export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number | string) => {
+    mutationFn: async (id: ID) => {
       return await deleteProduct(id);
     },
     onSuccess: () => {
@@ -75,7 +67,7 @@ export const useGetProductById = (id?: number | string) => {
   });
 };
 
-export const useUpdateProduct = (id) => {
+export const useUpdateProduct = (id: string | undefined) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
@@ -89,7 +81,6 @@ export const useUpdateProduct = (id) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminProducts"] });
-      //queryClient.invalidateQueries({ queryKey: ["products", "all"] });
       queryClient.invalidateQueries({ queryKey: ["product", id] });
     },
     onError: (error) => {

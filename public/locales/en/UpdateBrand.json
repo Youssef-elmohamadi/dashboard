@@ -17,7 +17,7 @@
     "name": "Brand name is required.",
     "status": "Select brand status.",
     "image": "Brand image is required.",
-    "general": "Something went wrong.",
+    "general": "un expected error occurred, please try again.",
     "global": "You don't have permission to perform this action."
   }
 }

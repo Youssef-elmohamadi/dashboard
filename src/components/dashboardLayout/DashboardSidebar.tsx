@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useDirectionAndLanguage } from "../../context/DirectionContext";
 import {
   BoxCubeIcon,
@@ -31,6 +31,7 @@ type DashboardSidebarProps = {
 };
 
 const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
+  const navigate = useNavigate();
   const { t } = useTranslation(["DashboardSidebar"]);
   const AdminNavItems: NavItem[] = [
     {
@@ -92,7 +93,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       icon: <PiSignOut />,
       name: t("Logout"),
       action: () => {
-        handleLogout("admin");
+        handleLogout("admin", navigate);
       },
     },
     // {
@@ -177,7 +178,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       icon: <PiSignOut />,
       name: t("Logout"),
       action: () => {
-        handleLogout("super_admin");
+        handleLogout("super_admin", navigate);
       },
     },
   ];

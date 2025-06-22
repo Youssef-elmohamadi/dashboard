@@ -5,6 +5,7 @@ import { showUser } from "../../api/AdminApi/profileApi/_requests";
 import { handleLogout } from "../common/Logout";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../context/DirectionContext";
+import { useNavigate } from "react-router";
 interface UserDropDownProps {
   userType: "admin" | "super_admin";
 }
@@ -27,7 +28,7 @@ export default function UserDropdown({ userType }: UserDropDownProps) {
     roles: [],
     avatar: "",
   });
-
+  const navigate = useNavigate();
   useEffect(() => {
     const storedUserId = localStorage.getItem("admin_id");
     if (!storedUserId) return;
@@ -181,7 +182,7 @@ export default function UserDropdown({ userType }: UserDropDownProps) {
         </ul>
         <button
           onClick={() => {
-            handleLogout(userType);
+            handleLogout(userType, navigate);
           }}
           className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
         >

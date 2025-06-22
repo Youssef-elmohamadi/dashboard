@@ -1,6 +1,7 @@
 import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { getProfile } from "../../../api/EndUserApi/endUserAuth/_requests";
 import { handleLogout } from "../../common/Logout";
+import { useNavigate } from "react-router-dom";
 interface UserContextType {
   userId: number | null;
   setUserId: (id: number) => void;
@@ -16,6 +17,7 @@ interface UserProviderProps {
 }
 
 export const EndUserProvider = ({ children }: UserProviderProps) => {
+    const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("end_user_token");
     if (token) {
@@ -25,7 +27,7 @@ export const EndUserProvider = ({ children }: UserProviderProps) => {
         } catch (error: any) {
           console.error("Failed to get data", error);
           if (error.response && error.response.status === 401) {
-            handleLogout("end_user");
+            handleLogout("end_user", navigate);
           }
           console.error(error);
         }

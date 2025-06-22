@@ -7,7 +7,7 @@ const ProtectedAdminRoute = ({ children }: { children: React.ReactNode }) => {
   if (!aToken) {
     return <Navigate to="/admin/signin" replace />;
   } else {
-    return <>{children}</>;  // هنرجع الـ children في حالة وجود token
+    return <>{children}</>; 
   }
 };
 

@@ -9,18 +9,19 @@ import {
 } from "../../../../api/AdminApi/brandsApi/_requests";
 // import { AxiosError } from "axios";
 import {
+  AllBrandsData,
+  BrandFilters,
   PaginatedBrandsData,
   UpdateBrandParams,
 } from "../../../../types/Brands";
 import { ID } from "../../../../types/Common";
-type BrandFilters = {
-  name?: string;
-};
-
 export const useAllBrands = () => {
-  return useQuery({
+  return useQuery<AllBrandsData>({
     queryKey: ["brands", "all"],
-    queryFn: getAllBrands,
+    queryFn: async () => {
+      const response = await getAllBrands();
+      return response.data;
+    },
     staleTime: 1000 * 60 * 4,
   });
 };

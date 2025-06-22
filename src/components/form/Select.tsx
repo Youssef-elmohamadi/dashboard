@@ -1,12 +1,10 @@
-import { useState } from "react";
-
 interface Option {
-  value: string;
+  value: number | string | undefined;
   label: string;
 }
 
 interface SelectProps {
-  options: Option[];
+  options?: Option[];
   placeholder?: string;
   onChange: (value: string) => void;
   className?: string;

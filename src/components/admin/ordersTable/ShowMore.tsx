@@ -1,63 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetOrderById } from "../../../hooks/Api/Admin/useOrders/useOrders";
-
-// Interfaces
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-}
-
-interface OrderItem {
-  id: number;
-  product: Product;
-  price: number;
-  quantity: number;
-  total: number;
-}
-
-interface User {
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-}
-
-interface Location {
-  street: string;
-  city: string;
-}
-
-interface MainOrder {
-  payment_method: string;
-  user: User;
-  location?: Location;
-}
-
-interface Order {
-  order_id: number;
-  status: string;
-  total: number;
-  shipping_status: string;
-  tracking_number: number;
-  building_number: number;
-  estimated_delivery_date: string;
-  created_at: string;
-  updated_at: string;
-  order: MainOrder;
-  items: OrderItem[];
-}
+import { Order } from "../../../types/Orders";
+import { AxiosError } from "axios";
+import PageMeta from "../../common/PageMeta";
 
 const OrderDetails: React.FC = () => {
   const { t } = useTranslation(["OrderDetails"]);
   const { id } = useParams();
+  const [globalError, setGlobalError] = useState(false);
+  const { data, isLoading, isError, error } = useGetOrderById(id);
 
-  const { data, isLoading } = useGetOrderById(id);
-
-  const order: Order = data?.data?.data;
-
+  const order: Order = data!!;
+  useEffect(() => {
+    if (isError && error instanceof AxiosError) {
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) {
+        setGlobalError(true);
+      } else {
+        setGlobalError(true);
+      }
+    }
+  }, [isError, error, t]);
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -65,29 +30,67 @@ const OrderDetails: React.FC = () => {
       day: "numeric",
     });
 
-  if (!id)
+  if (!id) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-white">
-        {t("no_id")}
-      </div>
+      <>
+        <PageMeta
+          title={t("main_title")}
+          description="show order details and delivery information"
+        />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("no_id")}
+        </div>
+      </>
     );
+  }
 
-  if (isLoading)
+  if (isLoading) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-white">
-        {t("loading")}
-      </div>
+      <>
+        <PageMeta
+          title={t("main_title")}
+          description="show order details and delivery information"
+        />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("loading")}
+        </div>
+      </>
     );
+  }
 
-  if (!order)
+  if (!order && !globalError && !isLoading) {
     return (
-      <div className="p-8 text-center text-gray-500 dark:text-white">
-        {t("not_found")}
-      </div>
+      <>
+        <PageMeta
+          title={t("main_title")}
+          description="show order details and delivery information"
+        />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("not_found")}
+        </div>
+      </>
     );
+  }
+  if (globalError) {
+    return (
+      <>
+        <PageMeta
+          title={t("main_title")}
+          description="show order details and delivery information"
+        />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("global_error")}
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="order-details p-6 max-w-6xl mx-auto space-y-10">
+      <PageMeta
+        title={t("main_title")}
+        description="show order details and delivery information"
+      />
       <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-4">
         {t("title")}
       </h1>
@@ -99,29 +102,29 @@ const OrderDetails: React.FC = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
-            <strong>{t("fields.order_id")}:</strong> {order.order_id}
+            <strong>{t("fields.order_id")}:</strong> {order?.order_id}
           </p>
           <p>
-            <strong>{t("fields.status")}:</strong> {order.status}
+            <strong>{t("fields.status")}:</strong> {order?.status}
           </p>
           <p>
-            <strong>{t("fields.total")}:</strong> {order.total} {t("egp")}
+            <strong>{t("fields.total")}:</strong> {order?.total} {t("egp")}
           </p>
           <p>
             <strong>{t("fields.payment_method")}:</strong>{" "}
-            {order.order?.payment_method}
+            {order?.order?.payment_method}
           </p>
           <p>
             <strong>{t("fields.shipping_status")}:</strong>{" "}
-            {order.shipping_status}
+            {order?.shipping_status}
           </p>
           <p>
             <strong>{t("fields.tracking_number")}:</strong>{" "}
-            {order.tracking_number}
+            {order?.tracking_number}
           </p>
           <p>
             <strong>{t("fields.estimated_delivery")}:</strong>{" "}
-            {formatDate(order.estimated_delivery_date)}
+            {formatDate(order?.estimated_delivery_date)}
           </p>
         </div>
       </section>
@@ -133,19 +136,20 @@ const OrderDetails: React.FC = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
-            <strong>{t("fields.name")}:</strong> {order.order?.user?.first_name}{" "}
-            {order.order?.user?.last_name}
+            <strong>{t("fields.name")}:</strong>{" "}
+            {order?.order?.user?.first_name} {order?.order?.user?.last_name}
           </p>
           <p>
-            <strong>{t("fields.email")}:</strong> {order.order?.user?.email}
+            <strong>{t("fields.email")}:</strong> {order?.order?.user?.email}
           </p>
           <p>
-            <strong>{t("fields.phone")}:</strong> {order.order?.user?.phone}
+            <strong>{t("fields.phone")}:</strong> {order?.order?.user?.phone}
           </p>
-          {order.order.location && (
+          {order?.order.location && (
             <p>
-              <strong>{t("fields.address")}:</strong> {order.building_number}
-              {order.order.location.street}, {order.order?.location?.city}
+              <strong>{t("fields.address")}:</strong>{" "}
+              {order?.order.location.building_number}
+              {order?.order.location.street}, {order?.order?.location?.city}
             </p>
           )}
         </div>
@@ -157,7 +161,7 @@ const OrderDetails: React.FC = () => {
           {t("sections.products")}
         </h2>
         <div className="space-y-4">
-          {order.items.map((item) => (
+          {order?.items.map((item) => (
             <div
               key={item.id}
               className="border dark:border-gray-700 p-4 rounded-md  dark:bg-gray-900"
@@ -194,11 +198,11 @@ const OrderDetails: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
             <strong>{t("fields.created_at")}:</strong>{" "}
-            {formatDate(order.created_at)}
+            {formatDate(order?.created_at)}
           </p>
           <p>
             <strong>{t("fields.updated_at")}:</strong>{" "}
-            {formatDate(order.updated_at)}
+            {formatDate(order?.updated_at)}
           </p>
         </div>
       </section>

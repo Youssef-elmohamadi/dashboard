@@ -8,6 +8,10 @@ export type BrandFormErrors = {
   general: string;
 };
 
+export type BrandFilters = {
+  name?: string;
+};
+
 export type BrandClientSideErrors = {
   name: string;
   status: string;
@@ -68,4 +72,10 @@ export interface BrandParams {
   page: number | undefined;
   pageSize?: number | undefined;
   name?: string;
+}
+
+export interface AllBrandsData {
+  success: boolean;
+  message: string;
+  data: Brand[];
 }

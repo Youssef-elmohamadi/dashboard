@@ -3,19 +3,11 @@ import {
   cancelOrder,
   getOrderById,
   getOrdersWithPaginate,
-  shipmentOrder,
 } from "../../../../api/AdminApi/ordersApi/_requests";
-import { AxiosError } from "axios";
-
-type OrderFilters = {
-  status?: string;
-  shipping_status?: string;
-  tracking_number?: string;
-  from_date?: string;
-  to_date?: string;
-};
+import { OrderFilters, PaginatedOrdersData } from "../../../../types/Orders";
+import { ID } from "../../../../types/Common";
 export const useAllOrdersPaginate = (page: number, filters?: OrderFilters) => {
-  return useQuery({
+  return useQuery<PaginatedOrdersData>({
     queryKey: ["orders", page, filters],
     queryFn: async () => {
       const response = await getOrdersWithPaginate({
@@ -26,16 +18,16 @@ export const useAllOrdersPaginate = (page: number, filters?: OrderFilters) => {
       return response.data.data;
     },
     staleTime: 1000 * 60 * 4,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطأ أثناء جلب الطلبات:", error);
-    },
   });
 };
 
 export const useGetOrderById = (id?: number | string) => {
   return useQuery({
     queryKey: ["order", id],
-    queryFn: () => getOrderById(id!),
+    queryFn: async () => {
+      const response = await getOrderById(id!);
+      return response.data.data;
+    },
     staleTime: 1000 * 60 * 5,
     enabled: !!id,
   });
@@ -45,11 +37,11 @@ export const useCancelOrder = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number | string) => {
+    mutationFn: async (id: ID) => {
       return await cancelOrder(id);
     },
     onSuccess: (_, variables) => {
-      const { id } = variables;
+      const id = variables;
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       queryClient.invalidateQueries({ queryKey: ["orders", "all"] });
       queryClient.invalidateQueries({ queryKey: ["orders", id] });
@@ -59,21 +51,21 @@ export const useCancelOrder = () => {
     },
   });
 };
-export const useShipOrder = () => {
-  const queryClient = useQueryClient();
+// export const useShipOrder = () => {
+//   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async ({ data, id }: { data: any; id: number }) => {
-      return await shipmentOrder(data, id);
-    },
-    onSuccess: (_, variables) => {
-      const { id } = variables;
-      queryClient.invalidateQueries({ queryKey: ["orders"] });
-      queryClient.invalidateQueries({ queryKey: ["orders", "all"] });
-      queryClient.invalidateQueries({ queryKey: ["orders", id] });
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-};
+//   return useMutation({
+//     mutationFn: async ({ data, id }: { data: any; id: number }) => {
+//       return await shipmentOrder(data, id);
+//     },
+//     onSuccess: (_, variables) => {
+//       const { id } = variables;
+//       queryClient.invalidateQueries({ queryKey: ["orders"] });
+//       queryClient.invalidateQueries({ queryKey: ["orders", "all"] });
+//       queryClient.invalidateQueries({ queryKey: ["orders", id] });
+//     },
+//     onError: (error) => {
+//       console.error(error);
+//     },
+//   });
+// };

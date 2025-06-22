@@ -4,47 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useGetProductById } from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
 import PageMeta from "../../common/PageMeta";
 import { AxiosError } from "axios";
-
-type Category = {
-  id: number;
-  name: string;
-  description: string;
-};
-type Brand = {
-  id: number;
-  name: string;
-  status: string;
-  image: string;
-};
-
-type Product = {
-  id: number;
-  vendor_id: number;
-  name: string;
-  slug: string;
-  description: string | null;
-  category_id: number;
-  brand_id: number;
-  price: number;
-  discount_price: number | null;
-  stock_quantity: number;
-  status: string;
-  is_featured: number;
-  rating: number | null;
-  views_count: number | null;
-  created_at: string;
-  updated_at: string;
-  category: Category;
-  brand: Brand;
-  attributes: any[];
-  images: any[];
-  tags: any[];
-  vendor?: {
-    name?: string;
-    email?: string;
-    phone?: string;
-  };
-};
+import { Product } from "../../../types/Product";
 
 const ProductDetails: React.FC = () => {
   const { t } = useTranslation(["ProductDetails"]);
@@ -205,7 +165,7 @@ const ProductDetails: React.FC = () => {
             {t("sections.attributes")}
           </h2>
           <ul className="list-disc list-inside text-gray-700 dark:text-white">
-            {product.attributes.map((attr: any) => (
+            {product.attributes.map((attr) => (
               <li key={attr.id}>
                 <strong>{attr.attribute_name}:</strong> {attr.attribute_value}
               </li>
@@ -221,7 +181,7 @@ const ProductDetails: React.FC = () => {
             {t("sections.tags")}
           </h2>
           <div className="flex flex-wrap gap-2 text-gray-700 dark:text-white">
-            {product.tags.map((tag: any) => (
+            {product.tags.map((tag) => (
               <span
                 key={tag.id}
                 className="bg-gray-200 text-sm px-3 py-1 rounded-full"
