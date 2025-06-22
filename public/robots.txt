@@ -1,0 +1,14 @@
+User-agent: *
+# امنع الزحف لصفحات الإدارة
+Disallow: /admin/
+Disallow: /super_admin/
+
+# اسمح بكل شيء تاني
+Allow: /
+
+# تأكد إن عناكب البحث تعرف مكان السايت ماب
+Sitemap: https://dashboard-zpse.vercel.app/
+
+# تعليمات إضافية لمحركات البحث
+# غير ملزمة لكن محبذة لبعض البوتات الذكية
+Crawl-delay: 10
