@@ -10,21 +10,28 @@ import { useTranslation } from "react-i18next";
 import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import LandingSection from "../../../components/EndUser/Landing/LandingSection";
 import VendorsCarousel from "../../../components/EndUser/VendorsBar/VendorsBar";
+import i18n from "../../../i18n";
 
 const Home = () => {
   const { modalType } = useModal();
   const { t } = useTranslation(["EndUserHome"]);
 
   const { data: categories } = useCategories();
+  const isArabic = i18n.language === "ar";
+
+  const metaTitle = isArabic
+    ? "تاشتيبا - تسوق عبر الإنترنت في السوق المتعدد البائعين"
+    : "Tashtiba - Shop Online at Multi-Vendor Marketplace";
+
+  const metaDescription = isArabic
+    ? "اكتشف آلاف المنتجات على تاشتيبا - سوقك الموثوق للتسوق عبر الإنترنت للموضة والإلكترونيات والسلع المنزلية والمزيد. تسوق بسهولة وأمان من أفضل البائعين"
+    : "Discover thousands of products on Tashtiba — your trusted multi-vendor marketplace for fashion, electronics, home goods, and more. Shop easily and securely from top sellers";
 
   return (
     <section>
       <Helmet>
-        <title>{t("home.mainTitle")}</title>
-        <meta
-          name="description"
-          content="Discover thousands of products on Tashtiba — your trusted multi-vendor marketplace for fashion, electronics, home goods, and more. Shop easily and securely from top sellers"
-        />
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDescription} />
       </Helmet>
       <LandingSection />
 
