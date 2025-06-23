@@ -1,12 +1,7 @@
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { useTranslation } from "react-i18next";
-
-interface StatisticsChartProps {
-  ordersData: {
-    orderPerMonth: Record<string, number>;
-  };
-}
+import { StatisticsChartProps } from "../../types/DashboardHome";
 
 export default function StatisticsChart({ ordersData }: StatisticsChartProps) {
   const { t } = useTranslation(["Home"]);

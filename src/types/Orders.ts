@@ -42,8 +42,12 @@ interface MainOrder {
   location?: Location;
 }
 
+interface Vendor {
+  name: string;
+}
+
 export type Order = {
-  id: number;
+  id: number | string;
   vendor_id: number;
   status: string;
   total: number;
@@ -69,6 +73,8 @@ export type Order = {
   estimated_delivery_date: string;
   order: MainOrder;
   items: OrderItem[];
+  vendor: Vendor;
+  delivered_at: string | null;
 };
 
 export type SearchValuesOrders = {

@@ -7,28 +7,14 @@ import {
 } from "../ui/table";
 import Badge from "../ui/badge/Badge";
 import { useTranslation } from "react-i18next";
+import { Order } from "../../types/Orders";
+import { RecentOrdersProps } from "../../types/DashboardHome";
 
-interface Vendor {
-  name: string;
-}
 
-interface Order {
-  id: string | number;
-  vendor?: Vendor;
-  total: number;
-  status: string;
-  shipping_status: string;
-  estimated_delivery_date: string;
-  delivered_at: string;
-  total_amount: string;
-}
 
-interface Props {
-  orders: Order[];
-  userType: "admin" | "super_admin";
-}
 
-export default function RecentOrders({ orders, userType }: Props) {
+
+export default function RecentOrders({ orders, userType }: RecentOrdersProps) {
   const { t } = useTranslation(["RecentOrders"]);
 
   const getStatusColor = (status: string) => {

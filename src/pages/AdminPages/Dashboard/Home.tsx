@@ -12,70 +12,13 @@ import { useAdminHome } from "../../../hooks/Api/Admin/useHome/useAdminHome";
 import { useSuperAdminHome } from "../../../hooks/Api/SuperAdmin/useHome/useSuperAdminHome";
 import DashboardSkeleton from "../../../components/admin/home/HomeSkeleton";
 import { AxiosError } from "axios";
-
-type MetricValue =
-  | number
-  | string
-  | Record<string, number | string>
-  | CountType;
-
-type Metric = {
-  label?: string;
-  value?: MetricValue;
-  percentage: number;
-  icon?: React.ElementType;
-  iconClassName?: string;
-};
-
-interface Vendor {
-  name: string;
-}
-
-interface Order {
-  id: string | number;
-  vendor?: Vendor;
-  total: number;
-  status: string;
-  shipping_status: string;
-  estimated_delivery_date: string;
-  delivered_at: string;
-  total_amount: string;
-}
-
-// هنا غيرنا orderPerMonth ليكون Record<string, number>
-interface MonthlySales {
-  orderPerMonth: Record<string, number>;
-}
-
-interface CountType {
-  all: number;
-  active: number;
-  inactive: number;
-}
-
-interface HomeData {
-  customer_count: number;
-  order_count: number;
-  vendor_count?: CountType;
-  product_count?: CountType;
-  order_count_per_month?: { month: string; count: number }[];
-  recent_orders?: Order[];
-}
-
-interface HomeProps {
-  userType: "admin" | "super_admin";
-}
-
+import { Order } from "../../../types/Orders";
+import { CountType, HomeData, HomeProps, Metric, MonthlySales, NumbersData } from "../../../types/DashboardHome";
 export default function Home({ userType }: HomeProps) {
   const { t } = useTranslation(["Home"]);
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-  const [numbersData, setNumbersData] = useState<{
-    customersCount: number;
-    ordersCount: number;
-    vendorsCount?: CountType;
-    productsCount?: CountType;
-  }>({
+  const [numbersData, setNumbersData] = useState<NumbersData>({
     customersCount: 0,
     ordersCount: 0,
     vendorsCount: { all: 0, active: 0, inactive: 0 },
@@ -199,31 +142,37 @@ export default function Home({ userType }: HomeProps) {
       <PageMeta title={t("mainTitle")} description="Show Your Statistics" />
 
       {!loading && globalError && (
-        <div className="p-4 text-center text-red-500 font-semibold">
-          {t("unExpectedError")}
-        </div>
+      <div className="p-4 text-center text-red-500 font-semibold">
+        {t("unExpectedError")}
+      </div>
+      )}
+
+      {!loading && unauthorized && (
+      <div className="p-4 text-center text-red-500 font-semibold">
+        {t("unauthorized")}
+      </div>
       )}
 
       <div className="grid grid-cols-12 gap-4 md:gap-6">
-        <div className="col-span-12 space-y-6 xl:col-span-7">
-          <EcommerceMetrics
-            parentClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6"
-            metrics={metrics}
-          />
-          <MonthlySalesChart ordersData={monthlySalesData} />
-        </div>
+      <div className="col-span-12 space-y-6 xl:col-span-7">
+        <EcommerceMetrics
+        parentClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6"
+        metrics={metrics}
+        />
+        <MonthlySalesChart ordersData={monthlySalesData} />
+      </div>
 
-        <div className="col-span-12 xl:col-span-5">
-          <DemographicCard />
-        </div>
+      <div className="col-span-12 xl:col-span-5">
+        <DemographicCard />
+      </div>
 
-        <div className="col-span-12">
-          <StatisticsChart ordersData={monthlySalesData} />
-        </div>
+      <div className="col-span-12">
+        <StatisticsChart ordersData={monthlySalesData} />
+      </div>
 
-        <div className="col-span-12">
-          <RecentOrders orders={recentOrders} userType={userType} />
-        </div>
+      <div className="col-span-12">
+        <RecentOrders orders={recentOrders} userType={userType} />
+      </div>
       </div>
     </>
   );

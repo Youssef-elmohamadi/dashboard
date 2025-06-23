@@ -6,7 +6,14 @@ import {
   getAllAdminsPaginate,
   updateAdmin,
 } from "../../../../api/AdminApi/usersApi/_requests";
-import { AxiosError } from "axios";
+import {
+  Admin,
+  AdminFilters,
+  AdminsPaginate,
+  CreateAdminInput,
+  UpdateAdminArguments,
+} from "../../../../types/Admins";
+import { ID } from "../../../../types/Common";
 
 type ApiResponse<T> = {
   success: boolean;
@@ -14,55 +21,8 @@ type ApiResponse<T> = {
   data: T;
 };
 
-type PaginatedResponse<T> = {
-  current_page: number;
-  data: T[];
-  first_page_url: string;
-  from: number;
-  last_page: number;
-  per_page: number;
-  prev_page_url: string | null;
-  to: number;
-  total: number;
-  next_page_url: string | null;
-  path: string;
-  last_page_url: string;
-  links: any[];
-};
-type Admin = {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  roles: string[];
-  created_at: string;
-};
-
-type AdminFilters = {
-  name?: string;
-  email?: string;
-  phone?: string;
-};
-
-type CreateAdminInput = {
-  first_name: string;
-  last_name: string;
-  phone: string;
-  email: string;
-  password: string;
-  role: string;
-};
-type UpdateAdminInput = {
-  first_name: string;
-  last_name: string;
-  phone: string;
-  email: string;
-  password: string;
-  role: string;
-};
-
 export const useAllAdmins = (page: number, filters?: AdminFilters) => {
-  return useQuery<PaginatedResponse<Admin>, AxiosError>({
+  return useQuery<AdminsPaginate>({
     queryKey: ["vendorAdmins", page, filters],
     queryFn: async () => {
       const response = await getAllAdminsPaginate({
@@ -72,16 +32,16 @@ export const useAllAdmins = (page: number, filters?: AdminFilters) => {
       return response.data.data;
     },
     staleTime: 1000 * 60 * 4,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطأ أثناء جلب المشرفين:", error);
-    },
   });
 };
 
-export const useGetAdminById = (id?: number | string) => {
-  return useQuery<Admin, Error>({
+export const useGetAdminById = (id?: ID) => {
+  return useQuery<Admin>({
     queryKey: ["admin", id],
-    queryFn: () => getAdminById(id!),
+    queryFn: async () => {
+      const response = await getAdminById(id!);
+      return response.data.data;
+    },
     staleTime: 1000 * 60 * 5,
     enabled: !!id,
   });
@@ -91,7 +51,7 @@ export const useDeleteAdmin = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number | string) => {
+    mutationFn: async (id: ID) => {
       return await deleteAdmin(id);
     },
     onSuccess: () => {
@@ -118,16 +78,10 @@ export const useCreateAdmin = () => {
   });
 };
 
-export const useUpdateAdmin = (id) => {
+export const useUpdateAdmin = (id: ID) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({
-      id,
-      adminData,
-    }: {
-      id: number;
-      adminData: UpdateAdminInput;
-    }) => {
+    mutationFn: async ({ id, adminData }: UpdateAdminArguments) => {
       return await updateAdmin(id, adminData);
     },
     onSuccess: () => {
@@ -139,14 +93,3 @@ export const useUpdateAdmin = (id) => {
     },
   });
 };
-
-// export const useCreateProduct = () => {
-//   const queryClient = useQueryClient();
-
-//   return useMutation({
-//     mutationFn: createProduct,
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['products'] });
-//     },
-//   });
-// };

@@ -82,6 +82,7 @@
     "postcss": "^8.5.3",
     "rollup": "^4.44.0",
     "sass-embedded": "^1.89.2",
+    "sitemap-generator": "^8.5.1",
     "tailwindcss": "^4.1.3",
     "tw-animate-css": "^1.3.3",
     "typescript": "~5.7.2",

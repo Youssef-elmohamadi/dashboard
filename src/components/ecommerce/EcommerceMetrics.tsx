@@ -2,28 +2,9 @@ import { useTranslation } from "react-i18next";
 import { ArrowDownIcon, ArrowUpIcon } from "../../icons";
 import Badge from "../ui/badge/Badge";
 import { FC } from "react";
-interface CountType {
-  all: number;
-  active: number;
-  inactive: number;
-}
+import { EcommerceMetricsProps } from "../../types/DashboardHome";
 
-type MetricValue =
-  | number
-  | string
-  | Record<string, number | string>
-  | CountType;
-type Metric = {
-  label?: string;
-  value?: MetricValue;
-  percentage: number;
-  icon?: React.ElementType;
-  iconClassName?: string;
-};
-interface EcommerceMetricsProps {
-  metrics?: Metric[];
-  parentClassName?: string;
-}
+
 
 const EcommerceMetrics: FC<EcommerceMetricsProps> = ({
   metrics,

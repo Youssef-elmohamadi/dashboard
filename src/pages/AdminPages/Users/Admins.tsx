@@ -14,6 +14,7 @@ import {
   useDeleteAdmin,
 } from "../../../hooks/Api/Admin/useVendorAdmins/useVendorAdmins";
 import { AxiosError } from "axios";
+import { ID } from "../../../types/Common";
 
 const Admins = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -31,7 +32,8 @@ const Admins = () => {
     pageIndex,
     searchValues
   );
-  const pageSize = data?.per_page ?? 1;
+  
+  const pageSize = data?.per_page ?? 15;
 
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
@@ -87,7 +89,7 @@ const Admins = () => {
   };
   const { mutateAsync: deleteAdminMutate } = useDeleteAdmin();
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: ID) => {
     await alertDelete(id, deleteAdminMutate, refetch, {
       confirmTitle: t("adminsPage.delete.confirmTitle"),
       confirmText: t("adminsPage.delete.confirmText"),

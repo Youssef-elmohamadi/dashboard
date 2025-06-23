@@ -5,11 +5,8 @@ import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { MoreDotIcon } from "../../icons";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-interface StatisticsChartProps {
-  ordersData: {
-    orderPerMonth: Record<string, number>;
-  };
-}
+import { StatisticsChartProps } from "../../types/DashboardHome";
+
 export default function MonthlySalesChart({
   ordersData,
 }: StatisticsChartProps) {
