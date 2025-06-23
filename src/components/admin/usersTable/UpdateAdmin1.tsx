@@ -39,7 +39,7 @@ const UpdateAdmin = () => {
     password: "",
     role: "",
   });
-
+  const [globalError, setGlobalError] = useState(false);
   const [errors, setErrors] = useState<ServerErrors>({
     first_name: [],
     last_name: [],
@@ -67,7 +67,6 @@ const UpdateAdmin = () => {
     error: errorFetchAdmin,
     isLoading,
   } = useGetAdminById(id);
-  console.log("Admin data:", data);
 
   // Set initial form values when admin data loads
   useEffect(() => {
@@ -241,6 +240,27 @@ const UpdateAdmin = () => {
         <p className="text-center mt-5">{t("admin.loading") || "Loading..."}</p>
       </>
     );
+
+  if (!data && !globalError) {
+    return (
+      <>
+        <PageMeta title={t("admin.main_title")} description="Update Admin" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("not_found")}
+        </div>
+      </>
+    );
+  }
+  if (globalError) {
+    return (
+      <>
+        <PageMeta title={t("admin.main_title")} description="Update Admin" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("admin.errors.error_fetching_admin")}
+        </div>
+      </>
+    );
+  }
 
   return (
     <div>
