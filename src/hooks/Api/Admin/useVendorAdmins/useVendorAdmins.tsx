@@ -15,12 +15,6 @@ import {
 } from "../../../../types/Admins";
 import { ID } from "../../../../types/Common";
 
-type ApiResponse<T> = {
-  success: boolean;
-  message: string;
-  data: T;
-};
-
 export const useAllAdmins = (page: number, filters?: AdminFilters) => {
   return useQuery<AdminsPaginate>({
     queryKey: ["vendorAdmins", page, filters],
@@ -35,7 +29,7 @@ export const useAllAdmins = (page: number, filters?: AdminFilters) => {
   });
 };
 
-export const useGetAdminById = (id?: ID) => {
+export const useGetAdminById = (id?: string) => {
   return useQuery<Admin>({
     queryKey: ["admin", id],
     queryFn: async () => {
@@ -78,7 +72,7 @@ export const useCreateAdmin = () => {
   });
 };
 
-export const useUpdateAdmin = (id: ID) => {
+export const useUpdateAdmin = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, adminData }: UpdateAdminArguments) => {

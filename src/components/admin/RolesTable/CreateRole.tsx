@@ -10,20 +10,22 @@ import {
   useGetAllPermissions,
 } from "../../../hooks/Api/Admin/useRoles/useRoles";
 import PageMeta from "../../common/PageMeta";
-type Permission = {
-  id: number;
-  name: string;
-};
+import {
+  CreateRoleInput,
+  Permission,
+  ServerErrors,
+} from "../../../types/Roles";
+import { AxiosError } from "axios";
 
 export default function CreateRole() {
-  const [roleData, setRoleData] = useState({
+  const [roleData, setRoleData] = useState<CreateRoleInput>({
     name: "",
-    permissions: [] as number[],
+    permissions: [],
   });
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
-  const [errors, setErrors] = useState({
-    name: [] as string[],
-    permissions: [] as string[],
+  const [errors, setErrors] = useState<ServerErrors>({
+    name: [],
+    permissions: [],
     global: "",
     general: "",
   });
@@ -38,11 +40,12 @@ export default function CreateRole() {
     error: permissionError,
     isError: isPermissionError,
   } = useGetAllPermissions();
+  console.log(data);
 
-  const permissions = data?.data.data;
+  const permissions = data;
 
   useEffect(() => {
-    if (isPermissionError) {
+    if (isPermissionError && permissionError instanceof AxiosError) {
       const status = permissionError?.response?.status;
       if (status === 401 || status === 403) {
         setErrors((prev) => ({
@@ -151,6 +154,16 @@ export default function CreateRole() {
         </h3>
       </div>
       <form onSubmit={handleSubmit} className="p-4 md:p-5">
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errors.global}
+          </p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errors.general}
+          </p>
+        )}
         <div className="grid gap-4 mb-4 grid-cols-2">
           <div className="col-span-2 sm:col-span-1">
             <Label htmlFor="name">{t("role.name")}</Label>
@@ -202,13 +215,6 @@ export default function CreateRole() {
             </div>
           )}
         </div>
-
-        {errors.global && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
-        )}
 
         <button
           type="submit"

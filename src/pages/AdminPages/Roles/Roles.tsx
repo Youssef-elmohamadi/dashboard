@@ -14,14 +14,14 @@ import {
   useRolesPaginate,
 } from "../../../hooks/Api/Admin/useRoles/useRoles";
 import { AxiosError } from "axios";
+import { SearchValues } from "../../../types/Roles";
+import { ID, TableAlert } from "../../../types/Common";
 
 const Roles = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-  const [searchValues, setSearchValues] = useState<{
-    name: string;
-  }>({
+  const [searchValues, setSearchValues] = useState<SearchValues>({
     name: "",
   });
   const location = useLocation();
@@ -30,6 +30,7 @@ const Roles = () => {
     pageIndex,
     searchValues
   );
+
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
       const status = error?.response?.status;
@@ -45,11 +46,7 @@ const Roles = () => {
   const pageSize = data?.per_page ?? 15;
   const rolesData = data?.data ?? [];
   const totalRoles = data?.total ?? 0;
-  const [alertData, setAlertData] = useState<{
-    variant: "success" | "error" | "info" | "warning";
-    title: string;
-    message: string;
-  } | null>(null);
+  const [alertData, setAlertData] = useState<TableAlert | null>(null);
 
   useEffect(() => {
     if (location.state?.successCreate) {
@@ -80,7 +77,7 @@ const Roles = () => {
   };
 
   const { mutateAsync: deleteRoleMutate } = useDeleteRole();
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: ID) => {
     await alertDelete(id, deleteRoleMutate, refetch, {
       confirmTitle: t("rolesPage.delete.confirmTitle"),
       confirmText: t("rolesPage.delete.confirmText"),

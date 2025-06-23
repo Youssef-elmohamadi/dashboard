@@ -8,7 +8,8 @@ import {
   getRoleById,
   updateRole,
 } from "../../../../api/AdminApi/rolesApi/_requests";
-import { AxiosError } from "axios";
+import { FilterRole, Permission, RolesPaginate } from "../../../../types/Roles";
+import { ID } from "../../../../types/Common";
 
 export const useRoles = () => {
   return useQuery({
@@ -18,8 +19,8 @@ export const useRoles = () => {
   });
 };
 
-export const useRolesPaginate = (page: number, filters?: any) => {
-  return useQuery({
+export const useRolesPaginate = (page: number, filters?: FilterRole) => {
+  return useQuery<RolesPaginate>({
     queryKey: ["roles", page, filters],
     queryFn: async () => {
       const response = await getAllRolesPaginate({
@@ -30,9 +31,6 @@ export const useRolesPaginate = (page: number, filters?: any) => {
       return response.data.data;
     },
     staleTime: 1000 * 60 * 4,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطاء في جلب الصلاحيات:", error);
-    },
   });
 };
 
@@ -40,7 +38,7 @@ export const useDeleteRole = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number | string) => {
+    mutationFn: async (id: ID) => {
       return await deleteRole(id);
     },
     onSuccess: () => {
@@ -54,10 +52,12 @@ export const useDeleteRole = () => {
 };
 
 export const useGetAllPermissions = () => {
-  return useQuery({
+  return useQuery<Permission[]>({
     queryKey: ["permissions"],
     queryFn: async () => {
-      return await getAllPermissions();
+      const response = await getAllPermissions();
+
+      return response.data.data;
     },
     staleTime: 1000 * 60 * 10,
   });
@@ -88,10 +88,10 @@ export const useGetRoleById = (id?: string) => {
   });
 };
 
-export const useUpdateRole = (id) => {
+export const useUpdateRole = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ roleData, id }: { roleData: any; id: number }) => {
+    mutationFn: async ({ roleData, id }: { roleData: any; id: string }) => {
       return await updateRole(roleData, id);
     },
     onSuccess: () => {

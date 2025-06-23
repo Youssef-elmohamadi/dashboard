@@ -8,7 +8,7 @@ export const getAllAdminsPaginate = async (params: AdminFilters) => {
     params,
   });
 };
-export const getAdminById = async (id: ID) => {
+export const getAdminById = async (id: string) => {
   return await axiosJson.get(`/api/vendor/admins/${id}`);
 };
 
@@ -24,6 +24,6 @@ export const createAdmin = async (adminData: any) => {
   return await axiosJson.post(`/api/vendor/admins`, adminData);
 };
 
-export const updateAdmin = async (id: ID, adminData: any) => {
+export const updateAdmin = async (id: string, adminData: any) => {
   return await axiosForm.post(`/api/vendor/admins/${id}`, adminData);
 };

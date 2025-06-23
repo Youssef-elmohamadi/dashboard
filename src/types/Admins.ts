@@ -1,11 +1,15 @@
 import { ID } from "./Common";
-
-export type Admin = {
+export type role = {
   id: number;
   name: string;
+};
+export type Admin = {
+  id: number;
+  first_name: string;
+  last_name: string;
   email: string;
   phone: string;
-  roles: string[];
+  roles: role[];
   created_at: string;
 };
 export type AdminsPaginate = {
@@ -24,12 +28,12 @@ export type AdminsPaginate = {
   links: any[];
 };
 
-type UpdateAdminInput = {
+export type UpdateAdminInput = {
   first_name: string;
   last_name: string;
   phone: string;
   email: string;
-  password: string;
+  password?: string;
   role: string;
 };
 
@@ -41,7 +45,7 @@ export type AdminFilters = {
 };
 
 export type UpdateAdminArguments = {
-  id: ID;
+  id: string;
   adminData: UpdateAdminInput;
 };
 
@@ -58,4 +62,24 @@ export type ApiResponse = {
   success: boolean;
   message: string;
   data: AdminsPaginate;
+};
+
+export type ServerErrors = {
+  first_name?: string[];
+  last_name?: string[];
+  phone?: string[];
+  email?: string[];
+  password?: string[];
+  role?: string[];
+  global?: string;
+  general?: string;
+};
+
+export type ClientErrors = {
+  first_name?: string;
+  last_name?: string;
+  phone?: string;
+  email?: string;
+  password?: string;
+  role?: string;
 };

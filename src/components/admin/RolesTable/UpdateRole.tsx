@@ -11,20 +11,22 @@ import {
   useUpdateRole,
 } from "../../../hooks/Api/Admin/useRoles/useRoles";
 import PageMeta from "../../common/PageMeta";
+import { AxiosError } from "axios";
+import { ServerErrors, UpdateRoleInput } from "../../../types/Roles";
 type Permission = {
   id: number;
   name: string;
 };
 const UpdateRole: React.FC = () => {
-  const [updateData, setUpdateData] = useState({
+  const [updateData, setUpdateData] = useState<UpdateRoleInput>({
     name: "",
     permissions: [] as number[],
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({}); // إضافة حالة لتخزين الأخطاء
-  const [errors, setErrors] = useState({
-    name: [] as string[],
-    permissions: [] as string[],
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState<ServerErrors>({
+    name: [],
+    permissions: [],
     general: "",
     global: "",
   });
@@ -38,8 +40,24 @@ const UpdateRole: React.FC = () => {
     isError: isPermissionError,
   } = useGetAllPermissions();
 
-  const permissions = permissionData?.data.data;
-
+  const permissions = permissionData;
+  useEffect(() => {
+    if (isPermissionError && permissionError instanceof AxiosError) {
+      const status = permissionError?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrors((prev) => ({
+          ...prev,
+          global: t("role.errors.global"),
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          general: t("role.errors.general"),
+        }));
+      }
+    }
+  }, [isPermissionError, permissionError, t]);
+  
   const {
     data: roleData,
     isLoading: isRoleLoading,
@@ -49,7 +67,7 @@ const UpdateRole: React.FC = () => {
 
   const role = roleData?.data?.data;
   useEffect(() => {
-    if (isRoleError) {
+    if (isRoleError && roleError instanceof AxiosError) {
       const status = roleError?.response?.status;
       if (status === 401 || status === 403) {
         setErrors((prev) => ({
@@ -108,7 +126,7 @@ const UpdateRole: React.FC = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const { mutateAsync } = useUpdateRole(id);
+  const { mutateAsync } = useUpdateRole(id!!);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -121,7 +139,7 @@ const UpdateRole: React.FC = () => {
 
     try {
       if (id) {
-        await mutateAsync({ id: +id, roleData: updateData });
+        await mutateAsync({ id: id, roleData: updateData });
         navigate("/admin/roles", {
           state: { successUpdate: t("role.success_message") },
         });
@@ -221,7 +239,7 @@ const UpdateRole: React.FC = () => {
                 {t("role.permission")}
               </h2>
               <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
-                {permissions.map((permission: Permission) => (
+                {permissions?.map((permission: Permission) => (
                   <Checkbox
                     key={permission.id}
                     label={permission.name}

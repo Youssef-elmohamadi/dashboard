@@ -7,3 +7,4 @@ export type TableAlert = {
 export type ID = {
   id: number | string | undefined;
 };
+

@@ -10,12 +10,17 @@ import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useCreateAdmin } from "../../../hooks/Api/Admin/useVendorAdmins/useVendorAdmins";
 import { useRoles } from "../../../hooks/Api/Admin/useRoles/useRoles";
 import PageMeta from "../../common/PageMeta";
+import {
+  ClientErrors,
+  CreateAdminInput,
+  ServerErrors,
+} from "../../../types/Admins";
+import { AxiosError } from "axios";
 export default function CreateAdmin() {
   const [showPassword, setShowPassword] = useState(false);
-  // const [options, setOptions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [fetchingRoleError, setFetchingRoleError] = useState("");
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<ServerErrors>({
     first_name: [] as string[],
     last_name: [] as string[],
     phone: [] as string[],
@@ -23,9 +28,9 @@ export default function CreateAdmin() {
     password: [] as string[],
     role: [] as string[],
     global: "",
-    general: [] as string[],
+    general: "",
   });
-  const [clientSideErrors, setClientSideErrors] = useState({
+  const [clientSideErrors, setClientSideErrors] = useState<ClientErrors>({
     first_name: "",
     last_name: "",
     phone: "",
@@ -33,7 +38,7 @@ export default function CreateAdmin() {
     password: "",
     role: "",
   });
-  const [adminData, setAdminData] = useState({
+  const [adminData, setAdminData] = useState<CreateAdminInput>({
     first_name: "",
     last_name: "",
     phone: "",
@@ -97,7 +102,7 @@ export default function CreateAdmin() {
   const { data, isError: isRoleError, error: roleError } = useRoles();
   const options = data?.data.data;
   useEffect(() => {
-    if (isRoleError) {
+    if (isRoleError && roleError instanceof AxiosError) {
       const status = roleError?.response?.status;
       if (status === 401 || status === 403) {
         setFetchingRoleError(t("admin.errors.global"));
@@ -117,7 +122,7 @@ export default function CreateAdmin() {
       password: [],
       role: [],
       global: "",
-      general: [],
+      general: "",
     });
     if (!validate()) return;
 
@@ -157,7 +162,7 @@ export default function CreateAdmin() {
         } else {
           setErrors((prev) => ({
             ...prev,
-            general: [t("admin.errors.general")],
+            general: t("admin.errors.general"),
           }));
         }
       }
@@ -178,6 +183,16 @@ export default function CreateAdmin() {
         onSubmit={handleSubmit}
         className="space-y-6 w-full mt-8 flex justify-between items-center flex-col"
       >
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errors.global}
+          </p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errors.general}
+          </p>
+        )}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
             <Label htmlFor="input">{t("admin.first_name")}</Label>
@@ -249,7 +264,7 @@ export default function CreateAdmin() {
             placeholder={t("admin.placeholder.email")}
             onChange={handleChange}
           />
-          {errors.email[0] && (
+          {errors.email && (
             <p className="text-red-500 text-sm mt-1">
               {t("admin.errors.email_taken")}
             </p>
@@ -269,7 +284,7 @@ export default function CreateAdmin() {
             placeholder={t("admin.placeholder.phone")}
             onChange={handleChange}
           />
-          {errors.phone[0] && (
+          {errors.phone && (
             <p className="text-red-500 text-sm mt-1">
               {t("admin.errors.phone_taken")}
             </p>
@@ -312,12 +327,6 @@ export default function CreateAdmin() {
             </button>
           </div>
         </div>
-        {errors.global && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
-        )}
         <button
           type="submit"
           disabled={loading}

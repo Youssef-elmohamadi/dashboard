@@ -14,13 +14,14 @@ import {
   useDeleteAdmin,
 } from "../../../hooks/Api/Admin/useVendorAdmins/useVendorAdmins";
 import { AxiosError } from "axios";
-import { ID } from "../../../types/Common";
+import { ID, TableAlert } from "../../../types/Common";
+import { AdminFilters } from "../../../types/Admins";
 
 const Admins = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-  const [searchValues, setSearchValues] = useState({
+  const [searchValues, setSearchValues] = useState<AdminFilters>({
     name: "",
     email: "",
     phone: "",
@@ -32,7 +33,7 @@ const Admins = () => {
     pageIndex,
     searchValues
   );
-  
+
   const pageSize = data?.per_page ?? 15;
 
   useEffect(() => {
@@ -50,11 +51,7 @@ const Admins = () => {
 
   const adminsData = data?.data ?? [];
   const totalAdmins = data?.total ?? 0;
-  const [alertData, setAlertData] = useState<{
-    variant: "success" | "error" | "info" | "warning";
-    title: string;
-    message: string;
-  } | null>(null);
+  const [alertData, setAlertData] = useState<TableAlert|null>(null);
 
   useEffect(() => {
     if (location.state?.successCreate) {

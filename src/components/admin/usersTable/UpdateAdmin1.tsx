@@ -13,33 +13,13 @@ import {
 } from "../../../hooks/Api/Admin/useVendorAdmins/useVendorAdmins";
 import { useRoles } from "../../../hooks/Api/Admin/useRoles/useRoles";
 import PageMeta from "../../common/PageMeta";
-
-type Admin = {
-  first_name: string;
-  last_name: string;
-  phone: string;
-  email: string;
-  password?: string;
-  roles: {
-    name: string;
-  }[];
-  role: string;
-  avatar: string;
-};
-
-type UpdateAdmin = {
-  first_name: string;
-  last_name: string;
-  phone: string;
-  email: string;
-  password: string;
-  role: string;
-};
-
-type Role = {
-  name: string;
-  value: string;
-};
+import {
+  ClientErrors,
+  ServerErrors,
+  UpdateAdminInput,
+} from "../../../types/Admins";
+import { AxiosError } from "axios";
+import { Role } from "../../../types/Roles";
 
 const UpdateAdmin = () => {
   const { id } = useParams();
@@ -51,7 +31,7 @@ const UpdateAdmin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [updateData, setUpdateData] = useState<UpdateAdmin>({
+  const [updateData, setUpdateData] = useState<UpdateAdminInput>({
     first_name: "",
     last_name: "",
     phone: "",
@@ -60,18 +40,18 @@ const UpdateAdmin = () => {
     role: "",
   });
 
-  const [errors, setErrors] = useState({
-    first_name: [] as string[],
-    last_name: [] as string[],
-    phone: [] as string[],
-    email: [] as string[],
-    password: [] as string[],
-    role: [] as string[],
+  const [errors, setErrors] = useState<ServerErrors>({
+    first_name: [],
+    last_name: [],
+    phone: [],
+    email: [],
+    password: [],
+    role: [],
     global: "",
     general: "",
   });
 
-  const [clientSideErrors, setClientSideErrors] = useState({
+  const [clientSideErrors, setClientSideErrors] = useState<ClientErrors>({
     first_name: "",
     last_name: "",
     phone: "",
@@ -87,10 +67,11 @@ const UpdateAdmin = () => {
     error: errorFetchAdmin,
     isLoading,
   } = useGetAdminById(id);
+  console.log("Admin data:", data);
 
   // Set initial form values when admin data loads
   useEffect(() => {
-    const admin: Admin | undefined = data?.data?.data;
+    const admin = data;
     if (!admin) return;
 
     setUpdateData({
@@ -105,7 +86,7 @@ const UpdateAdmin = () => {
 
   // Handle errors on fetching admin
   useEffect(() => {
-    if (isErrorFetchAdmin) {
+    if (isErrorFetchAdmin && errorFetchAdmin instanceof AxiosError) {
       const status = errorFetchAdmin?.response?.status;
       if (status === 401 || status === 403) {
         setErrors((prev) => ({
@@ -129,7 +110,7 @@ const UpdateAdmin = () => {
   } = useRoles();
   const options = rolesData?.data.data;
   useEffect(() => {
-    if (isRoleError) {
+    if (isRoleError && roleError instanceof AxiosError) {
       const status = roleError?.response?.status;
       if (status === 401 || status === 403) {
         setFetchingRoleError(t("admin.errors.global"));
@@ -193,7 +174,7 @@ const UpdateAdmin = () => {
   };
 
   // Update admin mutation
-  const { mutateAsync } = useUpdateAdmin(id);
+  const { mutateAsync } = useUpdateAdmin(id!!);
 
   // Form submit handler
   const handleSubmit = async (e: React.FormEvent) => {
@@ -218,7 +199,7 @@ const UpdateAdmin = () => {
         const dataToSend = { ...updateData };
         if (!dataToSend.password) delete dataToSend.password;
 
-        await mutateAsync({ id: +id, adminData: dataToSend });
+        await mutateAsync({ id: id, adminData: dataToSend });
         navigate("/admin/admins", {
           state: { successEdit: t("admin.success_message") },
         });
@@ -292,9 +273,9 @@ const UpdateAdmin = () => {
               placeholder={t("admin.placeholder.first_name")}
               onChange={handleChange}
             />
-            {(errors.first_name[0] || clientSideErrors.first_name) && (
+            {(errors.first_name?.[0] || clientSideErrors.first_name) && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.first_name[0] || clientSideErrors.first_name}
+                {errors.first_name?.[0] || clientSideErrors.first_name}
               </p>
             )}
           </div>
@@ -310,9 +291,9 @@ const UpdateAdmin = () => {
               placeholder={t("admin.placeholder.last_name")}
               onChange={handleChange}
             />
-            {(errors.last_name[0] || clientSideErrors.last_name) && (
+            {(errors.last_name?.[0] || clientSideErrors.last_name) && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.last_name[0] || clientSideErrors.last_name}
+                {errors.last_name?.[0] || clientSideErrors.last_name}
               </p>
             )}
           </div>
@@ -330,9 +311,9 @@ const UpdateAdmin = () => {
             value={updateData.role}
             placeholder={t("admin.placeholder.select_role")}
           />
-          {(errors.role[0] || clientSideErrors.role) && (
+          {(errors.role?.[0] || clientSideErrors.role) && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.role[0] || clientSideErrors.role}
+              {errors.role?.[0] || clientSideErrors.role}
             </p>
           )}
           {fetchingRoleError && (
@@ -351,7 +332,7 @@ const UpdateAdmin = () => {
             placeholder={t("admin.placeholder.email")}
             onChange={handleChange}
           />
-          {errors.email[0] && (
+          {errors.email && errors.email[0] && (
             <p className="text-red-500 text-sm mt-1">
               {t("admin.errors.email_taken")}
             </p>
@@ -374,7 +355,7 @@ const UpdateAdmin = () => {
             placeholder={t("admin.placeholder.phone")}
             onChange={handleChange}
           />
-          {errors.phone[0] && (
+          {errors.phone?.[0] && (
             <p className="text-red-500 text-sm mt-1">
               {t("admin.errors.phone_taken")}
             </p>
@@ -413,9 +394,9 @@ const UpdateAdmin = () => {
               )}
             </button>
           </div>
-          {(errors.password[0] || clientSideErrors.password) && (
+          {(errors.password?.[0] || clientSideErrors.password) && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.password[0] || clientSideErrors.password}
+              {errors.password?.[0] || clientSideErrors.password}
             </p>
           )}
         </div>
