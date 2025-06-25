@@ -2,9 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllCategories } from "../../../../api/EndUserApi/endUserCategories/_requests";
 import { getHome } from "../../../../api/EndUserApi/HomeApi/_requests";
 import { getProductCategories } from "../../../../api/EndUserApi/ensUserProducts/_requests";
+import { CategoryWithProductsType, HomeDataType } from "../../../../types/Home";
+import { Category } from "../../../../types/Categories";
 
 export const useCategories = () => {
-  return useQuery({
+  return useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: async () => {
       const res = await getAllCategories();
@@ -15,7 +17,7 @@ export const useCategories = () => {
 };
 
 export const useHomeData = () => {
-  return useQuery({
+  return useQuery<HomeDataType>({
     queryKey: ["homePage"],
     queryFn: async () => {
       const res = await getHome();
@@ -26,7 +28,7 @@ export const useHomeData = () => {
 };
 
 export const useProductForEveryCategory = () => {
-  return useQuery({
+  return useQuery<CategoryWithProductsType[]>({
     queryKey: ["product-categories"],
     queryFn: async () => {
       const res = await getProductCategories();

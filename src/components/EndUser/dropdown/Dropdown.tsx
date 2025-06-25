@@ -7,23 +7,11 @@ import {
 } from "../../../hooks/Api/EndUser/useNotification/useEndUserNotification";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { formatDistanceToNow } from "date-fns";
-import { Link } from "react-router";
-
-interface Notification {
-  id: number;
-  data_id: number | string;
-  created_at: string;
-  title_en: string;
-  title_ar: string;
-  message_en: string;
-  message_ar: string;
-}
-
-interface NotificationDropdownProps {
-  open: boolean;
-  onClose: () => void;
-  notificationIconRef: React.RefObject<HTMLDivElement | null>;
-}
+import { Link } from "react-router-dom";
+import {
+  NotificationItem,
+  NotificationDropdownProps,
+} from "../../../types/Notification";
 
 export default function NotificationDropdown({
   open,
@@ -63,7 +51,9 @@ export default function NotificationDropdown({
   }, [open, onClose, notificationIconRef]);
 
   const { data, hasNextPage, fetchNextPage } = useNotifications();
-  const notificationData: Notification[] = data?.pages.flatMap((page) => page) || [];
+
+  const notificationData: NotificationItem[] =
+    data?.pages.flatMap((page) => page.data) || [];
 
   const { mutateAsync: deleteNotificationMutate } = useDeleteNotification();
   const handleDeleteNotification = async (id: number) => {
@@ -92,13 +82,15 @@ export default function NotificationDropdown({
           } top-2 mt-2 w-80 bg-white rounded-xl shadow-lg z-10 border border-gray-200`}
         >
           <div className="p-4 border-b flex items-center justify-between border-gray-200">
-            <h3 className="font-semibold text-gray-800">الإشعارات</h3>
+            <h3 className="font-semibold text-gray-800">
+              {lang === "ar" ? "الإشعارات" : "Notifications"}
+            </h3>
             {notificationData.length > 0 && (
               <button
                 onClick={handleMarkAllAsRead}
                 className="text-sm text-blue-500 hover:underline"
               >
-                Mark All as Read
+                {lang === "ar" ? "تحديد الكل كمقروء" : "Mark All as Read"}
               </button>
             )}
           </div>
@@ -109,15 +101,19 @@ export default function NotificationDropdown({
                 key={notification.id}
               >
                 <Link
-                  onClick={() => handleItemClick(notification.id)}
+                  onClick={() => handleItemClick(Number(notification.id))}
                   className="block px-4 py-3 border-b border-gray-200 transition"
-                  to={`/u-orders/details/${notification.data_id}`}
+                  to={`/${lang}/notification/${notification.data_id}`}
                 >
                   <h4 className="font-medium text-gray-700">
                     {notification[`title_${lang}` as "title_en" | "title_ar"]}
                   </h4>
                   <p className="text-sm text-gray-500">
-                    {notification[`message_${lang}` as "message_en" | "message_ar"]}
+                    {
+                      notification[
+                        `message_${lang}` as "message_en" | "message_ar"
+                      ]
+                    }
                   </p>
                   <span className="text-xs text-gray-400">
                     {formatDistanceToNow(new Date(notification.created_at), {
@@ -126,7 +122,9 @@ export default function NotificationDropdown({
                   </span>
                 </Link>
                 <button
-                  onClick={() => handleDeleteNotification(notification.id)}
+                  onClick={() =>
+                    handleDeleteNotification(Number(notification.id))
+                  }
                   className={`block text-gray-500 transition dark:text-gray-400 px-1 py-1 ${
                     dir === "ltr" ? "!text-left" : "!text-right"
                   }`}
@@ -154,7 +152,7 @@ export default function NotificationDropdown({
               onClick={() => fetchNextPage()}
               className="block px-4 py-2 mt-3 text-sm font-medium text-center text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
             >
-              Show More
+              {lang === "ar" ? "عرض المزيد" : "Show More"}
             </button>
           )}
         </div>

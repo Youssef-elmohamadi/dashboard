@@ -1,6 +1,6 @@
 // ProductDetails.tsx
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import StarRatings from "react-star-ratings";
 import { MdCompareArrows, MdOutlineFavoriteBorder } from "react-icons/md";
 import InnerImageZoom from "react-inner-image-zoom";
@@ -14,24 +14,9 @@ import {
   useRemoveFavorite,
 } from "../../../hooks/Api/EndUser/useProducts/useFavoriteProducts";
 import { Helmet } from "react-helmet-async";
-
-type Product = {
-  id: number | string;
-  name: string;
-  description: string;
-  price: number;
-  discount_price: number | null;
-  stock_quantity: number;
-  rate?: number;
-  brand: { name: string; image: string };
-  vendor?: { name: string };
-  category?: { name: string };
-  is_fav?: boolean;
-  attributes?: { attribute_name: string; attribute_value: string }[];
-  tags?: { name: string }[];
-  review?: { rating: number; review: string }[];
-  images: { image: string }[];
-};
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import i18n from "../../../i18n";
+import { Product } from "../../../types/Product";
 
 const ProductDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -78,6 +63,21 @@ const ProductDetails: React.FC = () => {
       }
     }
   };
+
+  const { lang } = useParams();
+  //const { setLang, setDir } = useDirectionAndLanguage();
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (!lang || (lang !== "ar" && lang !== "en")) {
+  //     navigate("/en", { replace: true });
+  //     return;
+  //   }
+
+  //   i18n.changeLanguage(lang);
+  //   setLang(lang);
+  //   setDir(lang === "ar" ? "rtl" : "ltr");
+  // }, [lang]);
 
   if (isProductLoading) {
     return (
@@ -163,7 +163,7 @@ const ProductDetails: React.FC = () => {
             {product.discount_price ? (
               <>
                 <span className="line-through text-gray-400">
-                  {product.price.toFixed(2)} {t("egp")}
+                  {Number(product.price).toFixed(2)} {t("egp")}
                 </span>
                 <span className="text-purple-600">
                   {product.discount_price.toFixed(2)} {t("egp")}
@@ -171,7 +171,7 @@ const ProductDetails: React.FC = () => {
               </>
             ) : (
               <span className="text-purple-600">
-                {product.price.toFixed(2)} {t("egp")}
+                {Number(product.price).toFixed(2)} {t("egp")}
               </span>
             )}
           </div>

@@ -89,7 +89,7 @@ const NavBar = React.memo(() => {
   }, [isDropdownOpen]);
 
   const { data: categories } = useCategories();
-
+  const { lang } = useDirectionAndLanguage();
   return (
     <nav className="bg-primary w-full md:block hidden">
       <div className="flex enduser_container w-full justify-center lg:justify-baseline items-center relative">
@@ -127,7 +127,7 @@ const NavBar = React.memo(() => {
                     className="group relative px-4 py-2 hover:bg-[#8826bd35] cursor-pointer"
                   >
                     <Link
-                      to={`/category/${category.id}`}
+                      to={`/${lang}/category/${category.id}`}
                       className="flex justify-between items-center w-full"
                     >
                       <div className="">{category.name}</div>
@@ -155,7 +155,7 @@ const NavBar = React.memo(() => {
                                     (nested: Child, nestedIndex) => (
                                       <li key={nestedIndex}>
                                         <Link
-                                          to={`/category/${nested.id}`}
+                                          to={`/${lang}/category/${nested.id}`}
                                           className="hover:bg-gray-100 block p-1 rounded"
                                         >
                                           {nested.name}
@@ -167,7 +167,7 @@ const NavBar = React.memo(() => {
                               </div>
                             ) : (
                               <Link
-                                to={`/category/${sub.id}`}
+                                to={`/${lang}/category/${sub.id}`}
                                 className="hover:bg-gray-100 block p-2 rounded"
                               >
                                 {sub.name}
@@ -194,7 +194,7 @@ const NavBar = React.memo(() => {
             i < 4 ? (
               <li key={i} className="text-white py-3">
                 <Link
-                  to={`/category/${category.id}`}
+                  to={`/${lang}/category/${category.id}`}
                   className="py-3 font-semibold"
                 >
                   {category.name}
@@ -273,7 +273,7 @@ const NavBar = React.memo(() => {
                     </span>
                   </div>
                   <Link
-                    to="/cart"
+                    to={`/${lang}/cart`}
                     onClick={toggleCartPopup}
                     className="mt-4 w-full inline-block px-2 text-center bg-primary text-white py-2 rounded hover:bg-opacity-90 transition"
                   >

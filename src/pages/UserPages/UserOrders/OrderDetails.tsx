@@ -8,62 +8,7 @@ import "sweetalert2/src/sweetalert2.scss";
 import { useTranslation } from "react-i18next";
 import { useGetOrderById } from "../../../hooks/Api/EndUser/useOrders/useOrders";
 import { AxiosError } from "axios";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  discount_price: number | null;
-}
-
-interface Item {
-  id: number;
-  quantity: number;
-  price: number;
-  total: number;
-  product: Product;
-}
-
-interface Vendor {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-}
-
-interface SubOrder {
-  id: number;
-  vendor: Vendor;
-  items: Item[];
-  subtotal: number;
-  total: number;
-  commission: number;
-  status: string;
-  shipping_status: string;
-}
-
-interface Location {
-  full_name: string;
-  phone: string;
-  city: string;
-  area: string;
-  street: string;
-  building_number: string;
-  floor_number: string;
-  apartment_number: string;
-  landmark: string;
-}
-
-interface Order {
-  id: number;
-  total_amount: number;
-  payment_method: string;
-  is_paid: number;
-  status: string;
-  created_at: string;
-  sub_orders: SubOrder[];
-  location: Location;
-}
+import { Order } from "../../../types/Orders";
 
 const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
@@ -287,10 +232,10 @@ const OrderDetailsPage: React.FC = () => {
               {t("orderDetails.subtotal")}: {subOrder.subtotal.toLocaleString()}{" "}
               {t("orderDetails.egp")}
             </p>
-            <p>
+            {/* <p>
               {t("orderDetails.commission")}:{" "}
               {subOrder.commission.toLocaleString()} {t("orderDetails.egp")}
-            </p>
+            </p> */}
             <p className="font-semibold">
               {t("orderDetails.total")}: {subOrder.total.toLocaleString()}{" "}
               {t("orderDetails.egp")}

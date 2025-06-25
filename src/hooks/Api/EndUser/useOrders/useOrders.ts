@@ -4,7 +4,6 @@ import {
   getOrderById,
   getOrdersWithPaginate,
 } from "../../../../api/EndUserApi/endUserOrders/_requests";
-import { AxiosError } from "axios";
 
 export const useAllOrdersPaginate = (page: number) => {
   return useQuery({
@@ -17,9 +16,6 @@ export const useAllOrdersPaginate = (page: number) => {
       return response.data.data;
     },
     staleTime: 1000 * 60 * 4,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطأ أثناء جلب المشرفين:", error);
-    },
   });
 };
 
@@ -40,10 +36,9 @@ export const useCancelOrder = () => {
       return await cancelOrder(id);
     },
     onSuccess: (_, variables) => {
-      const { id } = variables;
       queryClient.invalidateQueries({ queryKey: ["EndUsersOrders"] });
       queryClient.invalidateQueries({ queryKey: ["EndUsersOrders", "all"] });
-      queryClient.invalidateQueries({ queryKey: ["endUserOrder", id] });
+      queryClient.invalidateQueries({ queryKey: ["endUserOrder", variables] });
     },
     onError: (error) => {
       console.error(error);

@@ -12,11 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useApplyCoupon } from "../../../hooks/Api/EndUser/useCopouns/useCopouns";
 import type { RootState } from "../../../components/EndUser/Redux/Store"; // تأكد أن عندك type للـ store
 import { Helmet } from "react-helmet-async";
-
-// ==========================
-// Types
-// ==========================
-
+import { Product } from "../../../types/Product";
 interface CartItem {
   id: number;
   name: string;
@@ -36,16 +32,12 @@ interface CouponStatus {
   message: string;
 }
 
-// ==========================
-// Cart Component
-// ==========================
-
 const Cart: React.FC = () => {
   const { t } = useTranslation(["EndUserCart"]);
   const dispatch = useDispatch();
   const items = useSelector(
     (state: RootState) => state.cart.items
-  ) as CartItem[];
+  ) as Product[];
   const totalPrice = useSelector((state: RootState) => state.cart.totalPrice);
   const totalQuantity = useSelector(
     (state: RootState) => state.cart.totalQuantity
@@ -76,7 +68,7 @@ const Cart: React.FC = () => {
     navigate("/checkout");
   };
 
-  const handleQuantityChange = (item: CartItem, quantity: number) => {
+  const handleQuantityChange = (item: Product, quantity: number) => {
     if (quantity > 0) {
       dispatch(updateQuantity({ id: item.id, quantity }));
     }
@@ -88,6 +80,8 @@ const Cart: React.FC = () => {
     e.preventDefault();
     try {
       const res = await applyCouponMutate(cuponData);
+      console.log("Coupon applied successfully:", res);
+
       dispatch(applyDiscount(res.discount));
       setCouponStatus({ success: true, message: res.message });
     } catch (error: any) {
@@ -210,7 +204,9 @@ const Cart: React.FC = () => {
                     </div>
                     <div className="text-sm font-bold text-gray-800">
                       {t("price_label", {
-                        price: (item.price * item.quantity).toFixed(2),
+                        price: (
+                          Number(item.price) * Number(item.quantity)
+                        ).toFixed(2),
                       })}
                     </div>
                   </div>
@@ -219,7 +215,7 @@ const Cart: React.FC = () => {
                   <button
                     className="bg-gray-300 px-2 rounded"
                     onClick={() =>
-                      handleQuantityChange(item, item.quantity - 1)
+                      handleQuantityChange(item, item.quantity!! - 1)
                     }
                   >
                     -
@@ -235,7 +231,7 @@ const Cart: React.FC = () => {
                   <button
                     className="bg-gray-300 px-2 rounded"
                     onClick={() =>
-                      handleQuantityChange(item, item.quantity + 1)
+                      handleQuantityChange(item, item.quantity!! + 1)
                     }
                   >
                     +

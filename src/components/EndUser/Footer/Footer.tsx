@@ -20,11 +20,8 @@ import { handleLogout } from "../../common/Logout";
 import { useTranslation } from "react-i18next";
 import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import LazyImage from "../../common/LazyImage";
-
-type Category = {
-  id: number;
-  name: string;
-};
+import { Category } from "../../../types/Categories";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 export default function Footer() {
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
@@ -34,7 +31,7 @@ export default function Footer() {
   const navigate = useNavigate();
   const { t } = useTranslation(["EndUserFooter"]);
   const { data: categories } = useCategories();
-
+  const { lang } = useDirectionAndLanguage();
   const socialIcons = useMemo(
     () => [FaLinkedin, FaYoutube, FaInstagram, FaTwitter, FaFacebook],
     []
@@ -130,7 +127,7 @@ export default function Footer() {
               {categories?.slice(0, 4).map((category: Category) => (
                 <li key={category.id}>
                   <Link
-                    to={`/category/${category.id}`}
+                    to={`${lang}/category/${category.id}`}
                     className="block py-1 hover:text-purple-400 text-sm transition-all duration-200"
                   >
                     {category.name}

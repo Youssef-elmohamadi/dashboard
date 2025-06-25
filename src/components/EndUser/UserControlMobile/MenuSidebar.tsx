@@ -20,7 +20,7 @@ const MenuSidebar = ({ isMenuOpen, setIsMenuOpen }: MenuSidebarProps) => {
   const { t } = useTranslation(["EndUserHeader"]);
   const { data: user } = useProfile();
   const navigate = useNavigate();
-
+  const { lang } = useDirectionAndLanguage();
   return (
     <>
       {/* Overlay */}
@@ -70,22 +70,22 @@ const MenuSidebar = ({ isMenuOpen, setIsMenuOpen }: MenuSidebarProps) => {
         <nav className="mt-6 px-4 space-y-2">
           {[
             {
-              to: "/u-profile",
+              to: `/${lang}/u-profile`,
               icon: <RiProfileFill className="text-lg" />,
               label: t("profile_management"),
             },
             {
-              to: "/u-orders",
+              to: `/${lang}/u-orders`,
               icon: <TiDocumentText className="text-lg" />,
               label: t("orders_history"),
             },
             {
-              to: "/u-compare",
+              to: `/${lang}/u-compare`,
               icon: <MdCompareArrows className="text-lg" />,
               label: t("compare_product"),
             },
             {
-              to: "/u-favorite",
+              to: `/${lang}/u-favorite`,
               icon: <MdFavorite className="text-lg" />,
               label: t("favorite_products"),
             },

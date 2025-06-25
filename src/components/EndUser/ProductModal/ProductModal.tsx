@@ -7,6 +7,9 @@ import { addItem } from "../Redux/cartSlice/CartSlice";
 import StarRatings from "react-star-ratings";
 import { useTranslation } from "react-i18next";
 import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
+import { Product } from "../../../types/Product";
+import { Category } from "../../../types/Categories";
+import { ImageObject, Review } from "../../../types/Common";
 
 const ProductModal = () => {
   const [selectedImage, setSelectedImage] = useState("");
@@ -16,7 +19,7 @@ const ProductModal = () => {
   const { t } = useTranslation(["EndUserProductModal"]);
   const { data: categories } = useCategories();
 
-  const handleAddToCart = (item: any) => {
+  const handleAddToCart = (item: Product) => {
     dispatch(addItem({ item, quantity }));
     openModal("addtocart", { ...item, quantity });
   };
@@ -29,10 +32,14 @@ const ProductModal = () => {
 
   if (modalType !== "product") return null;
 
-  const images = modalProps.images?.map((image) => image.image);
+  const images = modalProps.images?.map(
+    (imageObj: ImageObject) => imageObj.image
+  );
+  console.log(modalProps);
+
   const categoryName =
-    categories?.find((cat) => cat.id === modalProps?.category_id)?.name ||
-    t("unknownCategory");
+    categories?.find((cat: Category) => cat.id === modalProps?.category_id)
+      ?.name || t("unknownCategory");
   const discounted = modalProps.discount_price;
   const finalPrice = discounted || modalProps.price;
 
@@ -62,7 +69,7 @@ const ProductModal = () => {
               className="rounded w-full max-h-[400px] object-contain"
             />
             <div className="flex gap-2 mt-4 overflow-x-auto">
-              {images?.map((img, index) => (
+              {images?.map((img: string, index: number) => (
                 <img
                   key={index}
                   src={img}
@@ -147,7 +154,7 @@ const ProductModal = () => {
               <h4 className="font-semibold mb-2">{t("reviews")}:</h4>
               <div className="space-y-2 max-h-[150px] overflow-y-auto pr-2">
                 {modalProps.review?.length > 0 ? (
-                  modalProps.review.map((rev, idx) => (
+                  modalProps.review.map((rev: Review, idx: number) => (
                     <div
                       key={idx}
                       className="border border-gray-200 p-2 rounded-md"

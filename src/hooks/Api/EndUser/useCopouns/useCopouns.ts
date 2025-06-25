@@ -1,14 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { applyCoupon } from "../../../../api/EndUserApi/ensUserProducts/_requests";
-interface CouponRequest {
-  code: string;
-  order_total: number;
-}
+import { CouponRequest, CouponResponse } from "../../../../types/Coupons";
 
-interface CouponResponse {
-  discount: number;
-  message: string;
-}
+
+
 export const useApplyCoupon = () => {
   return useMutation<CouponResponse, Error, CouponRequest>({
     mutationFn: async (data) => {

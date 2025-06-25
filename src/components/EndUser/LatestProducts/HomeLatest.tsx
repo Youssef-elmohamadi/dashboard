@@ -2,18 +2,48 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "./customSwiper.css";
 import ProductCard from "../ProductCard/ProductCard";
-import { useTranslation } from "react-i18next";
 import { useHomeData } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import { Product } from "../../../types/Product";
+import LazyImage from "../../common/LazyImage";
+import { useTranslation } from "react-i18next";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 interface CategorySliderProps {
   title: string;
 }
 
 const LatestProducts: React.FC<CategorySliderProps> = ({ title }) => {
+  const { data: homeData, isLoading } = useHomeData();
   const { t } = useTranslation(["EndUserHome"]);
-  const { data: homeData, isLoading: isHomeLoading } = useHomeData();
-  const products = homeData?.leatestProducts;
+  const { lang } = useDirectionAndLanguage();
+
+  const loadingAltText =
+    lang === "ar" ? "تحميل أحدث المنتجات" : "Loading latest products...";
+
+  const products: Product[] | undefined = homeData?.leatestProducts?.map(
+    (product: any) => ({
+      ...product,
+      category_id: String(product.category_id),
+    })
+  );
+
+  if (isLoading) {
+    return (
+      <div className="enduser_container flex flex-col items-center justify-center px-4 py-10 text-gray-500 min-h-[50vh]">
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <LazyImage
+            src="images/product/placeholder-image.jpg"
+            alt={loadingAltText}
+            className="w-24 h-24 mb-4 animate-pulse mx-auto"
+          />
+          <span className="text-base">
+            {t("loading", "Loading products...")}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       {products && products.length > 0 && (

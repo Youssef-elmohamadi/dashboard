@@ -1,3 +1,5 @@
+import { Product } from "./Product";
+
 export type CategoryParams = {
   page: number | undefined;
   pageSize?: number | undefined;
@@ -24,6 +26,7 @@ export type Category = {
   children: Category[] | null;
   commission_rate: number | null;
   appears_in_website: boolean;
+  products: Product[];
 };
 
 // export type AllCategoriesOriginal = {

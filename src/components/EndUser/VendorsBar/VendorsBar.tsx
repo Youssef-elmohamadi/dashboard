@@ -2,22 +2,42 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useHomeData } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import LazyImage from "../../common/LazyImage";
-type Vendor = {
-  id: string | number;
-  name: string;
-  description: string;
-  logo: string;
-};
+import { Vendor } from "../../../types/Home";
+import { useTranslation } from "react-i18next";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const VendorsCarousel = () => {
-  const { data: homeData, isLoading: isHomeLoading } = useHomeData();
+  const { t } = useTranslation(["EndUserHome"]);
+  const { lang } = useDirectionAndLanguage();
+  const { data: homeData, isLoading } = useHomeData();
   const vendors = homeData?.vendors;
+
+  const loadingAltText =
+    lang === "ar" ? "جاري تحميل البائعين المميزين" : "Loading best vendors...";
+
+  if (isLoading) {
+    return (
+      <section dir="rtl" className="py-16">
+        <div className="enduser_container flex flex-col items-center justify-center px-4 py-10 text-gray-500 min-h-[30vh]">
+          <LazyImage
+            src="/images/vendor-placeholder.jpg"
+            alt={loadingAltText}
+            className="w-24 h-24 mb-4 animate-pulse mx-auto"
+          />
+          <span className="text-base">{t("loading", "Loading...")}</span>
+        </div>
+      </section>
+    );
+  }
+
+  if (!vendors || vendors.length === 0) return null;
+
   return (
     <section dir="rtl" className="py-16">
-      <div className="min-h-[300px] ">
+      <div className="min-h-[300px] enduser_container">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg md:text-xl font-semibold text-gray-800">
-            Best Vendors
+            {t("vendorsCarousel.bestVendors", "Best Vendors")}
           </h2>
         </div>
         <Swiper
@@ -31,14 +51,18 @@ const VendorsCarousel = () => {
             1024: { slidesPerView: 4.2 },
           }}
         >
-          {vendors?.map((vendor: Vendor) => (
+          {vendors.map((vendor: Vendor) => (
             <SwiperSlide key={vendor.id}>
               <div className="group bg-white dark:bg-gray-900 rounded-2xl p-6 min-h-[300px] flex flex-col items-center justify-between text-center transition-transform duration-300 hover:scale-105 border border-gray-200">
                 {/* Logo */}
                 <div className="w-24 h-24 mb-4 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden flex items-center justify-center">
                   <LazyImage
                     src={vendor.logo || "/images/apple.jpg"}
-                    alt={vendor.name}
+                    alt={
+                      lang === "ar"
+                        ? `شعار ${vendor.name}`
+                        : `Logo of ${vendor.name}`
+                    }
                     className="object-cover w-full h-full"
                   />
                 </div>

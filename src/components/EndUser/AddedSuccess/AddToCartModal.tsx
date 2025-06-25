@@ -3,10 +3,11 @@ import { useModal } from "../../../pages/UserPages/Context/ModalContext";
 import { BsFillCartCheckFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const AddToCartModal: React.FC = () => {
   const { modalType, modalProps, closeModal }: any = useModal();
-
+    const { lang } = useDirectionAndLanguage();
   if (modalType !== "addtocart") return null;
   const { t } = useTranslation(["AddedToCartModel"]);
   return (
@@ -56,7 +57,7 @@ const AddToCartModal: React.FC = () => {
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
           <Link
-            to="/cart"
+            to={`/${lang}/cart`}
             onClick={closeModal}
             className="flex-1 py-2 bg-purple-700 text-center text-white rounded-md hover:bg-purple-800 transition font-medium"
           >

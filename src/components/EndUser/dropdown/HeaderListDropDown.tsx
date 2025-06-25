@@ -4,17 +4,17 @@ import { MdCompareArrows, MdFavorite } from "react-icons/md";
 import { RiProfileFill } from "react-icons/ri";
 import { TiDocumentText } from "react-icons/ti";
 import { NavLink } from "react-router-dom";
-type Props = {
-  dir: string;
-  handleLogout: () => void;
-};
-const HeaderListDropDown = ({ dir, handleLogout }: Props) => {
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { HeaderListDropDownProps } from "../../../types/Header";
+
+const HeaderListDropDown = ({ dir, handleLogout }: HeaderListDropDownProps) => {
+  const { lang } = useDirectionAndLanguage();
   const { t } = useTranslation(["EndUserHeader"]);
   return (
     <>
       <ul className=" ">
         <NavLink
-          to="/u-profile"
+          to={`/${lang}/u-profile`}
           className={({ isActive }) =>
             `p-2 rounded flex items-center gap-2 transition-all duration-300 ${
               dir === "ltr" ? "pl-2" : "pr-2"
@@ -32,7 +32,7 @@ const HeaderListDropDown = ({ dir, handleLogout }: Props) => {
         </NavLink>
 
         <NavLink
-          to="/u-orders"
+          to={`/${lang}/u-orders`}
           className={({ isActive }) =>
             `p-2 rounded flex items-center gap-2 transition-all duration-300 ${
               dir === "ltr" ? "pl-2" : "pr-2"
@@ -50,7 +50,7 @@ const HeaderListDropDown = ({ dir, handleLogout }: Props) => {
         </NavLink>
 
         <NavLink
-          to="/u-compare"
+          to={`/${lang}/u-compare`}
           className={({ isActive }) =>
             `p-2 rounded flex items-center gap-2 transition-all duration-300 ${
               dir === "ltr" ? "pl-2" : "pr-2"
@@ -68,7 +68,7 @@ const HeaderListDropDown = ({ dir, handleLogout }: Props) => {
         </NavLink>
 
         <NavLink
-          to="/u-favorite"
+          to={`/${lang}/u-favorite`}
           className={({ isActive }) =>
             `p-2 rounded flex items-center gap-2 transition-all duration-300 ${
               dir === "ltr" ? "pl-2" : "pr-2"

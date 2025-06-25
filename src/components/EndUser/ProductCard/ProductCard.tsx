@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import StarRatings from "react-star-ratings";
 import { MdOutlineStarBorder } from "react-icons/md";
 import { TbStarHalfFilled } from "react-icons/tb";
@@ -14,15 +14,14 @@ import {
 import { Product } from "../../../types/Product";
 import { toast } from "react-toastify";
 import LazyImage from "../../common/LazyImage";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
-// Lazy image component
-
-// Product card component
 const ProductCard = ({ product }: { product: Product }) => {
   const { openModal } = useModal();
   const { t } = useTranslation(["EndUserProductCard"]);
-  const [is_fav, setIs_fav] = useState<boolean>(product?.is_fav);
+  const [is_fav, setIs_fav] = useState<boolean | undefined>(product?.is_fav);
 
+  const { lang } = useParams();
   const { mutateAsync: addToFavorite } = useAddFavorite();
   const { mutateAsync: removeFromFavorite } = useRemoveFavorite();
 
@@ -46,12 +45,17 @@ const ProductCard = ({ product }: { product: Product }) => {
     }
   };
 
+  const altText =
+    lang === "ar"
+      ? `صورة منتج ${product.name} تاشتيبا`
+      : `Product image for ${product.name} Tashtiba`;
+
   return (
     <div className="w-full border border-gray-200 rounded p-3 relative">
       <div className="w-full h-[300px]">
         <LazyImage
           src={product?.images[0]?.image}
-          alt={product?.name}
+          alt={altText}
           className="w-full h-full object-cover rounded"
         />
       </div>
@@ -66,7 +70,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       </button>
 
       <Link
-        to={`/product/${product.id}`}
+        to={`/${lang}/product/${product.id}`}
         className="text-base my-2 px-1 block font-medium line-clamp-2"
       >
         {product.name}

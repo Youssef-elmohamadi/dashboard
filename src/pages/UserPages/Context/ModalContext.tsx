@@ -1,30 +1,19 @@
-// ModalContext.tsx
+import { createContext, useContext, useState, FC } from "react";
 import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  FC,
-} from "react";
-
-type ModalContextType = {
-  modalType: string | null;
-  modalProps: Record<string, any>;
-  openModal: (type: string, props?: Record<string, any>) => void;
-  closeModal: () => void;
-};
-
-export const ModalContext = createContext<ModalContextType | undefined>(undefined);
-type ModalProviderProps = {
-  children: ReactNode;
-};
-
+  ModalType,
+  ModalProps,
+  ModalContextType,
+  ModalProviderProps,
+} from "../../../types/Modal";
+export const ModalContext = createContext<ModalContextType | undefined>(
+  undefined
+);
 
 export const ModalProvider: FC<ModalProviderProps> = ({ children }) => {
-  const [modalType, setModalType] = useState<string | null>(null);
-  const [modalProps, setModalProps] = useState<Record<string, any>>({});
+  const [modalType, setModalType] = useState<ModalType>(null);
+  const [modalProps, setModalProps] = useState<ModalProps>({});
 
-  const openModal = (type: string, props: Record<string, any> = {}) => {
+  const openModal = (type: string, props: ModalProps = {}) => {
     setModalType(type);
     setModalProps(props);
   };
@@ -35,13 +24,14 @@ export const ModalProvider: FC<ModalProviderProps> = ({ children }) => {
   };
 
   return (
-    <ModalContext.Provider value={{ modalType, modalProps, openModal, closeModal }}>
+    <ModalContext.Provider
+      value={{ modalType, modalProps, openModal, closeModal }}
+    >
       {children}
     </ModalContext.Provider>
   );
 };
 
-// 5. hook آمن باستخدام useContext
 export const useModal = (): ModalContextType => {
   const context = useContext(ModalContext);
   if (!context) {

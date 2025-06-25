@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Separator } from "../Separator/Separator";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useTranslation } from "react-i18next";
@@ -33,19 +33,22 @@ const TopBar = () => {
   useEffect(() => {
     window.localStorage.setItem("i18nextLng", lang);
     window.localStorage.setItem("dir", dir);
-    document.documentElement.setAttribute("dir", dir); // لضبط الاتجاه العام
+    document.documentElement.setAttribute("dir", dir);
   }, [lang, dir]);
 
-  const switchLanguage = (lang: "en" | "ar") => {
-    i18n.changeLanguage(lang);
-  };
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLanguageChange = (newLang: string) => {
     const langCode = newLang === t("arabic") ? "ar" : "en";
+
+    const newPath = location.pathname.replace(/^\/(ar|en)/, `/${langCode}`);
+    navigate(newPath);
     setLanguage(newLang);
     setLang(langCode);
     setDir(langCode === "ar" ? "rtl" : "ltr");
-    switchLanguage(langCode);
+    i18n.changeLanguage(langCode);
+
     setShowLangs(false);
   };
 

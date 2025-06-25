@@ -9,46 +9,75 @@ import { useTranslation } from "react-i18next";
 import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import LandingSection from "../../../components/EndUser/Landing/LandingSection";
 import VendorsCarousel from "../../../components/EndUser/VendorsBar/VendorsBar";
-import SEO from "../../../components/common/seo"; // تأكد أن المسار صحيح حسب مكان الكمبوننت
-import { Category } from "../../../types/Categories";
+import SEO from "../../../components/common/seo";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { useEffect } from "react";
+import i18n from "../../../i18n";
 
 const Home = () => {
   const { modalType } = useModal();
   const { t } = useTranslation(["EndUserHome"]);
-
   const { data: categories } = useCategories();
-  const metaCategories =
-    categories?.map((category: Category) => category.name) || [];
+  const { lang } = useParams();
+  const { setLang, setDir } = useDirectionAndLanguage();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!lang || (lang !== "ar" && lang !== "en")) {
+      navigate("/en", { replace: true });
+      return;
+    }
+
+    i18n.changeLanguage(lang);
+    setLang(lang);
+    setDir(lang === "ar" ? "rtl" : "ltr");
+  }, [lang]);
+
+  // const dynamicKeywords = categories?.map((c) =>
+  //   lang === "ar" ? c.name_ar : c.name_en
+  // );
 
   return (
     <section>
       <SEO
         title={{
-          ar: "تاشتيبا - تسوق عبر الإنترنت في السوق المتعدد البائعين",
-          en: "Tashtiba - Shop Online at Multi-Vendor Marketplace",
+          ar: "تاشتيبا - تسوق إلكتروني للأزياء والإلكترونيات والمزيد",
+          en: "Tashtiba - Online Shopping for Fashion, Electronics & More",
         }}
         description={{
-          ar: "اكتشف آلاف المنتجات على تاشتيبا - سوقك الموثوق للتسوق عبر الإنترنت للموضة والإلكترونيات والسلع المنزلية والمزيد. تسوق بسهولة وأمان من أفضل البائعين",
-          en: "Discover thousands of products on Tashtiba — your trusted multi-vendor marketplace for fashion, electronics, home goods, and more. Shop easily and securely from top sellers",
+          ar: "اكتشف منتجات مذهلة على تاشتيبا - تسوق إلكترونيات، أزياء، أثاث ومنتجات منزلية بسهولة وأمان من أفضل البائعين في مصر.",
+          en: "Shop amazing products at Tashtiba — your online destination for electronics, fashion, furniture, and home goods. Safe and easy shopping across Egypt.",
         }}
         keywords={{
           ar: [
             "تاشتيبا",
-            "سوق",
             "الكترونيات",
             "ملابس",
+            "أزياء",
             "أثاث",
-            "تسوق",
-            "توصيل",
+            "مطبخ",
+            "عناية شخصية",
+            "موبايلات",
+            "أحذية",
+            "شنط",
+            "سوق مصر",
+            "توصيل سريع",
+            // ...(dynamicKeywords || [])
           ],
           en: [
             "tashtiba",
-            "marketplace",
             "electronics",
             "fashion",
             "furniture",
-            "shopping",
-            "delivery",
+            "home appliances",
+            "mobiles",
+            "kitchen",
+            "bags",
+            "shoes",
+            "online shopping Egypt",
+            "fast delivery",
+            // ...(dynamicKeywords || [])
           ],
         }}
       />

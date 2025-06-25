@@ -5,16 +5,14 @@ import { NavLink } from "react-router";
 import { useProfile } from "../../../hooks/Api/EndUser/useProfile/useProfile";
 import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import { GrLogout } from "react-icons/gr";
+import { Category } from "../../../types/Categories";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 type Props = {
-    dir: string;
-    handleLogout: () => void;
+  dir: string;
+  handleLogout: () => void;
   isMenuOpen: boolean;
   closeMenu: () => void;
   uToken: string | null;
-};
-type Category = {
-  id: string | number;
-  name: string;
 };
 const MobileMenu = ({
   dir,
@@ -26,6 +24,7 @@ const MobileMenu = ({
   const { t } = useTranslation(["EndUserHeader"]);
   const { data: user } = useProfile();
   const { data: categories } = useCategories();
+  const { lang } = useDirectionAndLanguage();
   return (
     <>
       <div
@@ -77,7 +76,7 @@ const MobileMenu = ({
             {categories?.slice(0, 4).map((category: Category, i: number) => (
               <NavLink
                 key={i}
-                to={`/category/${category.id}`}
+                to={`/${lang}/category/${category.id}`}
                 className={({ isActive }) =>
                   `px-4 py-3 block rounded transition ${
                     isActive
@@ -95,10 +94,10 @@ const MobileMenu = ({
             <>
               <ul className="flex flex-col border-b border-gray-200 mt-2">
                 {[
-                  { to: "/u-profile", label: t("profile") },
-                  { to: "/u-notification", label: t("notifications") },
-                  { to: "/u-favorite", label: t("favorite_products") },
-                  { to: "/u-compare", label: t("compare_product") },
+                  { to: `${lang}/profile`, label: t("profile") },
+                  { to: `${lang}/notifications`, label: t("notifications") },
+                  { to: `${lang}/favorite`, label: t("favorite_products") },
+                  { to: `${lang}/compare`, label: t("compare_product") },
                 ].map((item, idx) => (
                   <NavLink
                     key={idx}

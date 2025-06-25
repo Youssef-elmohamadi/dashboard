@@ -1,9 +1,10 @@
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import ProductCard from "../../../components/EndUser/ProductCard/ProductCard";
 import { Circles } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import { useAllProducts } from "../../../hooks/Api/EndUser/useProducts/useProducts";
-import { Helmet } from "react-helmet-async";
+import SEO from "../../../components/common/seo";
+import LazyImage from "../../../components/common/LazyImage";
 
 const AllProducts = () => {
   const [searchParams] = useSearchParams();
@@ -11,6 +12,7 @@ const AllProducts = () => {
   const min = searchParams.get("min") || "";
   const max = searchParams.get("max") || "";
   const { t } = useTranslation(["EndUserShop"]);
+  const { lang } = useParams();
 
   const {
     products,
@@ -27,24 +29,63 @@ const AllProducts = () => {
 
   return (
     <div className="min-h-[300px] flex flex-col items-center">
-      <Helmet>
-        <title>{t("mainTitle")}</title>
-        <meta
-          name="description"
-          content={t("mainDescription", {
-            defaultValue: "اكتشف مجموعة واسعة من المنتجات المناسبة لجميع احتياجاتك بأسعار تنافسية وجودة عالية.",
-          })}
-        />
-      </Helmet>
+      <SEO
+        title={{
+          ar: "تاشتيبا - كل المنتجات",
+          en: "Tashtiba - All Products",
+        }}
+        description={{
+          ar: "تصفح جميع المنتجات المتوفرة في تاشتيبا، من ملابس، إلكترونيات، أثاث، أدوات منزلية والمزيد بأسعار تنافسية.",
+          en: "Browse all available products on Tashtiba including fashion, electronics, furniture, home goods, and more at competitive prices.",
+        }}
+        keywords={{
+          ar: [
+            "كل المنتجات",
+            "تاشتيبا",
+            "تسوق",
+            "إلكترونيات",
+            "أزياء",
+            "أدوات منزلية",
+            "موبايلات",
+            "شنط",
+            "أحذية",
+            "سوق مصر",
+          ],
+          en: [
+            "all products",
+            "tashtiba",
+            "shopping",
+            "electronics",
+            "fashion",
+            "home goods",
+            "mobiles",
+            "bags",
+            "shoes",
+            "Egypt marketplace",
+          ],
+        }}
+      />
 
       {isError ? (
         <p className="text-red-500 text-lg font-semibold mt-10">
           {t("mainContent.fetchError", {
-            defaultValue: "حدث خطأ ما أثناء تحميل المنتجات. حاول مرة أخرى لاحقًا.",
+            defaultValue:
+              "حدث خطأ ما أثناء تحميل المنتجات. حاول مرة أخرى لاحقًا.",
           })}
         </p>
       ) : isLoading ? (
-        <Circles height="80" width="80" color="#6B46C1" ariaLabel="loading" />
+        <div className="flex flex-col items-center justify-center py-10">
+          <LazyImage
+            src="/images/product/placeholder-image.jpg"
+            alt={
+              lang === "ar"
+                ? "تحميل المنتجات - تاشتيبا"
+                : "Loading products - Tashtiba"
+            }
+            className="w-20 h-20 mb-4 animate-pulse"
+          />
+          <Circles height="80" width="80" color="#6B46C1" ariaLabel="loading" />
+        </div>
       ) : products.length === 0 ? (
         <p className="text-gray-500 text-lg font-semibold mt-10">
           {t("mainContent.noDataForCategory")}

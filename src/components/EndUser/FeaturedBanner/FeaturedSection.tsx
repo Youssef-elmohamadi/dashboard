@@ -1,4 +1,3 @@
-// components/FeaturesSection.jsx
 import { useTranslation } from "react-i18next";
 import FeatureItem from "./FeatureItem";
 import { FaShippingFast, FaUndo, FaMapMarkedAlt, FaTags } from "react-icons/fa";

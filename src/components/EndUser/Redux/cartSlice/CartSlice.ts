@@ -1,10 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { CartItem, CartState } from "../../../../types/Redux";
 const storedCart = localStorage.getItem("cart");
 const initialState = storedCart
   ? JSON.parse(storedCart)
   : { items: [], totalQuantity: 0, totalPrice: 0, discount: 0 };
 
-const saveToLocalStorage = (state) => {
+
+
+const saveToLocalStorage = (state: CartState): void => {
   localStorage.setItem("cart", JSON.stringify(state));
 };
 
@@ -14,7 +17,7 @@ const cartSlice = createSlice({
   reducers: {
     addItem: (state, action) => {
       const { item, quantity } = action.payload;
-      const existingItem = state.items.find((i) => i.id === item.id);
+      const existingItem: CartItem | undefined = state.items.find((i: CartItem) => i.id === item.id);
 
       if (!existingItem) {
         state.items.push({ ...item, quantity });
@@ -29,14 +32,14 @@ const cartSlice = createSlice({
 
     removeItem: (state, action) => {
       const id = action.payload;
-      const existingItem = state.items.find((item) => item.id === id);
+      const existingItem: CartItem | undefined = state.items.find((item: CartItem) => item.id === id);
       if (existingItem) {
         state.totalPrice -= existingItem.price;
         existingItem.quantity--;
         state.totalQuantity--;
 
         if (existingItem.quantity === 0) {
-          state.items = state.items.filter((item) => item.id !== id);
+            state.items = state.items.filter((item: CartItem) => item.id !== id);
         }
       }
       saveToLocalStorage(state);
@@ -52,19 +55,17 @@ const cartSlice = createSlice({
 
     updateQuantity: (state, action) => {
       const { id, quantity } = action.payload;
-      const existingItem = state.items.find((item) => item.id === id);
+      const existingItem: CartItem | undefined = state.items.find((item: CartItem) => item.id === id);
 
       if (existingItem) {
         existingItem.quantity = quantity;
-
-        // نعيد حساب السعر والإجمالي
         state.totalQuantity = state.items.reduce(
-          (total, item) => total + item.quantity,
+          (total: number, item: CartItem) => total + item.quantity,
           0
         );
 
         state.totalPrice = state.items.reduce(
-          (total, item) => total + item.price * item.quantity,
+          (total: number, item: CartItem) => total + item.price * item.quantity,
           0
         );
       }

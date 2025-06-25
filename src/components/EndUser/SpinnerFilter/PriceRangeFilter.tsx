@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Range, getTrackBackground } from "react-range";
 import { useSearchParams } from "react-router-dom";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
@@ -49,7 +49,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
                   : ["#e5e7eb", "#8b5cf6", "#e5e7eb"],
                 min: MIN,
                 max: MAX,
-                rtl: isRTL, // إضافة خاصية rtl لـ getTrackBackground
+                rtl: isRTL,
               }),
             }}
           >

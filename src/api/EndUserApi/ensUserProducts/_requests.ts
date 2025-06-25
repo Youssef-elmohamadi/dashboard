@@ -12,7 +12,7 @@ export const getProductCategories = async () => {
     }
   );
 };
-export const showProduct = async (id) => {
+export const showProduct = async (id: any) => {
   return await axiosInstanceEndUser.get(`/api/user/products/${id}`);
 };
 export const getAllProducts = async (params: Record<string, any> = {}) => {
@@ -38,7 +38,7 @@ export const getProductCategoriesById = async (
   });
 };
 
-export const applyCoupon = async (data) => {
+export const applyCoupon = async (data: any) => {
   return await axiosInstanceEndUser.post("/api/user/cupons/apply", data);
 };
 

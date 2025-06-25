@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom";
+import { Navigate, Route } from "react-router-dom";
 import EndUserLayout from "../../pages/UserPages/EndUserLayout/Layout";
 import Home from "../../pages/UserPages/Home/Home";
 import EndUserSignIn from "../../pages/UserPages/AuthPages/EndUserSignin";
@@ -27,29 +27,33 @@ import UserForgotPassword from "../../pages/UserPages/AuthPages/UserForgotPasswo
 export const EndUserRoutes = (
   <>
     <Route element={<EndUserWrapper />}>
-      <Route element={<EndUserLayout />}>
-        <Route index element={<Home />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route element={<UserControlLayout />}>
-          <Route path="/u-dashboard" element={<UserDashboard />} />
-          <Route path="/u-profile" element={<UserProfile />} />
+      <Route path="/" element={<Navigate to="/er" replace />} />
 
-          <Route path="/u-orders" element={<UserOrders />} />
-          <Route path="/u-downloads" element={<UserDownloads />} />
-          <Route path="/u-conversation" element={<UserConversation />} />
-          <Route path="/u-wallet" element={<UserWallet />} />
-          <Route path="/u-Support-ticket" element={<UserSupportTicket />} />
+      <Route path="/:lang" element={<EndUserLayout />}>
+        <Route index element={<Home />} />
+        <Route path="product/:id" element={<ProductDetails />} />
+        <Route path="cart" element={<Cart />} />
+        <Route element={<UserControlLayout />}>
+          <Route path="u-dashboard" element={<UserDashboard />} />
+          <Route path="u-profile" element={<UserProfile />} />
+          <Route path="u-orders" element={<UserOrders />} />
+          <Route path="u-downloads" element={<UserDownloads />} />
+          <Route path="u-conversation" element={<UserConversation />} />
+          <Route path="u-wallet" element={<UserWallet />} />
+          <Route path="u-Support-ticket" element={<UserSupportTicket />} />
           <Route path="u-orders/details/:id" element={<OrderDetailsPage />} />
           <Route path="u-notification" element={<UserNotifications />} />
           <Route path="u-compare" element={<ProductsCompare />} />
           <Route path="u-favorite" element={<ProductsFavorite />} />
         </Route>
-        <Route path="/category" element={<CategoriesLayout />}>
+
+        <Route path="category" element={<CategoriesLayout />}>
           <Route index element={<AllProducts />} />
           <Route path=":category_id" element={<Shop />} />
         </Route>
       </Route>
+
+      {/* صفحات برة لغة المستخدم */}
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/reset-password" element={<UserForgotPassword />} />
       <Route path="/signin" element={<EndUserSignIn />} />

@@ -12,19 +12,8 @@ import FilterSidebar from "../../../components/EndUser/CategoryMobile/FilterSide
 import { useTranslation } from "react-i18next";
 import Sidebar from "../../../components/EndUser/CategoryLayout/Sidebar";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
-
-// Define category type based on your API response
-interface Category {
-  id: number;
-  name: string;
-  [key: string]: any;
-}
-
-interface PriceChangeParams {
-  min: string;
-  max: string;
-}
-
+import { Category } from "../../../types/Categories";
+import { PriceChangeParams } from "../../../types/Shop";
 export default function CategoriesLayout() {
   const [showCategories, setShowCategories] = useState<boolean>(true);
   const { t } = useTranslation(["EndUserShop"]);
@@ -64,7 +53,7 @@ export default function CategoriesLayout() {
   };
 
   const { data } = useAllCategories();
-  const categories: Category[] | undefined = data?.data?.data.original;
+  const categories: Category[] | undefined = data?.original;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

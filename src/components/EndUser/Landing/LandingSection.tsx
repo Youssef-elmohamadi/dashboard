@@ -1,12 +1,13 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const MotionLink = motion(Link);
 
 const LandingSection = () => {
   const { t } = useTranslation(["EndUserHome"]);
+  const { lang } = useParams();
 
   const isLoggedIn = useMemo(() => {
     return !!localStorage.getItem("end_user_token");
@@ -20,7 +21,7 @@ const LandingSection = () => {
 
   const loggedInButtons = [
     {
-      to: "/category",
+      to: `/${lang}/category`,
       text: t("landingSection.button.shopNow"),
       className: primaryBtn,
     },
@@ -45,13 +46,17 @@ const LandingSection = () => {
   ];
 
   const buttonsToRender = isLoggedIn ? loggedInButtons : guestButtons;
+  const backgroundAlt =
+    lang === "ar"
+      ? "صورة خلفية رئيسية لموقع تاشتيبا - تسوق إلكتروني"
+      : "Tashtiba main background image - Online Shopping";
 
   return (
     <section className="relative h-[550px] flex items-center justify-center text-white bg-black overflow-hidden rtl">
       <div className="absolute inset-0">
         <img
           src="/images/landing.webp"
-          alt="landing background"
+          alt={backgroundAlt}
           className="w-full h-full object-cover"
           loading="lazy"
           decoding="async"

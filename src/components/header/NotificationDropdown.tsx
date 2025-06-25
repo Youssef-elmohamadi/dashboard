@@ -20,7 +20,6 @@ export default function NotificationDropdown({ userType }) {
     hasNextPage,
     fetchNextPage,
     isFetching,
-    isLoading,
     deleteNotification,
     markAllAsRead,
     markAsRead,

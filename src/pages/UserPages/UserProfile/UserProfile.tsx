@@ -9,12 +9,17 @@ import {
   useProfile,
   useUpdateProfile,
 } from "../../../hooks/Api/EndUser/useProfile/useProfile";
+import {
+  ClientErrors,
+  ServerErrors,
+  UserProfileFormData,
+} from "../../../types/UserProfile";
 
 const UserProfile = () => {
   const { t } = useTranslation(["EndUserProfile"]);
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserProfileFormData>({
     id: "",
     first_name: "",
     last_name: "",
@@ -27,16 +32,17 @@ const UserProfile = () => {
 
   const [existingImage, setExistingImage] = useState("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [clientErrors, setClientErrors] = useState<{ [key: string]: string }>(
-    {}
-  );
-  const [errors, setErrors] = useState<Record<string, string[] | string>>({
-    first_name: [] as string[],
-    last_name: [] as string[],
-    email: [] as string[],
-    phone: [] as string[],
-    password: [] as string[],
-    password_confirmation: [] as string[],
+  const [clientErrors, setClientErrors] = useState<ClientErrors>({});
+  const [errors, setErrors] = useState<ServerErrors>({
+    first_name: [],
+    last_name: [],
+    email: [],
+    phone: [],
+    password: [],
+    password_confirmation: [],
+    avatar: [],
+    general: "",
+    global: "",
   });
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -283,13 +289,13 @@ const UserProfile = () => {
             </div>
 
             <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
-              {["password", "password_confirmation"].map((field) => (
+              {(["password", "password_confirmation"] as const).map((field) => (
                 <div key={field} className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
                     name={field}
                     value={
-                      (formData[field as keyof typeof formData] as string) || ""
+                      (formData[field] as string) || ""
                     }
                     onChange={handleChange}
                     placeholder={t(`form.${field}`)}

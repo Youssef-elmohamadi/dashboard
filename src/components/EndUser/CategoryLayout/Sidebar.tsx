@@ -3,18 +3,21 @@ import { IoIosArrowDown } from "react-icons/io";
 import { Link, useParams } from "react-router-dom";
 import PriceRangeFilter from "../SpinnerFilter/PriceRangeFilter";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
+import { SidebarShopProps } from "../../../types/Shop";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const Sidebar = ({
   setCurrentPage,
   handlePriceChange,
   setShowCategories,
   showCategories,
-}) => {
+}: SidebarShopProps) => {
   const { t } = useTranslation(["EndUserShop"]);
   const { category_id } = useParams();
   const { data, isLoading } = useAllCategories();
-  const categories = data?.data?.data.original;
-  
+
+  const categories = data?.original || [];
+  const { lang } = useDirectionAndLanguage();
   return (
     <aside className="w-64 hidden 2xl:block">
       <div className="border border-gray-200 p-4">
@@ -41,7 +44,7 @@ const Sidebar = ({
                     className={`text-gray-500 hover:text-purple-600 transition ${
                       !category_id ? "text-purple-600 font-semibold" : ""
                     }`}
-                    to={`/category/`}
+                    to={`/${lang}/category/`}
                   >
                     {t("allCategories")}
                   </Link>
@@ -57,7 +60,7 @@ const Sidebar = ({
                           ? "text-purple-600 font-semibold"
                           : ""
                       }`}
-                      to={`/category/${category.id}`}
+                      to={`/${lang}/category/${category.id}`}
                     >
                       {category.name}
                     </Link>

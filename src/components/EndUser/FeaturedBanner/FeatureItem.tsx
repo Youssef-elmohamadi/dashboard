@@ -1,10 +1,5 @@
-// components/FeatureItem.jsx
-import React, { ReactNode } from "react";
-type FeatureItemProps = {
-  icon: ReactNode; // لأنه ممكن تحط <FaTruck /> أو أي عنصر JSX
-  title: string;
-  description: string;
-};
+import { FeatureItemProps } from "../../../types/Home";
+
 const FeatureItem = ({ icon, title, description }: FeatureItemProps) => {
   return (
     <div className="flex flex-col items-center text-center p-4">

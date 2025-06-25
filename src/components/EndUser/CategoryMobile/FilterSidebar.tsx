@@ -3,8 +3,10 @@ import PriceRangeFilter from "../SpinnerFilter/PriceRangeFilter";
 import { Link } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io";
 import { useTranslation } from "react-i18next";
+import { FilterSidebarProps } from "../../../types/Shop";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
-const FilterSidebar = ({
+const FilterSidebar: React.FC<FilterSidebarProps> = ({
   isMenuOpen,
   setIsMenuOpen,
   setShowCategories,
@@ -13,6 +15,7 @@ const FilterSidebar = ({
   category_id,
   handlePriceChange,
 }) => {
+  const { lang } = useDirectionAndLanguage();
   const closeMenu = () => setIsMenuOpen(false);
   const { t } = useTranslation(["EndUserShop"]);
   return (
@@ -55,7 +58,7 @@ const FilterSidebar = ({
                     className={`text-gray-500 hover:text-purple-600 transition ${
                       !category_id ? "text-purple-600 font-semibold" : ""
                     }`}
-                    to={`/category/`}
+                    to={`/${lang}/category/`}
                   >
                     {t("allCategories")}
                   </Link>
@@ -68,7 +71,7 @@ const FilterSidebar = ({
                           ? "text-purple-600 font-semibold"
                           : ""
                       }`}
-                      to={`/category/${category.id}`}
+                      to={`/${lang}/category/${category.id}`}
                     >
                       {category.name}
                     </Link>

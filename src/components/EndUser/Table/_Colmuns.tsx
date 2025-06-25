@@ -5,11 +5,6 @@ type BaseEntity = {
   id: number;
   created_at?: string;
 };
-
-// نوع الـ Role لو موجود
-type Role = { name: string };
-
-// Props لتكوين الأعمدة الديناميكية
 interface ColumnBuilderOptions<T extends BaseEntity> {
   includeName?: boolean;
   includeBrandName?: boolean;
@@ -59,7 +54,7 @@ export const buildOrderColumns = <T extends BaseEntity>(
     {
       Header: t("ordersTable.columns.shippingStatus"),
       accessor: "sub_orders",
-      Cell: ({ value }) => {
+      Cell: ({ value }: any) => {
         const shippingStatus = value?.[0]?.shipping_status;
 
         return shippingStatus ? (

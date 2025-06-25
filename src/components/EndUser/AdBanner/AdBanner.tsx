@@ -1,12 +1,11 @@
+import { AdBannerProps } from "../../../types/Home";
 import LazyImage from "../../common/LazyImage";
 
-type Props = {
-  imageUrl: string;
-  linkUrl: string;
-  altText?: string;
-};
-
-const AdBanner = ({ imageUrl, linkUrl, altText = "Ad Banner" }: Props) => {
+const AdBanner = ({
+  imageUrl,
+  linkUrl,
+  altText = "Ad Banner",
+}: AdBannerProps) => {
   return (
     <a href={linkUrl}>
       <div className="w-full transition p-2 cursor-pointer duration-300 rounded-xl overflow-hidden">

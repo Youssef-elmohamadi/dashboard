@@ -12,46 +12,10 @@ import { clearCart } from "../Redux/cartSlice/CartSlice";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-
-// ✅ أنواع البيانات
-type LocationType = {
-  full_name: string;
-  phone: string;
-  city: string;
-  area: string;
-  street: string;
-  building_number: string;
-  floor_number: string;
-  apartment_number: string;
-  landmark: string;
-  notes: string;
-};
-
-type CartItem = {
-  id: number;
-  quantity: number;
-};
-
-type CheckoutFormType = {
-  items: { product_id: number; quantity: number }[];
-  payment_method: string;
-  location: LocationType;
-  save_info: boolean;
-  newsletter: boolean;
-};
-
-type ClientSideErrorsType = {
-  payment_method: string;
-  location: { [K in keyof LocationType]: string };
-  save_info: boolean;
-  newsletter: boolean;
-};
-
-type RootState = {
-  cart: {
-    items: CartItem[];
-  };
-};
+import { Checkout, ClientErrors, Location } from "../../../types/CheckoutType";
+import { RootState } from "../Redux/Store";
+import { Product } from "../../../types/Product";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const CheckoutForm: React.FC = () => {
   const { t } = useTranslation(["EndUserCheckout"]);
@@ -59,7 +23,7 @@ const CheckoutForm: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [clientSideErrors, setClientSideErrors] =
-    useState<ClientSideErrorsType>({
+    useState<ClientErrors>({
       payment_method: "",
       location: {
         full_name: "",
@@ -77,7 +41,7 @@ const CheckoutForm: React.FC = () => {
       newsletter: false,
     });
 
-  const [checkoutForm, setCheckoutForm] = useState<CheckoutFormType>({
+  const [checkoutForm, setCheckoutForm] = useState<Checkout>({
     items: [],
     payment_method: "",
     location: {
@@ -104,7 +68,7 @@ const CheckoutForm: React.FC = () => {
     const fieldErrors: Record<string, string[]> = {};
     const loc = checkoutForm.location;
 
-    const locationFields: (keyof LocationType)[] = [
+    const locationFields: (keyof Location)[] = [
       "full_name",
       "phone",
       "city",
@@ -154,7 +118,7 @@ const CheckoutForm: React.FC = () => {
   };
 
   useEffect(() => {
-    const updatedItems = items.map((item) => ({
+    const updatedItems = items.map((item:Product) => ({
       product_id: item.id,
       quantity: item.quantity,
     }));
@@ -172,12 +136,12 @@ const CheckoutForm: React.FC = () => {
       ...prev,
       location: {
         ...prev.location,
-        [name as keyof LocationType]: value,
+        [name as keyof Location]: value,
       },
     }));
   };
 
-  const handleRadio = (name: keyof CheckoutFormType, value: string) => {
+  const handleRadio = (name: keyof Checkout, value: string) => {
     setCheckoutForm((prev) => ({
       ...prev,
       [name]: value,
@@ -187,11 +151,11 @@ const CheckoutForm: React.FC = () => {
   const handleCheckBox = (id: "save_info" | "newsletter", checked: boolean) => {
     setCheckoutForm((prev) => ({ ...prev, [id]: checked }));
   };
-
+  const { lang } = useDirectionAndLanguage();
   const afterSuccess = () => {
     localStorage.removeItem("state");
     dispatch(clearCart());
-    navigate("/");
+    navigate(`/${lang}/`);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

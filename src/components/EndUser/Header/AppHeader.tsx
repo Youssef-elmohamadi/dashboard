@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { CiSearch } from "react-icons/ci";
 import { FaRegCircleUser } from "react-icons/fa6";
@@ -41,9 +41,19 @@ const AppHeader = () => {
     });
   };
   const { data: user } = useProfile();
-  const { data, isLoading, hasNextPage, fetchNextPage, isFetching } =
-    useAllFavoriteProducts();
+  const { data } = useAllFavoriteProducts();
   const favoriteCount = data?.pages[0].total;
+  const { lang } = useParams();
+  const altTexts = {
+    logo: {
+      ar: "تاشتيبا - السوق الإلكتروني",
+      en: "Tashtiba - Online Marketplace",
+    },
+    avatar: {
+      ar: "صورة مستخدم تاشتيبا",
+      en: "Tashtiba User Avatar",
+    },
+  };
   return (
     <div>
       <header className="enduser_container py-4 flex items-center justify-start gap-12 relative">
@@ -56,8 +66,12 @@ const AppHeader = () => {
               </button>
             </div>
             <div className="flex items-center gap-2 cursor-pointer flex-[1]">
-              <NavLink to="/">
-                <img src="/images/logo/logo.png" className="w-32" alt="Logo" />
+              <NavLink to={`/${lang}/`}>
+                <img
+                  src="/images/logo/logo.png"
+                  className="w-32"
+                  alt={lang === "ar" ? altTexts.logo.ar : altTexts.logo.en}
+                />
               </NavLink>
             </div>
           </div>
@@ -92,7 +106,11 @@ const AppHeader = () => {
                       <img
                         className="w-full h-full rounded-full"
                         src={user?.avatar || "/images/default-avatar.jpg"}
-                        alt="User Avatar"
+                        alt={
+                          lang === "ar"
+                            ? altTexts.avatar.ar
+                            : altTexts.avatar.en
+                        }
                       />
                     </div>
                   </div>
@@ -130,7 +148,7 @@ const AppHeader = () => {
                 </div>
 
                 <div className="flex items-center gap-2 relative">
-                  <NavLink to="/u-favorite">
+                  <NavLink to={`/${lang}/u-favorite`}>
                     {items && (
                       <div className="absolute -top-2 -right-2 bg-purple-700 w-5 h-5 flex justify-center items-center rounded-full text-white text-xs">
                         {favoriteCount}
@@ -140,7 +158,7 @@ const AppHeader = () => {
                   </NavLink>
                 </div>
                 <div className="flex items-center gap-2">
-                  <NavLink to="/u-compare">
+                  <NavLink to={`/${lang}/u-compare`}>
                     <MdOutlineCompareArrows className="text-2xl text-secondary" />
                   </NavLink>
                 </div>

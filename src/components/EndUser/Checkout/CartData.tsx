@@ -3,13 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { removeItem } from "../Redux/cartSlice/CartSlice";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
+import { RootState } from "../Redux/Store";
 
 const CartData: React.FC = () => {
   const { t } = useTranslation(["EndUserCheckout"]);
 
-  const items = useSelector((state: any) => state.cart.items);
-  const discount = useSelector((state: any) => state.cart.discount);
-  const totalPrice = useSelector((state: any) => state.cart.totalPrice);
+  const items = useSelector((state: RootState) => state.cart.items);
+  const discount = useSelector((state: RootState) => state.cart.discount);
+  const totalPrice = useSelector((state: RootState) => state.cart.totalPrice);
   const dispatch = useDispatch();
 
   const finalPrice = totalPrice - discount;

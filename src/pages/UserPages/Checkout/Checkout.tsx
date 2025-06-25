@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CartData from "../../../components/EndUser/Checkout/CartData";
 import CheckoutForm from "../../../components/EndUser/Checkout/CheckoutForm";

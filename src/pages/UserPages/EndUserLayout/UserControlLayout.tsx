@@ -8,8 +8,9 @@ import { MdCompareArrows, MdDelete, MdFavorite } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 export default function UserControlLayout() {
-  const { data: user, isLoading: isLoadingUser } = useQuery({
+  const { data: user } = useQuery({
     queryKey: ["endUserProfileData"],
     queryFn: async () => {
       const res = await getProfile();
@@ -17,6 +18,7 @@ export default function UserControlLayout() {
     },
     staleTime: 1000 * 60 * 5,
   });
+    const { lang } = useDirectionAndLanguage();
   const { t } = useTranslation(["EndUserControlMenu"]);
   const navigate = useNavigate();
   return (
@@ -36,7 +38,7 @@ export default function UserControlLayout() {
           </div>
           <nav className="space-y-2 mt-6">
             <NavLink
-              to="/u-profile"
+              to={`/${lang}/u-profile`}
               className={({ isActive }) =>
                 `p-2 px-3 rounded-3xl flex items-center group gap-2 transition-all duration-300 pl-2 ${
                   isActive
@@ -49,7 +51,7 @@ export default function UserControlLayout() {
               {t("profile_management")}
             </NavLink>
             <NavLink
-              to="/u-orders"
+              to={`/${lang}/u-orders`}
               className={({ isActive }) =>
                 `p-2 px-3 rounded-3xl flex items-center group gap-2 transition-all duration-300 pl-2 ${
                   isActive
@@ -91,7 +93,7 @@ export default function UserControlLayout() {
             </Link> */}
 
             <NavLink
-              to="/u-compare"
+              to={`/${lang}/u-compare`}
               className={({ isActive }) =>
                 `p-2 px-3 rounded-3xl flex items-center group gap-2 transition-all duration-300 pl-2 ${
                   isActive
@@ -104,7 +106,7 @@ export default function UserControlLayout() {
               {t("compare_product")}
             </NavLink>
             <NavLink
-              to="/u-favorite"
+              to={`/${lang}/u-favorite`}
               className={({ isActive }) =>
                 `p-2 px-3 rounded-3xl flex items-center group gap-2 transition-all duration-300 pl-2 ${
                   isActive

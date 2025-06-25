@@ -3,29 +3,30 @@ import ProductCard from "../../../components/EndUser/ProductCard/ProductCard";
 import { Circles } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import { useProductsByCategory } from "../../../hooks/Api/EndUser/useProducts/useProducts";
-import { Helmet } from "react-helmet-async";
 import { useEffect, useState } from "react";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
-type Category = {
-  id: number | string;
-};
+import { Category } from "../../../types/Categories";
+import LazyImage from "../../../components/common/LazyImage";
+import SEO from "../../../components/common/seo";
+
 const Shop = () => {
-  const { category_id } = useParams();
+  const { category_id, lang } = useParams();
   const [searchParams] = useSearchParams();
   const [categoryName, setCategoryName] = useState("");
   const sort = searchParams.get("sort") || "";
   const min = searchParams.get("min") || "";
   const max = searchParams.get("max") || "";
+
   const { t } = useTranslation(["EndUserShop"]);
   const { data } = useAllCategories();
-  const categories = data?.data?.data.original;
+  const categories = data?.original;
+
   useEffect(() => {
     const category = categories?.find(
       (cat: Category) => cat.id.toString() === category_id
     );
-    setCategoryName(category?.name);
+    setCategoryName(category?.name ?? "");
   }, [category_id, categories]);
-  console.log(categoryName);
 
   const {
     products,
@@ -35,25 +36,44 @@ const Shop = () => {
     isLoading,
     isError,
   } = useProductsByCategory({
-    category_id: category_id,
-    sort: sort,
-    min: min,
-    max: max,
+    category_id,
+    sort,
+    min,
+    max,
   });
 
   return (
     <div className="min-h-[300px] flex flex-col items-center">
-      <Helmet>
-        <title>{t("mainTitleCategory", { categoryName: categoryName })}</title>
-        <meta
-          name="description"
-          content={t("categoryDescription", {
-            categoryName: categoryName,
-            defaultValue:
-              "تسوق من مجموعة متنوعة من المنتجات داخل هذه الفئة بأسعار تنافسية وجودة عالية.",
-          })}
-        />
-      </Helmet>
+      <SEO
+        title={{
+          ar: `تاشتيبا - ${categoryName}`,
+          en: `Tashtiba - ${categoryName}`,
+        }}
+        description={{
+          ar: `تصفح منتجات فئة ${categoryName} بأفضل الأسعار على تاشتيبا.`,
+          en: `Browse the best deals in ${categoryName} on Tashtiba.`,
+        }}
+        keywords={{
+          ar: [
+            "تاشتيبا",
+            categoryName,
+            "تسوق",
+            "منتجات",
+            "مصر",
+            "فئة",
+            "خصومات",
+          ],
+          en: [
+            "tashtiba",
+            categoryName,
+            "shop",
+            "products",
+            "category",
+            "offers",
+            "Egypt",
+          ],
+        }}
+      />
 
       {isError ? (
         <p className="text-red-500 text-lg font-semibold mt-10">
@@ -63,9 +83,20 @@ const Shop = () => {
           })}
         </p>
       ) : isLoading ? (
-        <Circles height="80" width="80" color="#6B46C1" ariaLabel="loading" />
+        <div className="flex flex-col items-center justify-center py-10">
+          <LazyImage
+            src="/images/product/placeholder-image.jpg"
+            alt={
+              lang === "ar"
+                ? `تحميل منتجات ${categoryName}`
+                : `Loading ${categoryName} products`
+            }
+            className="w-20 h-20 mb-4 animate-pulse"
+          />
+          <Circles height="80" width="80" color="#6B46C1" ariaLabel="loading" />
+        </div>
       ) : products.length === 0 ? (
-        <p className="text-gray-500 text-lg font-semibold">
+        <p className="text-gray-500 text-lg font-semibold mt-10">
           {t("mainContent.noDataForCategory")}
         </p>
       ) : (

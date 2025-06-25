@@ -1,7 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { CategoryBreadCrumpProps } from "../../../types/Shop";
 
-const CategoryBreadCrump = ({ currentPage }) => {
+
+const CategoryBreadCrump = ({ currentPage }: CategoryBreadCrumpProps) => {
+  const { lang } = useDirectionAndLanguage();
   const { t } = useTranslation(["EndUserShop"]);
   return (
     <div className="-mt-7">
@@ -9,7 +13,7 @@ const CategoryBreadCrump = ({ currentPage }) => {
         <li className="inline-flex items-center">
           <Link
             className="flex items-center text-sm text-gray-500 hover:text-blue-600 focus:outline-hidden  focus:text-blue-600"
-            to="/"
+            to={`/${lang}/`}
           >
             {t("breadcrumbCategory.home")}
           </Link>

@@ -31,8 +31,16 @@ type Vendor = {
   updated_at?: string;
   documents?: any[];
 };
-export type Product = {
+
+export type image = {
   id?: number;
+  image: string;
+  product_id?: number;
+  created_at?: string;
+  updated_at?: string;
+};
+export type Product = {
+  id: number;
   vendor_id?: number;
   name: string;
   description: string | undefined;
@@ -42,7 +50,10 @@ export type Product = {
   discount_price?: number | null;
   stock_quantity?: number | string;
   status?: string;
+  rate?: number | null;
+  review: any[];
   is_featured: boolean;
+  is_fav?: boolean;
   rating?: number | null;
   views_count?: number | null;
   created_at: string;
@@ -50,11 +61,13 @@ export type Product = {
   category?: Category;
   brand?: Brand;
   attributes: Attribute[];
-  images: string[];
+  images: image[];
   tags: Tag[];
   variants?: any[];
   slug?: string;
   vendor?: Vendor;
+  tax?: number | null;
+  quantity?: number; // For cart management
 };
 
 export type SearchValues = {
@@ -70,3 +83,4 @@ export type ProductFilters = {
   status?: string;
   name?: string;
 };
+

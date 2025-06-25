@@ -10,6 +10,9 @@ import {
 } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import AdBanner from "../AdBanner/AdBanner";
 import LazyImage from "../../common/LazyImage";
+import { Banner } from "../../../types/Home";
+import { Product } from "../../../types/Product";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const HomeProducts: React.FC = () => {
   const { t } = useTranslation(["EndUserHome"]);
@@ -18,12 +21,13 @@ const HomeProducts: React.FC = () => {
   const { data: homeData, isLoading: isHomeLoading } = useHomeData();
 
   const isLoading = isHomeLoading || isProductsLoading;
-
   const filteredCategories = useMemo(() => {
     return productCategories?.filter(
-      (category: any) => category.products && category.products.length > 0
+      (category) => category.products && category.products.length > 0
     );
   }, [productCategories]);
+
+  const { lang } = useDirectionAndLanguage();
 
   if (isLoading) {
     return (
@@ -34,7 +38,9 @@ const HomeProducts: React.FC = () => {
             alt={t("homeProducts.loadingAlt", "Loading products...")}
             className="w-24 h-24 mb-4 animate-pulse mx-auto"
           />
-          <span className="text-base">{t("loading", "Loading products...")}</span>
+          <span className="text-base">
+            {t("loading", "Loading products...")}
+          </span>
         </div>
       </div>
     );
@@ -44,19 +50,24 @@ const HomeProducts: React.FC = () => {
 
   return (
     <div className="enduser_container px-4 py-10">
-      {filteredCategories.map((category: any) => {
+      {filteredCategories.map((category) => {
         const relatedBanners = homeData?.banners?.filter(
-          (banner: any) => banner.position === category.id
+          (banner: Banner) => banner.position === category.id
         );
+
+        const bannerAltText =
+          lang === "ar"
+            ? `إعلان تصنيف ${category.name}`
+            : `Category banner for ${category.name}`;
 
         return (
           <div key={category.id} className="mb-12">
-            {relatedBanners?.map((banner: any, idx: number) => (
+            {relatedBanners?.map((banner: Banner, idx: number) => (
               <AdBanner
                 key={idx}
                 imageUrl={banner.image}
-                linkUrl={banner.url || `/category/${category.id}`}
-                altText="Category Banner"
+                linkUrl={banner.url || `/${lang}/category/${category.id}`}
+                altText={bannerAltText}
               />
             ))}
 
@@ -65,7 +76,7 @@ const HomeProducts: React.FC = () => {
                 {category.name}
               </h2>
               <Link
-                to={`/category/${category.id}`}
+                to={`/${lang}/category/${category.id}`}
                 className="text-sm text-purple-600 hover:underline"
               >
                 {t("homeProducts.showAll")}
@@ -84,7 +95,7 @@ const HomeProducts: React.FC = () => {
             >
               {category.products.map((product: any) => (
                 <SwiperSlide key={product.id}>
-                  <ProductCard product={product} />
+                  <ProductCard product={product as Product} />
                 </SwiperSlide>
               ))}
             </Swiper>

@@ -5,6 +5,7 @@ import { FiShoppingCart, FiUser, FiBell } from "react-icons/fi";
 import { useState } from "react";
 import MenuSidebar from "../UserControlMobile/MenuSidebar";
 import { useTranslation } from "react-i18next";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const BottomNav = () => {
   const location = useLocation();
@@ -16,7 +17,7 @@ const BottomNav = () => {
 
   const { t } = useTranslation(["EndUserBottomNav"]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const { lang } = useDirectionAndLanguage();
   if (shouldHide) {
     return null;
   }
@@ -29,7 +30,7 @@ const BottomNav = () => {
           {/* Home */}
           <div className="w-1/5 flex flex-col items-center justify-center text-gray-700">
             <Link
-              to={"/"}
+              to={`/${lang}/`}
               className="flex flex-col items-center justify-center"
             >
               <IoHomeOutline size={24} />
@@ -40,7 +41,7 @@ const BottomNav = () => {
           {/* Categories */}
           <div className="w-1/5 flex flex-col items-center justify-center text-gray-700">
             <Link
-              to={"/category/"}
+              to={`/${lang}/categories`}
               className="flex flex-col items-center justify-center"
             >
               <BiCategory size={24} />
@@ -52,7 +53,7 @@ const BottomNav = () => {
           {isLoggedIn && (
             <div className="w-1/5 flex flex-col items-center justify-center text-gray-700">
               <Link
-                to={"/cart"}
+                to={`/${lang}/cart`}
                 className="flex flex-col items-center justify-center"
               >
                 <FiShoppingCart size={24} />
@@ -65,7 +66,7 @@ const BottomNav = () => {
           {isLoggedIn && (
             <div className="w-1/5 flex flex-col items-center justify-center text-gray-700">
               <Link
-                to={"/u-notification"}
+                to={`/${lang}/u-notification`}
                 className="flex flex-col items-center justify-center"
               >
                 <FiBell size={24} />

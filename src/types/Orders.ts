@@ -24,6 +24,13 @@ interface OrderItem {
   total: number;
 }
 interface Location {
+  full_name: string;
+  phone: string;
+  area: string;
+  landmark: string;
+  notes: string;
+  floor_number: string;
+  apartment_number: string;
   building_number: string;
   street: string;
   city: string;
@@ -44,10 +51,13 @@ interface MainOrder {
 
 interface Vendor {
   name: string;
+  id: number;
+  logo: string | null;
 }
 
 export type Order = {
   id: number | string;
+  is_paid: boolean;
   vendor_id: number;
   status: string;
   total: number;
@@ -75,6 +85,21 @@ export type Order = {
   items: OrderItem[];
   vendor: Vendor;
   delivered_at: string | null;
+  location: Location;
+  sub_orders: {
+    location: Location;
+    id: number;
+    vendor_id: number;
+    vendor: Vendor;
+    items: OrderItem[];
+    total: number;
+    status: string;
+    shipping_status: string;
+    tracking_number: string | null;
+    created_at: string;
+    updated_at: string;
+    subtotal: number;
+  }[];
 };
 
 export type SearchValuesOrders = {
