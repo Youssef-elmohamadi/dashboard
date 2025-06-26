@@ -35,7 +35,7 @@ const getBrowserLanguage = () => {
 export const EndUserRoutes = (
   <>
     <Route element={<EndUserWrapper />}>
-      <Route path="/" element={<Navigate to={`/${getBrowserLanguage()}`} replace />} />
+      <Route path="/" element={<Navigate to={`/en`} replace />} />
 
       <Route path="/:lang" element={<EndUserLayout />}>
         <Route index element={<Home />} />
