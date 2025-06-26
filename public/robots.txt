@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /admin/
 Disallow: /super_admin/
 
-Sitemap: https://dashboard-zpse.vercel.app/er
+Sitemap: https://tashtiba.vercel.app/sitemap.xml
