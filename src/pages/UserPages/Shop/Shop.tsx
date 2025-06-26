@@ -73,6 +73,12 @@ const Shop = () => {
             "Egypt",
           ],
         }}
+        alternates={[
+          { lang: "ar", href: "https://tashtiba.vercel.app/ar" }, // Replace with your actual Arabic URL
+          { lang: "en", href: "https://tashtiba.vercel.app/en" }, // Replace with your actual English URL
+          // You can also add an x-default if you have a default language page, for example:
+          // { lang: "x-default", href: "https://tashtiba.vercel.app/en" },
+        ]}
       />
 
       {isError ? (

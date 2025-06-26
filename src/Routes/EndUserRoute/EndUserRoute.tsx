@@ -25,9 +25,10 @@ import ProductsFavorite from "../../pages/UserPages/ProductsFavorite/ProductsFav
 import UserForgotPassword from "../../pages/UserPages/AuthPages/UserForgotPassword";
 
 export const EndUserRoutes = (
+  
   <>
     <Route element={<EndUserWrapper />}>
-      <Route path="/" element={<Navigate to="/er" replace />} />
+      <Route path="/" element={<Navigate to="/en" replace />} />
 
       <Route path="/:lang" element={<EndUserLayout />}>
         <Route index element={<Home />} />

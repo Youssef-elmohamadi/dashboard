@@ -41,7 +41,7 @@ const BottomNav = () => {
           {/* Categories */}
           <div className="w-1/5 flex flex-col items-center justify-center text-gray-700">
             <Link
-              to={`/${lang}/categories`}
+              to={`/${lang}/category`}
               className="flex flex-col items-center justify-center"
             >
               <BiCategory size={24} />

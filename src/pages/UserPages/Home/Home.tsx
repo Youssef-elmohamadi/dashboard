@@ -40,47 +40,55 @@ const Home = () => {
 
   return (
     <section>
-      <SEO
-        title={{
-          ar: "تاشتيبا - تسوق إلكتروني للأزياء والإلكترونيات والمزيد",
-          en: "Tashtiba - Online Shopping for Fashion, Electronics & More",
-        }}
-        description={{
-          ar: "اكتشف منتجات مذهلة على تاشتيبا - تسوق إلكترونيات، أزياء، أثاث ومنتجات منزلية بسهولة وأمان من أفضل البائعين في مصر.",
-          en: "Shop amazing products at Tashtiba — your online destination for electronics, fashion, furniture, and home goods. Safe and easy shopping across Egypt.",
-        }}
-        keywords={{
-          ar: [
-            "تاشتيبا",
-            "الكترونيات",
-            "ملابس",
-            "أزياء",
-            "أثاث",
-            "مطبخ",
-            "عناية شخصية",
-            "موبايلات",
-            "أحذية",
-            "شنط",
-            "سوق مصر",
-            "توصيل سريع",
-            // ...(dynamicKeywords || [])
-          ],
-          en: [
-            "tashtiba",
-            "electronics",
-            "fashion",
-            "furniture",
-            "home appliances",
-            "mobiles",
-            "kitchen",
-            "bags",
-            "shoes",
-            "online shopping Egypt",
-            "fast delivery",
-            // ...(dynamicKeywords || [])
-          ],
-        }}
-      />
+<SEO
+  title={{
+    ar: "تاشتيبا - تسوق إلكتروني للأزياء والإلكترونيات والمزيد",
+    en: "Tashtiba - Online Shopping for Fashion, Electronics & More",
+  }}
+  description={{
+    ar: "اكتشف منتجات مذهلة على تاشتيبا - تسوق إلكترونيات، أزياء، أثاث ومنتجات منزلية بسهولة وأمان من أفضل البائعين في مصر.",
+    en: "Shop amazing products at Tashtiba — your online destination for electronics, fashion, furniture, and home goods. Safe and easy shopping across Egypt.",
+  }}
+  keywords={{
+    ar: [
+      "تاشتيبا",
+      "الكترونيات",
+      "ملابس",
+      "أزياء",
+      "أثاث",
+      "مطبخ",
+      "عناية شخصية",
+      "موبايلات",
+      "أحذية",
+      "شنط",
+      "سوق مصر",
+      "توصيل سريع",
+      // ...(dynamicKeywords || [])
+    ],
+    en: [
+      "tashtiba",
+      "electronics",
+      "fashion",
+      "furniture",
+      "home appliances",
+      "mobiles",
+      "kitchen",
+      "bags",
+      "shoes",
+      "online shopping Egypt",
+      "fast delivery",
+      // ...(dynamicKeywords || [])
+    ],
+  }}
+  // --- ADD THIS SECTION FOR HREFLANG ---
+  alternates={[
+    { lang: "ar", href: "https://tashtiba.vercel.app/ar" }, // Replace with your actual Arabic URL
+    { lang: "en", href: "https://tashtiba.vercel.app/en" }, // Replace with your actual English URL
+    // You can also add an x-default if you have a default language page, for example:
+    // { lang: "x-default", href: "https://tashtiba.vercel.app/en" }, 
+  ]}
+  // --- END OF HREFLANG SECTION ---
+/>
 
       <LandingSection />
 

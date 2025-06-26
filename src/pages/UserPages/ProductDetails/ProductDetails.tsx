@@ -14,9 +14,8 @@ import {
   useRemoveFavorite,
 } from "../../../hooks/Api/EndUser/useProducts/useFavoriteProducts";
 import { Helmet } from "react-helmet-async";
-import { useDirectionAndLanguage } from "../../../context/DirectionContext";
-import i18n from "../../../i18n";
 import { Product } from "../../../types/Product";
+import SEO from "../../../components/common/seo";
 
 const ProductDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -64,10 +63,6 @@ const ProductDetails: React.FC = () => {
     }
   };
 
-  const { lang } = useParams();
-  //const { setLang, setDir } = useDirectionAndLanguage();
-  const navigate = useNavigate();
-
   // useEffect(() => {
   //   if (!lang || (lang !== "ar" && lang !== "en")) {
   //     navigate("/en", { replace: true });
@@ -97,17 +92,55 @@ const ProductDetails: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-10">
-      <Helmet>
-        <title>{t("mainTitle", { product_name: product.name })}</title>
-        <meta
-          name="description"
-          content={t("productDescription", {
-            product_name: product.name,
-            defaultValue:
-              "تسوق من مجموعة متنوعة من المنتجات داخل هذه الفئة بأسعار تنافسية وجودة عالية.",
-          })}
-        />
-      </Helmet>
+      <SEO
+        title={{
+          ar: `تاشتيبا - ${product.name}`,
+          en: `Tashtiba - ${product.name}`,
+        }}
+        description={{
+          ar: `اكتشف منتجات مذهلة على تاشتيبا - تسوق إلكترونيات، أزياء، أثاث ومنتجات منزلية بسهولة وأمان من أفضل البائعين في مصر.`,
+          en: `Shop amazing products at Tashtiba — your online destination for electronics, fashion, furniture, and home goods. Safe and easy shopping across Egypt.`,
+        }}
+        keywords={{
+          ar: [
+            "تاشتيبا",
+            "الكترونيات",
+            "ملابس",
+            "أزياء",
+            "أثاث",
+            "مطبخ",
+            "عناية شخصية",
+            "موبايلات",
+            "أحذية",
+            "شنط",
+            "سوق مصر",
+            "توصيل سريع",
+            // ...(dynamicKeywords || [])
+          ],
+          en: [
+            "tashtiba",
+            "electronics",
+            "fashion",
+            "furniture",
+            "home appliances",
+            "mobiles",
+            "kitchen",
+            "bags",
+            "shoes",
+            "online shopping Egypt",
+            "fast delivery",
+            // ...(dynamicKeywords || [])
+          ],
+        }}
+        // --- ADD THIS SECTION FOR HREFLANG ---
+        alternates={[
+          { lang: "ar", href: "https://tashtiba.vercel.app/ar" }, // Replace with your actual Arabic URL
+          { lang: "en", href: "https://tashtiba.vercel.app/en" }, // Replace with your actual English URL
+          // You can also add an x-default if you have a default language page, for example:
+          // { lang: "x-default", href: "https://tashtiba.vercel.app/en" },
+        ]}
+        // --- END OF HREFLANG SECTION ---
+      />
       <div className="grid lg:grid-cols-2 gap-10">
         {/* Left: Product Image + Thumbnails */}
         <div>

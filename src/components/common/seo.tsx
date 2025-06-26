@@ -7,9 +7,11 @@ type SEOProps = {
   keywords?: { ar: string | string[]; en: string | string[] };
   image?: string;
   url?: string;
+  // New prop for hreflang URLs
+  alternates?: { lang: string; href: string }[];
 };
 
-const SEO = ({ title, description, keywords, image, url }: SEOProps) => {
+const SEO = ({ title, description, keywords, image, url, alternates }: SEOProps) => {
   const currentLang = i18n.language;
   const isArabic = currentLang === "ar";
 
@@ -23,7 +25,7 @@ const SEO = ({ title, description, keywords, image, url }: SEOProps) => {
       : selectedKeywords
     : undefined;
 
-  const pageUrl = url || "https://tashtiba.com";
+  const pageUrl = url || "https://tashtiba.vercel.app/en/";
   const pageImage = image || "/favicon.png";
 
   return (
@@ -45,6 +47,15 @@ const SEO = ({ title, description, keywords, image, url }: SEOProps) => {
       <meta name="twitter:title" content={pageTitle} />
       <meta name="twitter:description" content={pageDescription} />
       <meta name="twitter:image" content={pageImage} />
+
+      {/* Hreflang tags */}
+      {alternates?.map((alt) => (
+        <link key={alt.lang} rel="alternate" hrefLang={alt.lang} href={alt.href} />
+      ))}
+      {/* Add a self-referencing hreflang for the current page */}
+      <link rel="alternate" hrefLang={currentLang} href={pageUrl} />
+      {/* Optionally, add an x-default hreflang if you have a default language page */}
+      <link rel="alternate" hrefLang="x-default" href="https://tashtiba.vercel.app/en/" />
     </Helmet>
   );
 };
