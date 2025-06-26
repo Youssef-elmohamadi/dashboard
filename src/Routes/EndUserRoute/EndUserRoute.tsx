@@ -23,12 +23,19 @@ import UserNotifications from "../../pages/UserPages/UserNotifications/UserNotif
 import ProductsCompare from "../../pages/UserPages/ProductsCompare/ProductsCompare";
 import ProductsFavorite from "../../pages/UserPages/ProductsFavorite/ProductsFavorite";
 import UserForgotPassword from "../../pages/UserPages/AuthPages/UserForgotPassword";
+const getBrowserLanguage = () => {
+  const browserLang = navigator.language.split("-")[0]; // تأخذ الجزء الأول (مثل 'en' من 'en-US')
+  const supportedLangs = ["en", "ar"]; // اللغات التي يدعمها تطبيقك
 
+  if (supportedLangs.includes(browserLang)) {
+    return browserLang;
+  }
+  return "en"; // اللغة الافتراضية إذا لم تكن لغة المتصفح مدعومة
+};
 export const EndUserRoutes = (
-  
   <>
     <Route element={<EndUserWrapper />}>
-      <Route path="/" element={<Navigate to="/en" replace />} />
+      <Route path="/" element={<Navigate to={`/${getBrowserLanguage()}`} replace />} />
 
       <Route path="/:lang" element={<EndUserLayout />}>
         <Route index element={<Home />} />
