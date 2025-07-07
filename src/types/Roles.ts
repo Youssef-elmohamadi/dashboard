@@ -22,7 +22,7 @@ export type ServerErrors = {
 export type Role = {
   id: number;
   name: string;
-  permissions: string[];
+  permissions: Permission[];
   created_at: string;
 };
 

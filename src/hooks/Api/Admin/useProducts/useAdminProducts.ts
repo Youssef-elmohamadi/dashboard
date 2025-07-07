@@ -6,11 +6,15 @@ import {
   deleteProduct,
   showProduct,
 } from "../../../../api/AdminApi/products/_requests";
-import { ProductFilters } from "../../../../types/Product";
+import {
+  Product,
+  ProductFilters,
+  ProductsPaginate,
+} from "../../../../types/Product";
 import { ID } from "../../../../types/Common";
 
 export const useAllProducts = (page: number, filters?: ProductFilters) => {
-  return useQuery({
+  return useQuery<ProductsPaginate>({
     queryKey: ["adminProducts", page, filters],
     queryFn: async () => {
       const response = await getProductsPaginate({
@@ -59,9 +63,12 @@ export const useCreateProduct = () => {
 };
 
 export const useGetProductById = (id?: number | string) => {
-  return useQuery({
+  return useQuery<Product>({
     queryKey: ["product", id],
-    queryFn: () => showProduct(id!),
+    queryFn: async () => {
+      const response = await showProduct(id!);
+      return response.data.data;
+    },
     staleTime: 1000 * 60 * 5,
     enabled: !!id,
   });

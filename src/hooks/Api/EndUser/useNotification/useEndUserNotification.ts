@@ -30,7 +30,7 @@ export const useDeleteNotification = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async (id: string) => {
       return await deleteNotification(id);
     },
     onSuccess: () => {
@@ -46,7 +46,7 @@ export const useMarkAsRead = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async (id: number | string) => {
       return await markAsRead(id);
     },
     onSuccess: () => {

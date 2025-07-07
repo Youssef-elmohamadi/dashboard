@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { register } from "../../../api/AdminApi/authApi/_requests";
 import { validateAdminForm, validateVendorForm } from "./ValidateForm";
 import convertToFormData from "./convertToFormData";
-import OTPPage from "../../common/OtpPage";
+import OTPPage from "../../common/Auth/OtpPage";
 import { sendOtp, verifyOtp } from "../../../api/OtpApi/_requests";
 import { toast } from "react-toastify";
 import { ClientErrors, FormDataType, ServerErrors } from "../../../types/Auth";

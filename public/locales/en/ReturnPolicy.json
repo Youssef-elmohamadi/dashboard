@@ -1,0 +1,27 @@
+{
+  "return": {
+    "title": "Flexibility and Trust Every Step",
+    "subtitle": "A clear return and exchange policy designed for your convenience.",
+    "sections": {
+      "conditions": {
+        "title": "Return Conditions",
+        "point1": "You can return the product within 7 days from the date of receipt.",
+        "point2": "The product must be in its original condition, unused, and in its original packaging."
+      },
+      "exceptions": {
+        "title": "Exceptions",
+        "point1": "Customized or specifically sized products cannot be returned.",
+        "point2": "Products damaged due to customer misuse cannot be returned."
+      },
+      "process": {
+        "title": "Return Process",
+        "point1": "Contact our customer service team to submit a return request.",
+        "point2": "The amount will be refunded using the same payment method within 5 to 10 business days after product inspection."
+      },
+      "exchange": {
+        "title": "Exchange Policy",
+        "description": "Immediate exchange is allowed in case of a clear manufacturing defect or if a wrong product was sent by mistake. In such cases, Tashtiba gladly bears all shipping costs."
+      }
+    }
+  }
+}

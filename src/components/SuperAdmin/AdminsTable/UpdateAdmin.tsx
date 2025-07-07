@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
-import Select from "../../form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
@@ -12,19 +12,22 @@ import {
   useUpdateAdmin,
 } from "../../../hooks/Api/SuperAdmin/useSuperAdminAdmis/useSuperAdminAdmins";
 import { useRoles } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
-import PageMeta from "../../common/PageMeta";
-type Role = {
-  name: string;
-  value: string;
-};
+import PageMeta from "../../common/SEO/PageMeta";
+import {
+  ClientErrors,
+  ServerErrors,
+  UpdateAdminInput,
+} from "../../../types/Admins";
+import { AxiosError } from "axios";
+import { Role } from "../../../types/Roles";
 const UpdateAdmin = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [fetchingRoleError, setFetchingRoleError] = useState("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [fetchingRoleError, setFetchingRoleError] = useState<string>("");
 
-  const [updateData, setUpdateData] = useState({
+  const [updateData, setUpdateData] = useState<UpdateAdminInput>({
     first_name: "",
     last_name: "",
     phone: "",
@@ -32,19 +35,19 @@ const UpdateAdmin = () => {
     password: "",
     role: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({
-    first_name: [] as string[],
-    last_name: [] as string[],
-    phone: [] as string[],
-    email: [] as string[],
-    password: [] as string[],
-    role: [] as string[],
+  const [loading, setLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<ServerErrors>({
+    first_name: [],
+    last_name: [],
+    phone: [],
+    email: [],
+    password: [],
+    role: [],
     global: "",
     general: "",
   });
 
-  const [clientSideErrors, setClientSideErrors] = useState({
+  const [clientSideErrors, setClientSideErrors] = useState<ClientErrors>({
     first_name: "",
     last_name: "",
     phone: "",
@@ -95,7 +98,7 @@ const UpdateAdmin = () => {
     isLoading,
   } = useGetAdminById(id);
 
-  const admin = data?.data?.data;
+  const admin = data;
   useEffect(() => {
     if (!admin) return;
     setUpdateData({
@@ -109,7 +112,7 @@ const UpdateAdmin = () => {
   }, [admin]);
 
   useEffect(() => {
-    if (isErrorFetchAdmin) {
+    if (isErrorFetchAdmin && errorFetchAdmin instanceof AxiosError) {
       const status = errorFetchAdmin?.response?.status;
       if (status === 401 || status === 403) {
         setErrors((prev) => ({
@@ -129,7 +132,7 @@ const UpdateAdmin = () => {
   const { data: roles, isError: isRoleError, error: roleError } = useRoles();
   const options = roles?.data.data;
   useEffect(() => {
-    if (isRoleError) {
+    if (isRoleError && roleError instanceof AxiosError) {
       const status = roleError?.response?.status;
       if (status === 401 || status === 403) {
         setFetchingRoleError(t("admin.errors.global"));
@@ -220,6 +223,27 @@ const UpdateAdmin = () => {
         <p className="text-center mt-5">{t("admin.loading") || "Loading..."}</p>
       </>
     );
+
+  if (!data && !errors.general) {
+    return (
+      <>
+        <PageMeta title={t("admin.main_title")} description="Update Admin" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("not_found")}
+        </div>
+      </>
+    );
+  }
+  if (errors.general) {
+    return (
+      <>
+        <PageMeta title={t("admin.main_title")} description="Update Admin" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {errors.general || t("admin.errors.general")}
+        </div>
+      </>
+    );
+  }
 
   return (
     <div>

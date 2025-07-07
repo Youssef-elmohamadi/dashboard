@@ -1,5 +1,5 @@
-import PageMeta from "../../../components/common/PageMeta";
-import AuthLayout from "../../../components/common/AuthPageLayout";
+import PageMeta from "../../../components/common/SEO/PageMeta";
+import AuthLayout from "../../../components/common/Auth/AuthPageLayout";
 import SignUpForm from "../../../components/admin/auth/SignUpForm";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";

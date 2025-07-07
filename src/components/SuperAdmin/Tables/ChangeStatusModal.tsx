@@ -3,7 +3,7 @@ import "./alert.css";
 
 type Props = {
   id: number;
-  getStatus: (id: number) => string;
+  getStatus: (id: number) => string | undefined;
   changeStatus: (id: number, payload: { status: string }) => Promise<any>;
   options: { [key: string]: string };
   Texts: {
@@ -29,7 +29,7 @@ export const openChangeStatusModal = async ({
     const currentStatusRaw = await getStatus(id);
 
     const matchedKey = Object.keys(options).find(
-      (key) => key.toLowerCase() === currentStatusRaw.toLowerCase()
+      (key) => key.toLowerCase() === currentStatusRaw?.toLowerCase()
     );
 
     const { value: newStatus } = await Swal.fire({
@@ -47,7 +47,7 @@ export const openChangeStatusModal = async ({
 
     if (
       newStatus &&
-      newStatus.toLowerCase() !== currentStatusRaw.toLowerCase()
+      newStatus.toLowerCase() !== currentStatusRaw?.toLowerCase()
     ) {
       try {
         await changeStatus(id, {

@@ -1,6 +1,6 @@
-import PageMeta from "../../../components/common/PageMeta";
-import AuthLayout from "../../../components/common/AuthPageLayout";
-import SignInForm from "../../../components/common/SignInForm";
+import PageMeta from "../../../components/common/SEO/PageMeta";
+import AuthLayout from "../../../components/common/Auth/AuthPageLayout";
+import SignInForm from "../../../components/common/Auth/SignInForm";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 export default function SuperAdminSignIn() {

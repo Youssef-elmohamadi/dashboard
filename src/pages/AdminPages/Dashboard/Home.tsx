@@ -1,19 +1,25 @@
-import EcommerceMetrics from "../../../components/ecommerce/EcommerceMetrics";
-import MonthlySalesChart from "../../../components/ecommerce/MonthlySalesChart";
-import StatisticsChart from "../../../components/ecommerce/StatisticsChart";
-import RecentOrders from "../../../components/ecommerce/RecentOrders";
-import DemographicCard from "../../../components/ecommerce/DemographicCard";
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import { useEffect, useState } from "react";
 import { GroupIcon } from "../../../icons";
 import { BoxIconLine } from "../../../icons";
 import { useTranslation } from "react-i18next";
 import { useAdminHome } from "../../../hooks/Api/Admin/useHome/useAdminHome";
 import { useSuperAdminHome } from "../../../hooks/Api/SuperAdmin/useHome/useSuperAdminHome";
-import DashboardSkeleton from "../../../components/admin/home/HomeSkeleton";
+import DashboardSkeleton from "../../../components/common/Home/HomeSkeleton";
 import { AxiosError } from "axios";
 import { Order } from "../../../types/Orders";
-import { CountType, HomeData, HomeProps, Metric, MonthlySales, NumbersData } from "../../../types/DashboardHome";
+import {
+  HomeData,
+  HomeProps,
+  Metric,
+  MonthlySales,
+  NumbersData,
+} from "../../../types/DashboardHome";
+import EcommerceMetrics from "../../../components/common/Home/EcommerceMetrics";
+import StatisticsChart from "../../../components/common/Home/StatisticsChart";
+import RecentOrders from "../../../components/common/Home/RecentOrders";
+import DemographicCard from "../../../components/common/Home/DemographicCard";
+import MonthlySalesChart from "../../../components/common/Home/MonthlySalesChart";
 export default function Home({ userType }: HomeProps) {
   const { t } = useTranslation(["Home"]);
   const [unauthorized, setUnauthorized] = useState(false);
@@ -142,37 +148,37 @@ export default function Home({ userType }: HomeProps) {
       <PageMeta title={t("mainTitle")} description="Show Your Statistics" />
 
       {!loading && globalError && (
-      <div className="p-4 text-center text-red-500 font-semibold">
-        {t("unExpectedError")}
-      </div>
+        <div className="p-4 text-center text-red-500 font-semibold">
+          {t("unExpectedError")}
+        </div>
       )}
 
       {!loading && unauthorized && (
-      <div className="p-4 text-center text-red-500 font-semibold">
-        {t("unauthorized")}
-      </div>
+        <div className="p-4 text-center text-red-500 font-semibold">
+          {t("unauthorized")}
+        </div>
       )}
 
       <div className="grid grid-cols-12 gap-4 md:gap-6">
-      <div className="col-span-12 space-y-6 xl:col-span-7">
-        <EcommerceMetrics
-        parentClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6"
-        metrics={metrics}
-        />
-        <MonthlySalesChart ordersData={monthlySalesData} />
-      </div>
+        <div className="col-span-12 space-y-6 xl:col-span-7">
+          <EcommerceMetrics
+            parentClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6"
+            metrics={metrics}
+          />
+          <MonthlySalesChart ordersData={monthlySalesData} />
+        </div>
 
-      <div className="col-span-12 xl:col-span-5">
-        <DemographicCard />
-      </div>
+        <div className="col-span-12 xl:col-span-5">
+          <DemographicCard />
+        </div>
 
-      <div className="col-span-12">
-        <StatisticsChart ordersData={monthlySalesData} />
-      </div>
+        <div className="col-span-12">
+          <StatisticsChart ordersData={monthlySalesData} />
+        </div>
 
-      <div className="col-span-12">
-        <RecentOrders orders={recentOrders} userType={userType} />
-      </div>
+        <div className="col-span-12">
+          <RecentOrders orders={recentOrders} userType={userType} />
+        </div>
       </div>
     </>
   );

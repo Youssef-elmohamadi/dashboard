@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import EcommerceMetrics from "../../../components/ecommerce/EcommerceMetrics";
-import { GroupIcon } from "../../../icons";
-import { BoxIconLine } from "../../../icons";
+import EcommerceMetrics from "../../../components/common/Home/EcommerceMetrics";
+import { GroupIcon, BoxIconLine } from "../../../icons";
 import FilterRangeDate from "../../../components/admin/reports/FilterRangeDate";
 import { useTranslation } from "react-i18next";
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import { useOrderData } from "../../../hooks/Api/Admin/useOrdersReports/useOrdersReport";
+
 type numbersData = {
   orderCount: number;
   deliveredOrdersCount: number;
@@ -13,6 +13,7 @@ type numbersData = {
   totalItemsSold: number;
   averageOrderValue: number;
 };
+
 const OrdersReport = () => {
   const [numbersData, setNumbersData] = useState<numbersData>({
     orderCount: 0,
@@ -22,15 +23,19 @@ const OrdersReport = () => {
     averageOrderValue: 0,
   });
 
-  const [searchValues, setSearchValues] = useState<{
-    start_date: string;
-    end_date: string;
-  }>({
+  const [searchValues, setSearchValues] = useState({
     start_date: "",
     end_date: "",
   });
+
+  const [generalError, setGeneralError] = useState("");
+  const [unauthorized, setUnauthorized] = useState("");
+
   const { data, isLoading, isError, error } = useOrderData(searchValues);
   const ordersReportsData = data;
+
+  const { t } = useTranslation(["OrdersReports"]);
+
   useEffect(() => {
     if (ordersReportsData) {
       setNumbersData({
@@ -43,7 +48,16 @@ const OrdersReport = () => {
     }
   }, [ordersReportsData]);
 
-  const { t } = useTranslation(["OrdersReports"]);
+  useEffect(() => {
+    if (isError && error) {
+      const err = error as any;
+      if (err?.response?.status === 401) {
+        setUnauthorized(t("unauthorized"));
+      } else {
+        setGeneralError(t("somethingWentWrong"));
+      }
+    }
+  }, [isError, error, t]);
 
   const handleFilter = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
@@ -51,9 +65,43 @@ const OrdersReport = () => {
       [key]: value,
     }));
   };
+
   if (isLoading) {
-    return <p className="text-center mt-5">{t("loading")}</p>;
+    return (
+      <>
+        <PageMeta
+          title={t("mainTitle")}
+          description="Show Your Orders Reports"
+        />
+        <p className="text-center mt-5">{t("loading")}</p>
+      </>
+    );
   }
+
+  if (unauthorized) {
+    return (
+      <>
+        <PageMeta
+          title={t("mainTitle")}
+          description="Show Your Orders Reports"
+        />
+        <p className="text-center text-red-500 mt-5">{unauthorized}</p>
+      </>
+    );
+  }
+
+  if (generalError) {
+    return (
+      <>
+        <PageMeta
+          title={t("mainTitle")}
+          description="Show Your Orders Reports"
+        />
+        <p className="text-center text-red-500 mt-5">{generalError}</p>
+      </>
+    );
+  }
+
   return (
     <>
       <PageMeta title={t("mainTitle")} description="Show Your Orders Reports" />

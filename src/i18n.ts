@@ -89,6 +89,10 @@ i18n
       "EndUserBottomNav",
       "EndUserHeader",
       "EndUserProductCard",
+      "Terms",
+      "SupportPolicy",
+      "ReturnPolicy",
+      "PrivacyPolicy",
     ],
 
     defaultNS: "Signup",

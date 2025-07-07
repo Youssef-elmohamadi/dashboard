@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Input from "../../form/input/InputField";
+import Input from "../../common/input/InputField";
 
 type Props = {
   file: File | null;

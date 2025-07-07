@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
-import Checkbox from "../../form/input/Checkbox";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Checkbox from "../../common/input/Checkbox";
 import Loading from "../../common/Loading";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -9,26 +9,30 @@ import {
   useCreateRole,
   useGetAllPermissions,
 } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
-import PageMeta from "../../common/PageMeta";
-type Permission = {
-  id: number;
-  name: string;
-};
+import PageMeta from "../../common/SEO/PageMeta";
+import { AxiosError } from "axios";
+import {
+  CreateRoleInput,
+  Permission,
+  ServerErrors,
+} from "../../../types/Roles";
 export default function CreateRole() {
-  const [roleData, setRoleData] = useState({
+  const [roleData, setRoleData] = useState<CreateRoleInput>({
     name: "",
-    permissions: [] as number[],
+    permissions: [],
   });
   const [clientSideErrors, setClientSideErrors] = useState<{
     [key: string]: string;
   }>({});
-  const [errors, setErrors] = useState({
-    name: [] as string[],
-    permissions: [] as string[],
-    global: "" as string,
-    general: "" as string,
+  const [errors, setErrors] = useState<ServerErrors>({
+    name: [],
+    permissions: [],
+    global: "",
+    general: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fetchingPermissionsError, setFetchingPermissionsError] =
+    useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const navigate = useNavigate();
   const { t } = useTranslation(["CreateRole"]);
   const {
@@ -38,10 +42,9 @@ export default function CreateRole() {
     isError: isPermissionError,
   } = useGetAllPermissions();
 
-  const permissions = data?.data.data;
-
+  const permissions: Permission[] = data || [];
   useEffect(() => {
-    if (isPermissionError) {
+    if (isPermissionError && permissionError instanceof AxiosError) {
       const status = permissionError?.response?.status;
       if (status === 401 || status === 403) {
         setErrors((prev) => ({
@@ -49,10 +52,7 @@ export default function CreateRole() {
           global: t("role.errors.global"),
         }));
       } else {
-        setErrors((prev) => ({
-          ...prev,
-          general: t("role.errors.general"),
-        }));
+        setFetchingPermissionsError(t("role.errors.fetching_permissions"));
       }
     }
   }, [isPermissionError, permissionError, t]);
@@ -143,6 +143,16 @@ export default function CreateRole() {
         </h3>
       </div>
       <form onSubmit={handleSubmit} className="p-4 md:p-5">
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errors.global}
+          </p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errors.general}
+          </p>
+        )}
         <div className="grid gap-4 mb-4 grid-cols-2">
           <div className="col-span-2 sm:col-span-1">
             <Label htmlFor="name">{t("role.name")}</Label>
@@ -193,15 +203,14 @@ export default function CreateRole() {
                   {errors.permissions[0]}
                 </p>
               )}
+              {fetchingPermissionsError && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fetchingPermissionsError}
+                </p>
+              )}
             </div>
           )}
         </div>
-        {errors.global && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
-        )}
         <button
           type="submit"
           disabled={isSubmitting}

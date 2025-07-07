@@ -1,4 +1,4 @@
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import VendorEditPage from "./VendorInfoCard";
 import { useTranslation } from "react-i18next";
@@ -12,7 +12,6 @@ const VendorSettings = () => {
       />
       <PageBreadcrumb pageTitle={t("vendor.vendorProfile")} userType="admin" />
       <div className="space-y-6">
-        {/* <UserMetaCard /> */}
         <VendorEditPage />
       </div>
     </>

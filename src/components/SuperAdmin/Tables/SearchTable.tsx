@@ -1,8 +1,8 @@
 import { FaFilter } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
-import Select from "../../form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 
 type Option = { label: string; value: string | number };
 type Field = {

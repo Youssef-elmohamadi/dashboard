@@ -1,5 +1,6 @@
 {
-  "title": "Profile",
+  "title": "Profile Management",
+  "subtitle": "Manage your profile and contact details.",
   "form": {
     "avatar": "Change Avatar",
     "first_name": "First Name",

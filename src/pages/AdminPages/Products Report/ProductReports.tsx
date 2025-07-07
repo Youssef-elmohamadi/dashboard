@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import EcommerceMetrics from "../../../components/ecommerce/EcommerceMetrics";
-import { GroupIcon } from "../../../icons";
-import { BoxIconLine } from "../../../icons";
+import EcommerceMetrics from "../../../components/common/Home/EcommerceMetrics";
+import { GroupIcon, BoxIconLine } from "../../../icons";
 import FilterRangeDate from "../../../components/admin/reports/FilterRangeDate";
 import TopSelligProducts from "../../../components/admin/productReports/TopSellingProducts";
 import { useTranslation } from "react-i18next";
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import { useProductData } from "../../../hooks/Api/Admin/useProductsReports/useProductReport";
+
 const ProductReports = () => {
   const [totalProductSell, setTotalProductSell] = useState([]);
   const [numbersData, setNumbersData] = useState({
@@ -16,16 +16,19 @@ const ProductReports = () => {
     outOfStockProduct: 0,
     lowStockProduct: 0,
   });
-  const [searchValues, setSearchValues] = useState<{
-    start_date: string;
-    end_date: string;
-  }>({
+
+  const [searchValues, setSearchValues] = useState({
     start_date: "",
     end_date: "",
   });
-  const { data, isLoading, isError, error } = useProductData(searchValues);
 
+  const [generalError, setGeneralError] = useState("");
+  const [unauthorized, setUnauthorized] = useState("");
+
+  const { data, isLoading, isError, error } = useProductData(searchValues);
   const productsReportsData = data;
+
+  const { t } = useTranslation(["ProductsReports"]);
 
   useEffect(() => {
     if (productsReportsData) {
@@ -40,6 +43,17 @@ const ProductReports = () => {
     }
   }, [productsReportsData]);
 
+  useEffect(() => {
+    if (isError && error) {
+      const err = error as any;
+      if (err?.response?.status === 401) {
+        setUnauthorized(t("unauthorized"));
+      } else {
+        setGeneralError(t("somethingWentWrong"));
+      }
+    }
+  }, [isError, error, t]);
+
   const handleFilter = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -47,10 +61,33 @@ const ProductReports = () => {
     }));
   };
 
-  const { t } = useTranslation(["ProductsReports"]);
   if (isLoading) {
-    return <p className="text-center mt-5">{t("loading")}</p>;
+    return (
+      <>
+        <PageMeta title={t("mainTitle")} description="Show Products Report" />
+        <p className="text-center mt-5">{t("loading")}</p>
+      </>
+    );
   }
+
+  if (unauthorized) {
+    return (
+      <>
+        <PageMeta title={t("mainTitle")} description="Show Products Report" />
+        <p className="text-center text-red-500 mt-5">{unauthorized}</p>
+      </>
+    );
+  }
+
+  if (generalError) {
+    return (
+      <>
+        <PageMeta title={t("mainTitle")} description="Show Products Report" />
+        <p className="text-center text-red-500 mt-5">{generalError}</p>
+      </>
+    );
+  }
+
   return (
     <>
       <PageMeta title={t("mainTitle")} description="Show Products Report" />

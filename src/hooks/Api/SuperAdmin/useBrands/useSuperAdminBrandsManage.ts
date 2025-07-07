@@ -5,16 +5,23 @@ import {
   getBrandById,
   getBrandsWithPaginate,
 } from "../../../../api/SuperAdminApi/Brands/_requests";
-import { AxiosError } from "axios";
+import {
+  AllBrandsData,
+  Brand,
+  PaginatedBrandsData,
+} from "../../../../types/Brands";
 export const useAllBrands = () => {
-  return useQuery({
+  return useQuery<AllBrandsData>({
     queryKey: ["brands", "all"],
-    queryFn: getAllBrands,
+    queryFn: async () => {
+      const response = await getAllBrands();
+      return response.data;
+    },
     staleTime: 1000 * 60 * 20,
   });
 };
 export const useGetBrandsPaginate = (page: number, filters?: any) => {
-  return useQuery({
+  return useQuery<PaginatedBrandsData>({
     queryKey: ["brands", page, filters],
     queryFn: async () => {
       const response = await getBrandsWithPaginate({
@@ -24,16 +31,16 @@ export const useGetBrandsPaginate = (page: number, filters?: any) => {
       return response.data.data;
     },
     staleTime: 1000 * 60 * 5,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطاء في جلب الصلاحيات:", error);
-    },
   });
 };
 
-export const useGetBrandById = (id: number) => {
-  return useQuery({
+export const useGetBrandById = (id: string | undefined) => {
+  return useQuery<Brand>({
     queryKey: ["brand", id],
-    queryFn: () => getBrandById(id),
+    queryFn: async () => {
+      const response = await getBrandById(id!);
+      return response.data.data;
+    },
     staleTime: 1000 * 60 * 5,
     enabled: !!id,
   });

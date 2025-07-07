@@ -1,8 +1,8 @@
 import { useModal } from "../../../hooks/useModal";
 import { Modal } from "../../ui/modal";
 import Button from "../../ui/button/Button";
-import Input from "../../form/input/InputField";
-import Label from "../../form/Label";
+import Input from "../../common/input/InputField";
+import Label from "../../common/form/Label";
 import { useEffect, useState } from "react";
 import {
   getAdminById,

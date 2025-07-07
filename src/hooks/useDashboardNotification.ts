@@ -12,15 +12,10 @@ import {
   useSuperAdminMarkAsRead,
 } from "./Api/SuperAdmin/useNotification/useSuperAdminNotification";
 
-export function useNotifications(userType: "admin" | "superAdmin") {
+export function useNotifications(userType: "admin" | "super_admin") {
   if (userType === "admin") {
-    const {
-      data,
-      hasNextPage,
-      fetchNextPage,
-      isFetching,
-      isLoading,
-    } = useAdminNotifications();
+    const { data, hasNextPage, fetchNextPage, isFetching, isLoading } =
+      useAdminNotifications();
     const { mutateAsync: deleteNotification } = useAdminDeleteNotification();
     const { mutateAsync: markAllAsRead } = useAdminMarkAllNotificationsAsRead();
     const { mutateAsync: markAsRead } = useAdminMarkAsRead();
@@ -37,15 +32,11 @@ export function useNotifications(userType: "admin" | "superAdmin") {
     };
   }
 
-  const {
-    data,
-    hasNextPage,
-    fetchNextPage,
-    isFetching,
-    isLoading,
-  } = useSuperAdminNotifications();
+  const { data, hasNextPage, fetchNextPage, isFetching, isLoading } =
+    useSuperAdminNotifications();
   const { mutateAsync: deleteNotification } = useSuperAdminDeleteNotification();
-  const { mutateAsync: markAllAsRead } = useSuperAdminMarkAllNotificationsAsRead();
+  const { mutateAsync: markAllAsRead } =
+    useSuperAdminMarkAllNotificationsAsRead();
   const { mutateAsync: markAsRead } = useSuperAdminMarkAsRead();
 
   return {

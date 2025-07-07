@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
-import Checkbox from "../../form/input/Checkbox";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Checkbox from "../../common/input/Checkbox";
 import Loading from "../../common/Loading";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -9,7 +9,7 @@ import {
   useCreateRole,
   useGetAllPermissions,
 } from "../../../hooks/Api/Admin/useRoles/useRoles";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
 import {
   CreateRoleInput,
   Permission,
@@ -22,6 +22,8 @@ export default function CreateRole() {
     name: "",
     permissions: [],
   });
+  const [fetchingPermissionsError, setFetchingPermissionsError] =
+    useState<string>("");
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const [errors, setErrors] = useState<ServerErrors>({
     name: [],
@@ -29,7 +31,7 @@ export default function CreateRole() {
     global: "",
     general: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const { t } = useTranslation(["CreateRole"]);
@@ -53,10 +55,7 @@ export default function CreateRole() {
           global: t("role.errors.global"),
         }));
       } else {
-        setErrors((prev) => ({
-          ...prev,
-          general: t("role.errors.general"),
-        }));
+        setFetchingPermissionsError(t("role.errors.fetching_permissions"));
       }
     }
   }, [isPermissionError, permissionError, t]);
@@ -210,6 +209,11 @@ export default function CreateRole() {
               {errors.permissions && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.permissions[0]}
+                </p>
+              )}
+              {fetchingPermissionsError && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fetchingPermissionsError}
                 </p>
               )}
             </div>

@@ -1,4 +1,3 @@
-import { ID } from "./Common";
 export type role = {
   id: number;
   name: string;

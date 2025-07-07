@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
-import Select from "../../form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 import { useNavigate } from "react-router-dom";
 import ImageUpload from "../../common/ImageUpload";
 import { useCreateBrand } from "../../../hooks/Api/Admin/useBrands/useBrands";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
 import {
   BrandClientSideErrors,
   BrandFormErrors,
@@ -133,7 +133,9 @@ export default function CreateBrand() {
         <p className="text-red-500 text-sm mt-4 text-center">{errors.global}</p>
       )}
       {errors.general && (
-        <p className="text-red-500 text-sm mt-4 text-center">{errors.general}</p>
+        <p className="text-red-500 text-sm mt-4 text-center">
+          {errors.general}
+        </p>
       )}
       <form onSubmit={handleSubmit} className="space-y-6 pt-3">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">

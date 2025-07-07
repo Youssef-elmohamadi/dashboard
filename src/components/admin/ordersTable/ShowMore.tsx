@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useGetOrderById } from "../../../hooks/Api/Admin/useOrders/useOrders";
 import { Order } from "../../../types/Orders";
 import { AxiosError } from "axios";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
 
 const OrderDetails: React.FC = () => {
   const { t } = useTranslation(["OrderDetails"]);

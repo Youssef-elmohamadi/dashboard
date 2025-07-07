@@ -7,7 +7,7 @@ import "./i18n";
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/">
       <HelmetProvider>
         <DirectionAndLanguageProvider>
           <ScrollToTop />

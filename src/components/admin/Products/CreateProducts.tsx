@@ -1,32 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Label from "../../../components/form/Label";
-import Input from "../../../components/form/input/InputField";
-import Checkbox from "../../form/input/Checkbox";
-import FileInput from "../../form/input/FileInput";
-import TextArea from "../../form/input/TextArea";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Checkbox from "../../common/input/Checkbox";
+import FileInput from "../../common/input/FileInput";
+import TextArea from "../../common/input/TextArea";
 import { FiDelete } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
-import Select from "../../form/Select";
+import Select from "../../common/form/Select";
 import { useCreateProduct } from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { useAllBrands } from "../../../hooks/Api/Admin/useBrands/useBrands";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
 import { Category } from "../../../types/Categories";
 import { Brand } from "../../../types/Brands";
-type Attribute = { label: string; value: string };
-
-type ProductFormData = {
-  name: string;
-  description: string;
-  price: string;
-  discount_price: string;
-  stock_quantity: string;
-  category_id: string;
-  brand_id: string;
-  status: string;
-  is_featured: boolean;
-};
+import {
+  Attribute,
+  ClientErrors,
+  productInputData,
+  ServerError,
+} from "../../../types/Product";
+import { AxiosError } from "axios";
 
 export default function CreateProducts() {
   const [loading, setLoading] = useState(false);
@@ -34,23 +28,25 @@ export default function CreateProducts() {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [tags, setTags] = useState<string[]>([]);
-  const [errors, setErrors] = useState({
-    name: [] as string[],
-    price: [] as string[],
-    description: [] as string[],
-    category_id: [] as string[],
-    brand_id: [] as string[],
-    stock_quantity: [] as string[],
-    status: [] as string[],
-    is_featured: [] as string[],
-    general: "" as string,
-    global: "" as string,
+  const [errors, setErrors] = useState<ServerError>({
+    name: [],
+    price: [],
+    description: [],
+    category_id: [],
+    brand_id: [],
+    stock_quantity: [],
+    status: [],
+    is_featured: [],
+    discount_price: [],
+    images: [],
+    attributes: [],
+    tags: [],
+    general: "",
+    global: "",
   });
-  const [clientSideErrors, setClientSideErrors] = useState<
-    Record<string, string>
-  >({});
+  const [clientSideErrors, setClientSideErrors] = useState<ClientErrors>({});
   const { t } = useTranslation(["CreateProduct"]);
-  const [productData, setProductData] = useState<ProductFormData>({
+  const [productData, setProductData] = useState<productInputData>({
     name: "",
     description: "",
     price: "",
@@ -61,11 +57,48 @@ export default function CreateProducts() {
     status: "inactive",
     is_featured: false,
   });
+  const [fetchingCategoriesError, setFetchingCategoriesError] =
+    useState<string>("");
+  const [fetchingBrandsError, setFetchingBrandsError] = useState<string>("");
 
-  const navigate = useNavigate();
-  const { data: allCategories } = useAllCategories();
+  const {
+    data: allCategories,
+    error: categoryError,
+    isError: isCategoryError,
+  } = useAllCategories();
+  useEffect(() => {
+    if (isCategoryError && categoryError instanceof AxiosError) {
+      const status = categoryError?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrors((prev) => ({
+          ...prev,
+          global: t("errors.global"),
+        }));
+      } else {
+        setFetchingCategoriesError(t("errors.fetching_categories"));
+      }
+    }
+  }, [isCategoryError, categoryError, t]);
   const categories = allCategories?.original;
-  const { data: allBrands } = useAllBrands();
+  const {
+    data: allBrands,
+    error: brandError,
+    isError: isBrandError,
+  } = useAllBrands();
+  useEffect(() => {
+    if (isBrandError && brandError instanceof AxiosError) {
+      const status = brandError?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrors((prev) => ({
+          ...prev,
+          global: t("errors.global"),
+        }));
+      } else {
+        setFetchingBrandsError(t("errors.fetching_brands"));
+      }
+    }
+  }, [isBrandError, brandError, t]);
+  const navigate = useNavigate();
   const brands = allBrands?.data;
   const addTag = () => {
     setTags([...tags, ""]);
@@ -108,8 +141,8 @@ export default function CreateProducts() {
     field: keyof Attribute,
     value: string
   ) => {
-    const updated = [...attributes];
-    updated[index][field] = value;
+    const updated = [...attributes] as Attribute[];
+    (updated[index] as any)[field] = value;
     setAttributes(updated);
   };
 
@@ -164,8 +197,8 @@ export default function CreateProducts() {
     formData.append("is_featured", productData.is_featured ? "1" : "0");
     images.forEach((image) => formData.append("images[]", image));
     attributes.forEach((attr, i) => {
-      formData.append(`attributes[${i}][name]`, attr.label);
-      formData.append(`attributes[${i}][value]`, attr.value);
+      formData.append(`attributes[${i}][name]`, attr.attribute_name);
+      formData.append(`attributes[${i}][value]`, attr.attribute_value);
     });
     tags
       .filter((tag) => tag.trim() !== "")
@@ -215,6 +248,12 @@ export default function CreateProducts() {
         </h3>
       </div>
       <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
             <Label htmlFor="name">{t("form.name")}</Label>
@@ -314,6 +353,11 @@ export default function CreateProducts() {
                 {errors.category_id[0]}
               </p>
             )}
+            {fetchingCategoriesError && (
+              <p className="text-red-500 text-sm mt-1">
+                {fetchingCategoriesError}
+              </p>
+            )}
           </div>
           <div>
             <Label htmlFor="brand_id">{t("form.brand")}</Label>
@@ -333,6 +377,9 @@ export default function CreateProducts() {
             )}
             {errors.brand_id && (
               <p className="text-red-500 text-sm mt-1">{errors.brand_id[0]}</p>
+            )}
+            {fetchingBrandsError && (
+              <p className="text-red-500 text-sm mt-1">{fetchingBrandsError}</p>
             )}
           </div>
           {/* <div>
@@ -414,16 +461,20 @@ export default function CreateProducts() {
             <div key={index} className="flex gap-2 mb-2 items-center">
               <Input
                 placeholder={t("placeholders.attribute_label")}
-                value={attr.label}
+                value={attr.attribute_name}
                 onChange={(e) =>
-                  handleAttributeChange(index, "label", e.target.value)
+                  handleAttributeChange(index, "attribute_name", e.target.value)
                 }
               />
               <Input
                 placeholder={t("placeholders.attribute_value")}
-                value={attr.value}
+                value={attr.attribute_value}
                 onChange={(e) =>
-                  handleAttributeChange(index, "value", e.target.value)
+                  handleAttributeChange(
+                    index,
+                    "attribute_value",
+                    e.target.value
+                  )
                 }
               />
               <button
@@ -438,7 +489,10 @@ export default function CreateProducts() {
           <button
             type="button"
             onClick={() =>
-              setAttributes([...attributes, { label: "", value: "" }])
+              setAttributes([
+                ...attributes,
+                { attribute_name: "", attribute_value: "" },
+              ])
             }
             className="text-blue-500 mt-1"
           >
@@ -472,12 +526,6 @@ export default function CreateProducts() {
             {t("form.add_tag")}
           </button>
         </div>
-        {errors.global && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
-        )}
         <button
           type="submit"
           disabled={loading}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
@@ -16,7 +16,7 @@ import {
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { useAllBrands } from "../../../hooks/Api/Admin/useBrands/useBrands";
 import { AxiosError } from "axios";
-import { ID } from "../../../types/Common";
+import { ID, TableAlert } from "../../../types/Common";
 import { SearchValues } from "../../../types/Product";
 import { Brand } from "../../../types/Brands";
 import { Category } from "../../../types/Categories";
@@ -57,11 +57,7 @@ const Products = () => {
   }, [isError, error]);
   const productsData = products?.data ?? [];
   const totalProducts = products?.total ?? 0;
-  const [alertData, setAlertData] = useState<{
-    variant: "success" | "error" | "info" | "warning";
-    title: string;
-    message: string;
-  } | null>(null);
+  const [alertData, setAlertData] = useState<TableAlert | null>(null);
   useEffect(() => {
     if (location.state?.successCreate) {
       setAlertData({
@@ -97,7 +93,7 @@ const Products = () => {
 
   const { data: allBrands } = useAllBrands();
   const brands = allBrands?.data;
-  
+
   const { mutateAsync: deleteProductMutate } = useDeleteProduct();
   const handleDelete = async (id: ID) => {
     await alertDelete(id, deleteProductMutate, refetch, {

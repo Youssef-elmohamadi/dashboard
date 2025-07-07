@@ -10,41 +10,19 @@ import {
   markAllAsRead,
   markAsRead,
 } from "../../../../api/SuperAdminApi/notifcationsApi/_requests";
-import { Axios, AxiosError } from "axios";
+import {
+  PaginationData,
+} from "../../../../types/Notification";
 
-type Notification = {
-  id: string;
-  title_ar: string;
-  title_en: string;
-  message_ar: string;
-  message_en: string;
-  type: string;
-  data_id: number;
-  is_read: number;
-  read_at: string | null;
-  created_at: string;
-  updated_at: string;
-};
-
-type PaginatedResponse<T> = {
-  data: T[];
-  total: number;
-  current_page: number;
-  last_page: number;
-};
 export const useSuperAdminNotifications = () => {
-  return useInfiniteQuery<PaginatedResponse<Notification>, Error>({
-    queryKey: ["adminNotifications"],
+  return useInfiniteQuery<PaginationData>({
+    queryKey: ["superAdminNotifications"],
     queryFn: async ({ pageParam = 1 }) => {
-      const response = await getAllNotifications(pageParam);
-      return response.data.data;
+      const response = await getAllNotifications(Number(pageParam));
+      return response.data;
     },
     initialPageParam: 1,
-    staleTime: 1000 * 60,
-    keepPreviousData: true,
-    onError: (error: AxiosError) => {
-      console.error("Error fetching notifications:", error);
-    },
+    staleTime: 2000 * 60,
     getNextPageParam: (lastPage) => {
       return lastPage.current_page < lastPage.last_page
         ? lastPage.current_page + 1
@@ -57,7 +35,7 @@ export const useSuperAdminDeleteNotification = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async (id: number | string) => {
       return await deleteNotification(id);
     },
     onSuccess: () => {
@@ -72,7 +50,7 @@ export const useSuperAdminMarkAsRead = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async (id: number | string) => {
       return await markAsRead(id);
     },
     onSuccess: () => {

@@ -1,12 +1,13 @@
 import axiosJson from "../../superAdminAxiosInstanceJson";
 import axiosForm from "../../superAdminAxiosInstanceFormData";
+import { BannerInput } from "../../../types/Banners";
 
 export const getBannersPaginate = async (params: {
-  pageIndex: number | undefined;
-  pageSize?: number | undefined;
+  page: number | undefined;
+  name?: string;
   status?: string;
-  category_id?: number;
-  brand_id?: number;
+  category_id?: number | string;
+  brand_id?: number | string;
 }) => {
   return await axiosJson.get("/api/superAdmin/banners/paginate", {
     params,
@@ -21,10 +22,10 @@ export const deleteBanner = async (id: number | string) => {
   return await axiosJson.delete(`/api/superAdmin/banners/${id}`);
 };
 
-export const createBanner = async (categoryData: any) => {
-  return await axiosForm.post(`/api/superAdmin/banners`, categoryData);
+export const createBanner = async (bannerData: BannerInput) => {
+  return await axiosForm.post(`/api/superAdmin/banners`, bannerData);
 };
 
-export const updateBanner = async (categoryData: any, id: number) => {
-  return await axiosForm.post(`/api/superAdmin/banners/${id}`, categoryData);
+export const updateBanner = async (bannerData: BannerInput, id: number) => {
+  return await axiosForm.post(`/api/superAdmin/banners/${id}`, bannerData);
 };

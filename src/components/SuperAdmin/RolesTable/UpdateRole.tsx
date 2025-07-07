@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
-import Checkbox from "../../form/input/Checkbox";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Checkbox from "../../common/input/Checkbox";
 import Loading from "../../common/Loading";
 import { useTranslation } from "react-i18next";
 import {
@@ -10,33 +10,53 @@ import {
   useGetRoleById,
   useUpdateRole,
 } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
-import PageMeta from "../../common/PageMeta";
-type Permission = {
-  id: number;
-  name: string;
-};
+import PageMeta from "../../common/SEO/PageMeta";
+import {
+  Permission,
+  ServerErrors,
+  UpdateRoleInput,
+} from "../../../types/Roles";
+import { AxiosError } from "axios";
 
 const UpdateRole: React.FC = () => {
-  const [updateData, setUpdateData] = useState({
+  const [updateData, setUpdateData] = useState<UpdateRoleInput>({
     name: "",
-    permissions: [] as number[],
+    permissions: [],
   });
-  const [errors, setErrors] = useState({
-    name: [] as string[],
-    permissions: [] as string[],
-    global: "" as string,
-    general: "" as string,
+  const [errors, setErrors] = useState<ServerErrors>({
+    name: [],
+    permissions: [],
+    global: "",
+    general: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fetchingPermissionsError, setFetchingPermissionsError] =
+    useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateRole"]);
-  const { data: permissionData, isLoading: isPermissionLoading } =
-    useGetAllPermissions();
+  const {
+    data: permissionData,
+    isLoading: isPermissionLoading,
+    error: permissionError,
+    isError: isPermissionError,
+  } = useGetAllPermissions();
 
-  const permissions: Permission[] = permissionData?.data.data;
-
+  const permissions: Permission[] = permissionData || [];
+  useEffect(() => {
+    if (isPermissionError && permissionError instanceof AxiosError) {
+      const status = permissionError?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrors((prev) => ({
+          ...prev,
+          global: t("role.errors.global"),
+        }));
+      } else {
+        setFetchingPermissionsError(t("role.errors.fetching_permissions"));
+      }
+    }
+  }, [isPermissionError, permissionError, t]);
   const {
     data: roleData,
     isLoading: isRoleLoading,
@@ -44,9 +64,9 @@ const UpdateRole: React.FC = () => {
     error: roleError,
   } = useGetRoleById(id);
 
-  const role = roleData?.data?.data;
+  const role = roleData;
   useEffect(() => {
-    if (isRoleError) {
+    if (isRoleError && roleError instanceof AxiosError) {
       const status = roleError?.response?.status;
       if (status === 401 || status === 403) {
         setErrors((prev) => ({
@@ -63,8 +83,8 @@ const UpdateRole: React.FC = () => {
   }, [isRoleError, roleError, t]);
   useEffect(() => {
     if (!role) return;
-    const permissionIds = Array.isArray(role.permissions)
-      ? role.permissions.map((perm: any) => perm.id)
+    const permissionIds: number[] = Array.isArray(role.permissions)
+      ? role.permissions.map((perm: Permission) => perm.id)
       : [];
 
     setUpdateData({
@@ -103,7 +123,7 @@ const UpdateRole: React.FC = () => {
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
-  const { mutateAsync } = useUpdateRole(id);
+  const { mutateAsync } = useUpdateRole(id!!);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -152,7 +172,6 @@ const UpdateRole: React.FC = () => {
     }
   };
 
-  // Handle invalid role ID
   if (isRoleLoading) {
     return (
       <>
@@ -161,7 +180,7 @@ const UpdateRole: React.FC = () => {
       </>
     );
   }
-  if (!id) {
+  if (!role && !errors.general) {
     return (
       <>
         <PageMeta title={t("role.main_title")} description="Update Role" />
@@ -171,7 +190,7 @@ const UpdateRole: React.FC = () => {
       </>
     );
   }
-  if (roleData?.data.success === false) {
+  if (errors.general) {
     return (
       <>
         <PageMeta title={t("role.main_title")} description="Update Role" />
@@ -192,6 +211,16 @@ const UpdateRole: React.FC = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="p-4 md:p-5">
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errors.global}
+          </p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errors.general}
+          </p>
+        )}
         <div className="grid gap-4 mb-4 grid-cols-2">
           <div className="col-span-2 sm:col-span-1">
             <Label htmlFor="name">{t("role.name")}</Label>
@@ -240,16 +269,15 @@ const UpdateRole: React.FC = () => {
                   {errors.permissions[0]}
                 </p>
               )}
+              {fetchingPermissionsError && (
+                <p className="text-red-500 text-sm mt-1">
+                  {fetchingPermissionsError}
+                </p>
+              )}
             </div>
           )}
         </div>
 
-        {errors.global && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
-        )}
         <button
           type="submit"
           disabled={isSubmitting}

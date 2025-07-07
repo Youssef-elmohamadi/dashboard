@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
@@ -15,16 +15,13 @@ import {
 } from "../../../hooks/Api/SuperAdmin/useBanners/useSuperAdminBanners";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { AxiosError } from "axios";
+import { SearchValues } from "../../../types/Banners";
+import { TableAlert } from "../../../types/Common";
 const Banners = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-  const [searchValues, setSearchValues] = useState<{
-    category_id: string;
-    brand_id: string;
-    status: string;
-    name: string;
-  }>({
+  const [searchValues, setSearchValues] = useState<SearchValues>({
     category_id: "",
     brand_id: "",
     status: "",
@@ -36,7 +33,8 @@ const Banners = () => {
     pageIndex,
     searchValues
   );
-  const pageSize = data?.per_page ?? 15;
+
+  const pageSize = data?.data?.per_page ?? 15;
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
       const status = error.response?.status;
@@ -50,14 +48,10 @@ const Banners = () => {
     }
   }, [isError, error]);
 
-  const bannersData = data?.data.data ?? [];
-  const totalBanners = data?.data?.total ?? 0;
+  const bannersData = data?.data.data || [];
+  const totalBanners = data?.data.total ?? 0;
 
-  const [alertData, setAlertData] = useState<{
-    variant: "success" | "error" | "info" | "warning";
-    title: string;
-    message: string;
-  } | null>(null);
+  const [alertData, setAlertData] = useState<TableAlert | null>(null);
 
   useEffect(() => {
     if (location.state?.successCreate) {
@@ -81,7 +75,7 @@ const Banners = () => {
   }, [location.state]);
 
   const { data: allCategories } = useAllCategories();
-  const categories = allCategories?.data.data?.original;
+  const categories = allCategories?.original;
 
   const handleSearch = (key: string, value: string) => {
     setSearchValues((prev) => ({

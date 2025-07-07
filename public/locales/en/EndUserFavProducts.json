@@ -1,6 +1,6 @@
 {
-  "wishlistTitle": "WishList",
-  "wishlistDescription": "View the products you have added to your WishList and keep it for a while.",
+  "pageTitle": "My WishList",
+  "pageSubtitle": "Here you can see the products you have added to your WishList.",
   "mainContent": {
     "fetchError": "An error occurred while loading the products. Try again later.",
     "emptyWishlist": "There are no products in your WishList.",

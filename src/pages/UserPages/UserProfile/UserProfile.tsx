@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
 import { Circles } from "react-loader-spinner";
-import { EyeCloseIcon, EyeIcon } from "../../../icons";
-import { useNavigate } from "react-router";
+import { EyeCloseIcon, EyeIcon } from "../../../icons"; // Assuming these are valid paths
+import { useNavigate, useParams } from "react-router-dom"; // Import useParams
 import {
   useProfile,
   useUpdateProfile,
@@ -14,10 +14,16 @@ import {
   ServerErrors,
   UserProfileFormData,
 } from "../../../types/UserProfile";
+import SEO from "../../../components/common/SEO/seo"; // Import your custom SEO component
+import { HiOutlineUserCircle, HiOutlinePhoto } from "react-icons/hi2"; // New icons for user profile and avatar
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const UserProfile = () => {
   const { t } = useTranslation(["EndUserProfile"]);
   const navigate = useNavigate();
+  // Brand colors from your other components
+  const primaryColor = "#9810fa"; // Lighter purple for accents/active states
+  const secondaryColor = "#542475"; // Deeper purple for text/main elements
 
   const [formData, setFormData] = useState<UserProfileFormData>({
     id: "",
@@ -46,13 +52,18 @@ const UserProfile = () => {
   });
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-
+    const { lang } = useDirectionAndLanguage();
   useEffect(() => {
     const token = localStorage.getItem("end_user_token");
     if (!token) {
-      navigate("/signin", { replace: true });
+      toast.error(
+        t("authRequired", {
+          defaultValue: "Please login first to view your profile.",
+        })
+      );
+      navigate(`/${lang}/signin`, { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, t]);
 
   const { data: userProfileData, isLoading } = useProfile();
 
@@ -64,7 +75,7 @@ const UserProfile = () => {
         last_name: userProfileData.last_name,
         email: userProfileData.email,
         phone: userProfileData.phone,
-        password: "",
+        password: "", // Passwords are not pre-filled for security
         password_confirmation: "",
         avatar: null,
       });
@@ -79,8 +90,13 @@ const UserProfile = () => {
       const file = files[0];
       setFormData((prev) => ({ ...prev, avatar: file }));
       setImageUrl(URL.createObjectURL(file));
+      setErrors((prev) => ({ ...prev, avatar: [] })); // Clear avatar error on new selection
+      setClientErrors((prev) => ({ ...prev, avatar: "" }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
+      // Clear errors for the specific field when changed
+      setErrors((prev) => ({ ...prev, [name]: [] }));
+      setClientErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -89,62 +105,99 @@ const UserProfile = () => {
   };
 
   const validateForm = () => {
-    const errors: { [key: string]: string } = {};
+    const newClientErrors: { [key: string]: string } = {};
 
     if (!formData.first_name.trim()) {
-      errors.first_name = t("validation.first_name_required");
+      newClientErrors.first_name = t("validation.first_name_required");
     }
 
     if (!formData.last_name.trim()) {
-      errors.last_name = t("validation.last_name_required");
+      newClientErrors.last_name = t("validation.last_name_required");
     }
 
     if (!formData.email.trim()) {
-      errors.email = t("validation.email_required");
+      newClientErrors.email = t("validation.email_required");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = t("validation.email_invalid");
+      newClientErrors.email = t("validation.email_invalid");
     }
 
     if (!formData.phone.trim()) {
-      errors.phone = t("validation.phone_required");
+      newClientErrors.phone = t("validation.phone_required");
     }
 
     if (formData.password && formData.password.length < 6) {
-      errors.password = t("validation.password_short");
+      newClientErrors.password = t("validation.password_short");
     }
 
-    if (formData.password !== formData.password_confirmation) {
-      errors.password_confirmation = t(
+    if (
+      formData.password &&
+      formData.password !== formData.password_confirmation
+    ) {
+      newClientErrors.password_confirmation = t(
         "validation.password_confirmation_mismatch"
       );
     }
 
-    setClientErrors(errors);
-    return Object.keys(errors).length === 0;
+    setClientErrors(newClientErrors);
+    return Object.keys(newClientErrors).length === 0;
   };
 
-  const { mutate: updateProfileMutation } = useUpdateProfile({
-    onSuccess: () => {
-      toast.success(t("toast.update_success"));
-    },
-    onError: (error: any) => {
-      const rawErrors = error?.response?.data?.errors;
-      if (Array.isArray(rawErrors)) {
-        const formattedErrors: Record<string, string[]> = {};
-        rawErrors.forEach((err: { code: string; message: string }) => {
-          if (!formattedErrors[err.code]) {
-            formattedErrors[err.code] = [];
-          }
-          formattedErrors[err.code].push(err.message);
-        });
-        setErrors((prev) => ({ ...prev, ...formattedErrors }));
-      } else {
-        setErrors({ ...errors, general: t("admin.errors.general") });
-      }
+  const { mutate: updateProfileMutation, isPending: isUpdating } =
+    useUpdateProfile({
+      onSuccess: () => {
+        toast.success(t("toast.update_success"));
+        // Clear password fields after successful update
+        setFormData((prev) => ({
+          ...prev,
+          password: "",
+          password_confirmation: "",
+        }));
+        setErrors({
+          first_name: [],
+          last_name: [],
+          email: [],
+          phone: [],
+          password: [],
+          password_confirmation: [],
+          avatar: [],
+          general: "",
+          global: "",
+        }); // Clear server errors
+      },
+      onError: (error: any) => {
+        const rawErrors = error?.response?.data?.errors;
+        const newServerErrors: ServerErrors = {
+          first_name: [],
+          last_name: [],
+          email: [],
+          phone: [],
+          password: [],
+          password_confirmation: [],
+          avatar: [],
+          general: "",
+          global: "",
+        };
 
-      toast.error(t("toast.update_fail"));
-    },
-  });
+        if (rawErrors) {
+          // Handle Laravel validation errors (often objects with arrays)
+          if (typeof rawErrors === "object" && !Array.isArray(rawErrors)) {
+            for (const key in rawErrors) {
+              if (key in newServerErrors && Array.isArray(rawErrors[key])) {
+                (newServerErrors as any)[key] = rawErrors[key];
+              }
+            }
+          }
+          // Handle a general error message if available
+          if (rawErrors.message) {
+            newServerErrors.general = rawErrors.message;
+          }
+        } else {
+          newServerErrors.general = t("admin.errors.general");
+        }
+        setErrors(newServerErrors);
+        toast.error(t("toast.update_fail"));
+      },
+    });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,189 +209,305 @@ const UserProfile = () => {
     }
 
     const payload = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value) {
-        payload.append(key, value as any);
-      }
-    });
+    if (formData.id) payload.append("id", formData.id);
+    if (formData.first_name) payload.append("first_name", formData.first_name);
+    if (formData.last_name) payload.append("last_name", formData.last_name);
+    if (formData.email) payload.append("email", formData.email);
+    if (formData.phone) payload.append("phone", formData.phone);
+    if (formData.password) payload.append("password", formData.password);
+    if (formData.password_confirmation)
+      payload.append("password_confirmation", formData.password_confirmation);
+    if (formData.avatar) payload.append("avatar", formData.avatar);
 
     updateProfileMutation(payload);
   };
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-medium mb-4 border-b border-gray-200 pb-3">
-        {t("title")}
-      </h2>
+      <SEO
+        title={{
+          ar: `تشطيبة - ملفي الشخصي`,
+          en: `Tashtiba - My Profile`,
+        }}
+        description={{
+          ar: `قم بتحديث معلومات ملفك الشخصي على تشطيبة. إدارة بيانات الاتصال، تغيير كلمة المرور، وتحديث صورة الملف الشخصي بأمان في مصر.`,
+          en: `Update your personal profile information on Tashtiba. Manage contact details, change password, and update your profile picture securely in Egypt.`,
+        }}
+        keywords={{
+          ar: [
+            "تشطيبة",
+            "ملفي الشخصي",
+            "تعديل البيانات",
+            "تغيير كلمة المرور",
+            "صورة الملف الشخصي",
+            "بيانات الحساب",
+            "إدارة الملف",
+            "مصر",
+            "حسابي",
+          ],
+          en: [
+            "tashtiba",
+            "my profile",
+            "edit profile",
+            "change password",
+            "profile picture",
+            "account settings",
+            "manage account",
+            "Egypt",
+            "my account",
+          ],
+        }}
+        alternates={[
+          { lang: "ar", href: "https://tashtiba.vercel.app/ar/profile" },
+          { lang: "en", href: "https://tashtiba.vercel.app/en/profile" },
+          { lang: "x-default", href: "https://tashtiba.vercel.app/en/profile" },
+        ]}
+      />
 
-      {isLoading && !userProfileData ? (
-        <div className="flex justify-center">
-          <Circles height="80" width="80" color="#6B46C1" ariaLabel="loading" />
+      <div className="bg-white rounded-2xl overflow-hidden">
+        <div className="p-6 border-b-2" style={{ borderColor: primaryColor }}>
+          <h1
+            className="text-3xl font-bold flex items-center gap-3"
+            style={{ color: secondaryColor }}
+          >
+            <HiOutlineUserCircle className="h-8 w-8" />
+            {t("title", { defaultValue: "ملفي الشخصي" })}
+          </h1>
+          <p className="mt-2 text-gray-600">
+            {t("subtitle", {
+              defaultValue:
+                "قم بإدارة معلومات حسابك وتفاصيل الاتصال الخاصة بك.",
+            })}
+          </p>
         </div>
-      ) : (
-        <>
-          <div className="flex mb-4">
-            <div
-              className="relative w-36 h-36 cursor-pointer"
-              onClick={handleImageClick}
-            >
-              <img
-                src={imageUrl || existingImage}
-                alt="User"
-                className="w-36 h-36 rounded-full object-cover border-4 border-purple-700"
+
+        {/* Profile Content */}
+        <div className="p-6">
+          {isLoading && !userProfileData ? (
+            <div className="flex justify-center items-center py-10">
+              <Circles
+                height="80"
+                width="80"
+                color={secondaryColor}
+                ariaLabel="loading-profile"
               />
-              <div className="absolute inset-0 bg-[#8826bd35] rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                <span className="text-white text-sm">{t("form.avatar")}</span>
-              </div>
             </div>
-            <input
-              type="file"
-              name="avatar"
-              accept="image/*"
-              onChange={handleChange}
-              ref={fileInputRef}
-              className="hidden"
-            />
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid md:grid-cols-2 grid-cols-1  gap-3">
-              <div>
-                <input
-                  type="text"
-                  name="first_name"
-                  value={formData.first_name}
-                  onChange={handleChange}
-                  placeholder={t("form.first_name")}
-                  className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20"
-                />
-                {errors.first_name[0] && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {errors.first_name[0]}
-                  </p>
-                )}
-                {clientErrors.first_name && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {clientErrors.first_name}
-                  </p>
-                )}
-              </div>
-              <div>
-                <input
-                  type="text"
-                  name="last_name"
-                  value={formData.last_name}
-                  onChange={handleChange}
-                  placeholder={t("form.last_name")}
-                  className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20"
-                />
-                {errors.last_name[0] && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {errors.last_name[0]}
-                  </p>
-                )}
-                {clientErrors.last_name && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {clientErrors.last_name}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
-              <div>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder={t("form.email")}
-                  className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20"
-                />
-                {errors.email[0] && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {t("backend.emailTaken")}
-                  </p>
-                )}
-                {clientErrors.email && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {clientErrors.email}
-                  </p>
-                )}
-              </div>
-              <div>
-                <input
-                  type="text"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder={t("form.phone")}
-                  className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20"
-                />
-                {errors.phone[0] && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {t("backend.phoneTaken")}
-                  </p>
-                )}
-                {clientErrors.phone && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {clientErrors.phone}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
-              {(["password", "password_confirmation"] as const).map((field) => (
-                <div key={field} className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name={field}
-                    value={
-                      (formData[field] as string) || ""
-                    }
-                    onChange={handleChange}
-                    placeholder={t(`form.${field}`)}
-                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-brand-300 focus:ring-brand-500/20"
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="flex items-center gap-6 mb-8">
+                <div
+                  className="relative w-36 h-36 cursor-pointer group" // Added group for hover effect
+                  onClick={handleImageClick}
+                >
+                  <img
+                    src={imageUrl || existingImage}
+                    alt="User Avatar"
+                    className="w-36 h-36 rounded-full object-cover border-4"
+                    style={{ borderColor: primaryColor }} // Using primary brand color for border
                   />
-                  {errors[field][0] && (
-                    <p className="text-red-600 text-sm mt-1">
-                      {errors[field][0]}
-                    </p>
-                  )}
-                  {clientErrors[field] && (
-                    <p className="text-red-600 text-sm mt-1">
-                      {clientErrors[field]}
-                    </p>
-                  )}
-                  <span
-                    onClick={() => setShowPassword(!showPassword)}
-                    className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
-                      document.documentElement.dir === "rtl"
-                        ? "left-4"
-                        : "right-4"
-                    }`}
-                  >
-                    {showPassword ? (
-                      <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                    ) : (
-                      <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                    )}
-                  </span>
+                  <div className="absolute inset-0 bg-black/30 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <HiOutlinePhoto className="text-white h-8 w-8" />{" "}
+                    {/* Icon for changing photo */}
+                    <span className="text-white text-sm ml-2">
+                      {t("form.avatar")}
+                    </span>
+                  </div>
                 </div>
-              ))}
-            </div>
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="bg-purple-700 text-white px-4 py-2 rounded md:w-1/4 w-1/2"
-            >
-              {isLoading ? t("form.updating") : t("form.submit")}
-            </button>
-          </form>
-        </>
-      )}
+                <input
+                  type="file"
+                  name="avatar"
+                  accept="image/*"
+                  onChange={handleChange}
+                  ref={fileInputRef}
+                  className="hidden"
+                />
+                {errors.avatar[0] && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.avatar[0]}
+                  </p>
+                )}
+                {clientErrors.avatar && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {clientErrors.avatar}
+                  </p>
+                )}
+              </div>
+              {/* Form Fields */}
+              <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
+                {" "}
+                {/* Increased gap */}
+                {/* First Name */}
+                <div>
+                  <label
+                    htmlFor="first_name"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    {t("form.first_name")}
+                  </label>
+                  <input
+                    id="first_name"
+                    type="text"
+                    name="first_name"
+                    value={formData.first_name}
+                    onChange={handleChange}
+                    placeholder={t("form.first_name")}
+                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-purple-300 focus:ring-purple-500/20" // Updated focus colors
+                  />
+                  {(errors.first_name[0] || clientErrors.first_name) && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.first_name[0] || clientErrors.first_name}
+                    </p>
+                  )}
+                </div>
+                {/* Last Name */}
+                <div>
+                  <label
+                    htmlFor="last_name"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    {t("form.last_name")}
+                  </label>
+                  <input
+                    id="last_name"
+                    type="text"
+                    name="last_name"
+                    value={formData.last_name}
+                    onChange={handleChange}
+                    placeholder={t("form.last_name")}
+                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-purple-300 focus:ring-purple-500/20" // Updated focus colors
+                  />
+                  {(errors.last_name[0] || clientErrors.last_name) && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.last_name[0] || clientErrors.last_name}
+                    </p>
+                  )}
+                </div>
+                {/* Email */}
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    {t("form.email")}
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder={t("form.email")}
+                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-purple-300 focus:ring-purple-500/20" // Updated focus colors
+                  />
+                  {(errors.email[0] || clientErrors.email) && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.email[0] === "validation.email_taken"
+                        ? t("backend.emailTaken")
+                        : errors.email[0] || clientErrors.email}
+                    </p>
+                  )}
+                </div>
+                {/* Phone */}
+                <div>
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    {t("form.phone")}
+                  </label>
+                  <input
+                    id="phone"
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder={t("form.phone")}
+                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-purple-300 focus:ring-purple-500/20" // Updated focus colors
+                  />
+                  {(errors.phone[0] || clientErrors.phone) && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.phone[0] === "validation.phone_taken"
+                        ? t("backend.phoneTaken")
+                        : errors.phone[0] || clientErrors.phone}
+                    </p>
+                  )}
+                </div>
+                {/* Password Fields */}
+                {(["password", "password_confirmation"] as const).map(
+                  (field) => (
+                    <div key={field} className="relative">
+                      <label
+                        htmlFor={field}
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        {t(`form.${field}`)}
+                      </label>
+                      <input
+                        id={field}
+                        type={showPassword ? "text" : "password"}
+                        name={field}
+                        value={(formData[field] as string) || ""}
+                        onChange={handleChange}
+                        placeholder={t(`form.${field}`)}
+                        className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-purple-300 focus:ring-purple-500/20" // Updated focus colors
+                      />
+                      {(errors[field][0] || clientErrors[field]) && (
+                        <p className="text-red-600 text-sm mt-1">
+                          {errors[field][0] || clientErrors[field]}
+                        </p>
+                      )}
+                      <span
+                        onClick={() => setShowPassword(!showPassword)}
+                        className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 mt-4 ${
+                          // Adjusted top for label
+                          document.documentElement.dir === "rtl"
+                            ? "left-4"
+                            : "right-4"
+                        }`}
+                      >
+                        {showPassword ? (
+                          <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                        ) : (
+                          <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                        )}
+                      </span>
+                    </div>
+                  )
+                )}
+              </div>
+              {/* General/Global Server Error */}
+              {(errors.general || errors.global) && (
+                <p className="text-red-600 text-sm text-center mt-4">
+                  {errors.general || errors.global}
+                </p>
+              )}
+              {/* Submit Button */}
+              <div className="flex justify-start pt-4">
+                {" "}
+                {/* Flex start for button alignment */}
+                <button
+                  type="submit"
+                  disabled={isUpdating} // Use isUpdating from useUpdateProfile
+                  className="bg-purple-700 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-purple-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ minWidth: "150px" }} // Give button a min-width
+                >
+                  {isUpdating ? (
+                    <Circles
+                      height="20"
+                      width="20"
+                      color="#fff"
+                      ariaLabel="loading-submit"
+                      wrapperClass="inline-block"
+                    />
+                  ) : (
+                    t("form.submit")
+                  )}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

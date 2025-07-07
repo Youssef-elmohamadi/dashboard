@@ -28,7 +28,7 @@ export type UpdateBrandParams = {
 };
 
 export interface Brand {
-  id: ID;
+  id: number;
   name: string;
   image: string;
   status: "active" | "inactive";

@@ -1,0 +1,17 @@
+{
+  "pageTitle": "My Notifications",
+  "pageSubtitle": "Here you can review all important updates and notifications.",
+  "authRequired": "Please log in to view notifications.",
+  "notificationDeleted": "Notification deleted successfully!",
+  "deleteError": "Failed to delete notification.",
+  "markAsRead": "Mark as read",
+  "markReadError": "Failed to mark notification as read.",
+  "markAllAsRead": "Mark all as read",
+  "markAllReadError": "Failed to mark all notifications as read.",
+  "allNotificationsRead": "All notifications marked as read.",
+  "notifications": "Notifications",
+  "fetchError": "An error occurred while loading notifications. Try again later.",
+  "deleteNotification": "Delete Notification",
+  "noNotifications": "There are no notifications at the moment.",
+  "showMore": "Show More"
+}

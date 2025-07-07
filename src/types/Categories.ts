@@ -6,6 +6,12 @@ export type CategoryParams = {
   name?: string;
 };
 
+export interface Child {
+  id: number;
+  name: string;
+  childs?: Child[]; // يمكن أن تحتوي على أطفال آخرين (متداخلة)
+}
+
 export type SearchValues = {
   name: string;
 };
@@ -24,9 +30,11 @@ export type Category = {
   updated_at: string;
   parent_id: number | null;
   children: Category[] | null;
-  commission_rate: number | null;
+  commission_rate: number | null | string;
   appears_in_website: boolean;
   products: Product[];
+  order: number;
+  childs: Child[];
 };
 
 // export type AllCategoriesOriginal = {
@@ -54,15 +62,46 @@ export type PaginatedCategoryOriginal = {
 
 export interface PaginatedCategoriesData {
   header: {};
-  original: Category[];
+  original: PaginatedCategoryOriginal;
 }
 export interface AllCategoriesData {
   header: {};
   original: Category[];
 }
 
-export interface GetCategoriesApiResponse {
+export interface GetCategoriesApiResponse<T> {
   success: boolean;
   message: string;
-  data: PaginatedCategoriesData;
+  data: T;
 }
+export type CategoryInputData = {
+  name: string;
+  description: string;
+  image: File | null | string;
+  status: "active" | "inactive";
+  parent_id: string | null;
+  commission_rate: string | null;
+  appears_in_website: boolean;
+};
+
+export type ServerErrors = {
+  name: string[];
+  description: string[];
+  image: string[];
+  status: string[];
+  parent_id: string[];
+  commission_rate: string[];
+  appears_in_website: string[];
+  global: string;
+  general: string;
+};
+
+export type ClientErrors = {
+  name: string;
+  description: string;
+  image: string;
+  status: string;
+  parent_id: string;
+  commission_rate: string;
+  appears_in_website: string;
+};

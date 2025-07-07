@@ -1,4 +1,4 @@
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
@@ -14,25 +14,15 @@ import {
 import { useAllCategories } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
 import { useAllBrands } from "../../../hooks/Api/SuperAdmin/useBrands/useSuperAdminBrandsManage";
 import { AxiosError } from "axios";
-type Category = {
-  id: number;
-  name: string;
-};
-type Brand = {
-  id: number;
-  name: string;
-};
+import { SearchValues } from "../../../types/Product";
+import { Category } from "../../../types/Categories";
+import { Brand } from "../../../types/Brands";
 
 const Products = () => {
   const [pageIndex, setPageIndex] = useState(0);
-  const [unauthorized, setUnauthorized] = useState(false);
-  const [globalError, setGlobalError] = useState(false);
-  const [searchValues, setSearchValues] = useState<{
-    category_id: string;
-    brand_id: string;
-    status: string;
-    name: string;
-  }>({
+  const [unauthorized, setUnauthorized] = useState<boolean>(false);
+  const [globalError, setGlobalError] = useState<boolean>(false);
+  const [searchValues, setSearchValues] = useState<SearchValues>({
     category_id: "",
     brand_id: "",
     status: "",
@@ -43,6 +33,7 @@ const Products = () => {
     pageIndex,
     searchValues
   );
+
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
@@ -58,6 +49,8 @@ const Products = () => {
   }, [isError, error]);
 
   const productsData = data?.data ?? [];
+  console.log(productsData);
+
   const totalProducts = data?.total ?? 0;
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
@@ -73,9 +66,9 @@ const Products = () => {
   };
 
   const { data: allCategories } = useAllCategories();
-  const categories = allCategories?.data.data?.original;
+  const categories = allCategories?.original;
   const { data: allBrands } = useAllBrands();
-  const brands = allBrands?.data.data;
+  const brands = allBrands?.data;
   const { mutateAsync: changeStatus } = useChangeProductStatus();
 
   const handleChangeStatus = async (id: number) => {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
@@ -39,7 +39,7 @@ const Admins = () => {
       const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
-      }else if (status === 500) {
+      } else if (status === 500) {
         setGlobalError(true);
       } else {
         setGlobalError(true);

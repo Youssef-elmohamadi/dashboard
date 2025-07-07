@@ -6,21 +6,13 @@ import {
   updateQuantity,
 } from "../../../components/EndUser/Redux/cartSlice/CartSlice";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import useParams
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { useApplyCoupon } from "../../../hooks/Api/EndUser/useCopouns/useCopouns";
-import type { RootState } from "../../../components/EndUser/Redux/Store"; // تأكد أن عندك type للـ store
-import { Helmet } from "react-helmet-async";
+import type { RootState } from "../../../components/EndUser/Redux/Store";
+import SEO from "../../../components/common/SEO/seo"; // Import your custom SEO component
 import { Product } from "../../../types/Product";
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  tax?: number;
-  images?: { image: string }[];
-}
 
 interface CouponFormData {
   code: string;
@@ -35,13 +27,9 @@ interface CouponStatus {
 const Cart: React.FC = () => {
   const { t } = useTranslation(["EndUserCart"]);
   const dispatch = useDispatch();
-  const items = useSelector(
-    (state: RootState) => state.cart.items
-  ) as Product[];
+  const items = useSelector((state: RootState) => state.cart.items) as Product[];
   const totalPrice = useSelector((state: RootState) => state.cart.totalPrice);
-  const totalQuantity = useSelector(
-    (state: RootState) => state.cart.totalQuantity
-  );
+  const totalQuantity = useSelector((state: RootState) => state.cart.totalQuantity);
   const discount = useSelector((state: RootState) => state.cart.discount);
   const navigate = useNavigate();
 
@@ -96,16 +84,47 @@ const Cart: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 py-6 flex flex-col lg:flex-row gap-6">
-      <Helmet>
-        <title>{t("mainTitle")}</title>
-        <meta
-          name="description"
-          content={t("CartDescription", {
-            defaultValue:
-              "تسوق من مجموعة متنوعة من المنتجات داخل هذه الفئة بأسعار تنافسية وجودة عالية.",
-          })}
-        />
-      </Helmet>
+      <SEO
+        title={{
+          ar: `تشطيبة - سلة التسوق`,
+          en: `Tashtiba - Shopping Cart`,
+        }}
+        description={{
+          ar: `راجع سلة التسوق الخاصة بك في تشطيبة. قم بتعديل الكميات، تطبيق الكوبونات، والمتابعة لإتمام طلبك.`,
+          en: `Review your shopping cart on Tashtiba. Adjust quantities, apply coupons, and proceed to checkout with your selected items.`,
+        }}
+        keywords={{
+          ar: [
+            "تشطيبة",
+            "سلة التسوق",
+            "عربة التسوق",
+            "منتجات",
+            "الطلب",
+            "الدفع",
+            "تطبيق كوبون",
+            "خصومات",
+            "مصر",
+            "تسوق",
+          ],
+          en: [
+            "tashtiba",
+            "shopping cart",
+            "cart items",
+            "my cart",
+            "checkout",
+            "apply coupon",
+            "discounts",
+            "Egypt",
+            "online shopping",
+            "order",
+          ],
+        }}
+        alternates={[
+          { lang: "ar", href: "https://tashtiba.vercel.app/ar/cart" }, // Adjust the path if your actual cart URL is different
+          { lang: "en", href: "https://tashtiba.vercel.app/en/cart" }, // Adjust the path if your actual cart URL is different
+        ]}
+      />
+
       {/* Order Summary */}
       <div className="lg:w-1/3 w-full bg-white rounded-2xl shadow p-4">
         <h2 className="text-lg font-semibold border-b border-gray-200 pb-2 mb-4">

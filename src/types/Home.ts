@@ -126,3 +126,18 @@ export interface CategoriesWithProductsResponse {
   message: string;
   data: CategoryWithProductsType[];
 }
+export interface IconProps {
+  className?: string;
+}
+
+export interface Feature {
+  icon: React.FC<IconProps>;
+  title: string;
+  description: string;
+}
+
+export interface Policy {
+  href: string;
+  title: string;
+  icon: React.FC<IconProps>;
+}

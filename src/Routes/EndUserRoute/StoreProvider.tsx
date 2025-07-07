@@ -2,10 +2,10 @@
 import { Provider } from "react-redux";
 import Store from "../../components/EndUser/Redux/Store";
 import { Outlet } from "react-router-dom";
-import { ModalProvider } from "../../pages/UserPages/Context/ModalContext";
-import BottomNav from "../../components/EndUser/BottomNav/BottomNav";
-import ProductModal from "../../components/EndUser/ProductModal/ProductModal";
-import AddToCartModal from "../../components/EndUser/AddedSuccess/AddToCartModal";
+import { ModalProvider } from "../../components/EndUser/context/ModalContext";
+import BottomNav from "../../components/EndUser/Layout/BottomNav";
+import ProductModal from "../../components/EndUser/Product/ProductModal";
+import AddToCartModal from "../../components/EndUser/Checkout/AddToCartModal";
 import { ToastContainer } from "react-toastify";
 import { EndUserProvider } from "../../components/EndUser/context/EndUserProvider";
 

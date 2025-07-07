@@ -1,15 +1,15 @@
 import { FaFilter } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
-import Select from "../../form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 
 type Option = { label: string; value: string | number | undefined };
 type Field = {
   key: string;
   label: string;
   type: "input" | "select" | "date";
-  options?: Option[] | undefined ;
+  options?: Option[] | undefined;
 };
 
 const SearchTable = ({

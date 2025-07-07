@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/admin/Tables/BasicTableTS";
@@ -21,6 +21,7 @@ const Categories = () => {
     pageIndex,
     searchValues
   );
+
   const pageSize = data?.original.per_page ?? 15;
 
   useEffect(() => {

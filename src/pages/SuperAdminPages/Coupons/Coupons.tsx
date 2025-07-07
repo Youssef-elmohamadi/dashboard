@@ -1,4 +1,4 @@
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
@@ -14,31 +14,14 @@ import {
   useDeleteCoupon,
 } from "../../../hooks/Api/SuperAdmin/useCoupons/useCoupons";
 import { AxiosError } from "axios";
-type User = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  vendor_id: number;
-  avatar: string;
-  created_at: string;
-  updated_at: string;
-  vendor: { id: number; name: string };
-  roles: { id: number; name: string }[];
-};
+import { CouponFilters } from "../../../types/Coupons";
+import { TableAlert } from "../../../types/Common";
 
 const Coupons = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-  const [searchValues, setSearchValues] = useState<{
-    active: string;
-    code: string;
-    type: string;
-    from_date: string;
-    to_date: string;
-  }>({
+  const [searchValues, setSearchValues] = useState<CouponFilters>({
     active: "",
     code: "",
     type: "",
@@ -64,15 +47,12 @@ const Coupons = () => {
       }
     }
   }, [isError, error]);
+  console.log(data);
 
   const couponsData = data?.data ?? [];
   const totalCoupons = data?.total ?? 0;
 
-  const [alertData, setAlertData] = useState<{
-    variant: "success" | "error" | "info" | "warning";
-    title: string;
-    message: string;
-  } | null>(null);
+  const [alertData, setAlertData] = useState<TableAlert | null>(null);
 
   useEffect(() => {
     if (location.state?.successCreate) {
@@ -120,7 +100,7 @@ const Coupons = () => {
     });
   };
 
-  const columns = buildColumns<User>({
+  const columns = buildColumns({
     includeCode: true,
     includeType: true,
     includeValue: true,

@@ -44,7 +44,9 @@
   },
   "errors": {
     "general": "Something went wrong. Please try again.",
-    "global": "You are not authorized to perform this action."
+    "global": "You are not authorized to perform this action.",
+    "fetching_categories": "Failed to fetch categories. Please try again later.",
+    "fetching_brands": "Failed to fetch brands. Please try again later."
   },
   "success_create": "Product Created Successfully",
   "success_update": "Product Updated Successfully",

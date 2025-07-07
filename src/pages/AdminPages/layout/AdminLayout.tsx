@@ -1,8 +1,8 @@
 import { SidebarProvider, useSidebar } from "../../../context/SidebarContext";
 import { Outlet } from "react-router";
-import AppHeader from "../../../components/dashboardLayout/AppHeader";
+import AppHeader from "../../../components/common/dashboardLayout/AppHeader";
 import Backdrop from "./Backdrop";
-import AppSidebar from "../../../components/dashboardLayout/DashboardSidebar";
+import AppSidebar from "../../../components/common/dashboardLayout/DashboardSidebar";
 import { ToastContainer } from "react-toastify";
 
 const LayoutContent: React.FC = () => {

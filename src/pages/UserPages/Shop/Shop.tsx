@@ -1,5 +1,5 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import ProductCard from "../../../components/EndUser/ProductCard/ProductCard";
+import ProductCard from "../../../components/EndUser/Product/ProductCard";
 import { Circles } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import { useProductsByCategory } from "../../../hooks/Api/EndUser/useProducts/useProducts";
@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { Category } from "../../../types/Categories";
 import LazyImage from "../../../components/common/LazyImage";
-import SEO from "../../../components/common/seo";
+import SEO from "../../../components/common/SEO/seo";
 
 const Shop = () => {
   const { category_id, lang } = useParams();
@@ -46,16 +46,16 @@ const Shop = () => {
     <div className="min-h-[300px] flex flex-col items-center">
       <SEO
         title={{
-          ar: `تاشتيبا - ${categoryName}`,
+          ar: `تشطيبة - ${categoryName}`,
           en: `Tashtiba - ${categoryName}`,
         }}
         description={{
-          ar: `تصفح منتجات فئة ${categoryName} بأفضل الأسعار على تاشتيبا.`,
+          ar: `تصفح منتجات فئة ${categoryName} بأفضل الأسعار على تشطيبة.`,
           en: `Browse the best deals in ${categoryName} on Tashtiba.`,
         }}
         keywords={{
           ar: [
-            "تاشتيبا",
+            "تشطيبة",
             categoryName,
             "تسوق",
             "منتجات",
@@ -74,10 +74,8 @@ const Shop = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar" }, // Replace with your actual Arabic URL
-          { lang: "en", href: "https://tashtiba.vercel.app/en" }, // Replace with your actual English URL
-          // You can also add an x-default if you have a default language page, for example:
-          // { lang: "x-default", href: "https://tashtiba.vercel.app/en" },
+          { lang: "ar", href: "https://tashtiba.vercel.app/ar" },
+          { lang: "en", href: "https://tashtiba.vercel.app/en" },
         ]}
       />
 

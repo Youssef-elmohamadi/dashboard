@@ -1,6 +1,5 @@
 // ResetPassword.tsx
 import { useState } from "react";
-import OTPPage from "./OtpPage";
 import { useNavigate } from "react-router-dom";
 import {
   sendOtp,
@@ -9,6 +8,8 @@ import {
 } from "../../../api/OtpApi/_requests";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import OTPPage from "../../common/Auth/OtpPage";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const ResetPassword = () => {
   const [step, setStep] = useState(1);
@@ -21,6 +22,7 @@ const ResetPassword = () => {
   const [passwordError, setPasswordError] = useState("");
   const { t } = useTranslation(["auth"]);
   const navigate = useNavigate();
+  const { lang } = useDirectionAndLanguage();
 
   const handleNext = async () => {
     if (step === 1 && phone) {
@@ -101,7 +103,7 @@ const ResetPassword = () => {
 
       if (res?.status === 200) {
         toast.success(t("forgotPasswordPage.resetPasswordSuccess"));
-        navigate("/signin");
+        navigate(`/${lang}/signin`);
       }
     } catch (err: any) {
       const response = err?.response?.data;
@@ -142,7 +144,7 @@ const ResetPassword = () => {
              {t("forgotPasswordPage.submit")}
             </button>
             <button
-              onClick={() => navigate("/signin")}
+              onClick={() => navigate(`/${lang}/signin`)}
               className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
             >
               {t("forgotPasswordPage.backToLogin")}

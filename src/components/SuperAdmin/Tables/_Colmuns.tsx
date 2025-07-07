@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import BrandCell from "./BrandCell";
-import TableStatus from "../../common/TableStatus";
+import TableStatus from "../../common/Tables/TableStatus";
 
 type BaseEntity = {
   id: number;
@@ -134,25 +134,17 @@ export const buildColumns = <T extends BaseEntity>(
       Cell: ({ row }: any) => <TableStatus status={row.original.status} />,
     });
   }
-  // if (options.includeOrderStatus) {
-  //   columns.push({
-  //     Header: "Order Status",
-  //     id: "order_status",
-  //     Cell: ({ row }: any) => (
-  //       <TableStatus status={row.original.order.status} />
-  //     ),
-  //   });
-  // }
-
-  // if (options.includeShippedStatus) {
-  //   columns.push({
-  //     Header: "Shipping Status",
-  //     id: "shipping_status",
-  //     Cell: ({ row }: any) => (
-  //       <TableStatus status={row.original.shipping_status} />
-  //     ),
-  //   });
-  // }
+  if (options.includeIsActive) {
+    columns.push({
+      Header: t("table.status"),
+      accessor: "active" as keyof T,
+      Cell: ({ row }: any) => (
+        <TableStatus
+          status={row.original.active === 1 ? "active" : "inactive"}
+        />
+      ),
+    });
+  }
 
   if (options.includeVendorEmail) {
     columns.push({
@@ -197,15 +189,21 @@ export const buildColumns = <T extends BaseEntity>(
   //   });
   // }
   if (options.includeTotalPrice) {
+    interface TotalPriceRow {
+      total_amount: number;
+    }
     columns.push({
       Header: t("table.total_amount"),
-      accessor: (row) => row?.total_amount,
+      accessor: (row: TotalPriceRow) => row?.total_amount,
     });
   }
   if (options.includePaymentMethod) {
+    interface PaymentMethodRow {
+      payment_method: string;
+    }
     columns.push({
       Header: t("table.payment_method"),
-      accessor: (row) => row?.payment_method,
+      accessor: (row: PaymentMethodRow) => row?.payment_method,
     });
   }
 
@@ -285,13 +283,6 @@ export const buildColumns = <T extends BaseEntity>(
     });
   }
 
-  if (options.includeIsActive) {
-    columns.push({
-      Header: t("table.status"),
-      accessor: "is_active" as keyof T,
-      Cell: ({ value }: any) => (value ? "✅Active" : "❌Inactive"),
-    });
-  }
   if (options.includeActions) {
     columns.push({
       Header: t("table.actions"),

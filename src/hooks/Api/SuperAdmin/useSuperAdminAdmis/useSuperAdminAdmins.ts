@@ -6,75 +6,36 @@ import {
   getAllAdminsPaginate,
   updateAdmin,
 } from "../../../../api/SuperAdminApi/Admins/_requests";
-import { AxiosError } from "axios";
+import {
+  Admin,
+  AdminFilters,
+  AdminsPaginate,
+  CreateAdminInput,
+  UpdateAdminInput,
+} from "../../../../types/Admins";
 
-type ApiResponse<T> = {
-  success: boolean;
-  message: string;
-  data: T;
-};
-
-type PaginatedResponse<T> = {
-  data: T[];
-  total: number;
-  current_page: number;
-  last_page: number;
-  per_page: number;
-};
-type Admin = {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  roles: string[];
-  created_at: string;
-};
-
-type AdminFilters = {
-  name?: string;
-  email?: string;
-  phone?: string;
-};
-
-type CreateAdminInput = {
-  first_name: string;
-  last_name: string;
-  phone: string;
-  email: string;
-  password: string;
-  role: string;
-};
-type UpdateAdminInput = {
-  first_name: string;
-  last_name: string;
-  phone: string;
-  email: string;
-  password: string;
-  role: string;
-};
-
-export const useAllAdmins = (page: number, filters?: AdminFilters) => {
-  return useQuery<PaginatedResponse<Admin>>({
+export const useAllAdmins = (page: string | number, filters?: AdminFilters) => {
+  return useQuery<AdminsPaginate>({
     queryKey: ["superAdminAdmins", page, filters],
     queryFn: async () => {
       const response = await getAllAdminsPaginate({
-        page: page + 1,
+        page,
         ...filters,
       });
 
       return response.data.data;
     },
     staleTime: 1000 * 60 * 4,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطأ أثناء جلب المشرفين:", error);
-    },
   });
 };
 
 export const useGetAdminById = (id?: number | string) => {
-  return useQuery<ApiResponse<PaginatedResponse<Admin>>, Error>({
+  return useQuery<Admin>({
     queryKey: ["admin", id],
-    queryFn: () => getAdminById(id!),
+    queryFn: async () => {
+      const response = await getAdminById(id!);
+      return response.data.data;
+    },
     staleTime: 1000 * 60 * 5,
     enabled: !!id,
   });

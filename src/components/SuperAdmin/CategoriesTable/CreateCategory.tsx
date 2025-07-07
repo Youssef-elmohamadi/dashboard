@@ -1,45 +1,55 @@
 import { useEffect, useState } from "react";
-import Label from "../../../components/form/Label";
-import Input from "../../../components/form/input/InputField";
-import Select from "../../../components/form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 import { useNavigate } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
 import CategoryImageUpload from "./CategoryImageUpload";
 import { useTranslation } from "react-i18next";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { useCreateCategory } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
-import TextArea from "../../form/input/TextArea";
-type Category = {
-  id: string;
-  name: string;
-};
+import TextArea from "../../common/input/TextArea";
+import {
+  Category,
+  CategoryInputData,
+  ClientErrors,
+  ServerErrors,
+} from "../../../types/Categories";
+import { AxiosError } from "axios";
+
 export default function CreateCategory() {
   const { t } = useTranslation(["CreateCategory"]);
-  const [categoryData, setCategoryData] = useState({
+  const [categoryData, setCategoryData] = useState<CategoryInputData>({
     name: "",
     description: "",
     commission_rate: "",
     parent_id: "",
     image: null as File | null,
+    status: "active", // or a default value like "active" if required
+    appears_in_website: false, // or true, depending on your default
   });
 
   const [errorFetchingCategories, setErrorFetchingCategories] = useState("");
 
-  const [errors, setErrors] = useState({
-    name: [] as string[],
-    description: [] as string[],
-    commission_rate: [] as string[],
-    parent_id: [] as string[],
-    image: [] as string[],
-    global: "" as string,
-    general: "" as string,
+  const [errors, setErrors] = useState<ServerErrors>({
+    name: [],
+    description: [],
+    commission_rate: [],
+    parent_id: [],
+    image: [],
+    status: [],
+    appears_in_website: [],
+    global: "",
+    general: "",
   });
-  const [clientErrors, setClientErrors] = useState({
+  const [clientErrors, setClientErrors] = useState<ClientErrors>({
     name: "",
     description: "",
     commission_rate: "",
     parent_id: "",
     image: "",
+    status: "",
+    appears_in_website: "",
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -49,9 +59,11 @@ export default function CreateCategory() {
     isError: isCategoriesError,
     error: categoriesError,
   } = useAllCategories();
-  const categories = data?.data.data.original;
+  const categories = data?.original || [];
+  console.log(data);
+
   useEffect(() => {
-    if (isCategoriesError) {
+    if (isCategoriesError && categoriesError instanceof AxiosError) {
       const status = categoriesError?.response?.status;
       if (status === 401 || status === 403) {
         setErrorFetchingCategories(t("category.errors.global"));
@@ -103,6 +115,8 @@ export default function CreateCategory() {
       commission_rate: [],
       parent_id: [],
       image: [],
+      status: [],
+      appears_in_website: [],
       global: "",
       general: "",
     });
@@ -111,7 +125,7 @@ export default function CreateCategory() {
     const formData = new FormData();
     formData.append("name", categoryData.name);
     formData.append("description", categoryData.description);
-    formData.append("commission_rate", categoryData.commission_rate);
+    formData.append("commission_rate", categoryData.commission_rate ?? "");
     if (categoryData.parent_id)
       formData.append("parent_id", categoryData.parent_id);
     if (categoryData.image) formData.append("image", categoryData.image);
@@ -165,6 +179,12 @@ export default function CreateCategory() {
         onSubmit={handleSubmit}
         className="space-y-6 w-full mt-8 flex flex-col items-center"
       >
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
           <div>
             <Label>{t("category.name")}</Label>
@@ -235,7 +255,7 @@ export default function CreateCategory() {
                 value: cat.id.toString(),
                 label: cat.name,
               }))}
-              value={categoryData.parent_id}
+              value={categoryData.parent_id!!}
               onChange={handleSelectChange}
               placeholder={t("category.selectParent")}
             />
@@ -258,7 +278,7 @@ export default function CreateCategory() {
         <div className="w-full">
           <Label>{t("category.image")}</Label>
           <CategoryImageUpload
-            file={categoryData.image}
+            file={categoryData.image as File | null}
             onFileChange={handleImageChange}
           />
           {clientErrors.image && (
@@ -268,13 +288,6 @@ export default function CreateCategory() {
             <p className="text-red-500 text-sm mt-1">{errors.image[0]}</p>
           )}
         </div>
-
-        {errors.global && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
-        )}
 
         <button
           type="submit"

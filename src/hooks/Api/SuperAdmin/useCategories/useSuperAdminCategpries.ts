@@ -7,18 +7,26 @@ import {
   getCategoryById,
   updateCategory,
 } from "../../../../api/SuperAdminApi/Categories/_requests";
-import { AxiosError } from "axios";
+import {
+  AllCategoriesData,
+  Category,
+  CategoryFilters,
+  PaginatedCategoryOriginal,
+} from "../../../../types/Categories";
 
 export const useAllCategories = () => {
-  return useQuery({
+  return useQuery<AllCategoriesData>({
     queryKey: ["categories", "all"],
-    queryFn: getAllCategories,
+    queryFn: async () => {
+      const response = await getAllCategories();
+      return response.data.data;
+    },
     staleTime: 1000 * 60 * 20,
   });
 };
 
-export const useGetCategories = (page: number, filters?: any) => {
-  return useQuery({
+export const useGetCategories = (page: number, filters?: CategoryFilters) => {
+  return useQuery<PaginatedCategoryOriginal>({
     queryKey: ["superAdminCategories", page, filters],
     queryFn: async () => {
       const response = await getCategoriesPaginate({
@@ -26,19 +34,19 @@ export const useGetCategories = (page: number, filters?: any) => {
         ...filters,
       });
 
-      return response.data.data;
+      return response.data.data.original;
     },
     staleTime: 1000 * 60 * 5,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطاء في جلب الصلاحيات:", error);
-    },
   });
 };
 
 export const useGetCategoryById = (id?: number | string) => {
-  return useQuery({
+  return useQuery<Category>({
     queryKey: ["category", id],
-    queryFn: () => getCategoryById(id!),
+    queryFn: async () => {
+      const response = await getCategoryById(id!);
+      return response.data.data.original;
+    },
     staleTime: 1000 * 60 * 5,
     enabled: !!id,
   });
@@ -54,7 +62,7 @@ export const useDeleteCategory = () => {
       return res;
     },
     onSuccess: (_, variables) => {
-      const { id } = variables;
+      const id = variables;
       queryClient.invalidateQueries({ queryKey: ["superAdminCategories"] });
       queryClient.invalidateQueries({ queryKey: ["superAdminCategories", id] });
       queryClient.invalidateQueries({ queryKey: ["categories", "all"] });
@@ -68,7 +76,7 @@ export const useDeleteCategory = () => {
 export const useCreateCategory = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (categoryData: any) => {
+    mutationFn: async (categoryData: FormData) => {
       return await createCategory(categoryData);
     },
 
@@ -82,15 +90,15 @@ export const useCreateCategory = () => {
   });
 };
 
-export const useUpdateCategory = (id) => {
+export const useUpdateCategory = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
       categoryData,
       id,
     }: {
-      id: number | string;
-      categoryData: any;
+      id: string;
+      categoryData: FormData;
     }) => {
       return await updateCategory(categoryData, id);
     },

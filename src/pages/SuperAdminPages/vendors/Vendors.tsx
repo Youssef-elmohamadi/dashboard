@@ -1,4 +1,4 @@
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
@@ -12,16 +12,13 @@ import {
   useGetVendorsPaginate,
 } from "../../../hooks/Api/SuperAdmin/useVendorMangement/useSuperAdminVendorManage";
 import { AxiosError } from "axios";
+import { SearchValues } from "../../../types/Vendor";
 
 const Vendors = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-  const [searchValues, setSearchValues] = useState<{
-    name: string;
-    email: string;
-    phone: string;
-  }>({
+  const [searchValues, setSearchValues] = useState<SearchValues>({
     name: "",
     email: "",
     phone: "",
@@ -39,6 +36,7 @@ const Vendors = () => {
     pageIndex,
     searchValues
   );
+
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
       const status = error.response?.status;

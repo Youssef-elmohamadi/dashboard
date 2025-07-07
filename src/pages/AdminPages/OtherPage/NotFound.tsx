@@ -1,6 +1,5 @@
-import GridShape from "../../../components/common/GridShape";
-import { Link } from "react-router";
-import PageMeta from "../../../components/common/PageMeta";
+import GridShape from "../../../components/common/Auth/GridShape";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import { useTranslation } from "react-i18next";
 
 export default function NotFound() {

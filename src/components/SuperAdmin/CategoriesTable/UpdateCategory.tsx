@@ -2,50 +2,60 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FiEdit } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
-import Label from "../../../components/form/Label";
-import Input from "../../../components/form/input/InputField";
-import Select from "../../../components/form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 import CategoryImageUpload from "./CategoryImageUpload";
 import {
   useGetCategoryById,
   useUpdateCategory,
 } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
-import TextArea from "../../form/input/TextArea";
-import PageMeta from "../../common/PageMeta";
-type Category = {
-  id: string;
-  name: string;
-};
+import TextArea from "../../common/input/TextArea";
+import PageMeta from "../../common/SEO/PageMeta";
+import { AxiosError } from "axios";
+import {
+  Category,
+  CategoryInputData,
+  ClientErrors,
+  ServerErrors,
+} from "../../../types/Categories";
 export default function UpdateCategory() {
   const { t } = useTranslation(["UpdateCategory"]);
-  const [categoryData, setCategoryData] = useState({
+  const [categoryData, setCategoryData] = useState<CategoryInputData>({
     name: "",
     description: "",
     commission_rate: "",
     parent_id: "",
     image: null as File | null,
+    status: "active", // or a default value like "active" if required
+    appears_in_website: false, // or a default value as needed
   });
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [clientErrors, setClientErrors] = useState({
+  const [clientErrors, setClientErrors] = useState<ClientErrors>({
     name: "",
     description: "",
     commission_rate: "",
     parent_id: "",
     image: "",
+    status: "",
+    appears_in_website: "",
   });
-  const [errors, setErrors] = useState({
-    name: [] as string[],
-    description: [] as string[],
-    commission_rate: [] as string[],
-    parent_id: [] as string[],
-    image: [] as string[],
-    global: "" as string,
-    general: "" as string,
+  const [errors, setErrors] = useState<ServerErrors>({
+    name: [],
+    description: [],
+    commission_rate: [],
+    parent_id: [],
+    image: [],
+    status: [],
+    appears_in_website: [],
+    global: "",
+    general: "",
   });
-  const [errorFetchingCategories, setErrorFetchingCategories] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [errorFetchingCategories, setErrorFetchingCategories] =
+    useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const {
@@ -53,9 +63,9 @@ export default function UpdateCategory() {
     isError: isCategoriesError,
     error: categoriesError,
   } = useAllCategories();
-  const categories = categoriesData?.data.data.original;
+  const categories = categoriesData?.original;
   useEffect(() => {
-    if (isCategoriesError) {
+    if (isCategoriesError && categoriesError instanceof AxiosError) {
       const status = categoriesError?.response?.status;
       if (status === 401 || status === 403) {
         setErrorFetchingCategories(t("category.errors.global"));
@@ -67,21 +77,23 @@ export default function UpdateCategory() {
 
   const { data, isError, error, isLoading } = useGetCategoryById(id);
 
-  const Category = data?.data.data.original;
+  const Category = data;
 
   useEffect(() => {
     if (!Category) return;
     setCategoryData({
       name: Category.name || "",
       description: Category.description || "",
-      commission_rate: Category.commission_rate || "",
+      commission_rate: Category.commission_rate?.toString() || "",
       parent_id: Category.parent_id ? Category.parent_id.toString() : "",
       image: null,
+      status: Category.status || "active",
+      appears_in_website: Category.appears_in_website ?? false,
     });
     setPreviewImage(Category.image);
   }, [Category]);
   useEffect(() => {
-    if (isError) {
+    if (isError && error instanceof AxiosError) {
       const status = error?.response?.status;
       if (status === 403 || status === 401) {
         setErrors({
@@ -129,7 +141,7 @@ export default function UpdateCategory() {
     setClientErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  const { mutateAsync } = useUpdateCategory(id);
+  const { mutateAsync } = useUpdateCategory(id!!);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({
@@ -138,6 +150,8 @@ export default function UpdateCategory() {
       commission_rate: [],
       parent_id: [],
       image: [],
+      status: [],
+      appears_in_website: [],
       global: "",
       general: "",
     });
@@ -146,7 +160,7 @@ export default function UpdateCategory() {
     const formData = new FormData();
     formData.append("name", categoryData.name);
     formData.append("description", categoryData.description);
-    formData.append("commission_rate", categoryData.commission_rate);
+    formData.append("commission_rate", categoryData.commission_rate ?? "");
     if (categoryData.parent_id)
       formData.append("parent_id", categoryData.parent_id);
     if (categoryData.image) formData.append("image", categoryData.image);
@@ -201,6 +215,46 @@ export default function UpdateCategory() {
       </>
     );
 
+  if (!data && !errors.general) {
+    return (
+      <>
+        <PageMeta
+          title={t("category.mainTitle")}
+          description="Update Category"
+        />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("not_found")}
+        </div>
+      </>
+    );
+  }
+  if (errors.global) {
+    return (
+      <>
+        <PageMeta
+          title={t("category.mainTitle")}
+          description="Update Category"
+        />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {errors.global}
+        </div>
+      </>
+    );
+  }
+  if (errors.general) {
+    return (
+      <>
+        <PageMeta
+          title={t("category.mainTitle")}
+          description="Update Category"
+        />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {errors.general}
+        </div>
+      </>
+    );
+  }
+
   return (
     <div>
       <PageMeta title={t("category.mainTitle")} description="Update Category" />
@@ -243,7 +297,7 @@ export default function UpdateCategory() {
             <Input
               type="number"
               name="commission_rate"
-              value={categoryData.commission_rate}
+              value={categoryData?.commission_rate!!}
               onChange={handleChange}
               placeholder={t("category.commissionPlaceholder")}
             />
@@ -290,7 +344,7 @@ export default function UpdateCategory() {
                 value: cat.id.toString(),
                 label: cat.name,
               }))}
-              value={categoryData.parent_id}
+              value={categoryData?.parent_id!!}
               onChange={handleSelectChange}
               placeholder={t("category.selectParent")}
             />
@@ -328,7 +382,7 @@ export default function UpdateCategory() {
             </div>
             <div className="flex-1">
               <CategoryImageUpload
-                file={categoryData.image}
+                file={categoryData.image as File}
                 onFileChange={handleImageChange}
               />
               {errors.image && (

@@ -1,24 +1,22 @@
-// ProductDetails.tsx
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import StarRatings from "react-star-ratings";
 import { MdCompareArrows, MdOutlineFavoriteBorder } from "react-icons/md";
 import InnerImageZoom from "react-inner-image-zoom";
 import { Circles } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { useModal } from "../Context/ModalContext";
+import { useModal } from "../../../components/EndUser/context/ModalContext";
 import { useGetProductById } from "../../../hooks/Api/EndUser/useProducts/useProducts";
 import {
   useAddFavorite,
   useRemoveFavorite,
 } from "../../../hooks/Api/EndUser/useProducts/useFavoriteProducts";
-import { Helmet } from "react-helmet-async";
+import SEO from "../../../components/common/SEO/seo"; // Ensure this import is correct
 import { Product } from "../../../types/Product";
-import SEO from "../../../components/common/seo";
 
 const ProductDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id, lang } = useParams<{ id: string; lang?: string }>(); // Destructure lang here
   const numericId = Number(id);
   const { t } = useTranslation(["EndUserProductDetails"]);
   const { openModal } = useModal();
@@ -63,17 +61,6 @@ const ProductDetails: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (!lang || (lang !== "ar" && lang !== "en")) {
-  //     navigate("/en", { replace: true });
-  //     return;
-  //   }
-
-  //   i18n.changeLanguage(lang);
-  //   setLang(lang);
-  //   setDir(lang === "ar" ? "rtl" : "ltr");
-  // }, [lang]);
-
   if (isProductLoading) {
     return (
       <div className="flex justify-center items-center my-5">
@@ -90,56 +77,85 @@ const ProductDetails: React.FC = () => {
     );
   }
 
+  // Generate dynamic keywords and description based on product data
+  const generateKeywords = () => {
+    const baseKeywords =
+      lang === "ar"
+        ? ["تشطيبة", "تسوق أونلاين", "منتجات", "مصر", "أفضل عروض"]
+        : ["tashtiba", "online shopping", "products", "Egypt", "best deals"];
+
+    const productSpecificKeywords = [];
+
+    if (product.name) {
+      productSpecificKeywords.push(product.name);
+    }
+    if (product.category?.name) {
+      productSpecificKeywords.push(product.category.name);
+    }
+    if (product.brand?.name) {
+      productSpecificKeywords.push(product.brand.name);
+    }
+    if (Array.isArray(product.tags) && product.tags.length > 0) {
+      product.tags.forEach((tag) => productSpecificKeywords.push(tag.name));
+    }
+    if (product.name) {
+      productSpecificKeywords.push(
+        `${product.name} ${lang === "ar" ? "سعر" : "price"}`
+      );
+      productSpecificKeywords.push(
+        `${lang === "ar" ? "اشترِ" : "buy"} ${product.name}`
+      );
+    }
+
+    return [...new Set([...baseKeywords, ...productSpecificKeywords])]; // Use Set to remove duplicates
+  };
+
+  const generateDescription = () => {
+    const productName = product.name || t("defaultProductName");
+    const productPrice = product.discount_price
+      ? product.discount_price.toFixed(2)
+      : Number(product.price).toFixed(2);
+    const currency = t("egp");
+    const categoryName = product.category?.name || t("uncategorized");
+    const brandName = product.brand?.name || t("unknownBrand");
+
+    if (lang === "ar") {
+      return `تسوق ${productName} من تشطيبة في مصر. اكتشف أفضل العروض، المواصفات (${categoryName}, ${brandName})، والسعر ${productPrice} ${currency}. اطلب الآن واستمتع بتجربة تسوق فريدة.`;
+    } else {
+      return `Shop ${productName} from Tashtiba in Egypt. Find best deals, specifications (${categoryName}, ${brandName}), and price ${productPrice} ${currency}. Order now for a unique shopping experience.`;
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-10">
       <SEO
         title={{
-          ar: `تاشتيبا - ${product.name}`,
-          en: `Tashtiba - ${product.name}`,
+          ar: `تشطيبة - ${product.name} | سعر ومواصفات`,
+          en: `Tashtiba - ${product.name} | Price & Specs`,
         }}
         description={{
-          ar: `اكتشف منتجات مذهلة على تاشتيبا - تسوق إلكترونيات، أزياء، أثاث ومنتجات منزلية بسهولة وأمان من أفضل البائعين في مصر.`,
-          en: `Shop amazing products at Tashtiba — your online destination for electronics, fashion, furniture, and home goods. Safe and easy shopping across Egypt.`,
+          ar: generateDescription(),
+          en: generateDescription(),
         }}
         keywords={{
-          ar: [
-            "تاشتيبا",
-            "الكترونيات",
-            "ملابس",
-            "أزياء",
-            "أثاث",
-            "مطبخ",
-            "عناية شخصية",
-            "موبايلات",
-            "أحذية",
-            "شنط",
-            "سوق مصر",
-            "توصيل سريع",
-            // ...(dynamicKeywords || [])
-          ],
-          en: [
-            "tashtiba",
-            "electronics",
-            "fashion",
-            "furniture",
-            "home appliances",
-            "mobiles",
-            "kitchen",
-            "bags",
-            "shoes",
-            "online shopping Egypt",
-            "fast delivery",
-            // ...(dynamicKeywords || [])
-          ],
+          ar: generateKeywords(),
+          en: generateKeywords(),
         }}
-        // --- ADD THIS SECTION FOR HREFLANG ---
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar" }, // Replace with your actual Arabic URL
-          { lang: "en", href: "https://tashtiba.vercel.app/en" }, // Replace with your actual English URL
-          // You can also add an x-default if you have a default language page, for example:
-          // { lang: "x-default", href: "https://tashtiba.vercel.app/en" },
+          // Use product ID in the URL for language alternates
+          {
+            lang: "ar",
+            href: `https://tashtiba.vercel.app/ar/product/${product.id}`,
+          },
+          {
+            lang: "en",
+            href: `https://tashtiba.vercel.app/en/product/${product.id}`,
+          },
+          {
+            lang: "x-default",
+            href: `https://tashtiba.vercel.app/en/product/${product.id}`,
+          }, // Consider a default if you have one
         ]}
-        // --- END OF HREFLANG SECTION ---
       />
       <div className="grid lg:grid-cols-2 gap-10">
         {/* Left: Product Image + Thumbnails */}

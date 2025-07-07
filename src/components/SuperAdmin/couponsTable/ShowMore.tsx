@@ -3,29 +3,16 @@ import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetCouponById } from "../../../hooks/Api/SuperAdmin/useCoupons/useCoupons";
 import { AxiosError } from "axios";
-import PageMeta from "../../common/PageMeta";
-
-interface Coupon {
-  code: string;
-  type: "fixed" | "percent";
-  value: string;
-  max_discount: string | null;
-  min_order_amount: string;
-  usage_limit: number;
-  used_count: string;
-  active: "1" | "0";
-  start_at: string;
-  expires_at: string;
-}
+import PageMeta from "../../common/SEO/PageMeta";
 
 const CouponDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["CouponDetails"]);
   //const [couponData, setCouponData] = useState<Coupon | null>(null);
-  const [globalError, setGlobalError] = useState("");
+  const [globalError, setGlobalError] = useState<string>("");
   const { data, isLoading, isError, error } = useGetCouponById(id!!);
 
-  const couponData = data?.data?.data;
+  const couponData = data;
 
   // useEffect(() => {
   //   if (coupon) {
@@ -44,14 +31,16 @@ const CouponDetails: React.FC = () => {
     }
   }, [isError, error, t]);
 
-  const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const formatDate = (dateStr?: string) =>
+    dateStr
+      ? new Date(dateStr).toLocaleString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : t("coupon.no_date");
 
   if (!id) {
     return (
@@ -67,7 +56,10 @@ const CouponDetails: React.FC = () => {
   if (isLoading) {
     return (
       <>
-        <PageMeta title={t("coupon.mainTitle")} description="Category Details" />
+        <PageMeta
+          title={t("coupon.mainTitle")}
+          description="Category Details"
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("coupon.loading")}
         </div>
@@ -78,7 +70,10 @@ const CouponDetails: React.FC = () => {
   if (!couponData && !globalError) {
     return (
       <>
-        <PageMeta title={t("coupon.mainTitle")} description="Category Details" />
+        <PageMeta
+          title={t("coupon.mainTitle")}
+          description="Category Details"
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("coupon.not_found")}
         </div>
@@ -88,7 +83,10 @@ const CouponDetails: React.FC = () => {
   if (globalError) {
     return (
       <>
-        <PageMeta title={t("coupon.mainTitle")} description="Category Details" />
+        <PageMeta
+          title={t("coupon.mainTitle")}
+          description="Category Details"
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {globalError}
         </div>
@@ -110,19 +108,19 @@ const CouponDetails: React.FC = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
-            <strong>{t("coupon.code")}:</strong> {couponData.code}
+            <strong>{t("coupon.code")}:</strong> {couponData?.code}
           </p>
           <p>
             <strong>{t("coupon.type")}:</strong>{" "}
-            {t(`coupon.${couponData.type}`)}
+            {t(`coupon.${couponData?.type}`)}
           </p>
           <p>
-            <strong>{t("coupon.value")}:</strong> {couponData.value}
-            {couponData.type === "percent" ? "%" : " EGP"}
+            <strong>{t("coupon.value")}:</strong> {couponData?.value}
+            {couponData?.type === "percent" ? "%" : " EGP"}
           </p>
           <p>
             <strong>{t("coupon.status")}:</strong>{" "}
-            {t(`coupon.${couponData.active === "1" ? "active" : "inactive"}`)}
+            {t(`coupon.${couponData?.active === "1" ? "active" : "inactive"}`)}
           </p>
         </div>
       </section>
@@ -135,17 +133,18 @@ const CouponDetails: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
             <strong>{t("coupon.min_order")}:</strong>{" "}
-            {couponData.min_order_amount} EGP
+            {couponData?.min_order_amount} EGP
           </p>
           <p>
             <strong>{t("coupon.max_discount")}:</strong>{" "}
-            {couponData.max_discount || t("coupon.no_limit")}
+            {couponData?.max_discount || t("coupon.no_limit")}
           </p>
           <p>
-            <strong>{t("coupon.usage_limit")}:</strong> {couponData.usage_limit}
+            <strong>{t("coupon.usage_limit")}:</strong>{" "}
+            {couponData?.usage_limit}
           </p>
           <p>
-            <strong>{t("coupon.used_count")}:</strong> {couponData.used_count}
+            <strong>{t("coupon.used_count")}:</strong> {couponData?.used_count}
           </p>
         </div>
       </section>
@@ -158,11 +157,11 @@ const CouponDetails: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
           <p>
             <strong>{t("coupon.start_at")}:</strong>{" "}
-            {formatDate(couponData.start_at)}
+            {formatDate(couponData?.start_at)}
           </p>
           <p>
             <strong>{t("coupon.expires_at")}:</strong>{" "}
-            {formatDate(couponData.expires_at)}
+            {formatDate(couponData?.expires_at)}
           </p>
         </div>
       </section>

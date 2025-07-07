@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Input from "../form/input/InputField";
+import Input from "./input/InputField";
 import { useTranslation } from "react-i18next";
 
 type Props = {

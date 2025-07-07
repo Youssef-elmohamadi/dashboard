@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetProductById } from "../../../hooks/Api/SuperAdmin/useProducts/useSuperAdminProductsManage";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
+import { AxiosError } from "axios";
 
 const ProductDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["ProductDetails"]);
   const [globalError, setGlobalError] = useState(false);
-  const { data, isLoading: loading, error, isError } = useGetProductById(id);
-
+  const { data, isLoading: loading, error, isError } = useGetProductById(id!!);
   const product = data?.data.data;
   useEffect(() => {
-    if (isError) {
+    if (isError && error instanceof AxiosError) {
       const status = error?.response?.status;
       if (status === 401 || status === 403) {
         setGlobalError(true);

@@ -1,6 +1,6 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 import { showUser } from "../api/AdminApi/profileApi/_requests";
-import { handleLogout } from "../components/common/Logout";
+import { handleLogout } from "../components/common/Auth/Logout";
 import { useNavigate } from "react-router";
 
 interface UserContextType {

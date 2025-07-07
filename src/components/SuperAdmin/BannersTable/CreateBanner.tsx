@@ -1,35 +1,54 @@
 import React, { useEffect, useState } from "react";
-import Label from "../../../components/form/Label";
-import Input from "../../../components/form/input/InputField";
-import Select from "../../form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Button from "../../ui/button/Button";
 import { useAllCategories } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
 import { useCreateBanner } from "../../../hooks/Api/SuperAdmin/useBanners/useSuperAdminBanners";
 import { AxiosError } from "axios";
-
-interface Category {
-  id: string;
-  name: string;
-}
+import {
+  BannerInput,
+  ClientErrors,
+  ServerErrors,
+} from "../../../types/Banners";
+import { Category } from "../../../types/Categories";
 
 const CreateBanner = () => {
   const { t } = useTranslation(["CreateBanner"]);
-  const [bannerData, setBannerData] = useState({
+  const [bannerData, setBannerData] = useState<BannerInput>({
     title: "",
-    link_type: "external",
+    image: "",
+    link_type: "",
     url: "",
     link_id: "",
     position: "",
-    is_active: "1",
+    is_active: "",
   });
-  const [fetchingCategoriesError, setFetchingCategoriesError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string[] | string>>({});
-  const [clientSideErrors, setClientSideErrors] = useState<
-    Record<string, string>
-  >({});
+  const [fetchingCategoriesError, setFetchingCategoriesError] =
+    useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [errors, setErrors] = useState<ServerErrors>({
+    title: [],
+    image: [],
+    link_type: [],
+    url: [],
+    link_id: [],
+    position: [],
+    is_active: [],
+    global: "",
+    general: "",
+  });
+  const [clientSideErrors, setClientSideErrors] = useState<ClientErrors>({
+    title: "",
+    image: "",
+    link_type: "",
+    url: "",
+    link_id: "",
+    position: "",
+    is_active: "",
+  });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const navigate = useNavigate();
@@ -39,7 +58,10 @@ const CreateBanner = () => {
     isError: isErrorFetchingCategories,
     error: categoriesError,
   } = useAllCategories();
-  const categories = allCategories?.data.data.original;
+
+  const categories = allCategories?.original || [];
+  console.log(allCategories);
+
   useEffect(() => {
     if (isErrorFetchingCategories && categoriesError instanceof AxiosError) {
       const status = categoriesError?.response?.status;
@@ -51,7 +73,15 @@ const CreateBanner = () => {
     }
   }, [isErrorFetchingCategories, categoriesError, t]);
   const validate = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: ClientErrors = {
+      title: "",
+      image: "",
+      link_type: "",
+      url: "",
+      link_id: "",
+      position: "",
+      is_active: "",
+    };
     if (!bannerData.title) newErrors.title = t("banner.errors.name");
     if (!bannerData.link_type)
       newErrors.link_type = t("banner.errors.linkType");
@@ -69,7 +99,7 @@ const CreateBanner = () => {
     }
 
     setClientSideErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.values(newErrors).every((val) => val === "");
   };
   const { mutateAsync: createBanner } = useCreateBanner();
   const handleChange = (
@@ -89,9 +119,21 @@ const CreateBanner = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors({});
+    setErrors({
+      title: [],
+      image: [],
+      link_type: [],
+      url: [],
+      link_id: [],
+      position: [],
+      is_active: [],
+      global: "",
+      general: "",
+    });
     setIsSubmitting(true);
     if (!validate()) {
+      console.log(clientSideErrors);
+
       setIsSubmitting(false);
       return;
     }
@@ -117,7 +159,7 @@ const CreateBanner = () => {
       console.error("Error creating banner:", error);
       const status = error?.response?.status;
       if (status === 403 || status === 401) {
-        setErrors({ global: t("banner.errors.global") });
+        setErrors((prev) => ({ ...prev, global: t("banner.errors.global") }));
         return;
       }
       const rawErrors = error?.response?.data.errors;
@@ -132,9 +174,12 @@ const CreateBanner = () => {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors(formattedErrors);
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ general: t("banner.errors.general") });
+        setErrors((prev) => ({
+          ...prev,
+          general: t("banner.errors.general"),
+        }));
       }
     } finally {
       setIsSubmitting(false);
@@ -149,6 +194,12 @@ const CreateBanner = () => {
         </h3>
       </div>
       <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+        {errors.global && (
+          <p className="text-red-500 text-sm text-center">{errors.global}</p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm text-center">{errors.general}</p>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
             <Label htmlFor="title">{t("banner.name")}</Label>
@@ -158,7 +209,7 @@ const CreateBanner = () => {
               onChange={handleChange}
               placeholder={t("banner.titlePlaceholder")}
             />
-            {errors.title && (
+            {errors.title?.[0] && (
               <p className="text-red-500 text-sm mt-1">
                 {t("banner.errors.titleTaken")}
               </p>
@@ -174,7 +225,10 @@ const CreateBanner = () => {
             <Select
               value={bannerData.link_type}
               onChange={(value) =>
-                setBannerData((prev) => ({ ...prev, link_type: value }))
+                setBannerData((prev) => ({
+                  ...prev,
+                  link_type: value as "category" | "external",
+                }))
               }
               options={[
                 {
@@ -189,8 +243,8 @@ const CreateBanner = () => {
               placeholder={t("banner.linkTypePlaceholder")}
               className="border border-gray-300 rounded px-3 py-2 w-full"
             />
-            {errors.link_type && (
-              <p className="text-red-500 text-sm mt-1">{errors.link_type}</p>
+            {errors.link_type[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.link_type[0]}</p>
             )}
             {clientSideErrors.link_type && (
               <p className="text-red-500 text-sm mt-1">
@@ -209,8 +263,8 @@ const CreateBanner = () => {
                 onChange={handleChange}
                 placeholder="https://example.com"
               />
-              {errors.url && (
-                <p className="text-red-500 text-sm mt-1">{errors.url}</p>
+              {errors.url[0] && (
+                <p className="text-red-500 text-sm mt-1">{errors.url[0]}</p>
               )}
               {clientSideErrors.url && (
                 <p className="text-red-500 text-sm mt-1">
@@ -235,8 +289,8 @@ const CreateBanner = () => {
                 placeholder={t("banner.categoryPlaceholder")}
                 className="border border-gray-300 rounded px-3 py-2 w-full"
               />
-              {errors.link_id && (
-                <p className="text-red-500 text-sm mt-1">{errors.link_id}</p>
+              {errors.link_id[0] && (
+                <p className="text-red-500 text-sm mt-1">{errors.link_id[0]}</p>
               )}
               {clientSideErrors.link_id && (
                 <p className="text-red-500 text-sm mt-1">
@@ -264,12 +318,17 @@ const CreateBanner = () => {
               }))}
               placeholder={t("banner.positionPlaceholder")}
             />
-            {errors.position && (
-              <p className="text-red-500 text-sm mt-1">{errors.position}</p>
+            {errors.position[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.position[0]}</p>
             )}
             {clientSideErrors.position && (
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.position}
+              </p>
+            )}
+            {fetchingCategoriesError && (
+              <p className="text-red-500 text-sm mt-1">
+                {fetchingCategoriesError}
               </p>
             )}
           </div>
@@ -287,8 +346,8 @@ const CreateBanner = () => {
               ]}
               placeholder={t("banner.statusPlaceholder")}
             />
-            {errors.is_active && (
-              <p className="text-red-500 text-sm mt-1">{errors.is_active}</p>
+            {errors.is_active[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.is_active[0]}</p>
             )}
             {clientSideErrors.is_active && (
               <p className="text-red-500 text-sm mt-1">
@@ -301,7 +360,7 @@ const CreateBanner = () => {
         <div>
           <Label htmlFor="image">{t("banner.bannerImage")}</Label>
           <Input type="file" onChange={handleImageChange} />
-          {errors.image && (
+          {errors.image[0] && (
             <p className="text-red-500 text-sm mt-1">
               {t("banner.errors.invalidImage")}
             </p>
@@ -319,12 +378,6 @@ const CreateBanner = () => {
             />
           )}
         </div>
-        {errors.global && (
-          <p className="text-red-500 text-sm">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm">{errors.general}</p>
-        )}
 
         <Button
           type="submit"

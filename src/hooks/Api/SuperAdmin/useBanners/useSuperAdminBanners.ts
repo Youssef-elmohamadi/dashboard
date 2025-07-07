@@ -6,10 +6,14 @@ import {
   getBannersPaginate,
   updateBanner,
 } from "../../../../api/SuperAdminApi/Banners/_requests";
-import { AxiosError } from "axios";
+import { SearchValues } from "../../../../types/Banners";
+import { Banner, BannersApiResponse } from "../../../../types/Banners";
 
-export const useBannersWithPaginate = (page: number, filters?: any) => {
-  return useQuery({
+export const useBannersWithPaginate = (
+  page: number,
+  filters?: SearchValues
+) => {
+  return useQuery<BannersApiResponse>({
     queryKey: ["banners", page, filters],
     queryFn: async () => {
       const response = await getBannersPaginate({
@@ -19,21 +23,23 @@ export const useBannersWithPaginate = (page: number, filters?: any) => {
       return response.data;
     },
     staleTime: 1000 * 60 * 5,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطأ في جلب البانرات:", error);
-    },
   });
 };
 
+// ✅ جلب بانر واحد بالتفاصيل
 export const useGetBannerById = (id?: number | string) => {
-  return useQuery({
+  return useQuery<Banner>({
     queryKey: ["banner", id],
-    queryFn: () => getBannerById(id!),
+    queryFn: async () => {
+      const response = await getBannerById(id!);
+      return response.data.data;
+    },
     staleTime: 1000 * 60 * 5,
     enabled: !!id,
   });
 };
 
+// ✅ حذف بانر
 export const useDeleteBanner = () => {
   const queryClient = useQueryClient();
 
@@ -43,7 +49,7 @@ export const useDeleteBanner = () => {
       return res;
     },
     onSuccess: (_, variables) => {
-      const { id } = variables;
+      const id = variables;
       queryClient.invalidateQueries({ queryKey: ["Banners"] });
       queryClient.invalidateQueries({ queryKey: ["Banner", id] });
       queryClient.invalidateQueries({ queryKey: ["banners", "all"] });
@@ -54,13 +60,13 @@ export const useDeleteBanner = () => {
   });
 };
 
+// ✅ إنشاء بانر جديد
 export const useCreateBanner = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (bannerData: any) => {
       return await createBanner(bannerData);
     },
-
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["banners"] });
       queryClient.invalidateQueries({ queryKey: ["banners", "all"] });
@@ -71,7 +77,8 @@ export const useCreateBanner = () => {
   });
 };
 
-export const useUpdateBanner = (id: number|string) => {
+// ✅ تعديل بانر
+export const useUpdateBanner = (id: number | string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ bannerData, id }: { id: number; bannerData: any }) => {

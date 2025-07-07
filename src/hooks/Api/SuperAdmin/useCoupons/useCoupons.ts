@@ -1,7 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-import { AxiosError } from "axios";
-
 import {
   createCoupon,
   deleteCoupon,
@@ -9,6 +6,11 @@ import {
   showCoupon,
   updateCoupon,
 } from "../../../../api/SuperAdminApi/couponsApi/_requests";
+import {
+  Coupon,
+  CouponInput,
+  PaginatedCoupons,
+} from "../../../../types/Coupons";
 
 type CouponFilters = {
   active?: string;
@@ -18,7 +20,7 @@ type CouponFilters = {
   to_date?: string;
 };
 export const useAllCoupons = (page: number, filters?: CouponFilters) => {
-  return useQuery({
+  return useQuery<PaginatedCoupons>({
     queryKey: ["coupons", page, filters],
     queryFn: async () => {
       const response = await getCouponsWithPaginate({
@@ -29,9 +31,6 @@ export const useAllCoupons = (page: number, filters?: CouponFilters) => {
       return response.data.data;
     },
     staleTime: 1000 * 60 * 4,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطأ أثناء جلب المشرفين:", error);
-    },
   });
 };
 
@@ -55,7 +54,7 @@ export const useDeleteCoupon = () => {
 export const useCreateCoupon = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (productData: any) => {
+    mutationFn: async (productData: CouponInput) => {
       return await createCoupon(productData);
     },
 
@@ -70,9 +69,12 @@ export const useCreateCoupon = () => {
 };
 
 export const useGetCouponById = (id: number | string) => {
-  return useQuery({
+  return useQuery<Coupon>({
     queryKey: ["coupon", id],
-    queryFn: () => showCoupon(id!),
+    queryFn: async () => {
+      const response = await showCoupon(id!);
+      return response.data.data;
+    },
     staleTime: 1000 * 60 * 5,
     enabled: !!id,
   });
@@ -81,7 +83,13 @@ export const useGetCouponById = (id: number | string) => {
 export const useUpdateCoupon = (id: number | string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ couponData, id }: { couponData: any; id: number }) => {
+    mutationFn: async ({
+      couponData,
+      id,
+    }: {
+      couponData: CouponInput;
+      id: number;
+    }) => {
       return await updateCoupon(id, couponData);
     },
     onSuccess: () => {

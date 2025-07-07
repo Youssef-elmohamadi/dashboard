@@ -6,8 +6,8 @@ import {
   ServerErrors,
   VendorInfo,
 } from "../../../types/Auth";
-import Input from "../../form/input/InputField";
-import Label from "../../form/Label";
+import Input from "../../common/input/InputField";
+import Label from "../../common/form/Label";
 import ImageUploader from "./ImageUploader";
 import { useTranslation } from "react-i18next";
 

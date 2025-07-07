@@ -1,14 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { AxiosError } from "axios";
 import {
     changeStatus,
   getProductById,
   getProductsWithPaginate,
 } from "../../../../api/SuperAdminApi/Products/_requests";
+import { ProductsPaginate } from "../../../../types/Product";
 
 export const useGetProductsPaginate = (page: number, filters?: any) => {
-  return useQuery({
+  return useQuery<ProductsPaginate>({
     queryKey: ["superAdminProducts", page, filters],
     queryFn: async () => {
       const response = await getProductsWithPaginate({
@@ -18,13 +18,10 @@ export const useGetProductsPaginate = (page: number, filters?: any) => {
       return response.data.data;
     },
     staleTime: 1000 * 60 * 5,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطاء في جلب الصلاحيات:", error);
-    },
   });
 };
 
-export const useGetProductById = (id: number) => {
+export const useGetProductById = (id: number | string) => {
   return useQuery({
     queryKey: ["product", id],
     queryFn: () => getProductById(id),

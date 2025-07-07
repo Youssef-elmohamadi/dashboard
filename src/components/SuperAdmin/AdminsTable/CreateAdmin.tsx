@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Label from "../../../components/form/Label";
-import Input from "../../../components/form/input/InputField";
-import Select from "../../../components/form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import { FiUserPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,8 @@ import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useRoles } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
 import { useCreateAdmin } from "../../../hooks/Api/SuperAdmin/useSuperAdminAdmis/useSuperAdminAdmins";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
+import { AxiosError } from "axios";
 type Role = {
   name: string;
 };
@@ -99,7 +100,7 @@ export default function CreateAdmin() {
   const { data, isError: isRoleError, error: roleError } = useRoles();
   const options = data?.data.data;
   useEffect(() => {
-    if (isRoleError) {
+    if (isRoleError && roleError instanceof AxiosError) {
       const status = roleError?.response?.status;
       if (status === 401 || status === 403) {
         setFetchingRoleError(t("admin.errors.global"));
@@ -172,6 +173,16 @@ export default function CreateAdmin() {
         onSubmit={handleSubmit}
         className="space-y-6 w-full mt-8 flex justify-between items-center flex-col"
       >
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errors.global}
+          </p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errors.general}
+          </p>
+        )}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
             <Label htmlFor="input">{t("admin.first_name")}</Label>
@@ -182,7 +193,7 @@ export default function CreateAdmin() {
               placeholder={t("admin.placeholder.first_name")}
               onChange={handleChange}
             />
-            {errors.first_name && (
+            {errors.first_name[0] && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.first_name[0]}
               </p>
@@ -202,7 +213,7 @@ export default function CreateAdmin() {
               placeholder={t("admin.placeholder.last_name")}
               onChange={handleChange}
             />
-            {errors.last_name && (
+            {errors.last_name[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.last_name[0]}</p>
             )}
             {clientSideErrors.last_name && (
@@ -227,7 +238,7 @@ export default function CreateAdmin() {
           {fetchingRoleError && (
             <p className="text-red-500 text-sm mt-1">{fetchingRoleError}</p>
           )}
-          {errors.role && (
+          {errors.role[0] && (
             <p className="text-red-500 text-sm mt-1">{errors.role[0]}</p>
           )}
           {clientSideErrors.role && (
@@ -283,7 +294,7 @@ export default function CreateAdmin() {
               placeholder={t("admin.placeholder.password")}
               onChange={handleChange}
             />
-            {errors.password && (
+            {errors.password[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>
             )}
             {clientSideErrors.password && (
@@ -306,12 +317,6 @@ export default function CreateAdmin() {
             </button>
           </div>
         </div>
-        {errors.global && (
-          <p className="text-red-500 text-sm mt-4">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
-        )}
         <button
           type="submit"
           disabled={loading}

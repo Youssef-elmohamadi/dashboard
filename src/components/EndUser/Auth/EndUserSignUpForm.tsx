@@ -3,11 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { register } from "../../../api/EndUserApi/endUserAuth/_requests";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
-import OTPPage from "../../common/OtpPage";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import OTPPage from "../../common/Auth/OtpPage";
 import { sendOtp, verifyOtp } from "../../../api/OtpApi/_requests";
 import { toast } from "react-toastify";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 export default function SignUpForm() {
   const navigate = useNavigate();
   const { t } = useTranslation("auth");
@@ -20,6 +21,7 @@ export default function SignUpForm() {
   );
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [otpError, setOtpError] = useState("");
+  const { lang } = useDirectionAndLanguage();
   const [dataForm, setDataForm] = useState({
     first_name: "",
     last_name: "",
@@ -68,7 +70,7 @@ export default function SignUpForm() {
 
       if (res?.status === 200) {
         toast.success(t("otp.success"));
-        navigate("/admin/signin");
+        navigate(`/${lang}/signin`);
       }
     } catch (err: any) {
       const message = t("otp.invalid");
@@ -339,7 +341,7 @@ export default function SignUpForm() {
           <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
             {t("alreadyHaveAccount")}{" "}
             <Link
-              to="/signin"
+              to={`/${lang}/signin`}
               className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
             >
               {t("buttons.loginButton")}

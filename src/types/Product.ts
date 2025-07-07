@@ -1,5 +1,6 @@
 import { Brand } from "./Brands";
 import { Category } from "./Categories";
+import { Vendor } from "./Vendor";
 
 export type Attribute = {
   id?: number;
@@ -18,18 +19,6 @@ export type Tag = {
     product_id: number;
     tag_id: number | string;
   };
-};
-
-type Vendor = {
-  name?: string;
-  email?: string;
-  phone?: string;
-  description?: string;
-  status?: string;
-  is_verified?: number;
-  created_at?: string;
-  updated_at?: string;
-  documents?: any[];
 };
 
 export type image = {
@@ -84,3 +73,43 @@ export type ProductFilters = {
   name?: string;
 };
 
+export type ProductsPaginate = {
+  data: Product[];
+  total: number;
+  per_page: number;
+  current_page: number;
+  last_page: number;
+  from: number;
+  to: number;
+};
+
+export type productInputData = {
+  name: string;
+  description: string;
+  price: string;
+  discount_price: string;
+  stock_quantity: string;
+  category_id: string;
+  brand_id: string;
+  status: string;
+  is_featured: boolean;
+};
+
+export type ServerError = {
+  name: string[];
+  price: string[];
+  description: string[];
+  category_id: string[];
+  brand_id: string[];
+  stock_quantity: string[];
+  status: string[];
+  is_featured: string[];
+  discount_price: string[];
+  images: string[];
+  attributes: string[];
+  tags: string[];
+  general: string;
+  global: string;
+};
+
+export type ClientErrors = Record<string, string>;

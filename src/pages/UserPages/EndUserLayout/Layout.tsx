@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
-import AppHeader from "../../../components/EndUser/Header/AppHeader";
-import NavBar from "../../../components/EndUser/NavBar/NavBar";
-import AppTopBar from "../../../components/EndUser/TopBar/AppTopBar";
-import Footer from "../../../components/EndUser/Footer/Footer";
+import AppHeader from "../../../components/EndUser/Layout/AppHeader";
+import NavBar from "../../../components/EndUser/Layout/NavBar";
+import AppTopBar from "../../../components/EndUser/Layout/AppTopBar";
+import Footer from "../../../components/EndUser/Layout/Footer";
+import AboutTashtiba from "../../../components/EndUser/Layout/AboutSection";
 
 export default function EndUserLayout() {
   const [hidden, setHidden] = useState(false);
@@ -27,10 +28,10 @@ export default function EndUserLayout() {
   }, [lastScroll]);
 
   return (
-    <div className="bg-white text-black dark:bg-white dark:text-black min-h-screen">
+    <div className="bg-white! text-black dark:bg-white!  dark:text-black min-h-screen">
       {/* TopBar */}
       <div
-        className={`sticky z-[50] bg-white shadow-md transition-all duration-400 ease-in-out ${
+        className={`sticky z-[50] !bg-white shadow-md transition-all duration-400 ease-in-out ${
           hidden ? "top-0" : "top-12"
         }`}
       >
@@ -55,11 +56,12 @@ export default function EndUserLayout() {
       </div>
 
       {/* Main content */}
-      <main className="md:pt-[95px] pt-[50px]">
+      <main className="md:pt-[95px] !bg-white pt-[50px]">
         <Outlet />
       </main>
 
       <footer>
+        <AboutTashtiba />
         <Footer />
       </footer>
     </div>

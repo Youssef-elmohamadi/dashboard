@@ -33,7 +33,7 @@ type ServerErrors = {
 };
 
 type ClientErrors = {
-  [key in keyof Omit<UserProfileFormData, "avatar" | "id">]?: string;
+  [key in keyof Omit<UserProfileFormData, "id">]?: string;
 };
 
 export type { UserProfileFormData, ApiError, ServerErrors, ClientErrors };

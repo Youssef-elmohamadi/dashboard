@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import BrandCell from "./BrandCell";
-import TableStatus from "../../common/TableStatus";
+import TableStatus from "../../common/Tables/TableStatus";
 
 type BaseEntity = {
   id: number;

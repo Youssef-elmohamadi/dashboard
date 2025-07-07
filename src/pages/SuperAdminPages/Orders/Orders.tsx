@@ -1,4 +1,4 @@
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
@@ -14,29 +14,11 @@ import {
   useShipOrder,
 } from "../../../hooks/Api/SuperAdmin/useOrders/useOrders";
 import { AxiosError } from "axios";
-type User = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  vendor_id: number;
-  avatar: string;
-  created_at: string;
-  updated_at: string;
-  vendor: { id: number; name: string };
-  roles: { id: number; name: string }[];
-};
+import { SearchValuesOrders } from "../../../types/Orders";
 
 const Orders = () => {
   const [pageIndex, setPageIndex] = useState(0);
-  const [searchValues, setSearchValues] = useState<{
-    status: string;
-    shipping_status: string;
-    tracking_number: string;
-    from_date: string;
-    to_date: string;
-  }>({
+  const [searchValues, setSearchValues] = useState<SearchValuesOrders>({
     status: "",
     shipping_status: "",
     tracking_number: "",
@@ -51,6 +33,8 @@ const Orders = () => {
     pageIndex,
     searchValues
   );
+  console.log(data);
+
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
@@ -93,10 +77,9 @@ const Orders = () => {
     await openShipmentModal(id, shipment);
   };
 
-  const columns = buildColumns<User>({
+  const columns = buildColumns({
     includeFullName: true,
     includeDateOfCreation: true,
-    //includeOrderStatus: true,
     includeStatus: true,
     includeTotalPrice: true,
     includePaymentMethod: true,

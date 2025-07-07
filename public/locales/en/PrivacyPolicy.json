@@ -1,0 +1,28 @@
+{
+  "privacy": {
+    "title": "Your Privacy is Our Commitment",
+    "subtitle": "A transparent privacy policy that shows how we handle your data responsibly.",
+    "sections": {
+      "collection": {
+        "title": "Data We Collect",
+        "point1": "Basic personal data: name, email, phone number, and shipping address.",
+        "point2": "Usage data: your previous orders and interactions with the website."
+      },
+      "usage": {
+        "title": "How We Use Your Data",
+        "point1": "To efficiently process your orders and ensure proper delivery.",
+        "point2": "To improve our services and personalize your experience.",
+        "point3": "To send promotions and updates (only with your explicit consent)."
+      },
+      "protection": {
+        "title": "Data Protection",
+        "description": "We take your data security seriously. We use the latest protection protocols such as SSL and encryption. We never share your data with third parties outside of trusted service partners (like shipping companies) without your consent."
+      },
+      "rights": {
+        "title": "User Rights",
+        "point1": "You have full rights to access, modify, or delete your personal data at any time.",
+        "point2": "You can unsubscribe from our promotional emails easily via the link at the bottom of each email."
+      }
+    }
+  }
+}

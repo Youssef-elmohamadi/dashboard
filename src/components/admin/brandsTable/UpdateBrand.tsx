@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
-import Select from "../../form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 import ImageUpload from "../../common/ImageUpload";
 import {
   useGetBrandById,
   useUpdateBrand,
 } from "../../../hooks/Api/Admin/useBrands/useBrands";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
 import { AxiosError } from "axios";
 import {
   BrandApiError,

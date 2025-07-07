@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
-import Select from "../../form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
@@ -12,7 +12,7 @@ import {
   useUpdateAdmin,
 } from "../../../hooks/Api/Admin/useVendorAdmins/useVendorAdmins";
 import { useRoles } from "../../../hooks/Api/Admin/useRoles/useRoles";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
 import {
   ClientErrors,
   ServerErrors,
@@ -39,7 +39,6 @@ const UpdateAdmin = () => {
     password: "",
     role: "",
   });
-  const [globalError, setGlobalError] = useState(false);
   const [errors, setErrors] = useState<ServerErrors>({
     first_name: [],
     last_name: [],
@@ -95,7 +94,7 @@ const UpdateAdmin = () => {
       } else {
         setErrors((prev) => ({
           ...prev,
-          general: t("admin.errors.fetching_admin"),
+          general: t("admin.errors.general"),
         }));
       }
     }
@@ -112,7 +111,10 @@ const UpdateAdmin = () => {
     if (isRoleError && roleError instanceof AxiosError) {
       const status = roleError?.response?.status;
       if (status === 401 || status === 403) {
-        setFetchingRoleError(t("admin.errors.global"));
+        setErrors((prev) => ({
+          ...prev,
+          global: t("admin.errors.global"),
+        }));
       } else {
         setFetchingRoleError(t("admin.errors.fetching_roles"));
       }
@@ -241,7 +243,7 @@ const UpdateAdmin = () => {
       </>
     );
 
-  if (!data && !globalError) {
+  if (!data && !errors.general) {
     return (
       <>
         <PageMeta title={t("admin.main_title")} description="Update Admin" />
@@ -251,12 +253,12 @@ const UpdateAdmin = () => {
       </>
     );
   }
-  if (globalError) {
+  if (errors.general) {
     return (
       <>
         <PageMeta title={t("admin.main_title")} description="Update Admin" />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("admin.errors.error_fetching_admin")}
+          {errors.general || t("admin.errors.general")}
         </div>
       </>
     );
@@ -275,11 +277,11 @@ const UpdateAdmin = () => {
         onSubmit={handleSubmit}
         className="space-y-6 w-full mt-10 flex flex-col items-center"
       >
-        {errors.global && (
-          <p className="text-error-500 text-sm mt-1">{errors.global}</p>
-        )}
         {errors.general && (
           <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+        )}
+        {errors.global && (
+          <p className="text-error-500 text-sm mt-1">{errors.global}</p>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
           {/* First Name */}

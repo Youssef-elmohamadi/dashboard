@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
-import Select from "../../form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 import {
   useGetCouponById,
   useUpdateCoupon,
 } from "../../../hooks/Api/SuperAdmin/useCoupons/useCoupons";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
+import { ClientErrors, CouponInput, ServerError } from "../../../types/Coupons";
+import { AxiosError } from "axios";
 
 const UpdateCoupon = () => {
   const { id } = useParams();
 
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateCoupon"]);
-  const [loading, setLoading] = useState(false);
-  const [couponData, setCouponData] = useState({
+  const [loading, setLoading] = useState<boolean>(false);
+  const [couponData, setCouponData] = useState<CouponInput>({
     code: "",
     type: "fixed",
     value: "",
@@ -28,30 +30,36 @@ const UpdateCoupon = () => {
     expires_at: "",
   });
 
-  const [clientSideErrors, setClientSideErrors] = useState<
-    Record<string, string>
-  >({});
-
-  const [errors, setErrors] = useState({
-    code: [] as string[],
-    type: [] as string[],
-    value: [] as string[],
-    max_discount: [] as string[],
-    min_order_amount: [] as string[],
-    usage_limit: [] as string[],
-    active: [] as string[],
-    start_at: [] as string[],
-    expires_at: [] as string[],
+  const [errors, setErrors] = useState<ServerError>({
+    code: [],
+    type: [],
+    value: [],
+    max_discount: [],
+    min_order_amount: [],
+    usage_limit: [],
+    active: [],
+    start_at: [],
+    expires_at: [],
     general: "",
     global: "",
   });
+  const [clientSideErrors, setClientSideErrors] = useState<ClientErrors>({
+    code: "",
+    type: "",
+    value: "",
+    max_discount: "",
+    min_order_amount: "",
+    usage_limit: "",
+    active: "",
+    start_at: "",
+    expires_at: "",
+  });
 
   const { data, isError, error, isLoading } = useGetCouponById(id!!);
-
-  const coupon = data?.data?.data;
+  const coupon = data;
 
   useEffect(() => {
-    if (isError) {
+    if (isError && error instanceof AxiosError) {
       const status = error?.response?.status;
       if (status === 401 || status === 403) {
         setErrors((prev) => ({
@@ -76,7 +84,7 @@ const UpdateCoupon = () => {
         max_discount: coupon.max_discount || "",
         min_order_amount: coupon.min_order_amount || "",
         usage_limit: coupon.usage_limit || "",
-        active: coupon.active?.toString() || "1",
+        active: coupon.active || "1",
         start_at: coupon.start_at || "",
         expires_at: coupon.expires_at || "",
       });
@@ -92,7 +100,17 @@ const UpdateCoupon = () => {
     setCouponData((prev) => ({ ...prev, [name]: value }));
   };
   const validate = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors = {
+      code: "",
+      type: "",
+      value: "",
+      max_discount: "",
+      min_order_amount: "",
+      usage_limit: "",
+      active: "",
+      start_at: "",
+      expires_at: "",
+    };
 
     if (!couponData.code) newErrors.code = t("coupon.errors.code");
     if (!couponData.value) newErrors.value = t("coupon.errors.value");
@@ -112,7 +130,7 @@ const UpdateCoupon = () => {
     }
 
     setClientSideErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.values(newErrors).every((val) => val === "");
   };
   const { mutateAsync } = useUpdateCoupon(id!!);
   const handleSubmit = async (e: React.FormEvent) => {
@@ -179,6 +197,22 @@ const UpdateCoupon = () => {
         </p>
       </>
     );
+  if (!data && !errors.general)
+    return (
+      <>
+        <PageMeta title={t("coupon.mainTitle")} description="Update Coupon" />
+        <p className="text-center mt-5">{t("coupon.notFound")}</p>
+      </>
+    );
+
+  if (errors.general) {
+    return (
+      <>
+        <PageMeta title={t("coupon.mainTitle")} description="Update Coupon" />
+        <p className="text-center mt-5">{errors.general}</p>
+      </>
+    );
+  }
 
   return (
     <div className="p-4">

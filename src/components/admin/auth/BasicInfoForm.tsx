@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
 import { useTranslation } from "react-i18next";
 import { BasicInfoFormProps } from "../../../types/Auth";
 function BasicInfoForm({

@@ -1,54 +1,38 @@
 import React, { useEffect, useState } from "react";
-import Label from "../../../components/form/Label";
-import Input from "../../../components/form/input/InputField";
-import TextArea from "../../../components/form/input/TextArea";
+import Label from "../../../components/common/form/Label";
+import Input from "../../../components/common/input/InputField";
+import TextArea from "../../../components/common/input/TextArea";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import {
   useUpdateVendor,
   useVendorData,
 } from "../../../hooks/Api/Admin/useVendor/useVendor";
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import VendorEditSkeleton from "../../../components/admin/vendorSettings/VendorSettingsSkeleton";
-
-interface Vendor {
-  name: string;
-  email: string;
-  phone: string;
-  description: string | null;
-  status: string;
-  is_verified: number;
-  created_at: string;
-  updated_at: string;
-  documents: VendorDocument[];
-}
-
-interface VendorDocument {
-  id: number;
-  vendor_id: number;
-  document_name: string;
-  document_type: number;
-  status: "approved" | "pending" | "rejected";
-}
-
-const documentTypeMap: Record<number, string> = {
-  1: "validation.commercial_record",
-  2: "validation.tax_record",
-};
-
-const initialVendorData: Vendor = {
-  name: "",
-  email: "",
-  phone: "",
-  description: "",
-  status: "",
-  is_verified: 0,
-  created_at: "",
-  updated_at: "",
-  documents: [],
-};
+import { Document, Vendor } from "../../../types/Vendor";
+import { AxiosError } from "axios";
 
 const VendorEditPage: React.FC = () => {
+  const documentTypeMap: Record<number, string> = {
+    1: "validation.commercial_record",
+    2: "validation.tax_record",
+  };
+
+  const [unauthorized, setUnauthorized] = useState<string>("");
+  const [generalError, setGeneralError] = useState<string>("");
+  const initialVendorData: Vendor = {
+    id: 0,
+    name: "",
+    email: "",
+    phone: "",
+    description: "",
+    status: "",
+    is_verified: 0,
+    created_at: "",
+    updated_at: "",
+    documents: [],
+  };
   const { t } = useTranslation(["UpdateVendor"]);
   const [vendor, setVendor] = useState<Vendor>(initialVendorData);
   const [updatedDocs, setUpdatedDocs] = useState<Record<number, File | null>>(
@@ -79,42 +63,23 @@ const VendorEditPage: React.FC = () => {
     setUpdatedDocs((prev) => ({ ...prev, [docId]: file }));
   };
 
-  const { data, isLoading } = useVendorData();
+  const { data, isLoading, isError, error } = useVendorData();
   const vendorData = data?.data.data;
   useEffect(() => {
     if (vendorData) {
       setVendor(vendorData);
     }
   }, [vendorData]);
-
-  // const queryClient = useQueryClient();
-
-  // const updateVendorMutation = useMutation({
-  //   mutationFn: (formData: FormData) => updateVendor(formData),
-  //   onSuccess: () => {
-  //     toast.success(t("vendor.successUpdate"));
-  //     setValidationErrors({});
-  //     queryClient.invalidateQueries({ queryKey: ["vendorData"] });
-  //   },
-  //   onError: (error: any) => {
-  //     console.log(error);
-
-  //     toast.error(t("vendor.errorUpdate"));
-  //     const rawErrors = error?.response?.data?.errors;
-  //     if (Array.isArray(rawErrors)) {
-  //       const formattedErrors: Record<string, string[]> = {};
-  //       rawErrors.forEach((err: { code: string; message: string }) => {
-  //         if (!formattedErrors[err.code]) {
-  //           formattedErrors[err.code] = [];
-  //         }
-  //         formattedErrors[err.code].push(err.message);
-  //       });
-  //       setValidationErrors(formattedErrors);
-  //     } else {
-  //       setValidationErrors({ general: [t("errors.general")] });
-  //     }
-  //   },
-  // });
+  useEffect(() => {
+    if (isError && error) {
+      const err = error as any;
+      if (err?.response?.status === 401) {
+        setUnauthorized(t("unauthorized"));
+      } else {
+        setGeneralError(t("somethingWentWrong"));
+      }
+    }
+  }, [isError, error, t]);
   const { mutateAsync: updateVendor } = useUpdateVendor();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -146,7 +111,8 @@ const VendorEditPage: React.FC = () => {
       console.error(error);
 
       toast.error(t("vendor.errorUpdate"));
-      const rawErrors = error?.response?.data?.errors;
+      const axiosError = error as AxiosError<any>;
+      const rawErrors = axiosError?.response?.data?.errors;
       if (Array.isArray(rawErrors)) {
         const formattedErrors: Record<string, string[]> = {};
         rawErrors.forEach((err: { code: string; message: string }) => {
@@ -166,10 +132,34 @@ const VendorEditPage: React.FC = () => {
     return (
       <>
         <PageMeta
-          title="Tashtiba | Home Admin Dashboard"
-          description="Show Your Statistics"
+          title="Tashtiba | Vendor Settings"
+          description="Update Your Vendor Information"
         />
         <VendorEditSkeleton />
+      </>
+    );
+  }
+
+  if (unauthorized) {
+    return (
+      <>
+        <PageMeta
+          title="Tashtiba | Vendor Settings"
+          description="Update Your Vendor Information"
+        />
+        <p className="text-center text-red-500 mt-5">{unauthorized}</p>
+      </>
+    );
+  }
+
+  if (generalError) {
+    return (
+      <>
+        <PageMeta
+          title="Tashtiba | Vendor Settings"
+          description="Update Your Vendor Information"
+        />
+        <p className="text-center text-red-500 mt-5">{generalError}</p>
       </>
     );
   }
@@ -177,8 +167,8 @@ const VendorEditPage: React.FC = () => {
   return (
     <div>
       <PageMeta
-        title="Tashtiba | Home Admin Dashboard"
-        description="Show Your Statistics"
+        title="Tashtiba | Vendor Settings"
+        description="Update Your Vendor Information"
       />
       <form
         onSubmit={handleSubmit}
@@ -199,6 +189,11 @@ const VendorEditPage: React.FC = () => {
               />
               {clientErrors.name && (
                 <p className="text-red-600 text-sm mt-1">{clientErrors.name}</p>
+              )}
+              {validationErrors.name && (
+                <p className="text-red-600 text-sm mt-1">
+                  {validationErrors.name[0]}
+                </p>
               )}
             </div>
 
@@ -228,6 +223,11 @@ const VendorEditPage: React.FC = () => {
                   {clientErrors.phone}
                 </p>
               )}
+              {validationErrors.phone && (
+                <p className="text-red-600 text-sm mt-1">
+                  {validationErrors.phone[0]}
+                </p>
+              )}
             </div>
 
             <div>
@@ -252,7 +252,7 @@ const VendorEditPage: React.FC = () => {
             {t("vendor.documents_title")}
           </h3>
           <div className="grid gap-6">
-            {vendor?.documents?.map((doc: VendorDocument) => (
+            {vendor?.documents?.map((doc: Document) => (
               <div
                 key={doc.id}
                 className="border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200"

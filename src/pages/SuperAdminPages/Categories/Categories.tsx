@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
@@ -14,19 +14,13 @@ import {
   useGetCategories,
 } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
 import { AxiosError } from "axios";
+import { SearchValues } from "../../../types/Categories";
+import { TableAlert } from "../../../types/Common";
 const Categories = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-  const [searchValues, setSearchValues] = useState<{
-    category_id: string;
-    brand_id: string;
-    status: string;
-    name: string;
-  }>({
-    category_id: "",
-    brand_id: "",
-    status: "",
+  const [searchValues, setSearchValues] = useState<SearchValues>({
     name: "",
   });
   const location = useLocation();
@@ -50,14 +44,10 @@ const Categories = () => {
     }
   }, [isError, error]);
 
-  const categoriesData = data?.original?.data ?? [];
-  const totalCategories = data?.original?.total ?? 0;
+  const categoriesData = data?.data ?? [];
+  const totalCategories = data?.total ?? 0;
 
-  const [alertData, setAlertData] = useState<{
-    variant: "success" | "error" | "info" | "warning";
-    title: string;
-    message: string;
-  } | null>(null);
+  const [alertData, setAlertData] = useState<TableAlert | null>(null);
 
   useEffect(() => {
     if (location.state?.successCreate) {

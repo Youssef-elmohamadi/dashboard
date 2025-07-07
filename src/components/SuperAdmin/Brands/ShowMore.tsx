@@ -2,26 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetBrandById } from "../../../hooks/Api/SuperAdmin/useBrands/useSuperAdminBrandsManage";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
 import { AxiosError } from "axios";
-
-// interface Brand {
-//   id: number;
-//   name: string;
-//   image: string;
-//   status: string;
-//   created_at: string;
-//   updated_at: string;
-// }
 
 const BrandDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["BrandDetails"]);
-  const [globalError, setGlobalError] = useState("");
+  const [globalError, setGlobalError] = useState<string>("");
 
   const { data, isLoading, error, isError } = useGetBrandById(id);
 
-  const brand = data?.data.data;
+  const brand = data;
 
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
@@ -75,14 +66,16 @@ const BrandDetails: React.FC = () => {
       </>
     );
   }
-  const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const formatDate = (dateStr?: string) =>
+    dateStr
+      ? new Date(dateStr).toLocaleString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : t("noDate");
   return (
     <div className="brand-details p-6 max-w-3xl mx-auto space-y-8">
       <PageMeta title={t("mainTitle")} description="Product Details" />
@@ -97,10 +90,10 @@ const BrandDetails: React.FC = () => {
         </h2>
         <div className="grid grid-cols-1 gap-4 text-gray-700 dark:text-gray-200">
           <p>
-            <strong>{t("name")}:</strong> {brand.name}
+            <strong>{t("name")}:</strong> {brand?.name}
           </p>
           <p>
-            <strong>{t("status")}:</strong> {brand.status}
+            <strong>{t("status")}:</strong> {brand?.status}
           </p>
         </div>
       </section>
@@ -110,11 +103,11 @@ const BrandDetails: React.FC = () => {
         <h2 className="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">
           {t("image")}
         </h2>
-        {brand.image ? (
+        {brand?.image ? (
           <div className="flex justify-center">
             <img
-              src={brand.image}
-              alt={brand.name}
+              src={brand?.image}
+              alt={brand?.name}
               className="w-64 h-64 object-contain rounded-lg border border-gray-200"
             />
           </div>
@@ -130,10 +123,10 @@ const BrandDetails: React.FC = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-gray-200">
           <p>
-            <strong>{t("createdAt")}:</strong> {formatDate(brand.created_at)}
+            <strong>{t("createdAt")}:</strong> {formatDate(brand?.created_at)}
           </p>
           <p>
-            <strong>{t("updatedAt")}:</strong> {formatDate(brand.updated_at)}
+            <strong>{t("updatedAt")}:</strong> {formatDate(brand?.updated_at)}
           </p>
         </div>
       </section>

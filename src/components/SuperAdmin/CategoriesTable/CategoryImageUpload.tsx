@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Input from "../../form/input/InputField";
+import Input from "../../common/input/InputField";
 
 type Props = {
   file: File | null;
@@ -15,8 +15,8 @@ function CategoryImageUpload({ file, onFileChange }: Props) {
       const objectUrl = URL.createObjectURL(file);
       setImage(objectUrl);
       return () => URL.revokeObjectURL(objectUrl);
-    } 
-  }, [file]); 
+    }
+  }, [file]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;

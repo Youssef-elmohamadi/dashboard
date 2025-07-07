@@ -2,7 +2,7 @@ import axiosForm from "../../superAdminAxiosInstanceFormData";
 import axiosJson from "../../superAdminAxiosInstanceJson";
 
 export const getAllAdminsPaginate = async (params: {
-  page?: number;
+  page?: number | string;
   name?: string;
   email?: string;
   phone?: string;

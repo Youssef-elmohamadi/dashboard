@@ -19,8 +19,8 @@ interface AlertMessages {
 }
 
 export const alertDelete = async (
-  id: ID,
-  apiFn: (id: ID) => Promise<any>,
+  id: string | number,
+  apiFn: (id: string | number) => Promise<any>,
   refetchFn?: () => Promise<any>,
   messages?: AlertMessages
 ): Promise<any> => {

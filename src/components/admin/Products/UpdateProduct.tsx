@@ -1,30 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Label from "../../../components/form/Label";
-import Input from "../../../components/form/input/InputField";
-import Checkbox from "../../../components/form/input/Checkbox";
-import FileInput from "../../../components/form/input/FileInput";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Checkbox from "../../common/input/Checkbox";
+import FileInput from "../../common/input/FileInput";
 import { FiDelete } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
-import Select from "../../form/Select";
-import TextArea from "../../form/input/TextArea";
+import Select from "../../common/form/Select";
+import TextArea from "../../common/input/TextArea";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { useAllBrands } from "../../../hooks/Api/Admin/useBrands/useBrands";
 import {
   useGetProductById,
   useUpdateProduct,
 } from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
 import { AxiosError } from "axios";
 import { Category } from "../../../types/Categories";
 import { Brand } from "../../../types/Brands";
-import { Attribute, Product } from "../../../types/Product";
+import { Attribute, image, Product, ServerError } from "../../../types/Product";
 
 const UpdateProductPage: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateProduct"]);
   const [productData, setProductData] = useState<Product>({
+    id: 0,
     name: "",
     description: "",
     price: "",
@@ -38,19 +39,21 @@ const UpdateProductPage: React.FC = () => {
     attributes: [],
     images: [],
     tags: [],
+    review: [],
   });
   //const [categories, setCategories] = useState<Category[]>([]);
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const [existingImages, setExistingImages] = useState<string[]>([]);
+  const [existingImages, setExistingImages] = useState<image[]>([]);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [tags, setTags] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [globalError, setGlobalError] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string[] | string>>({
+  const [loading, setLoading] = useState<boolean>(false);
+  const [globalError, setGlobalError] = useState<boolean>(false);
+  const [errors, setErrors] = useState<ServerError>({
     name: [],
     description: [],
     price: [],
+    discount_price: [],
     stock_quantity: [],
     category_id: [],
     brand_id: [],
@@ -75,14 +78,8 @@ const UpdateProductPage: React.FC = () => {
     images: "",
     is_featured: "",
   });
-
-  const { data: allCategories } = useAllCategories();
-  const categories = allCategories?.original;
-  const { data: allBrands } = useAllBrands();
-  const brands = allBrands?.data;
-
   const { data, isLoading, isError, error } = useGetProductById(id);
-  const product = data?.data?.data;
+  const product = data;
   useEffect(() => {
     if (!product) return;
     setProductData(product);
@@ -98,6 +95,48 @@ const UpdateProductPage: React.FC = () => {
       product.tags.map((tag: any) => (typeof tag === "string" ? tag : tag.name))
     );
   }, [product]);
+  const [fetchingCategoriesError, setFetchingCategoriesError] =
+    useState<string>("");
+  const [fetchingBrandsError, setFetchingBrandsError] = useState<string>("");
+
+  const {
+    data: allCategories,
+    error: categoryError,
+    isError: isCategoryError,
+  } = useAllCategories();
+  useEffect(() => {
+    if (isCategoryError && categoryError instanceof AxiosError) {
+      const status = categoryError?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrors((prev) => ({
+          ...prev,
+          global: t("errors.global"),
+        }));
+      } else {
+        setFetchingCategoriesError(t("errors.fetching_categories"));
+      }
+    }
+  }, [isCategoryError, categoryError, t]);
+  const categories = allCategories?.original;
+  const {
+    data: allBrands,
+    error: brandError,
+    isError: isBrandError,
+  } = useAllBrands();
+  const brands = allBrands?.data;
+  useEffect(() => {
+    if (isBrandError && brandError instanceof AxiosError) {
+      const status = brandError?.response?.status;
+      if (status === 401 || status === 403) {
+        setErrors((prev) => ({
+          ...prev,
+          global: t("errors.global"),
+        }));
+      } else {
+        setFetchingBrandsError(t("errors.fetching_brands"));
+      }
+    }
+  }, [isBrandError, brandError, t]);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -193,6 +232,7 @@ const UpdateProductPage: React.FC = () => {
       name: [],
       description: [],
       price: [],
+      discount_price: [],
       stock_quantity: [],
       category_id: [],
       brand_id: [],
@@ -272,7 +312,10 @@ const UpdateProductPage: React.FC = () => {
       if (status === 401 || status === 403) {
         setGlobalError(true);
       } else {
-        setGlobalError(true);
+        setErrors({
+          ...errors,
+          general: t("errors.general"),
+        });
       }
     }
   }, [isError, error, t]);
@@ -299,7 +342,17 @@ const UpdateProductPage: React.FC = () => {
     );
   }
 
-  if (!product && !globalError) {
+  if (errors.general) {
+    return (
+      <>
+        <PageMeta title={t("main_title")} description="Update Product" />
+        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
+          {t("errors.general")}
+        </div>
+      </>
+    );
+  }
+  if (!product && !globalError && !errors.general) {
     return (
       <>
         <PageMeta title={t("main_title")} description="Update Product" />
@@ -314,7 +367,7 @@ const UpdateProductPage: React.FC = () => {
       <>
         <PageMeta title={t("main_title")} description="Update Product" />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("errors.general")}
+          {t("errors.global")}
         </div>
       </>
     );
@@ -331,6 +384,9 @@ const UpdateProductPage: React.FC = () => {
 
       {errors.global && (
         <div className="text-red-600 mb-4">{errors.global}</div>
+      )}
+      {errors.general && (
+        <div className="text-red-600 mb-4">{errors.general}</div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6 mt-4">
@@ -409,6 +465,11 @@ const UpdateProductPage: React.FC = () => {
                 {clientSideErrors.category_id}
               </p>
             )}
+            {fetchingCategoriesError && (
+              <p className="text-red-500 text-sm mt-1">
+                {fetchingCategoriesError}
+              </p>
+            )}
           </div>
           <div>
             <Label htmlFor="brand_id">{t("form.brand")}</Label>
@@ -428,6 +489,9 @@ const UpdateProductPage: React.FC = () => {
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.brand_id}
               </p>
+            )}
+            {fetchingBrandsError && (
+              <p className="text-red-500 text-sm mt-1">{fetchingBrandsError}</p>
             )}
           </div>
           <div>
@@ -505,7 +569,7 @@ const UpdateProductPage: React.FC = () => {
                 {existingImages.map((src, i) => (
                   <img
                     key={i}
-                    src={src}
+                    src={src.image}
                     alt={`Existing ${i}`}
                     className="w-32 h-32 text-gray-700 dark:text-gray-400 object-cover rounded border dark:border-gray-700"
                   />

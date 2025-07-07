@@ -5,12 +5,12 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import CategoryBreadCrump from "../../../components/EndUser/BreadCrump/CategoryBreadCrump";
+import CategoryBreadCrump from "../../../components/EndUser/Shop/CategoryBreadCrump";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaFilter } from "react-icons/fa";
-import FilterSidebar from "../../../components/EndUser/CategoryMobile/FilterSidebar";
+import FilterSidebar from "../../../components/EndUser/Shop/FilterSidebar";
 import { useTranslation } from "react-i18next";
-import Sidebar from "../../../components/EndUser/CategoryLayout/Sidebar";
+import Sidebar from "../../../components/EndUser/Shop/Sidebar";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { Category } from "../../../types/Categories";
 import { PriceChangeParams } from "../../../types/Shop";

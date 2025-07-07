@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Label from "../../../components/form/Label";
-import Input from "../../../components/form/input/InputField";
-import Select from "../../../components/form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import { FiUserPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useCreateAdmin } from "../../../hooks/Api/Admin/useVendorAdmins/useVendorAdmins";
 import { useRoles } from "../../../hooks/Api/Admin/useRoles/useRoles";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
 import {
   ClientErrors,
   CreateAdminInput,
@@ -110,7 +110,7 @@ export default function CreateAdmin() {
         setFetchingRoleError(t("admin.errors.fetching_roles"));
       }
     }
-  }, [isRoleError, roleError, t]);
+  }, [isRoleError, roleError, t, options]);
   const { mutateAsync } = useCreateAdmin();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -203,7 +203,7 @@ export default function CreateAdmin() {
               placeholder={t("admin.placeholder.first_name")}
               onChange={handleChange}
             />
-            {errors.first_name && (
+            {errors.first_name?.[0] && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.first_name[0]}
               </p>
@@ -223,7 +223,7 @@ export default function CreateAdmin() {
               placeholder={t("admin.placeholder.last_name")}
               onChange={handleChange}
             />
-            {errors.last_name && (
+            {errors.last_name?.[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.last_name[0]}</p>
             )}
             {clientSideErrors.last_name && (
@@ -245,7 +245,7 @@ export default function CreateAdmin() {
             placeholder={t("admin.placeholder.select_role")}
             className="dark:bg-dark-900"
           />
-          {errors.role && (
+          {errors.role?.[0] && (
             <p className="text-red-500 text-sm mt-1">{errors.role[0]}</p>
           )}
           {clientSideErrors.role && (
@@ -264,7 +264,7 @@ export default function CreateAdmin() {
             placeholder={t("admin.placeholder.email")}
             onChange={handleChange}
           />
-          {errors.email && (
+          {errors.email?.[0] && (
             <p className="text-red-500 text-sm mt-1">
               {t("admin.errors.email_taken")}
             </p>
@@ -284,7 +284,7 @@ export default function CreateAdmin() {
             placeholder={t("admin.placeholder.phone")}
             onChange={handleChange}
           />
-          {errors.phone && (
+          {errors.phone?.[0] && (
             <p className="text-red-500 text-sm mt-1">
               {t("admin.errors.phone_taken")}
             </p>
@@ -304,7 +304,7 @@ export default function CreateAdmin() {
               placeholder={t("admin.placeholder.password")}
               onChange={handleChange}
             />
-            {errors.password && (
+            {errors.password?.[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>
             )}
             {clientSideErrors.password && (

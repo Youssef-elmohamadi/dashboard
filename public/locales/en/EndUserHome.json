@@ -8,11 +8,46 @@
       "subTitle": "Tashtiba",
       "description": "Your one-stop shop for all your needs - exclusive discounts, fast delivery, and unbeatable offers!"
     },
+
     "button": {
       "shopNow": "Shop Now",
       "learnMore": "Learn More",
       "signUp": "Sign Up",
       "signIn": "Sign In"
+    }
+  },
+  "AboutSection": {
+    "heading": "Our mission? To turn your vision into reality.",
+    "description": "At Tashtiba, we don't just sell products; we offer integrated solutions that make your home finishing journey a smooth and enjoyable experience. From the foundations to the final touches, we're your partner every step of the way.",
+    "features": {
+      "quality": {
+        "title": "Unparalleled quality",
+        "description": "We select the best suppliers and products to ensure the highest quality standards in every piece."
+      },
+      "price": {
+        "title": "Affordable prices",
+        "description": "We offer competitive prices that don't compromise on quality or style quality."
+      },
+      "delivery": {
+        "title": "Fast and reliable delivery",
+        "description": "We prioritize speed and reliability to ensure your home finishes are delivered on time and in perfect condition."
+      }
+    },
+    "Politics": {
+      "heading": "Information you need",
+      "description": "Everything you need to know about our policies.",
+      "terms": {
+        "title": "Terms and Conditions"
+      },
+      "privacy": {
+        "title": "Privacy Policy"
+      },
+      "support": {
+        "title": "Customer Support"
+      },
+      "refund": {
+        "title": "Refund Policy"
+      }
     }
   },
   "featuredSection": {
@@ -36,5 +71,7 @@
   "homeProducts": {
     "showAll": "Show All"
   },
-  "latestProducts": "Latest Products"
+  "latestProducts": "Latest Products",
+  "loading": "Loading...",
+  "bestVendors": "Best Vendors"
 }

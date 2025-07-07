@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
@@ -14,14 +14,13 @@ import {
   useRolesPaginate,
 } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
 import { AxiosError } from "axios";
+import { SearchValues } from "../../../types/Roles";
 
 const Roles = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-  const [searchValues, setSearchValues] = useState<{
-    name: string;
-  }>({
+  const [searchValues, setSearchValues] = useState<SearchValues>({
     name: "",
   });
   const location = useLocation();
@@ -30,6 +29,7 @@ const Roles = () => {
     pageIndex,
     searchValues
   );
+
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
       const status = error.response?.status;

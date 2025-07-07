@@ -3,7 +3,7 @@ import SuperAdminAxiosInstanceJson from "../../superAdminAxiosInstanceJson";
 
 export const getAllBrands = async () => {
   return await SuperAdminAxiosInstanceJson.get("/api/superAdmin/brands");
-}
+};
 export const getBrandsWithPaginate = async (params: {
   page?: number;
   name?: string;
@@ -15,7 +15,7 @@ export const getBrandsWithPaginate = async (params: {
     }
   );
 };
-export const getBrandById = async (id: number | string) => {
+export const getBrandById = async (id: string | undefined) => {
   return await SuperAdminAxiosInstanceJson.get(`/api/superAdmin/brands/${id}`);
 };
 export const changeStatus = async (id: number | string, data: any) => {

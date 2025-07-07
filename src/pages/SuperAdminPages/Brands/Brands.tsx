@@ -1,4 +1,4 @@
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
@@ -14,6 +14,7 @@ import {
   useGetBrandsPaginate,
 } from "../../../hooks/Api/SuperAdmin/useBrands/useSuperAdminBrandsManage";
 import { AxiosError } from "axios";
+import { TableAlert } from "../../../types/Common";
 
 const Brands = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -53,11 +54,7 @@ const Brands = () => {
     }));
     setPageIndex(0);
   };
-  const [alertData, setAlertData] = useState<{
-    variant: "success" | "error" | "info" | "warning";
-    title: string;
-    message: string;
-  } | null>(null);
+  const [alertData, setAlertData] = useState<TableAlert | null>(null);
 
   useEffect(() => {
     if (location.state?.successCreate) {

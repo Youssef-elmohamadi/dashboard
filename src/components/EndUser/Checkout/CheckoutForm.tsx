@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Input from "../../form/input/InputField";
-import Label from "../../form/Label";
-import Radio from "../../form/input/Radio";
+import Input from "../../common/input/InputField";
+import Label from "../../common/form/Label";
+import Radio from "../../common/input/Radio";
 import { SlWallet } from "react-icons/sl";
-import Checkbox from "../../form/input/Checkbox";
+import Checkbox from "../../common/input/Checkbox";
 import { useSelector, useDispatch } from "react-redux";
 import { checkout } from "../../../api/EndUserApi/ensUserProducts/_requests";
-import TextArea from "../../form/input/TextArea";
+import TextArea from "../../common/input/TextArea";
 import { SweetAlert } from "../../common/SweetAlert";
 import { clearCart } from "../Redux/cartSlice/CartSlice";
 import { useNavigate } from "react-router-dom";
@@ -22,24 +22,23 @@ const CheckoutForm: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const [clientSideErrors, setClientSideErrors] =
-    useState<ClientErrors>({
-      payment_method: "",
-      location: {
-        full_name: "",
-        phone: "",
-        city: "",
-        area: "",
-        street: "",
-        building_number: "",
-        floor_number: "",
-        apartment_number: "",
-        landmark: "",
-        notes: "",
-      },
-      save_info: false,
-      newsletter: false,
-    });
+  const [clientSideErrors, setClientSideErrors] = useState<ClientErrors>({
+    payment_method: "",
+    location: {
+      full_name: "",
+      phone: "",
+      city: "",
+      area: "",
+      street: "",
+      building_number: "",
+      floor_number: "",
+      apartment_number: "",
+      landmark: "",
+      notes: "",
+    },
+    save_info: false,
+    newsletter: false,
+  });
 
   const [checkoutForm, setCheckoutForm] = useState<Checkout>({
     items: [],
@@ -118,7 +117,7 @@ const CheckoutForm: React.FC = () => {
   };
 
   useEffect(() => {
-    const updatedItems = items.map((item:Product) => ({
+    const updatedItems = items.map((item: Product) => ({
       product_id: item.id,
       quantity: item.quantity,
     }));

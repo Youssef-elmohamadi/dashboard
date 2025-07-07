@@ -7,34 +7,18 @@ import {
   useChangeDocumentStatus,
   useGetVendorById,
 } from "../../../hooks/Api/SuperAdmin/useVendorMangement/useSuperAdminVendorManage";
-import PageMeta from "../../common/PageMeta";
-
-interface Document {
-  id: number;
-  vendor_id: number;
-  document_name: string;
-  document_type: number;
-  status: string;
-  created_at: string;
-}
-
-interface Vendor {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  description: string | null;
-  created_at: string;
-  updated_at: string;
-  documents: Document[];
-}
+import PageMeta from "../../common/SEO/PageMeta";
+import { Document } from "../../../types/Vendor";
+import { AxiosError } from "axios";
 
 const VendorDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["VendorsTable"]);
-  const [globalError, setGlobalError] = useState(false);
-  const [showImage, setShowImage] = useState(false);
-  const [doc, setDoc] = useState({});
+  const [globalError, setGlobalError] = useState<boolean>(false);
+  const [generalError, setGeneralError] = useState<boolean>(false);
+
+  const [showImage, setShowImage] = useState<boolean>(false);
+  const [doc, setDoc] = useState<Document | null>(null);
 
   const {
     data: vendorData,
@@ -43,30 +27,34 @@ const VendorDetails: React.FC = () => {
     error: vendorError,
   } = useGetVendorById(id!!);
 
-  const vendor: Vendor = vendorData?.data.data;
+  const vendor = vendorData;
+  console.log("vendor", vendor);
+
   useEffect(() => {
-    if (isVendorError) {
+    if (isVendorError && vendorError instanceof AxiosError) {
       const status = vendorError?.response?.status;
       if (status === 401 || status === 403) {
         setGlobalError(true);
       } else {
-        setGlobalError(true);
+        setGeneralError(true);
       }
     }
   }, [isVendorError, vendorError, t]);
-  const handleOpenImage = (doc: {}) => {
+  const handleOpenImage = (doc: Document) => {
     setDoc(doc);
     setShowImage(true);
   };
 
-  const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const formatDate = (dateStr?: string) =>
+    dateStr
+      ? new Date(dateStr).toLocaleString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : t("vendorsPage.details.noDate");
 
   const documentTypeLabel = (type: number) =>
     t(`vendorsPage.details.documentTypes.${type}`) ??
@@ -106,16 +94,6 @@ const VendorDetails: React.FC = () => {
     });
   };
 
-  if (!id)
-    return (
-      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        <PageMeta
-          title={t("vendorsPage.mainTitleDetails")}
-          description="Vendor Details"
-        />
-        {t("vendorsPage.details.noId")}
-      </div>
-    );
   if (loading)
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-400">
@@ -126,24 +104,25 @@ const VendorDetails: React.FC = () => {
         {t("vendorsPage.details.loading")}
       </div>
     );
-  if (!vendor && !globalError)
+  if (!vendor && !globalError && !generalError)
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-400">
         <PageMeta
           title={t("vendorsPage.mainTitleDetails")}
           description="Vendor Details"
         />
+
         {t("vendorsPage.details.notFound")}
       </div>
     );
-  if (globalError)
+  if (generalError)
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-400">
         <PageMeta
           title={t("vendorsPage.mainTitleDetails")}
           description="Vendor Details"
         />
-        {t("vendorsPage.details.globalError")}
+        {t("vendorsPage.details.generalError")}
       </div>
     );
 
@@ -170,17 +149,17 @@ const VendorDetails: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <p>
-              <strong>{t("vendorsPage.details.name")}:</strong> {vendor.name}
+              <strong>{t("vendorsPage.details.name")}:</strong> {vendor?.name}
             </p>
             <p>
-              <strong>{t("vendorsPage.details.email")}:</strong> {vendor.email}
+              <strong>{t("vendorsPage.details.email")}:</strong> {vendor?.email}
             </p>
             <p>
-              <strong>{t("vendorsPage.details.phone")}:</strong> {vendor.phone}
+              <strong>{t("vendorsPage.details.phone")}:</strong> {vendor?.phone}
             </p>
             <p>
               <strong>{t("vendorsPage.details.description")}:</strong>{" "}
-              {vendor.description || t("vendorsPage.details.noDescription")}
+              {vendor?.description || t("vendorsPage.details.noDescription")}
             </p>
           </div>
         </section>
@@ -193,11 +172,11 @@ const VendorDetails: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <p>
               <strong>{t("vendorsPage.details.createdAt")}:</strong>{" "}
-              {formatDate(vendor.created_at)}
+              {formatDate(vendor?.created_at)}
             </p>
             <p>
               <strong>{t("vendorsPage.details.updatedAt")}:</strong>{" "}
-              {formatDate(vendor.updated_at)}
+              {formatDate(vendor?.updated_at)}
             </p>
           </div>
         </section>
@@ -208,8 +187,8 @@ const VendorDetails: React.FC = () => {
             {t("vendorsPage.details.documents")}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {vendor.documents.length > 0 ? (
-              vendor.documents.map((doc: Document) => (
+            {(vendor?.documents?.length ?? 0) > 0 ? (
+              vendor?.documents.map((doc: Document) => (
                 <div
                   key={doc.id}
                   onClick={() => handleOpenImage(doc)}
@@ -251,7 +230,7 @@ const VendorDetails: React.FC = () => {
             <button
               onClick={() =>
                 window.open(
-                  `http://127.0.0.1:8000/api/superAdmin/vendors/downloadVendorData/${vendor.id}`,
+                  `http://127.0.0.1:8000/api/superAdmin/vendors/downloadVendorData/${vendor?.id}`,
                   "_blank"
                 )
               }

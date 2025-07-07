@@ -8,12 +8,7 @@ import EndUserWrapper from "./StoreProvider";
 import Cart from "../../pages/UserPages/Cart/Cart";
 import UserControlLayout from "../../pages/UserPages/EndUserLayout/UserControlLayout";
 import UserOrders from "../../pages/UserPages/UserOrders/UserOrders";
-import UserDashboard from "../../pages/UserPages/UserDashboard/UserDashboard";
 import CategoriesLayout from "../../pages/UserPages/EndUserLayout/CategoriesLayout";
-import UserDownloads from "../../pages/UserPages/UserDownloads/UserDownloads";
-import UserConversation from "../../pages/UserPages/UserConversation/UserConversation";
-import UserWallet from "../../pages/UserPages/UserWallet/UserWallet";
-import UserSupportTicket from "../../pages/UserPages/SupportTicket/UserSupportTicket";
 import Shop from "../../pages/UserPages/Shop/Shop";
 import AllProducts from "../../pages/UserPages/Shop/AllProducts";
 import ProductDetails from "../../pages/UserPages/ProductDetails/ProductDetails";
@@ -23,6 +18,10 @@ import UserNotifications from "../../pages/UserPages/UserNotifications/UserNotif
 import ProductsCompare from "../../pages/UserPages/ProductsCompare/ProductsCompare";
 import ProductsFavorite from "../../pages/UserPages/ProductsFavorite/ProductsFavorite";
 import UserForgotPassword from "../../pages/UserPages/AuthPages/UserForgotPassword";
+import TermsAndConditionsPage from "../../pages/UserPages/TermsAndConditions/TermsAndConditionsPage";
+import ReturnPolicyPage from "../../pages/UserPages/ReturnPolicy/ReturnPolicyPage";
+import SupportPolicyPage from "../../pages/UserPages/SupportPolicy/SupportPolicy";
+import PrivacyPolicyPage from "../../pages/UserPages/PrivacyPolice/PrivacyPolice";
 const getBrowserLanguage = () => {
   const browserLang = navigator.language.split("-")[0]; // تأخذ الجزء الأول (مثل 'en' من 'en-US')
   const supportedLangs = ["en", "ar"]; // اللغات التي يدعمها تطبيقك
@@ -30,7 +29,7 @@ const getBrowserLanguage = () => {
   if (supportedLangs.includes(browserLang)) {
     return browserLang;
   }
-  return "en"; // اللغة الافتراضية إذا لم تكن لغة المتصفح مدعومة
+  return "en"; // default language
 };
 export const EndUserRoutes = (
   <>
@@ -42,30 +41,28 @@ export const EndUserRoutes = (
         <Route path="product/:id" element={<ProductDetails />} />
         <Route path="cart" element={<Cart />} />
         <Route element={<UserControlLayout />}>
-          <Route path="u-dashboard" element={<UserDashboard />} />
           <Route path="u-profile" element={<UserProfile />} />
           <Route path="u-orders" element={<UserOrders />} />
-          <Route path="u-downloads" element={<UserDownloads />} />
-          <Route path="u-conversation" element={<UserConversation />} />
-          <Route path="u-wallet" element={<UserWallet />} />
-          <Route path="u-Support-ticket" element={<UserSupportTicket />} />
           <Route path="u-orders/details/:id" element={<OrderDetailsPage />} />
           <Route path="u-notification" element={<UserNotifications />} />
           <Route path="u-compare" element={<ProductsCompare />} />
           <Route path="u-favorite" element={<ProductsFavorite />} />
         </Route>
-
+        <Route path="terms" element={<TermsAndConditionsPage />} />
+        <Route path="return" element={<ReturnPolicyPage />} />
+        <Route path="support" element={<SupportPolicyPage />} />
+        <Route path="privacy" element={<PrivacyPolicyPage />} />
         <Route path="category" element={<CategoriesLayout />}>
           <Route index element={<AllProducts />} />
           <Route path=":category_id" element={<Shop />} />
         </Route>
       </Route>
 
+      <Route path="/:lang/reset-password" element={<UserForgotPassword />} />
+      <Route path="/:lang/signin" element={<EndUserSignIn />} />
+      <Route path="/:lang/signup" element={<EndUserSignUp />} />
       {/* صفحات برة لغة المستخدم */}
       <Route path="/checkout" element={<Checkout />} />
-      <Route path="/reset-password" element={<UserForgotPassword />} />
-      <Route path="/signin" element={<EndUserSignIn />} />
-      <Route path="/signup" element={<EndUserSignUp />} />
     </Route>
   </>
 );

@@ -1,6 +1,6 @@
-import React, { createContext, useState, ReactNode, useEffect } from "react";
+import { createContext, useState, ReactNode, useEffect } from "react";
 import { getProfile } from "../../../api/EndUserApi/endUserAuth/_requests";
-import { handleLogout } from "../../common/Logout";
+import { handleLogout } from "../../common/Auth/Logout";
 import { useNavigate } from "react-router-dom";
 interface UserContextType {
   userId: number | null;

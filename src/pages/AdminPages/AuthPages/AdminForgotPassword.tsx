@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import AuthLayout from "../../../components/common/AuthPageLayout";
-import ResetPasswordSteps from "../../../components/common/ResetPassword";
-import PageMeta from "../../../components/common/PageMeta";
+import AuthLayout from "../../../components/common/Auth/AuthPageLayout";
+import ResetPasswordSteps from "../../../components/common/Auth/ResetPassword";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 
 import { useNavigate } from "react-router-dom";
 const AdminForgotPassword = () => {

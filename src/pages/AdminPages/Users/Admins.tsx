@@ -1,4 +1,4 @@
-import PageMeta from "../../../components/common/PageMeta";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/admin/Tables/BasicTableTS";
@@ -51,7 +51,7 @@ const Admins = () => {
 
   const adminsData = data?.data ?? [];
   const totalAdmins = data?.total ?? 0;
-  const [alertData, setAlertData] = useState<TableAlert|null>(null);
+  const [alertData, setAlertData] = useState<TableAlert | null>(null);
 
   useEffect(() => {
     if (location.state?.successCreate) {

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import { useTranslation } from "react-i18next";
-import Checkbox from "../../form/input/Checkbox";
+import Checkbox from "../../common/input/Checkbox";
 import { login } from "../../../api/EndUserApi/endUserAuth/_requests";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const EndUserSignInForm = () => {
   const { t } = useTranslation(["auth"]);
@@ -42,7 +43,7 @@ const EndUserSignInForm = () => {
   };
 
   const navigate = useNavigate();
-
+  const {lang} = useDirectionAndLanguage();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
@@ -208,7 +209,7 @@ const EndUserSignInForm = () => {
                     </span>
                   </div>
                   <Link
-                    to="/reset-password"
+                    to={`/${lang}/reset-password`}
                     className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
                   >
                     {t("forgotPassword")}
@@ -229,7 +230,7 @@ const EndUserSignInForm = () => {
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
                 {t("signup")}
                 <Link
-                  to="/signup"
+                  to={`/${lang}/signup`}
                   className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
                 >
                   {t("signupLink")}

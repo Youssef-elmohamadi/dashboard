@@ -5,22 +5,9 @@ import {
   useAllCategories,
 } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
 import { useTranslation } from "react-i18next";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
 import { AxiosError } from "axios";
-interface Category {
-  id: number;
-  name: string;
-  description: string;
-  image: string | null;
-  parent_id: number | null;
-  status: string;
-  order: number;
-  commission_rate: number;
-  appears_in_website: string;
-  created_at: string | null;
-  updated_at: string | null;
-  category?: any;
-}
+import { Category } from "../../../types/Categories";
 
 const CategoryDetails: React.FC = () => {
   const { id } = useParams();
@@ -31,7 +18,7 @@ const CategoryDetails: React.FC = () => {
   //const [loading, setLoading] = useState(true);
   const { data, isLoading: loading, error, isError } = useGetCategoryById(id);
 
-  const category = data?.data.data;
+  const category = data;
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
       const status = error?.response?.status;
@@ -115,29 +102,29 @@ const CategoryDetails: React.FC = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-gray-200">
           <p>
-            <strong>{t("name")}:</strong> {category.name}
+            <strong>{t("name")}:</strong> {category?.name}
           </p>
           <p>
-            <strong>{t("description")}:</strong> {category.description}
+            <strong>{t("description")}:</strong> {category?.description}
           </p>
           <p>
-            <strong>{t("commissionRate")}:</strong> {category.commission_rate}%
+            <strong>{t("commissionRate")}:</strong> {category?.commission_rate}%
           </p>
           <p>
-            <strong>{t("order")}:</strong> {category.order}
+            <strong>{t("order")}:</strong> {category?.order}
           </p>
           <p>
-            <strong>{t("status")}:</strong> {category.status}
+            <strong>{t("status")}:</strong> {category?.status}
           </p>
           <p>
             <strong>{t("appearsOnWebsite")}:</strong>{" "}
-            {category.appears_in_website === "yes" ? t("yes") : t("no")}
+            {category?.appears_in_website ? t("yes") : t("no")}
           </p>
           <p>
             <strong>{t("parentId")}:</strong>{" "}
-            {category.parent_id
+            {category?.parent_id
               ? categories?.find(
-                  (cat: Category) => cat.id === category.parent_id
+                  (cat: Category) => cat.id === category?.parent_id
                 )?.name || t("unknown")
               : t("none")}
           </p>
@@ -145,15 +132,15 @@ const CategoryDetails: React.FC = () => {
       </section>
 
       {/* Image */}
-      {category.image && (
+      {category?.image && (
         <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
           <h2 className="text-xl font-semibold mb-4 text-green-700 dark:text-green-400">
             {t("categoryImage")}
           </h2>
           <div className="w-full flex justify-center">
             <img
-              src={category.image}
-              alt={category.name}
+              src={category?.image}
+              alt={category?.name}
               className="max-w-xs h-auto rounded-lg shadow-md"
             />
           </div>
@@ -167,10 +154,12 @@ const CategoryDetails: React.FC = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-gray-200">
           <p>
-            <strong>{t("createdAt")}:</strong> {formatDate(category.created_at)}
+            <strong>{t("createdAt")}:</strong>{" "}
+            {formatDate(category?.created_at as string)}
           </p>
           <p>
-            <strong>{t("updatedAt")}:</strong> {formatDate(category.updated_at)}
+            <strong>{t("updatedAt")}:</strong>{" "}
+            {formatDate(category?.updated_at as string)}
           </p>
         </div>
       </section>

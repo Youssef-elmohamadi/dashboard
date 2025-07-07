@@ -56,7 +56,7 @@ interface Vendor {
 }
 
 export type Order = {
-  id: number | string;
+  id: number;
   is_paid: boolean;
   vendor_id: number;
   status: string;
@@ -99,6 +99,7 @@ export type Order = {
     created_at: string;
     updated_at: string;
     subtotal: number;
+    estimated_delivery_date: string;
   }[];
 };
 

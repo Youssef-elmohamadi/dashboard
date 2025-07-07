@@ -5,17 +5,14 @@ import {
   getOrdersWithPaginate,
   shipmentOrder,
 } from "../../../../api/SuperAdminApi/ordersApi/_requests";
-import { AxiosError } from "axios";
+import {
+  Order,
+  OrderFilters,
+  PaginatedOrdersData,
+} from "../../../../types/Orders";
 
-type OrderFilters = {
-  status?: string;
-  shipping_status?: string;
-  tracking_number?: string;
-  from_date?: string;
-  to_date?: string;
-};
 export const useAllOrdersPaginate = (page: number, filters?: OrderFilters) => {
-  return useQuery({
+  return useQuery<PaginatedOrdersData>({
     queryKey: ["orders", page, filters],
     queryFn: async () => {
       const response = await getOrdersWithPaginate({
@@ -26,16 +23,16 @@ export const useAllOrdersPaginate = (page: number, filters?: OrderFilters) => {
       return response.data.data;
     },
     staleTime: 1000 * 60 * 4,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطأ أثناء جلب الطلبات:", error);
-    },
   });
 };
 
 export const useGetOrderById = (id?: number | string) => {
-  return useQuery({
+  return useQuery<Order>({
     queryKey: ["order", id],
-    queryFn: () => getOrderById(id!),
+    queryFn: async () => {
+      const response = await getOrderById(id!);
+      return response.data.data;
+    },
     staleTime: 1000 * 60 * 5,
     enabled: !!id,
   });
@@ -49,7 +46,7 @@ export const useCancelOrder = () => {
       return await cancelOrder(id);
     },
     onSuccess: (_, variables) => {
-      const { id } = variables;
+      const id = variables;
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       queryClient.invalidateQueries({ queryKey: ["orders", "all"] });
       queryClient.invalidateQueries({ queryKey: ["orders", id] });

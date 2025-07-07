@@ -6,10 +6,11 @@ import {
   changeStatus,
 } from "../../../../api/SuperAdminApi/Vendors/_requests";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Vendor, VendorsPaginate } from "../../../../types/Vendor";
 //import { changeStatus } from "../api/SuperAdminApi/Products/_requests";
 
 export const useGetVendorsPaginate = (page: number, filters?: any) => {
-  return useQuery({
+  return useQuery<VendorsPaginate>({
     queryKey: ["vendors", page, filters],
     queryFn: async () => {
       const response = await getVendorsWithPaginate({
@@ -19,16 +20,16 @@ export const useGetVendorsPaginate = (page: number, filters?: any) => {
       return response.data.data;
     },
     staleTime: 1000 * 60 * 5,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطاء في جلب الصلاحيات:", error);
-    },
   });
 };
 
 export const useGetVendorById = (id: number | string) => {
-  return useQuery({
+  return useQuery<Vendor>({
     queryKey: ["vendor", id],
-    queryFn: () => getVendorById(id),
+    queryFn: async () => {
+      const response = await getVendorById(id!);
+      return response.data.data;
+    },
     staleTime: 1000 * 60 * 5,
     enabled: !!id,
   });

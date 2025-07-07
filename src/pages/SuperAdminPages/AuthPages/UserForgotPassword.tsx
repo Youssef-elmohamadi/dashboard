@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import AuthLayout from "../../../components/common/AuthPageLayout";
-import ResetPassword from "../../../components/common/ResetPassword";
+import AuthLayout from "../../../components/common/Auth/AuthPageLayout";
+import ResetPassword from "../../../components/common/Auth/ResetPassword";
 import { useNavigate } from "react-router-dom";
 const SuperAdminForgotPassword = () => {
   const navigate = useNavigate();

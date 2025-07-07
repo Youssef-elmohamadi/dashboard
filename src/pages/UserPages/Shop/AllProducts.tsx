@@ -1,9 +1,9 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import ProductCard from "../../../components/EndUser/ProductCard/ProductCard";
+import ProductCard from "../../../components/EndUser/Product/ProductCard";
 import { Circles } from "react-loader-spinner";
 import { useTranslation } from "react-i18next";
 import { useAllProducts } from "../../../hooks/Api/EndUser/useProducts/useProducts";
-import SEO from "../../../components/common/seo";
+import SEO from "../../../components/common/SEO/seo";
 import LazyImage from "../../../components/common/LazyImage";
 
 const AllProducts = () => {
@@ -31,17 +31,17 @@ const AllProducts = () => {
     <div className="min-h-[300px] flex flex-col items-center">
       <SEO
         title={{
-          ar: "تاشتيبا - كل المنتجات",
+          ar: "تشطيبة - كل المنتجات",
           en: "Tashtiba - All Products",
         }}
         description={{
-          ar: "تصفح جميع المنتجات المتوفرة في تاشتيبا، من ملابس، إلكترونيات، أثاث، أدوات منزلية والمزيد بأسعار تنافسية.",
+          ar: "تصفح جميع المنتجات المتوفرة في تشطيبة، من ملابس، إلكترونيات، أثاث، أدوات منزلية والمزيد بأسعار تنافسية.",
           en: "Browse all available products on Tashtiba including fashion, electronics, furniture, home goods, and more at competitive prices.",
         }}
         keywords={{
           ar: [
             "كل المنتجات",
-            "تاشتيبا",
+            "تشطيبة",
             "تسوق",
             "إلكترونيات",
             "أزياء",
@@ -65,9 +65,8 @@ const AllProducts = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar" }, // Replace with your actual Arabic URL
-          { lang: "en", href: "https://tashtiba.vercel.app/en" }, // Replace with your actual English URL
-          // You can also add an x-default if you have a default language page, for example:
+          { lang: "ar", href: "https://tashtiba.vercel.app/ar" },
+          { lang: "en", href: "https://tashtiba.vercel.app/en" },
           // { lang: "x-default", href: "https://tashtiba.vercel.app/en" },
         ]}
       />
@@ -85,7 +84,7 @@ const AllProducts = () => {
             src="/images/product/placeholder-image.jpg"
             alt={
               lang === "ar"
-                ? "تحميل المنتجات - تاشتيبا"
+                ? "تحميل المنتجات - تشطيبة"
                 : "Loading products - Tashtiba"
             }
             className="w-20 h-20 mb-4 animate-pulse"

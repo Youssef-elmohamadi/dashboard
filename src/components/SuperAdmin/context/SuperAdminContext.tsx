@@ -1,6 +1,6 @@
 import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { showUser } from "../../../api/AdminApi/profileApi/_requests";
-import { handleLogout } from "../../common/Logout";
+import { handleLogout } from "../../common/Auth/Logout";
 
 interface UserContextType {
   userId: number | null;

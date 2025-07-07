@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Label from "../../form/Label";
-import Input from "../../form/input/InputField";
-import Select from "../../form/Select";
-import { useGetCouponById, useUpdateCoupon } from "../../../hooks/Api/Admin/useCoupons/useCoupons";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
+import {
+  useGetCouponById,
+  useUpdateCoupon,
+} from "../../../hooks/Api/Admin/useCoupons/useCoupons";
 
 const UpdateCoupon = () => {
   const { id } = useParams();

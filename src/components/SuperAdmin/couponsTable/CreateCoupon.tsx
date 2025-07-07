@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import Label from "../../../components/form/Label";
-import Input from "../../../components/form/input/InputField";
-import Select from "../../../components/form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 import { useCreateCoupon } from "../../../hooks/Api/SuperAdmin/useCoupons/useCoupons";
-import PageMeta from "../../common/PageMeta";
+import PageMeta from "../../common/SEO/PageMeta";
+import { ClientErrors, CouponInput, ServerError } from "../../../types/Coupons";
 export default function CreateCoupon() {
   const { t } = useTranslation(["CreateCoupon"]);
   const navigate = useNavigate();
-  const [couponData, setCouponData] = useState({
+  const [couponData, setCouponData] = useState<CouponInput>({
     code: "",
     type: "fixed",
     value: "",
@@ -20,23 +21,31 @@ export default function CreateCoupon() {
     start_at: "",
     expires_at: "",
   });
-  const [errors, setErrors] = useState({
-    code: [] as string[],
-    type: [] as string[],
-    value: [] as string[],
-    max_discount: [] as string[],
-    min_order_amount: [] as string[],
-    usage_limit: [] as string[],
-    active: [] as string[],
-    start_at: [] as string[],
-    expires_at: [] as string[],
-    general: "" as string,
-    global: "" as string,
+  const [loading, setLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<ServerError>({
+    code: [],
+    type: [],
+    value: [],
+    max_discount: [],
+    min_order_amount: [],
+    usage_limit: [],
+    active: [],
+    start_at: [],
+    expires_at: [],
+    general: "",
+    global: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [clientSideErrors, setClientSideErrors] = useState<
-    Record<string, string>
-  >({});
+  const [clientSideErrors, setClientSideErrors] = useState<ClientErrors>({
+    code: "",
+    type: "",
+    value: "",
+    max_discount: "",
+    min_order_amount: "",
+    usage_limit: "",
+    active: "",
+    start_at: "",
+    expires_at: "",
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -58,7 +67,17 @@ export default function CreateCoupon() {
   };
 
   const validate = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors = {
+      code: "",
+      type: "",
+      value: "",
+      max_discount: "",
+      min_order_amount: "",
+      usage_limit: "",
+      active: "",
+      start_at: "",
+      expires_at: "",
+    };
 
     if (!couponData.code) newErrors.code = t("coupon.errors.code");
     if (!couponData.value) newErrors.value = t("coupon.errors.value");
@@ -80,7 +99,7 @@ export default function CreateCoupon() {
     }
 
     setClientSideErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.values(newErrors).every((val) => val === "");
   };
 
   const { mutateAsync } = useCreateCoupon();
@@ -151,18 +170,20 @@ export default function CreateCoupon() {
         </h3>
       </div>
 
-      {errors.general && (
-        <p className="text-red-500 text-sm text-center mt-4">
-          {errors.general}
-        </p>
-      )}
-      {errors.global && (
-        <p className="text-red-500 text-sm text-center mt-4">{errors.global}</p>
-      )}
       <form
         onSubmit={handleSubmit}
         className="space-y-6 w-full mt-8 flex flex-col items-center"
       >
+        {errors.general && (
+          <p className="text-red-500 text-sm text-center mt-4">
+            {errors.general}
+          </p>
+        )}
+        {errors.global && (
+          <p className="text-red-500 text-sm text-center mt-4">
+            {errors.global}
+          </p>
+        )}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
             <Label>{t("coupon.fields.code")}</Label>

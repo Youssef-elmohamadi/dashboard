@@ -1,11 +1,16 @@
 {
   "mainTitle": "Tashtiba | Order History",
+  "pageTitle": "my Orders",
+  "pageSubtitle": "Review all details of your orders and the products included.",
   "loading": "Loading order...",
   "no_id": "No Order ID provided.",
   "not_found": "Order not found.",
   "global_error": "Something went wrong. Please try again.",
   "orderDetails": {
     "title": "Order Summary",
+    "subtitle": "Review all details of your order and the products included.",
+    "orderSummary": "Order Summary",
+    "shippingAddress": "Shipping Address",
     "orderId": "Order ID",
     "orderDate": "Order Date",
     "paymentMethod": "Payment Method",

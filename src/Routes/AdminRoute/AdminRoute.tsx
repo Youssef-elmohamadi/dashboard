@@ -2,7 +2,6 @@ import { Route } from "react-router-dom";
 import AdminLayout from "../../pages/AdminPages/layout/AdminLayout";
 import Home from "../../pages/AdminPages/Dashboard/Home";
 import UserProfiles from "../../pages/AdminPages/UserProfile/UserProfiles";
-import Calendar from "../../pages/AdminPages/Calendar";
 import Admins from "../../pages/AdminPages/Users/Admins";
 import CreateAdmin from "../../components/admin/usersTable/CreateAdmin";
 import UpdateAdmin1 from "../../components/admin/usersTable/UpdateAdmin1";
@@ -17,9 +16,6 @@ import Products from "../../pages/AdminPages/Products/Products";
 import CreateProducts from "../../components/admin/Products/CreateProducts";
 import UpdateProduct from "../../components/admin/Products/UpdateProduct";
 import ProductDetails from "../../components/admin/Products/ShowMore";
-import FormElements from "../../pages/AdminPages/Forms/FormElements";
-import LineChart from "../../pages/AdminPages/Charts/LineChart";
-import BarChart from "../../pages/AdminPages/Charts/BarChart";
 import AdminSignIn from "../../pages/AdminPages/AuthPages/AdminSignIn";
 import AdminSignUp from "../../pages/AdminPages/AuthPages/AdminSignUp";
 import ProtectedAdminRoute from "./ProtectedAdminRoute";
@@ -47,7 +43,6 @@ export const adminRoutes = (
     >
       <Route index element={<Home userType="admin" />} />
       <Route path="profile" element={<UserProfiles />} />
-      <Route path="calendar" element={<Calendar />} />
       <Route path="admins" element={<Admins />} />
       <Route path="admins/create" element={<CreateAdmin />} />
       <Route path="admins/update/:id" element={<UpdateAdmin1 />} />
@@ -71,9 +66,6 @@ export const adminRoutes = (
       <Route path="orders_report" element={<OrdersReports />} />
       <Route path="products_report" element={<ProductReports />} />
       <Route path="settings" element={<VendorSettings />} />
-      <Route path="form-elements" element={<FormElements />} />
-      <Route path="line-chart" element={<LineChart />} />
-      <Route path="bar-chart" element={<BarChart />} />
     </Route>
     <Route path="/admin/signin" element={<AdminSignIn />} />
     <Route path="/admin/signup" element={<AdminSignUp />} />

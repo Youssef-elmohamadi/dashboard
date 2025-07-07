@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import Label from "../../../components/form/Label";
-import Input from "../../../components/form/input/InputField";
-import Select from "../../../components/form/Select";
+import Label from "../../common/form/Label";
+import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 import { useCreateCoupon } from "../../../hooks/Api/Admin/useCoupons/useCoupons";
 export default function CreateCoupon() {
   const { t } = useTranslation(["CreateCoupon"]);
