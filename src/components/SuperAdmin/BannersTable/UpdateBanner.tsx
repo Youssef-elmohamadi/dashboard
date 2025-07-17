@@ -5,13 +5,14 @@ import Button from "../../ui/button/Button";
 import Input from "../../common/input/InputField";
 import Label from "../../common/form/Label";
 import Select from "../../common/form/Select";
-import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
+import { useAllCategories } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
 import {
   useGetBannerById,
   useUpdateBanner,
 } from "../../../hooks/Api/SuperAdmin/useBanners/useSuperAdminBanners";
 import { AxiosError } from "axios";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
 import {
   BannerInput,
   ClientErrors,
@@ -23,15 +24,15 @@ const UpdateBanner = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const navigate = useNavigate();
-  const { t } = useTranslation(["UpdateBanner"]);
+  const { t } = useTranslation(["UpdateBanner", "Meta"]);
   const [errors, setErrors] = useState<ServerErrors>({
     title: [],
     link_type: [],
     url: [],
     link_id: [],
-    position: [],
     is_active: [],
     image: [],
+    position: [], // إضافة 'position' هنا
     global: "",
     general: "",
   });
@@ -40,9 +41,9 @@ const UpdateBanner = () => {
     link_type: "",
     url: "",
     link_id: "",
-    position: "",
     is_active: "",
     image: "",
+    position: "", // إضافة 'position' هنا
   });
   const [imagePreview, setImagePreview] = useState<string>("");
   const [existingImage, setExistingImage] = useState<string>("");
@@ -80,7 +81,7 @@ const UpdateBanner = () => {
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
       const status = error?.response?.status;
-      if (status === 403 || status === 401) {
+      if (status === 401 || status === 403) {
         setErrors((prev) => ({
           ...prev,
           global: t("banner.errors.global"),
@@ -194,10 +195,7 @@ const UpdateBanner = () => {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors((prev) => ({
-          ...prev,
-          ...formattedErrors,
-        }));
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -211,7 +209,32 @@ const UpdateBanner = () => {
   if (isLoading)
     return (
       <>
-        <PageMeta title={t("banner.mainTitle")} description="Update Banner" />
+        <SEO // PageMeta replaced with SEO, and data directly set for loading state
+          title={{
+            ar: "تشطيبة - تحديث بانر - جارٍ التحميل (سوبر أدمن)",
+            en: "Tashtiba - Update Banner - Loading (Super Admin)",
+          }}
+          description={{
+            ar: "جارٍ تحميل بيانات البانر للتحديث بواسطة المشرف العام في تشطيبة. يرجى الانتظار.",
+            en: "Loading banner data for update by Super Admin on Tashtiba. Please wait.",
+          }}
+          keywords={{
+            ar: [
+              "تحديث بانر",
+              "تحميل بانر",
+              "إدارة البانرات",
+              "سوبر أدمن",
+              "إعلانات الموقع",
+            ],
+            en: [
+              "update banner",
+              "loading banner",
+              "banner management",
+              "super admin",
+              "website ads",
+            ],
+          }}
+        />{" "}
         <p className="text-center mt-5">
           {t("banner.loading") || "Loading..."}
         </p>
@@ -221,7 +244,32 @@ const UpdateBanner = () => {
   if (!data && !errors.general)
     return (
       <>
-        <PageMeta title={t("banner.mainTitle")} description="Update Banner" />
+        <SEO // PageMeta replaced with SEO, and data directly set for not found state
+          title={{
+            ar: "تشطيبة - تحديث بانر - غير موجود (سوبر أدمن)",
+            en: "Tashtiba - Update Banner - Not Found (Super Admin)",
+          }}
+          description={{
+            ar: "البانر المطلوب للتحديث غير موجود في نظام تشطيبة. يرجى التحقق من المعرف.",
+            en: "The requested banner for update was not found on Tashtiba. Please verify the ID.",
+          }}
+          keywords={{
+            ar: [
+              "بانر غير موجود",
+              "تحديث بانر",
+              "خطأ 404",
+              "سوبر أدمن",
+              "إدارة البانرات",
+            ],
+            en: [
+              "banner not found",
+              "update banner",
+              "404 error",
+              "super admin",
+              "banner management",
+            ],
+          }}
+        />{" "}
         <p className="text-center mt-5">{t("banner.notFound")}</p>
       </>
     );
@@ -229,14 +277,71 @@ const UpdateBanner = () => {
   if (errors.general) {
     return (
       <>
-        <PageMeta title={t("banner.mainTitle")} description="Update Banner" />
+        <SEO // PageMeta replaced with SEO, and data directly set for general error state
+          title={{
+            ar: "تشطيبة - خطأ في تحديث البانر (سوبر أدمن)",
+            en: "Tashtiba - Banner Update Error (Super Admin)",
+          }}
+          description={{
+            ar: "حدث خطأ عام أثناء محاولة تحديث بيانات البانر بواسطة المشرف العام في تشطيبة. يرجى المحاولة مرة أخرى.",
+            en: "An error occurred while attempting to update banner data by Super Admin on Tashtiba. Please try again.",
+          }}
+          keywords={{
+            ar: [
+              "خطأ تحديث بانر",
+              "مشكلة بانر",
+              "تحديث تشطيبة",
+              "سوبر أدمن",
+              "فشل التعديل",
+            ],
+            en: [
+              "banner update error",
+              "banner issue",
+              "Tashtiba update",
+              "super admin",
+              "update failed",
+            ],
+          }}
+        />{" "}
         <p className="text-center mt-5">{errors.general}</p>
       </>
     );
   }
   return (
     <div>
-      <PageMeta title={t("banner.mainTitle")} description="Update Banner" />
+      <SEO
+        title={{
+          ar: `تشطيبة - تحديث بانر ${banner?.title || ""}`,
+          en: `Tashtiba - Update Banner ${banner?.title || ""} (Super Admin)`,
+        }}
+        description={{
+          ar: `صفحة تحديث البانر "${
+            banner?.title || "غير معروف"
+          }" بواسطة المشرف العام في تشطيبة. عدّل التفاصيل، نوع الرابط، والموضع.`,
+          en: `Update banner "${
+            banner?.title || "unknown"
+          }" details by Super Admin on Tashtiba. Modify details, link type, and position.`,
+        }}
+        keywords={{
+          ar: [
+            `تحديث بانر ${banner?.title || ""}`,
+            "تعديل إعلان",
+            "إدارة البانرات",
+            "سوبر أدمن",
+            "إعلانات الموقع",
+            "تشطيبة",
+          ],
+          en: [
+            `update banner ${banner?.title || ""}`,
+            "edit ad",
+            "banner management",
+            "super admin",
+            "website ads",
+            "Tashtiba",
+          ],
+        }}
+      />
+
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("banner.title")}

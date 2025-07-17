@@ -29,9 +29,6 @@ export const useAllCoupons = (page: number, filters?: CouponFilters) => {
       return response.data.data;
     },
     staleTime: 1000 * 60 * 4,
-    onError: (error: AxiosError) => {
-      console.error("حدث خطأ أثناء جلب المشرفين:", error);
-    },
   });
 };
 

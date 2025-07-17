@@ -10,7 +10,8 @@ import {
   useGetRoleById,
   useUpdateRole,
 } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
 import {
   Permission,
   ServerErrors,
@@ -35,7 +36,7 @@ const UpdateRole: React.FC = () => {
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t } = useTranslation(["UpdateRole"]);
+  const { t } = useTranslation(["UpdateRole", "Meta"]);
   const {
     data: permissionData,
     isLoading: isPermissionLoading,
@@ -165,7 +166,7 @@ const UpdateRole: React.FC = () => {
 
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ ...errors, general: t("admin.errors.general") });
+        setErrors((prev) => ({ ...prev, general: t("role.errors.general") }));
       }
     } finally {
       setIsSubmitting(false);
@@ -175,7 +176,32 @@ const UpdateRole: React.FC = () => {
   if (isRoleLoading) {
     return (
       <>
-        <PageMeta title={t("role.main_title")} description="Update Role" />
+        <SEO // PageMeta replaced with SEO, and data directly set for loading state
+          title={{
+            ar: "تشطيبة - تحديث صلاحية - جارٍ التحميل (سوبر أدمن)",
+            en: "Tashtiba - Update Role - Loading (Super Admin)",
+          }}
+          description={{
+            ar: "جارٍ تحميل بيانات الصلاحية للتحديث بواسطة المشرف العام في تشطيبة. يرجى الانتظار.",
+            en: "Loading role data for update by Super Admin on Tashtiba. Please wait.",
+          }}
+          keywords={{
+            ar: [
+              "تحديث صلاحية",
+              "تحميل صلاحية",
+              "إدارة الصلاحيات",
+              "سوبر أدمن",
+              "أدوار المستخدمين",
+            ],
+            en: [
+              "update role",
+              "loading role",
+              "role management",
+              "super admin",
+              "user roles",
+            ],
+          }}
+        />{" "}
         <p className="text-gray-400 text-center p-4">{t("role.loadingRole")}</p>
       </>
     );
@@ -183,7 +209,32 @@ const UpdateRole: React.FC = () => {
   if (!role && !errors.general) {
     return (
       <>
-        <PageMeta title={t("role.main_title")} description="Update Role" />
+        <SEO // PageMeta replaced with SEO, and data directly set for not found state
+          title={{
+            ar: "تشطيبة - تحديث صلاحية - غير موجودة (سوبر أدمن)",
+            en: "Tashtiba - Update Role - Not Found (Super Admin)",
+          }}
+          description={{
+            ar: "الصلاحية المطلوبة للتحديث غير موجودة في نظام تشطيبة. يرجى التحقق من المعرف.",
+            en: "The requested role for update was not found on Tashtiba. Please verify the ID.",
+          }}
+          keywords={{
+            ar: [
+              "صلاحية غير موجودة",
+              "تحديث صلاحية",
+              "خطأ 404",
+              "سوبر أدمن",
+              "إدارة الصلاحيات",
+            ],
+            en: [
+              "role not found",
+              "update role",
+              "404 error",
+              "super admin",
+              "role management",
+            ],
+          }}
+        />{" "}
         <p className="text-gray-400 text-center p-4">
           {t("role.errors.notFound")}
         </p>
@@ -193,7 +244,32 @@ const UpdateRole: React.FC = () => {
   if (errors.general) {
     return (
       <>
-        <PageMeta title={t("role.main_title")} description="Update Role" />
+        <SEO // PageMeta replaced with SEO, and data directly set for general error state
+          title={{
+            ar: "تشطيبة - خطأ في تحديث الصلاحية (سوبر أدمن)",
+            en: "Tashtiba - Role Update Error (Super Admin)",
+          }}
+          description={{
+            ar: "حدث خطأ عام أثناء محاولة تحديث بيانات الصلاحية بواسطة المشرف العام في تشطيبة. يرجى المحاولة مرة أخرى.",
+            en: "An error occurred while attempting to update role data by Super Admin on Tashtiba. Please try again.",
+          }}
+          keywords={{
+            ar: [
+              "خطأ تحديث صلاحية",
+              "مشكلة صلاحية",
+              "تحديث تشطيبة",
+              "سوبر أدمن",
+              "فشل التعديل",
+            ],
+            en: [
+              "role update error",
+              "role issue",
+              "Tashtiba update",
+              "super admin",
+              "update failed",
+            ],
+          }}
+        />{" "}
         <p className="text-red-500 text-center p-4">
           {t("role.errors.general")}
         </p>
@@ -203,13 +279,44 @@ const UpdateRole: React.FC = () => {
 
   return (
     <div className="p-6">
-      <PageMeta title={t("role.main_title")} description="Update Role" />
+      <SEO
+        title={{
+          ar: `تشطيبة - تحديث صلاحية ${role?.name || ""}`,
+          en: `Tashtiba - Update Role ${role?.name || ""} (Super Admin)`,
+        }}
+        description={{
+          ar: `صفحة تحديث الصلاحية "${
+            role?.name || "غير معروف"
+          }" بواسطة المشرف العام في تشطيبة. عدّل الاسم والصلاحيات.`,
+          en: `Update role "${
+            role?.name || "unknown"
+          }" details by Super Admin on Tashtiba. Modify name and permissions.`,
+        }}
+        keywords={{
+          ar: [
+            `تحديث صلاحية ${role?.name || ""}`,
+            "تعديل دور",
+            "إدارة الصلاحيات",
+            "سوبر أدمن",
+            "أدوار المستخدمين",
+            "تشطيبة",
+          ],
+          en: [
+            `update role ${role?.name || ""}`,
+            "edit role",
+            "role management",
+            "super admin",
+            "user roles",
+            "Tashtiba",
+          ],
+        }}
+      />
+
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("role.update_title")}
         </h3>
       </div>
-
       <form onSubmit={handleSubmit} className="p-4 md:p-5">
         {errors.global && (
           <p className="text-red-500 text-sm mt-4 text-center">

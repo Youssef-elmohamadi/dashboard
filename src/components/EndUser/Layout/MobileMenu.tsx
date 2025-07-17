@@ -74,7 +74,7 @@ const MobileMenu = ({
         <div className="flex items-center gap-2 border-b border-gray-200 py-3">
           <div className="w-10 h-10 rounded-full overflow-hidden">
             <img
-              src={user?.avatar || "/images/default-avatar.jpg"}
+              src={user?.avatar || "/images/default-avatar.webp"}
               alt="User Avatar"
               className="w-full h-full object-cover"
             />
@@ -204,7 +204,7 @@ const MobileMenu = ({
                           : "hover:bg-[#8826bd35]"
                       }`
                     }
-                    onClick={closeMenu} 
+                    onClick={closeMenu}
                   >
                     <li>{item.label}</li>
                   </NavLink>
@@ -216,7 +216,7 @@ const MobileMenu = ({
                   onClick={() => {
                     handleLogout();
                     closeMenu();
-                  }} 
+                  }}
                   className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-100 cursor-pointer"
                 >
                   <GrLogout className="text-xl" />

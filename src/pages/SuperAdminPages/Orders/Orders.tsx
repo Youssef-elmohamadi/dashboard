@@ -1,4 +1,3 @@
-import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
@@ -15,6 +14,8 @@ import {
 } from "../../../hooks/Api/SuperAdmin/useOrders/useOrders";
 import { AxiosError } from "axios";
 import { SearchValuesOrders } from "../../../types/Orders";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
 
 const Orders = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -28,7 +29,7 @@ const Orders = () => {
 
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-  const { t } = useTranslation(["OrdersTable"]);
+  const { t } = useTranslation(["OrdersTable", "Meta"]);
   const { data, isLoading, isError, refetch, error } = useAllOrdersPaginate(
     pageIndex,
     searchValues
@@ -87,19 +88,43 @@ const Orders = () => {
   });
   return (
     <>
-      <PageMeta
-        title={t("ordersPage.mainTitle")}
-        description="Show and Manage Your orders"
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إدارة الطلبات (سوبر أدمن)",
+          en: "Tashtiba - Order Management (Super Admin)",
+        }}
+        description={{
+          ar: "صفحة إدارة طلبات العملاء بواسطة المشرف العام في تشطيبة. عرض، تتبع، وإلغاء الطلبات.",
+          en: "Manage customer orders by Super Admin on Tashtiba. View, track, and cancel orders.",
+        }}
+        keywords={{
+          ar: [
+            "طلبات المشرف العام",
+            "إدارة الطلبات",
+            "تتبع الطلبات",
+            "تشطيبة",
+            "سوبر أدمن",
+            "المبيعات",
+          ],
+          en: [
+            "super admin orders",
+            "order management",
+            "order tracking",
+            "Tashtiba",
+            "super admin",
+            "sales",
+          ],
+        }}
       />
       <PageBreadcrumb pageTitle={t("ordersPage.title")} userType="admin" />
       <div>
         <SearchTable
           fields={[
-            { key: "tracking_number", label: "Tracking Number", type: "input" },
+            { key: "tracking_number", label: "Tracking Number", type: "input" }, // تم الإبقاء عليها كما هي حسب التعليمات
 
             {
               key: "status",
-              label: "Status",
+              label: "Status", // تم الإبقاء عليها كما هي حسب التعليمات
               type: "select",
               options: [
                 { label: t("ordersPage.statuses.pending"), value: "pending" },
@@ -117,7 +142,7 @@ const Orders = () => {
             },
             {
               key: "shipping_status",
-              label: "Shipping Status",
+              label: "Shipping Status", // تم الإبقاء عليها كما هي حسب التعليمات
               type: "select",
               options: [
                 { label: t("ordersPage.statuses.pending"), value: "pending" },
@@ -128,8 +153,8 @@ const Orders = () => {
                 },
               ],
             },
-            { key: "from_date", label: "From", type: "date" },
-            { key: "to_date", label: "To", type: "date" },
+            { key: "from_date", label: "From", type: "date" }, // تم الإبقاء عليها كما هي حسب التعليمات
+            { key: "to_date", label: "To", type: "date" }, // تم الإبقاء عليها كما هي حسب التعليمات
           ]}
           setSearchParam={handleSearch}
           searchValues={searchValues}

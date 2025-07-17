@@ -1,4 +1,3 @@
-import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
@@ -17,6 +16,8 @@ import { AxiosError } from "axios";
 import { SearchValues } from "../../../types/Product";
 import { Category } from "../../../types/Categories";
 import { Brand } from "../../../types/Brands";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
 
 const Products = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -104,9 +105,33 @@ const Products = () => {
   });
   return (
     <>
-      <PageMeta
-        title={t("productsPage.mainTitle")}
-        description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إدارة المنتجات (سوبر أدمن)",
+          en: "Tashtiba - Product Management (Super Admin)",
+        }}
+        description={{
+          ar: "صفحة إدارة المنتجات بواسطة المشرف العام في تشطيبة. عرض، تغيير حالة، والتحكم في المنتجات.",
+          en: "Manage products by Super Admin on Tashtiba. View, change status, and control products.",
+        }}
+        keywords={{
+          ar: [
+            "منتجات المشرف العام",
+            "إدارة المنتجات",
+            "قائمة المنتجات",
+            "تشطيبة",
+            "سوبر أدمن",
+            "المخزون",
+          ],
+          en: [
+            "super admin products",
+            "product management",
+            "product list",
+            "Tashtiba",
+            "super admin",
+            "inventory",
+          ],
+        }}
       />
       <PageBreadcrumb
         pageTitle={t("productsPage.title")}
@@ -115,10 +140,10 @@ const Products = () => {
       <div>
         <SearchTable
           fields={[
-            { key: "name", label: "Name", type: "input" },
+            { key: "name", label: "Name", type: "input" }, // تم الإبقاء عليها كما هي حسب التعليمات
             {
               key: "category_id",
-              label: "Category",
+              label: "Category", // تم الإبقاء عليها كما هي حسب التعليمات
               type: "select",
               options: categories?.map((category: Category) => ({
                 label: category.name,
@@ -127,7 +152,7 @@ const Products = () => {
             },
             {
               key: "brand_id",
-              label: "Brand",
+              label: "Brand", // تم الإبقاء عليها كما هي حسب التعليمات
               type: "select",
               options: brands?.map((brand: Brand) => ({
                 label: brand.name,
@@ -136,7 +161,7 @@ const Products = () => {
             },
             {
               key: "status",
-              label: "Status",
+              label: "Status", // تم الإبقاء عليها كما هي حسب التعليمات
               type: "select",
               options: [
                 { label: t("productsPage.status.active"), value: "active" },

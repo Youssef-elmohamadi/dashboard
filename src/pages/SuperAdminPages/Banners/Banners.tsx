@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
-import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
-import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
-import { useLocation } from "react-router";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
+import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
-import Alert from "../../../components/ui/alert/Alert";
 import {
   useBannersWithPaginate,
   useDeleteBanner,
@@ -17,6 +16,9 @@ import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCate
 import { AxiosError } from "axios";
 import { SearchValues } from "../../../types/Banners";
 import { TableAlert } from "../../../types/Common";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+
 const Banners = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
@@ -28,7 +30,7 @@ const Banners = () => {
     name: "",
   });
   const location = useLocation();
-  const { t } = useTranslation(["BannersTable"]);
+  const { t } = useTranslation(["BannersTable", "Meta"]);
   const { data, isLoading, isError, refetch, error } = useBannersWithPaginate(
     pageIndex,
     searchValues
@@ -118,9 +120,33 @@ const Banners = () => {
           message={alertData.message}
         />
       )}
-      <PageMeta
-        title="React.js Basic Tables Dashboard | TailAdmin - Next.js Admin Dashboard Template"
-        description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إدارة البانرات (سوبر أدمن)",
+          en: "Tashtiba - Banner Management (Super Admin)",
+        }}
+        description={{
+          ar: "صفحة إدارة البانرات الإعلانية بواسطة المشرف العام في تشطيبة. عرض، إضافة، تعديل، وحذف البانرات.",
+          en: "Manage advertising banners by Super Admin on Tashtiba. View, add, edit, and delete banners.",
+        }}
+        keywords={{
+          ar: [
+            "بانرات المشرف العام",
+            "إدارة البانرات",
+            "إعلانات الموقع",
+            "تشطيبة",
+            "سوبر أدمن",
+            "تصميم الموقع",
+          ],
+          en: [
+            "super admin banners",
+            "banner management",
+            "website ads",
+            "Tashtiba",
+            "super admin",
+            "website design",
+          ],
+        }}
       />
       <PageBreadcrumb
         pageTitle={t("bannersPage.title")}
@@ -128,7 +154,7 @@ const Banners = () => {
       />
       <div>
         <SearchTable
-          fields={[{ key: "name", label: "Name", type: "input" }]}
+          fields={[{ key: "name", label: "Name", type: "input" }]} // تم الإبقاء عليها كما هي حسب التعليمات
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />

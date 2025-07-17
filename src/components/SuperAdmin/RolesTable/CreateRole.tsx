@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
+import Select from "../../common/form/Select";
 import Checkbox from "../../common/input/Checkbox";
 import Loading from "../../common/Loading";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +10,8 @@ import {
   useCreateRole,
   useGetAllPermissions,
 } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
 import { AxiosError } from "axios";
 import {
   CreateRoleInput,
@@ -34,7 +36,7 @@ export default function CreateRole() {
     useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { t } = useTranslation(["CreateRole"]);
+  const { t } = useTranslation(["CreateRole", "Meta"]);
   const {
     data,
     isLoading,
@@ -127,7 +129,7 @@ export default function CreateRole() {
 
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors((prev) => ({ ...prev, global: t("role.errors.general") }));
+        setErrors((prev) => ({ ...prev, general: t("role.errors.general") }));
       }
     } finally {
       setIsSubmitting(false);
@@ -136,7 +138,36 @@ export default function CreateRole() {
 
   return (
     <div className=" p-6">
-      <PageMeta title={t("role.main_title")} description="Create New Role" />
+      <SEO // PageMeta replaced with SEO, and data directly set
+        title={{
+          ar: "تشطيبة - إنشاء صلاحية جديدة (سوبر أدمن)",
+          en: "Tashtiba - Create New Role (Super Admin)",
+        }}
+        description={{
+          ar: "صفحة إنشاء صلاحية (دور) جديد للمستخدمين بواسطة المشرف العام في تشطيبة. حدد الاسم والصلاحيات المخصصة.",
+          en: "Create a new user role (permission set) by Super Admin on Tashtiba. Define the role name and assigned permissions.",
+        }}
+        keywords={{
+          ar: [
+            "إنشاء صلاحية",
+            "إضافة دور",
+            "صلاحية جديدة",
+            "سوبر أدمن",
+            "أدوار المستخدمين",
+            "تشطيبة",
+            "صلاحيات",
+          ],
+          en: [
+            "create role",
+            "add new role",
+            "new permission set",
+            "super admin",
+            "user roles",
+            "Tashtiba",
+            "permissions",
+          ],
+        }}
+      />{" "}
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("role.create_title")}

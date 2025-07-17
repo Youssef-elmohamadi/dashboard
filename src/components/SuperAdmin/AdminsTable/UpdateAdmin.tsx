@@ -12,7 +12,8 @@ import {
   useUpdateAdmin,
 } from "../../../hooks/Api/SuperAdmin/useSuperAdminAdmis/useSuperAdminAdmins";
 import { useRoles } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
 import {
   ClientErrors,
   ServerErrors,
@@ -88,7 +89,7 @@ const UpdateAdmin = () => {
     setClientSideErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");
   };
-  const { t } = useTranslation(["UpdateAdmin"]);
+  const { t } = useTranslation(["UpdateAdmin", "Meta"]);
   const { dir } = useDirectionAndLanguage();
 
   const {
@@ -219,7 +220,32 @@ const UpdateAdmin = () => {
   if (isLoading)
     return (
       <>
-        <PageMeta title={t("admin.main_title")} description="Update Admin" />
+        <SEO // PageMeta replaced with SEO, and data directly set for loading state
+          title={{
+            ar: "تشطيبة - تحديث مسؤول - جارٍ التحميل (سوبر أدمن)",
+            en: "Tashtiba - Update Admin - Loading (Super Admin)",
+          }}
+          description={{
+            ar: "جارٍ تحميل بيانات المسؤول للتحديث بواسطة المشرف العام في تشطيبة. يرجى الانتظار.",
+            en: "Loading admin data for update by Super Admin on Tashtiba. Please wait.",
+          }}
+          keywords={{
+            ar: [
+              "تحديث مسؤول",
+              "تحميل مسؤول",
+              "إدارة المسؤولين",
+              "سوبر أدمن",
+              "حسابات المسؤولين",
+            ],
+            en: [
+              "update admin",
+              "loading admin",
+              "admin management",
+              "super admin",
+              "admin accounts",
+            ],
+          }}
+        />{" "}
         <p className="text-center mt-5">{t("admin.loading") || "Loading..."}</p>
       </>
     );
@@ -227,7 +253,32 @@ const UpdateAdmin = () => {
   if (!data && !errors.general) {
     return (
       <>
-        <PageMeta title={t("admin.main_title")} description="Update Admin" />
+        <SEO // PageMeta replaced with SEO, and data directly set for not found state
+          title={{
+            ar: "تشطيبة - تحديث مسؤول - غير موجود (سوبر أدمن)",
+            en: "Tashtiba - Update Admin - Not Found (Super Admin)",
+          }}
+          description={{
+            ar: "المسؤول المطلوب للتحديث غير موجود في نظام تشطيبة. يرجى التحقق من المعرف.",
+            en: "The requested admin for update was not found on Tashtiba. Please verify the ID.",
+          }}
+          keywords={{
+            ar: [
+              "مسؤول غير موجود",
+              "تحديث مسؤول",
+              "خطأ 404",
+              "سوبر أدمن",
+              "إدارة المسؤولين",
+            ],
+            en: [
+              "admin not found",
+              "update admin",
+              "404 error",
+              "super admin",
+              "admin management",
+            ],
+          }}
+        />{" "}
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("not_found")}
         </div>
@@ -237,7 +288,32 @@ const UpdateAdmin = () => {
   if (errors.general) {
     return (
       <>
-        <PageMeta title={t("admin.main_title")} description="Update Admin" />
+        <SEO // PageMeta replaced with SEO, and data directly set for general error state
+          title={{
+            ar: "تشطيبة - خطأ في تحديث المسؤول (سوبر أدمن)",
+            en: "Tashtiba - Admin Update Error (Super Admin)",
+          }}
+          description={{
+            ar: "حدث خطأ عام أثناء محاولة تحديث بيانات المسؤول بواسطة المشرف العام في تشطيبة. يرجى المحاولة مرة أخرى.",
+            en: "An error occurred while attempting to update admin data by Super Admin on Tashtiba. Please try again.",
+          }}
+          keywords={{
+            ar: [
+              "خطأ تحديث مسؤول",
+              "مشكلة مسؤول",
+              "تحديث تشطيبة",
+              "سوبر أدمن",
+              "فشل التعديل",
+            ],
+            en: [
+              "admin update error",
+              "admin issue",
+              "Tashtiba update",
+              "super admin",
+              "update failed",
+            ],
+          }}
+        />{" "}
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {errors.general || t("admin.errors.general")}
         </div>
@@ -248,7 +324,41 @@ const UpdateAdmin = () => {
   return (
     <div>
       <div className="p-4 border-b border-gray-200 dark:border-gray-600">
-        <PageMeta title={t("admin.main_title")} description="Update Admin" />
+        <SEO
+          title={{
+            ar: `تشطيبة - تحديث مسؤول ${admin?.first_name || ""}`,
+            en: `Tashtiba - Update Admin ${
+              admin?.first_name || ""
+            } (Super Admin)`,
+          }}
+          description={{
+            ar: `صفحة تحديث بيانات المسؤول "${
+              admin?.first_name || "غير معروف"
+            }" بواسطة المشرف العام في تشطيبة. عدّل المعلومات والصلاحيات.`,
+            en: `Update administrator "${
+              admin?.first_name || "unknown"
+            }" details by Super Admin on Tashtiba. Modify info and permissions.`,
+          }}
+          keywords={{
+            ar: [
+              `تحديث مسؤول ${admin?.first_name || ""}`,
+              "تعديل أدمن",
+              "إدارة المسؤولين",
+              "سوبر أدمن",
+              "حسابات المسؤولين",
+              "تشطيبة",
+            ],
+            en: [
+              `update admin ${admin?.first_name || ""}`,
+              "edit admin",
+              "admin management",
+              "super admin",
+              "admin accounts",
+              "Tashtiba",
+            ],
+          }}
+        />
+
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("admin.update_title")}
         </h3>

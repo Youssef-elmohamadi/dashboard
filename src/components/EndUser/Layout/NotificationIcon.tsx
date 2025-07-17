@@ -1,5 +1,5 @@
+import React, { Suspense, lazy, useRef } from "react"; // استيراد Suspense و lazy
 import { MdNotifications } from "react-icons/md";
-import NotificationDropdown from "./Dropdown";
 
 interface NotificationIconProps {
   openNotification: boolean;
@@ -8,7 +8,9 @@ interface NotificationIconProps {
   notificationIconRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export const NotificationIcon: React.FC<NotificationIconProps> = ({
+const LazyNotificationDropdown = lazy(() => import("./Dropdown")); // تأكد من المسار الصحيح لـ NotificationDropdown
+
+const NotificationIcon: React.FC<NotificationIconProps> = ({
   openNotification,
   toggleNotification,
   onCloseNotification,
@@ -26,13 +28,17 @@ export const NotificationIcon: React.FC<NotificationIconProps> = ({
 
       {openNotification && (
         <div className="absolute top-full right-0 z-50">
-          <NotificationDropdown
-            open={openNotification}
-            onClose={onCloseNotification}
-            notificationIconRef={notificationIconRef}
-          />
+          <Suspense fallback={null}>
+            <LazyNotificationDropdown
+              open={openNotification}
+              onClose={onCloseNotification}
+              notificationIconRef={notificationIconRef}
+            />
+          </Suspense>
         </div>
       )}
     </div>
   );
 };
+
+export default NotificationIcon;

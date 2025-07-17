@@ -89,7 +89,7 @@ const Shop = () => {
       ) : isLoading ? (
         <div className="flex flex-col items-center justify-center py-10">
           <LazyImage
-            src="/images/product/placeholder-image.jpg"
+            src="/images/product/placeholder-image.webp"
             alt={
               lang === "ar"
                 ? `تحميل منتجات ${categoryName}`

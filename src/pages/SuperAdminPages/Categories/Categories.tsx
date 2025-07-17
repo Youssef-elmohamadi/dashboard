@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import PageMeta from "../../../components/common/SEO/PageMeta";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
-import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
-import { useLocation } from "react-router";
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
 import Alert from "../../../components/ui/alert/Alert";
@@ -16,6 +15,7 @@ import {
 import { AxiosError } from "axios";
 import { SearchValues } from "../../../types/Categories";
 import { TableAlert } from "../../../types/Common";
+import { useLocation } from "react-router-dom";
 const Categories = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
@@ -24,7 +24,7 @@ const Categories = () => {
     name: "",
   });
   const location = useLocation();
-  const { t } = useTranslation(["CategoriesTable"]);
+  const { t } = useTranslation(["CategoriesTable", "Meta"]);
   const { data, isLoading, isError, refetch, error } = useGetCategories(
     pageIndex,
     searchValues
@@ -108,9 +108,33 @@ const Categories = () => {
           message={alertData.message}
         />
       )}
-      <PageMeta
-        title={t("categoriesPage.mainTitle")}
-        description="Manage Your Categories"
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إدارة الفئات (سوبر أدمن)",
+          en: "Tashtiba - Category Management (Super Admin)",
+        }}
+        description={{
+          ar: "صفحة إدارة فئات المنتجات بواسطة المشرف العام في تشطيبة. عرض، إضافة، تعديل، وحذف الفئات.",
+          en: "Manage product categories by Super Admin on Tashtiba. View, add, edit, and delete categories.",
+        }}
+        keywords={{
+          ar: [
+            "فئات المشرف العام",
+            "إدارة الفئات",
+            "تصنيفات المنتجات",
+            "تشطيبة",
+            "سوبر أدمن",
+            "إدارة الموقع",
+          ],
+          en: [
+            "super admin categories",
+            "category management",
+            "product classifications",
+            "Tashtiba",
+            "super admin",
+            "site management",
+          ],
+        }}
       />
       <PageBreadcrumb
         pageTitle={t("categoriesPage.title")}
@@ -118,7 +142,7 @@ const Categories = () => {
       />
       <div>
         <SearchTable
-          fields={[{ key: "name", label: "Name", type: "input" }]}
+          fields={[{ key: "name", label: "Name", type: "input" }]} // تم الإبقاء عليها كما هي
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />

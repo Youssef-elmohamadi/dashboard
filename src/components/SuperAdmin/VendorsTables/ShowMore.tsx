@@ -7,13 +7,14 @@ import {
   useChangeDocumentStatus,
   useGetVendorById,
 } from "../../../hooks/Api/SuperAdmin/useVendorMangement/useSuperAdminVendorManage";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // Removed PageMeta import
+import SEO from "../../common/SEO/seo"; // Ensured SEO component is imported
 import { Document } from "../../../types/Vendor";
 import { AxiosError } from "axios";
 
 const VendorDetails: React.FC = () => {
   const { id } = useParams();
-  const { t } = useTranslation(["VendorsTable"]);
+  const { t } = useTranslation(["VendorsTable", "Meta"]);
   const [globalError, setGlobalError] = useState<boolean>(false);
   const [generalError, setGeneralError] = useState<boolean>(false);
 
@@ -97,9 +98,29 @@ const VendorDetails: React.FC = () => {
   if (loading)
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        <PageMeta
-          title={t("vendorsPage.mainTitleDetails")}
-          description="Vendor Details"
+        <SEO // PageMeta replaced with SEO, and data directly set for loading state
+          title={{
+            ar: "تشطيبة - تفاصيل البائع - جارٍ التحميل",
+            en: "Tashtiba - Vendor Details - Loading",
+          }}
+          description={{
+            ar: "جارٍ تحميل تفاصيل البائع في تشطيبة. يرجى الانتظار.",
+            en: "Loading vendor details on Tashtiba. Please wait.",
+          }}
+          keywords={{
+            ar: [
+              "تفاصيل البائع",
+              "تحميل البائع",
+              "بائعين تشطيبة",
+              "إدارة البائعين",
+            ],
+            en: [
+              "vendor details",
+              "loading vendor",
+              "Tashtiba vendors",
+              "vendor management",
+            ],
+          }}
         />
         {t("vendorsPage.details.loading")}
       </div>
@@ -107,9 +128,31 @@ const VendorDetails: React.FC = () => {
   if (!vendor && !globalError && !generalError)
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        <PageMeta
-          title={t("vendorsPage.mainTitleDetails")}
-          description="Vendor Details"
+        <SEO // PageMeta replaced with SEO, and data directly set for not found state
+          title={{
+            ar: "تشطيبة - تفاصيل البائع - غير موجود",
+            en: "Tashtiba - Vendor Details - Not Found",
+          }}
+          description={{
+            ar: "البائع المطلوب غير موجود في نظام تشطيبة. يرجى التحقق من المعرف.",
+            en: "The requested vendor was not found in Tashtiba. Please check the ID.",
+          }}
+          keywords={{
+            ar: [
+              "بائع غير موجود",
+              "تفاصيل البائع",
+              "خطأ 404",
+              "تشطيبة",
+              "إدارة البائعين",
+            ],
+            en: [
+              "vendor not found",
+              "vendor details",
+              "404 error",
+              "Tashtiba",
+              "vendor management",
+            ],
+          }}
         />
 
         {t("vendorsPage.details.notFound")}
@@ -118,9 +161,31 @@ const VendorDetails: React.FC = () => {
   if (generalError)
     return (
       <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-        <PageMeta
-          title={t("vendorsPage.mainTitleDetails")}
-          description="Vendor Details"
+        <SEO // PageMeta replaced with SEO, and data directly set for general error state
+          title={{
+            ar: "تشطيبة - تفاصيل البائع - خطأ",
+            en: "Tashtiba - Vendor Details - Error",
+          }}
+          description={{
+            ar: "حدث خطأ عام أثناء تحميل تفاصيل البائع في تشطيبة. يرجى المحاولة لاحقًا.",
+            en: "A general error occurred while loading vendor details on Tashtiba. Please try again later.",
+          }}
+          keywords={{
+            ar: [
+              "خطأ",
+              "مشكلة تقنية",
+              "تفاصيل البائع",
+              "تشطيبة",
+              "فشل التحميل",
+            ],
+            en: [
+              "error",
+              "technical issue",
+              "vendor details",
+              "Tashtiba",
+              "loading failed",
+            ],
+          }}
         />
         {t("vendorsPage.details.generalError")}
       </div>
@@ -133,9 +198,39 @@ const VendorDetails: React.FC = () => {
         setShowImageModal={setShowImage}
         doc={doc}
       />
-      <PageMeta
-        title={t("vendorsPage.mainTitleDetails")}
-        description="Vendor Details"
+      <SEO // PageMeta replaced with SEO, and data directly set for main content
+        title={{
+          ar: `تشطيبة - تفاصيل البائع ${vendor?.name || ""}`,
+          en: `Tashtiba - Vendor Details ${vendor?.name || ""}`,
+        }}
+        description={{
+          ar: `استعرض التفاصيل الكاملة للبائع ${
+            vendor?.name || "غير معروف"
+          } في تشطيبة، بما في ذلك معلومات الاتصال والوثائق.`,
+          en: `View full details for vendor ${
+            vendor?.name || "unknown"
+          } on Tashtiba, including contact information and documents.`,
+        }}
+        keywords={{
+          ar: [
+            `البائع ${vendor?.name || ""}`,
+            "تفاصيل البائع",
+            "عرض البائع",
+            "معلومات البائع",
+            "وثائق البائع",
+            "إدارة البائعين",
+            "تشطيبة",
+          ],
+          en: [
+            `vendor ${vendor?.name || ""}`,
+            "vendor details",
+            "view vendor",
+            "vendor info",
+            "vendor documents",
+            "vendor management",
+            "Tashtiba",
+          ],
+        }}
       />
       <div className="vendor-details p-6 max-w-5xl mx-auto space-y-8 text-gray-800 dark:text-gray-100">
         <h1 className="text-3xl font-bold text-center mb-6">

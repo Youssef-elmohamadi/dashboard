@@ -5,10 +5,11 @@ import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
 import Select from "../../common/form/Select";
 import { useCreateCoupon } from "../../../hooks/Api/SuperAdmin/useCoupons/useCoupons";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
 import { ClientErrors, CouponInput, ServerError } from "../../../types/Coupons";
 export default function CreateCoupon() {
-  const { t } = useTranslation(["CreateCoupon"]);
+  const { t } = useTranslation(["CreateCoupon", "Meta"]);
   const navigate = useNavigate();
   const [couponData, setCouponData] = useState<CouponInput>({
     code: "",
@@ -160,9 +161,35 @@ export default function CreateCoupon() {
 
   return (
     <div>
-      <PageMeta
-        title={t("coupon.main_title")}
-        description="Create New Coupon"
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إنشاء كوبون جديد (سوبر أدمن)",
+          en: "Tashtiba - Create New Coupon (Super Admin)",
+        }}
+        description={{
+          ar: "صفحة إنشاء كوبون خصم جديد بواسطة المشرف العام في تشطيبة. أدخل تفاصيل الكوبون، نوعه، قيمته، حد الاستخدام، وتاريخ الصلاحية.",
+          en: "Create a new discount coupon by Super Admin on Tashtiba. Enter coupon details, type, value, usage limit, and expiry date.",
+        }}
+        keywords={{
+          ar: [
+            "إنشاء كوبون",
+            "إضافة خصم",
+            "كوبون جديد",
+            "سوبر أدمن",
+            "إدارة الكوبونات",
+            "رموز الخصم",
+            "تشطيبة",
+          ],
+          en: [
+            "create coupon",
+            "add new discount",
+            "new coupon",
+            "super admin",
+            "coupon management",
+            "discount codes",
+            "Tashtiba",
+          ],
+        }}
       />
       <div className="p-4 border-b border-gray-200 dark:border-gray-600">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">

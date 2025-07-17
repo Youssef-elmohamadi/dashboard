@@ -213,11 +213,11 @@ export default function UserInfoCard({ userType }: { userType: string }) {
             </p>
             <div className="w-24 h-24 overflow-hidden rounded-full border border-gray-300 dark:border-gray-600">
               <img
-                src={dataUser?.avatar || "/images/default-avatar.jpg"}
+                src={dataUser?.avatar || "/images/default-avatar.webp"}
                 alt="User"
                 className="w-full h-full object-cover"
                 onError={(e) =>
-                  (e.currentTarget.src = "/images/default-avatar.jpg")
+                  (e.currentTarget.src = "/images/default-avatar.webp")
                 }
               />
             </div>

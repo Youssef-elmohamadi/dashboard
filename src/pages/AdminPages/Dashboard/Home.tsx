@@ -1,5 +1,5 @@
-import PageMeta from "../../../components/common/SEO/PageMeta";
 import { useEffect, useState } from "react";
+import EcommerceMetrics from "../../../components/common/Home/EcommerceMetrics";
 import { GroupIcon } from "../../../icons";
 import { BoxIconLine } from "../../../icons";
 import { useTranslation } from "react-i18next";
@@ -15,12 +15,16 @@ import {
   MonthlySales,
   NumbersData,
 } from "../../../types/DashboardHome";
-import EcommerceMetrics from "../../../components/common/Home/EcommerceMetrics";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم التعليق على استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+
 import StatisticsChart from "../../../components/common/Home/StatisticsChart";
 import RecentOrders from "../../../components/common/Home/RecentOrders";
 import DemographicCard from "../../../components/common/Home/DemographicCard";
 import MonthlySalesChart from "../../../components/common/Home/MonthlySalesChart";
+
 export default function Home({ userType }: HomeProps) {
+  // استخدام useTranslation مع الـ namespace "Home"
   const { t } = useTranslation(["Home"]);
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
@@ -46,6 +50,7 @@ export default function Home({ userType }: HomeProps) {
 
   const homeData: HomeData | undefined =
     userType === "admin" ? data?.data.data[0] : data?.data.data;
+
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
       const status = error.response?.status;
@@ -58,6 +63,7 @@ export default function Home({ userType }: HomeProps) {
       }
     }
   }, [isError, error]);
+
   useEffect(() => {
     if (!homeData) return;
 
@@ -122,13 +128,13 @@ export default function Home({ userType }: HomeProps) {
           },
           {
             label: t("vendors"),
-            value: numbersData.vendorsCount,
+            value: numbersData.vendorsCount, // تم إبقاء القيمة الأصلية هنا
             percentage: 3.1,
             icon: BoxIconLine,
           },
           {
             label: t("products"),
-            value: numbersData.productsCount,
+            value: numbersData.productsCount, // تم إبقاء القيمة الأصلية هنا
             percentage: 7.2,
             icon: BoxIconLine,
           },
@@ -137,7 +143,43 @@ export default function Home({ userType }: HomeProps) {
   if (loading) {
     return (
       <>
-        <PageMeta title={t("mainTitle")} description="Show Your Statistics" />
+        {/* تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة */}
+        <SEO
+          title={{
+            ar: "تشطيبة - لوحة التحكم",
+            en: "Tashtiba - Dashboard",
+          }}
+          description={{
+            ar: "لوحة التحكم الرئيسية لـ تشطيبة لعرض ملخص شامل للمتجر، بما في ذلك إحصائيات العملاء، الطلبات، البائعين، والمنتجات.",
+            en: "Tashtiba's main dashboard for a comprehensive overview of the store, including customer, order, vendor, and product statistics.",
+          }}
+          keywords={{
+            ar: [
+              "لوحة تحكم",
+              "إدارة المتجر",
+              "إحصائيات",
+              "تقارير",
+              "تشطيبة",
+              "عملاء",
+              "طلبات",
+              "منتجات",
+              "بائعون",
+              "إدارة التجارة الإلكترونية",
+            ],
+            en: [
+              "dashboard",
+              "store management",
+              "statistics",
+              "reports",
+              "Tashtiba",
+              "customers",
+              "orders",
+              "products",
+              "vendors",
+              "e-commerce admin",
+            ],
+          }}
+        />
         <DashboardSkeleton />
       </>
     );
@@ -145,16 +187,82 @@ export default function Home({ userType }: HomeProps) {
 
   return (
     <>
-      <PageMeta title={t("mainTitle")} description="Show Your Statistics" />
+      {/* تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة */}
+      <SEO
+        title={{
+          ar: "تشطيبة - لوحة التحكم",
+          en: "Tashtiba - Dashboard",
+        }}
+        description={{
+          ar: "لوحة التحكم الرئيسية لـ تشطيبة لعرض ملخص شامل للمتجر، بما في ذلك إحصائيات العملاء، الطلبات، البائعين، والمنتجات.",
+          en: "Tashtiba's main dashboard for a comprehensive overview of the store, including customer, order, vendor, and product statistics.",
+        }}
+        keywords={{
+          ar: [
+            "لوحة تحكم",
+            "إدارة المتجر",
+            "إحصائيات",
+            "تقارير",
+            "تشطيبة",
+            "عملاء",
+            "طلبات",
+            "منتجات",
+            "بائعون",
+            "إدارة التجارة الإلكترونية",
+          ],
+          en: [
+            "dashboard",
+            "store management",
+            "statistics",
+            "reports",
+            "Tashtiba",
+            "customers",
+            "orders",
+            "products",
+            "vendors",
+            "e-commerce admin",
+          ],
+        }}
+      />
 
       {!loading && globalError && (
         <div className="p-4 text-center text-red-500 font-semibold">
+          {/* تم إضافة SEO component هنا مع بيانات مخصصة للخطأ */}
+          <SEO
+            title={{
+              ar: "تشطيبة - خطأ",
+              en: "Tashtiba - Error",
+            }}
+            description={{
+              ar: "حدث خطأ غير متوقع أثناء تحميل لوحة تحكم تشطيبة. يرجى المحاولة مرة أخرى.",
+              en: "An unexpected error occurred while loading Tashtiba dashboard. Please try again.",
+            }}
+            keywords={{
+              ar: ["خطأ", "مشكلة", "تشطيبة", "لوحة تحكم", "فشل التحميل"],
+              en: ["error", "issue", "Tashtiba", "dashboard", "loading failed"],
+            }}
+          />
           {t("unExpectedError")}
         </div>
       )}
 
       {!loading && unauthorized && (
         <div className="p-4 text-center text-red-500 font-semibold">
+          {/* تم إضافة SEO component هنا مع بيانات مخصصة لغير المصرح به */}
+          <SEO
+            title={{
+              ar: "تشطيبة - لوحة التحكم - غير مصرح",
+              en: "Tashtiba - Dashboard - Unauthorized",
+            }}
+            description={{
+              ar: "لا يوجد تصريح للوصول إلى لوحة تحكم تشطيبة. يرجى تسجيل الدخول بحساب مسؤول.",
+              en: "Unauthorized access to Tashtiba dashboard. Please log in with an administrator account.",
+            }}
+            keywords={{
+              ar: ["لوحة تحكم", "تشطيبة", "غير مصرح", "إدارة", "تسجيل الدخول"],
+              en: ["dashboard", "Tashtiba", "unauthorized", "admin", "login"],
+            }}
+          />
           {t("unauthorized")}
         </div>
       )}

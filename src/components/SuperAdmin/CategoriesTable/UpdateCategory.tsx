@@ -12,7 +12,8 @@ import {
 } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import TextArea from "../../common/input/TextArea";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
 import { AxiosError } from "axios";
 import {
   Category,
@@ -21,7 +22,7 @@ import {
   ServerErrors,
 } from "../../../types/Categories";
 export default function UpdateCategory() {
-  const { t } = useTranslation(["UpdateCategory"]);
+  const { t } = useTranslation(["UpdateCategory", "Meta"]);
   const [categoryData, setCategoryData] = useState<CategoryInputData>({
     name: "",
     description: "",
@@ -205,9 +206,31 @@ export default function UpdateCategory() {
   if (isLoading)
     return (
       <>
-        <PageMeta
-          title={t("category.mainTitle")}
-          description="Update Category"
+        <SEO // PageMeta replaced with SEO, and data directly set for loading state
+          title={{
+            ar: "تشطيبة - تحديث فئة - جارٍ التحميل (سوبر أدمن)",
+            en: "Tashtiba - Update Category - Loading (Super Admin)",
+          }}
+          description={{
+            ar: "جارٍ تحميل بيانات الفئة للتحديث بواسطة المشرف العام في تشطيبة. يرجى الانتظار.",
+            en: "Loading category data for update by Super Admin on Tashtiba. Please wait.",
+          }}
+          keywords={{
+            ar: [
+              "تحديث فئة",
+              "تحميل فئة",
+              "إدارة الفئات",
+              "سوبر أدمن",
+              "تصنيفات المنتجات",
+            ],
+            en: [
+              "update category",
+              "loading category",
+              "category management",
+              "super admin",
+              "product classifications",
+            ],
+          }}
         />
         <p className="text-center mt-5">
           {t("category.loading") || "Loading..."}
@@ -218,9 +241,31 @@ export default function UpdateCategory() {
   if (!data && !errors.general) {
     return (
       <>
-        <PageMeta
-          title={t("category.mainTitle")}
-          description="Update Category"
+        <SEO // PageMeta replaced with SEO, and data directly set for not found state
+          title={{
+            ar: "تشطيبة - تحديث فئة - غير موجودة (سوبر أدمن)",
+            en: "Tashtiba - Update Category - Not Found (Super Admin)",
+          }}
+          description={{
+            ar: "الفئة المطلوبة للتحديث غير موجودة في نظام تشطيبة. يرجى التحقق من المعرف.",
+            en: "The requested category for update was not found on Tashtiba. Please verify the ID.",
+          }}
+          keywords={{
+            ar: [
+              "فئة غير موجودة",
+              "تحديث فئة",
+              "خطأ 404",
+              "سوبر أدمن",
+              "إدارة الفئات",
+            ],
+            en: [
+              "category not found",
+              "update category",
+              "404 error",
+              "super admin",
+              "category management",
+            ],
+          }}
         />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("not_found")}
@@ -231,9 +276,31 @@ export default function UpdateCategory() {
   if (errors.global) {
     return (
       <>
-        <PageMeta
-          title={t("category.mainTitle")}
-          description="Update Category"
+        <SEO // PageMeta replaced with SEO, and data directly set for global error state
+          title={{
+            ar: "تشطيبة - خطأ عام - تحديث فئة (سوبر أدمن)",
+            en: "Tashtiba - Global Error - Update Category (Super Admin)",
+          }}
+          description={{
+            ar: "حدث خطأ عام أثناء تحديث الفئة بواسطة المشرف العام في تشطيبة. يرجى المحاولة لاحقًا.",
+            en: "A global error occurred during category update by Super Admin on Tashtiba. Please try again later.",
+          }}
+          keywords={{
+            ar: [
+              "خطأ عام",
+              "مشكلة تقنية",
+              "تحديث فئة",
+              "سوبر أدمن",
+              "فشل التحديث",
+            ],
+            en: [
+              "global error",
+              "technical issue",
+              "update category",
+              "super admin",
+              "update failed",
+            ],
+          }}
         />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {errors.global}
@@ -244,9 +311,31 @@ export default function UpdateCategory() {
   if (errors.general) {
     return (
       <>
-        <PageMeta
-          title={t("category.mainTitle")}
-          description="Update Category"
+        <SEO // PageMeta replaced with SEO, and data directly set for general error state
+          title={{
+            ar: "تشطيبة - خطأ في تحديث الفئة (سوبر أدمن)",
+            en: "Tashtiba - Category Update Error (Super Admin)",
+          }}
+          description={{
+            ar: "حدث خطأ أثناء محاولة تحديث بيانات الفئة بواسطة المشرف العام في تشطيبة. يرجى المحاولة مرة أخرى.",
+            en: "An error occurred while attempting to update category data by Super Admin on Tashtiba. Please try again.",
+          }}
+          keywords={{
+            ar: [
+              "خطأ تحديث فئة",
+              "مشكلة فئة",
+              "تحديث تشطيبة",
+              "سوبر أدمن",
+              "فشل التعديل",
+            ],
+            en: [
+              "category update error",
+              "category issue",
+              "Tashtiba update",
+              "super admin",
+              "update failed",
+            ],
+          }}
         />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {errors.general}
@@ -257,7 +346,39 @@ export default function UpdateCategory() {
 
   return (
     <div>
-      <PageMeta title={t("category.mainTitle")} description="Update Category" />
+      <SEO
+        title={{
+          ar: `تشطيبة - تحديث فئة ${Category?.name || ""}`,
+          en: `Tashtiba - Update Category ${Category?.name || ""}`,
+        }}
+        description={{
+          ar: `صفحة تحديث الفئة "${
+            Category?.name || "غير معروف"
+          }" بواسطة المشرف العام في تشطيبة. عدّل تفاصيل الفئة والعمولة والصورة.`,
+          en: `Update category "${
+            Category?.name || "unknown"
+          }" by Super Admin on Tashtiba. Modify category details, commission, and image.`,
+        }}
+        keywords={{
+          ar: [
+            `تحديث فئة ${Category?.name || ""}`,
+            "تعديل تصنيف",
+            "إدارة الفئات",
+            "سوبر أدمن",
+            "عمولة الفئة",
+            "تشطيبة",
+          ],
+          en: [
+            `update category ${Category?.name || ""}`,
+            "edit category",
+            "category management",
+            "super admin",
+            "category commission",
+            "Tashtiba",
+          ],
+        }}
+      />
+
       <div className="p-4 border-b border-gray-200 dark:border-gray-600">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("category.title")}

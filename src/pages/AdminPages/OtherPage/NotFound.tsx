@@ -1,14 +1,37 @@
 import GridShape from "../../../components/common/Auth/GridShape";
-import PageMeta from "../../../components/common/SEO/PageMeta";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم التأكد من استيراد SEO
 import { useTranslation } from "react-i18next";
 
 export default function NotFound() {
   const { t } = useTranslation("NotFoundPage");
   return (
     <>
-      <PageMeta
-        title="Tashtiba | Page Not Found 404 "
-        description="This is 404 Dashboard page"
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - الصفحة غير موجودة (404)",
+          en: "Tashtiba - Page Not Found (404)",
+        }}
+        description={{
+          ar: "عذرًا، الصفحة التي تبحث عنها غير موجودة. يرجى التحقق من الرابط أو العودة إلى الصفحة الرئيسية.",
+          en: "Sorry, the page you are looking for does not exist. Please check the URL or return to the homepage.",
+        }}
+        keywords={{
+          ar: [
+            "صفحة غير موجودة",
+            "خطأ 404",
+            "صفحة مفقودة",
+            "تشطيبة",
+            "خطأ في الرابط",
+          ],
+          en: [
+            "page not found",
+            "404 error",
+            "missing page",
+            "Tashtiba",
+            "broken link",
+          ],
+        }}
       />
       <div className="relative flex flex-col items-center justify-center min-h-screen p-6 overflow-hidden z-1">
         <GridShape />
@@ -35,7 +58,7 @@ export default function NotFound() {
             Back to Home Page
           </Link> */}
         </div>
-        {/* <!-- Footer --> */}
+        {/* */}
         <p className="absolute text-sm text-center text-gray-500 -translate-x-1/2 bottom-6 left-1/2 dark:text-gray-400">
           &copy; {new Date().getFullYear()} - Tashtiba
         </p>

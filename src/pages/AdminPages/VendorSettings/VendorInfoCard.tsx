@@ -132,8 +132,8 @@ const VendorEditPage: React.FC = () => {
     return (
       <>
         <PageMeta
-          title="Tashtiba | Vendor Settings"
-          description="Update Your Vendor Information"
+          title={t("Meta:vendorSettings.title")}
+          description={t("Meta:vendorSettings.description")}
         />
         <VendorEditSkeleton />
       </>
@@ -143,10 +143,10 @@ const VendorEditPage: React.FC = () => {
   if (unauthorized) {
     return (
       <>
-        <PageMeta
-          title="Tashtiba | Vendor Settings"
-          description="Update Your Vendor Information"
-        />
+      <PageMeta
+        title={t("Meta:vendorSettings.title")}
+        description={t("Meta:vendorSettings.description")}
+      />
         <p className="text-center text-red-500 mt-5">{unauthorized}</p>
       </>
     );
@@ -155,10 +155,10 @@ const VendorEditPage: React.FC = () => {
   if (generalError) {
     return (
       <>
-        <PageMeta
-          title="Tashtiba | Vendor Settings"
-          description="Update Your Vendor Information"
-        />
+      <PageMeta
+        title={t("Meta:vendorSettings.title")}
+        description={t("Meta:vendorSettings.description")}
+      />
         <p className="text-center text-red-500 mt-5">{generalError}</p>
       </>
     );
@@ -166,10 +166,10 @@ const VendorEditPage: React.FC = () => {
 
   return (
     <div>
-      <PageMeta
-        title="Tashtiba | Vendor Settings"
-        description="Update Your Vendor Information"
-      />
+      {/* <PageMeta
+        title={t("Meta:vendorSettings.title")}
+        description={t("Meta:vendorSettings.description")}
+      /> */}
       <form
         onSubmit={handleSubmit}
         className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md space-y-8"

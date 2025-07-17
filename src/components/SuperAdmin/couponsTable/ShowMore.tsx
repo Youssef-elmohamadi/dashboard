@@ -3,11 +3,12 @@ import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetCouponById } from "../../../hooks/Api/SuperAdmin/useCoupons/useCoupons";
 import { AxiosError } from "axios";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
 
 const CouponDetails: React.FC = () => {
   const { id } = useParams();
-  const { t } = useTranslation(["CouponDetails"]);
+  const { t } = useTranslation(["CouponDetails", "Meta"]);
   //const [couponData, setCouponData] = useState<Coupon | null>(null);
   const [globalError, setGlobalError] = useState<string>("");
   const { data, isLoading, isError, error } = useGetCouponById(id!!);
@@ -15,9 +16,9 @@ const CouponDetails: React.FC = () => {
   const couponData = data;
 
   // useEffect(() => {
-  //   if (coupon) {
-  //     setCouponData(coupon);
-  //   }
+  //   if (coupon) {
+  //     setCouponData(coupon);
+  //   }
   // }, [coupon]);
 
   useEffect(() => {
@@ -45,7 +46,34 @@ const CouponDetails: React.FC = () => {
   if (!id) {
     return (
       <>
-        <PageMeta title={t("mainTitle")} description="Category Details" />
+        <SEO // PageMeta replaced with SEO, and data directly set for missing ID
+          title={{
+            ar: "تشطيبة - تفاصيل الكوبون - معرف مفقود (سوبر أدمن)",
+            en: "Tashtiba - Coupon Details - ID Missing (Super Admin)",
+          }}
+          description={{
+            ar: "صفحة تفاصيل الكوبون تتطلب معرف كوبون صالح. يرجى التأكد من توفير المعرف.",
+            en: "The coupon details page requires a valid coupon ID. Please ensure the ID is provided.",
+          }}
+          keywords={{
+            ar: [
+              "تفاصيل كوبون",
+              "معرف مفقود",
+              "كوبون غير صالح",
+              "تشطيبة",
+              "إدارة الكوبونات",
+              "سوبر أدمن",
+            ],
+            en: [
+              "coupon details",
+              "missing ID",
+              "invalid coupon",
+              "Tashtiba",
+              "coupon management",
+              "super admin",
+            ],
+          }}
+        />{" "}
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("no_data")}
         </div>
@@ -56,9 +84,31 @@ const CouponDetails: React.FC = () => {
   if (isLoading) {
     return (
       <>
-        <PageMeta
-          title={t("coupon.mainTitle")}
-          description="Category Details"
+        <SEO // PageMeta replaced with SEO, and data directly set for loading state
+          title={{
+            ar: "تشطيبة - تفاصيل الكوبون - جارٍ التحميل (سوبر أدمن)",
+            en: "Tashtiba - Coupon Details - Loading (Super Admin)",
+          }}
+          description={{
+            ar: "جارٍ تحميل تفاصيل الكوبون بواسطة المشرف العام في تشطيبة. يرجى الانتظار.",
+            en: "Loading coupon details by Super Admin on Tashtiba. Please wait.",
+          }}
+          keywords={{
+            ar: [
+              "تفاصيل كوبون",
+              "تحميل كوبون",
+              "إدارة الكوبونات",
+              "سوبر أدمن",
+              "خصومات",
+            ],
+            en: [
+              "coupon details",
+              "loading coupon",
+              "coupon management",
+              "super admin",
+              "discounts",
+            ],
+          }}
         />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("coupon.loading")}
@@ -70,9 +120,33 @@ const CouponDetails: React.FC = () => {
   if (!couponData && !globalError) {
     return (
       <>
-        <PageMeta
-          title={t("coupon.mainTitle")}
-          description="Category Details"
+        <SEO // PageMeta replaced with SEO, and data directly set for not found state
+          title={{
+            ar: "تشطيبة - تفاصيل الكوبون - غير موجود (سوبر أدمن)",
+            en: "Tashtiba - Coupon Details - Not Found (Super Admin)",
+          }}
+          description={{
+            ar: "الكوبون المطلوب غير موجود في نظام تشطيبة. يرجى التحقق من المعرف.",
+            en: "The requested coupon was not found in Tashtiba. Please check the ID.",
+          }}
+          keywords={{
+            ar: [
+              "كوبون غير موجود",
+              "تفاصيل كوبون",
+              "خطأ 404",
+              "تشطيبة",
+              "إدارة الكوبونات",
+              "سوبر أدمن",
+            ],
+            en: [
+              "coupon not found",
+              "coupon details",
+              "404 error",
+              "Tashtiba",
+              "coupon management",
+              "super admin",
+            ],
+          }}
         />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("coupon.not_found")}
@@ -83,9 +157,31 @@ const CouponDetails: React.FC = () => {
   if (globalError) {
     return (
       <>
-        <PageMeta
-          title={t("coupon.mainTitle")}
-          description="Category Details"
+        <SEO // PageMeta replaced with SEO, and data directly set for global error state
+          title={{
+            ar: "تشطيبة - تفاصيل الكوبون - خطأ عام (سوبر أدمن)",
+            en: "Tashtiba - Coupon Details - Global Error (Super Admin)",
+          }}
+          description={{
+            ar: "حدث خطأ عام أثناء تحميل تفاصيل الكوبون بواسطة المشرف العام في تشطيبة. يرجى المحاولة لاحقًا.",
+            en: "A global error occurred while loading coupon details by Super Admin on Tashtiba. Please try again later.",
+          }}
+          keywords={{
+            ar: [
+              "خطأ عام",
+              "مشكلة تقنية",
+              "تفاصيل الكوبون",
+              "سوبر أدمن",
+              "فشل التحميل",
+            ],
+            en: [
+              "global error",
+              "technical issue",
+              "coupon details",
+              "super admin",
+              "loading failed",
+            ],
+          }}
         />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {globalError}
@@ -96,7 +192,43 @@ const CouponDetails: React.FC = () => {
 
   return (
     <div className="coupon-details py-6 max-w-4xl mx-auto space-y-8">
-      <PageMeta title={t("coupon.mainTitle")} description="Category Details" />
+      <SEO
+        title={{
+          ar: `تشطيبة - تفاصيل الكوبون ${couponData?.code || ""}`,
+          en: `Tashtiba - Coupon Details ${
+            couponData?.code || ""
+          } (Super Admin)`,
+        }}
+        description={{
+          ar: `استعرض التفاصيل الكاملة للكوبون "${
+            couponData?.code || "غير معروف"
+          }" بواسطة المشرف العام في تشطيبة، بما في ذلك النوع، القيمة، وحد الاستخدام.`,
+          en: `View full details for coupon "${
+            couponData?.code || "unknown"
+          }" by Super Admin on Tashtiba, including type, value, and usage limit.`,
+        }}
+        keywords={{
+          ar: [
+            `كوبون ${couponData?.code || ""}`,
+            "تفاصيل الكوبون",
+            "عرض كوبون",
+            "نوع الكوبون",
+            "قيمة الكوبون",
+            "إدارة الكوبونات",
+            "سوبر أدمن",
+          ],
+          en: [
+            `coupon ${couponData?.code || ""}`,
+            "coupon details",
+            "view coupon",
+            "coupon type",
+            "coupon value",
+            "coupon management",
+            "super admin",
+          ],
+        }}
+      />
+
       <h1 className="text-3xl font-bold text-center text-gray-800 mb-6 dark:text-white">
         {t("coupon.title")}
       </h1>

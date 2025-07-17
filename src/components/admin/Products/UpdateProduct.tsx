@@ -14,7 +14,8 @@ import {
   useGetProductById,
   useUpdateProduct,
 } from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم التأكد من استيراد SEO
 import { AxiosError } from "axios";
 import { Category } from "../../../types/Categories";
 import { Brand } from "../../../types/Brands";
@@ -23,7 +24,7 @@ import { Attribute, image, Product, ServerError } from "../../../types/Product";
 const UpdateProductPage: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t } = useTranslation(["UpdateProduct"]);
+  const { t } = useTranslation(["UpdateProduct", "Meta"]); // استخدام الـ namespaces هنا
   const [productData, setProductData] = useState<Product>({
     id: 0,
     name: "",
@@ -62,8 +63,8 @@ const UpdateProductPage: React.FC = () => {
     images: [],
     attributes: [],
     tags: [],
-    global: "",
     general: "",
+    global: "",
   });
   const [clientSideErrors, setClientSideErrors] = useState<
     Record<string, string>
@@ -110,10 +111,12 @@ const UpdateProductPage: React.FC = () => {
       if (status === 401 || status === 403) {
         setErrors((prev) => ({
           ...prev,
-          global: t("errors.global"),
+          global: t("UpdateProduct:errors.global"), // إضافة namespace
         }));
       } else {
-        setFetchingCategoriesError(t("errors.fetching_categories"));
+        setFetchingCategoriesError(
+          t("UpdateProduct:errors.fetching_categories")
+        ); // إضافة namespace
       }
     }
   }, [isCategoryError, categoryError, t]);
@@ -130,10 +133,10 @@ const UpdateProductPage: React.FC = () => {
       if (status === 401 || status === 403) {
         setErrors((prev) => ({
           ...prev,
-          global: t("errors.global"),
+          global: t("UpdateProduct:errors.global"), // إضافة namespace
         }));
       } else {
-        setFetchingBrandsError(t("errors.fetching_brands"));
+        setFetchingBrandsError(t("UpdateProduct:errors.fetching_brands")); // إضافة namespace
       }
     }
   }, [isBrandError, brandError, t]);
@@ -208,15 +211,17 @@ const UpdateProductPage: React.FC = () => {
       images: "",
       is_featured: "",
     };
-    if (!productData.name) newErrors.name = t("validation.name");
-    if (!productData.price) newErrors.price = t("validation.price");
+    if (!productData.name) newErrors.name = t("UpdateProduct:validation.name"); // إضافة namespace
+    if (!productData.price)
+      newErrors.price = t("UpdateProduct:validation.price"); // إضافة namespace
     if (!productData.stock_quantity)
-      newErrors.stock_quantity = t("validation.stock_quantity");
+      newErrors.stock_quantity = t("UpdateProduct:validation.stock_quantity"); // إضافة namespace
     if (!productData.category_id)
-      newErrors.category_id = t("validation.category_id");
-    if (!productData.brand_id) newErrors.brand_id = t("validation.brand_id");
+      newErrors.category_id = t("UpdateProduct:validation.category_id"); // إضافة namespace
+    if (!productData.brand_id)
+      newErrors.brand_id = t("UpdateProduct:validation.brand_id"); // إضافة namespace
     if (!productData.description)
-      newErrors.description = t("validation.description");
+      newErrors.description = t("UpdateProduct:validation.description"); // إضافة namespace
     setClientSideErrors(newErrors);
     return Object.values(newErrors).every((err) => err === "");
   };
@@ -270,18 +275,19 @@ const UpdateProductPage: React.FC = () => {
     tags.forEach((tag) => {
       formData.append("tags[]", tag);
     });
+    formData.append("_method", "PUT"); // Required for Laravel PUT with FormData
 
     try {
       await mutateAsync({ id: +id!, productData: formData });
       navigate("/admin/products", {
-        state: { successUpdate: t("success_update") },
+        state: { successUpdate: t("UpdateProduct:success_update") }, // إضافة namespace
       });
     } catch (error: any) {
       const status = error?.response?.status;
       if (status === 403 || status === 401) {
         setErrors({
           ...errors,
-          global: t("errors.global"),
+          global: t("UpdateProduct:errors.global"), // إضافة namespace
         });
         return;
       }
@@ -299,7 +305,7 @@ const UpdateProductPage: React.FC = () => {
 
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ ...errors, general: t("errors.general") });
+        setErrors({ ...errors, general: t("UpdateProduct:errors.general") }); // إضافة namespace
       }
     } finally {
       setLoading(false);
@@ -314,7 +320,7 @@ const UpdateProductPage: React.FC = () => {
       } else {
         setErrors({
           ...errors,
-          general: t("errors.general"),
+          general: t("UpdateProduct:errors.general"), // إضافة namespace
         });
       }
     }
@@ -323,9 +329,35 @@ const UpdateProductPage: React.FC = () => {
   if (!id) {
     return (
       <>
-        <PageMeta title={t("main_title")} description="Update Product" />
+        {/* PageMeta replaced with SEO, and data directly set for missing ID */}
+        <SEO
+          title={{
+            ar: "تشطيبة - تحديث منتج - معرف غير موجود",
+            en: "Tashtiba - Update Product - ID Missing",
+          }}
+          description={{
+            ar: "صفحة تحديث المنتج تتطلب معرف منتج صالح. يرجى التأكد من توفير المعرف.",
+            en: "The product update page requires a valid product ID. Please ensure the ID is provided.",
+          }}
+          keywords={{
+            ar: [
+              "تحديث منتج",
+              "خطأ معرف",
+              "منتج غير صالح",
+              "تشطيبة",
+              "إدارة المنتجات",
+            ],
+            en: [
+              "update product",
+              "ID error",
+              "invalid product",
+              "Tashtiba",
+              "product management",
+            ],
+          }}
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("no_data")}
+          {t("UpdateProduct:no_data")} {/* إضافة namespace */}
         </div>
       </>
     );
@@ -334,9 +366,35 @@ const UpdateProductPage: React.FC = () => {
   if (isLoading) {
     return (
       <>
-        <PageMeta title={t("main_title")} description="Update Product" />
+        {/* PageMeta replaced with SEO, and data directly set for loading state */}
+        <SEO
+          title={{
+            ar: "تشطيبة - تحديث منتج",
+            en: "Tashtiba - Update Product",
+          }}
+          description={{
+            ar: "جارٍ تحميل بيانات المنتج للتحديث في تشطيبة. يرجى الانتظار.",
+            en: "Loading product data for update in Tashtiba. Please wait.",
+          }}
+          keywords={{
+            ar: [
+              "تحديث منتج",
+              "تحميل بيانات",
+              "إدارة المنتجات",
+              "تشطيبة",
+              "التحميل",
+            ],
+            en: [
+              "update product",
+              "loading data",
+              "product management",
+              "Tashtiba",
+              "loading",
+            ],
+          }}
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("loading")}
+          {t("UpdateProduct:loading")} {/* إضافة namespace */}
         </div>
       </>
     );
@@ -345,9 +403,28 @@ const UpdateProductPage: React.FC = () => {
   if (errors.general) {
     return (
       <>
-        <PageMeta title={t("main_title")} description="Update Product" />
+        {/* PageMeta replaced with SEO, and data directly set for general error */}
+        <SEO
+          title={{
+            ar: "تشطيبة - خطأ في تحديث المنتج",
+            en: "Tashtiba - Product Update Error",
+          }}
+          description={{
+            ar: "حدث خطأ عام أثناء محاولة تحديث بيانات المنتج في تشطيبة. يرجى المحاولة مرة أخرى.",
+            en: "A general error occurred while attempting to update product data in Tashtiba. Please try again.",
+          }}
+          keywords={{
+            ar: ["خطأ تحديث منتج", "مشكلة منتج", "تحديث تشطيبة", "فشل التعديل"],
+            en: [
+              "product update error",
+              "product issue",
+              "Tashtiba update",
+              "update failed",
+            ],
+          }}
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("errors.general")}
+          {t("UpdateProduct:errors.general")} {/* إضافة namespace */}
         </div>
       </>
     );
@@ -355,9 +432,35 @@ const UpdateProductPage: React.FC = () => {
   if (!product && !globalError && !errors.general) {
     return (
       <>
-        <PageMeta title={t("main_title")} description="Update Product" />
+        {/* PageMeta replaced with SEO, and data directly set for product not found */}
+        <SEO
+          title={{
+            ar: "تشطيبة - منتج غير موجود",
+            en: "Tashtiba - Product Not Found",
+          }}
+          description={{
+            ar: "المنتج المطلوب لتحديث بياناته غير موجود في نظام تشطيبة. يرجى التحقق من المعرف.",
+            en: "The requested product for update was not found in Tashtiba system. Please check the ID.",
+          }}
+          keywords={{
+            ar: [
+              "منتج غير موجود",
+              "خطأ",
+              "تحديث منتج",
+              "تشطيبة",
+              "إدارة المنتجات",
+            ],
+            en: [
+              "product not found",
+              "error",
+              "update product",
+              "Tashtiba",
+              "product management",
+            ],
+          }}
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("not_found")}
+          {t("UpdateProduct:not_found")} {/* إضافة namespace */}
         </div>
       </>
     );
@@ -365,9 +468,35 @@ const UpdateProductPage: React.FC = () => {
   if (globalError) {
     return (
       <>
-        <PageMeta title={t("main_title")} description="Update Product" />
+        {/* PageMeta replaced with SEO, and data directly set for global error */}
+        <SEO
+          title={{
+            ar: "تشطيبة - خطأ عام",
+            en: "Tashtiba - Global Error",
+          }}
+          description={{
+            ar: "حدث خطأ عام أثناء معالجة طلبك في تشطيبة. يرجى المحاولة مرة أخرى لاحقًا.",
+            en: "A global error occurred while processing your request in Tashtiba. Please try again later.",
+          }}
+          keywords={{
+            ar: [
+              "خطأ عام",
+              "مشكلة في النظام",
+              "تشطيبة",
+              "خطأ الخادم",
+              "فشل عام",
+            ],
+            en: [
+              "global error",
+              "system issue",
+              "Tashtiba",
+              "server error",
+              "general failure",
+            ],
+          }}
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("errors.global")}
+          {t("UpdateProduct:errors.global")} {/* إضافة namespace */}
         </div>
       </>
     );
@@ -375,10 +504,38 @@ const UpdateProductPage: React.FC = () => {
 
   return (
     <div className="">
-      <PageMeta title={t("main_title")} description="Update Product" />
+      {/* PageMeta replaced with SEO, and data directly set for main content */}
+      <SEO
+        title={{
+          ar: "تشطيبة - تحديث المنتج",
+          en: "Tashtiba - Update Product",
+        }}
+        description={{
+          ar: "صفحة تحديث المنتج في متجر تشطيبة. عدّل تفاصيل المنتج، الصور، والسمات.",
+          en: "Update a product in Tashtiba store. Modify product details, images, and attributes.",
+        }}
+        keywords={{
+          ar: [
+            "تحديث منتج",
+            "تعديل منتج",
+            "إدارة المنتجات",
+            "تشطيبة",
+            "المخزون",
+            "متجر إلكتروني",
+          ],
+          en: [
+            "update product",
+            "edit product",
+            "product management",
+            "Tashtiba",
+            "inventory",
+            "e-commerce store",
+          ],
+        }}
+      />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {t("title")}
+          {t("UpdateProduct:title")} {/* إضافة namespace */}
         </h3>
       </div>
 
@@ -392,16 +549,17 @@ const UpdateProductPage: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-6 mt-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <Label htmlFor="name">{t("form.name")}</Label>
+            <Label htmlFor="name">{t("UpdateProduct:form.name")}</Label>
             <Input
               name="name"
-              placeholder={t("placeholders.name")}
+              placeholder={t("UpdateProduct:placeholders.name")}
               value={productData.name}
               onChange={handleChange}
             />
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-            )}
+            {errors.name &&
+              errors.name[0] && ( // تم تعديل الوصول إلى العنصر الأول
+                <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
+              )}
             {clientSideErrors.name && (
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.name}
@@ -409,16 +567,17 @@ const UpdateProductPage: React.FC = () => {
             )}
           </div>
           <div>
-            <Label htmlFor="price">{t("form.price")}</Label>
+            <Label htmlFor="price">{t("UpdateProduct:form.price")}</Label>
             <Input
               name="price"
-              placeholder={t("placeholders.price")}
+              placeholder={t("UpdateProduct:placeholders.price")}
               value={productData.price}
               onChange={handleChange}
             />
-            {errors.price && (
-              <p className="text-red-500 text-sm mt-1">{errors.price}</p>
-            )}
+            {errors.price &&
+              errors.price[0] && ( // تم تعديل الوصول إلى العنصر الأول
+                <p className="text-red-500 text-sm mt-1">{errors.price[0]}</p>
+              )}
             {clientSideErrors.price && (
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.price}
@@ -426,18 +585,21 @@ const UpdateProductPage: React.FC = () => {
             )}
           </div>
           <div>
-            <Label htmlFor="stock_quantity">{t("form.stock_quantity")}</Label>
+            <Label htmlFor="stock_quantity">
+              {t("UpdateProduct:form.stock_quantity")}
+            </Label>
             <Input
               name="stock_quantity"
-              placeholder={t("placeholders.stock_quantity")}
+              placeholder={t("UpdateProduct:placeholders.stock_quantity")}
               value={productData.stock_quantity}
               onChange={handleChange}
             />
-            {errors.stock_quantity && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.stock_quantity}
-              </p>
-            )}
+            {errors.stock_quantity &&
+              errors.stock_quantity[0] && ( // تم تعديل الوصول إلى العنصر الأول
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.stock_quantity[0]}
+                </p>
+              )}
             {clientSideErrors.stock_quantity && (
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.stock_quantity}
@@ -445,7 +607,9 @@ const UpdateProductPage: React.FC = () => {
             )}
           </div>
           <div>
-            <Label htmlFor="category_id">{t("form.category")}</Label>
+            <Label htmlFor="category_id">
+              {t("UpdateProduct:form.category")}
+            </Label>
             <Select
               options={categories?.map((category: Category) => ({
                 value: category.id,
@@ -453,13 +617,14 @@ const UpdateProductPage: React.FC = () => {
               }))}
               onChange={(value) => handleSelectChange(value, "category_id")}
               value={productData?.category_id}
-              placeholder={t("form.select_category")}
+              placeholder={t("UpdateProduct:form.select_category")}
             />
-            {errors.category_id[0] && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.category_id[0]}
-              </p>
-            )}
+            {errors.category_id &&
+              errors.category_id[0] && ( // تم تعديل الوصول إلى العنصر الأول
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.category_id[0]}
+                </p>
+              )}
             {clientSideErrors.category_id && (
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.category_id}
@@ -472,7 +637,7 @@ const UpdateProductPage: React.FC = () => {
             )}
           </div>
           <div>
-            <Label htmlFor="brand_id">{t("form.brand")}</Label>
+            <Label htmlFor="brand_id">{t("UpdateProduct:form.brand")}</Label>
             <Select
               options={brands?.map((brand: Brand) => ({
                 value: String(brand.id),
@@ -480,11 +645,14 @@ const UpdateProductPage: React.FC = () => {
               }))}
               onChange={(value) => handleSelectChange(value, "brand_id")}
               value={productData.brand_id}
-              placeholder={t("form.select_brand")}
+              placeholder={t("UpdateProduct:form.select_brand")}
             />
-            {errors.brand_id && (
-              <p className="text-red-500 text-sm mt-1">{errors.brand_id}</p>
-            )}
+            {errors.brand_id &&
+              errors.brand_id[0] && ( // تم تعديل الوصول إلى العنصر الأول
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.brand_id[0]}
+                </p>
+              )}
             {clientSideErrors.brand_id && (
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.brand_id}
@@ -495,32 +663,43 @@ const UpdateProductPage: React.FC = () => {
             )}
           </div>
           <div>
-            <Label htmlFor="status">{t("form.status")}</Label>
+            <Label htmlFor="status">{t("UpdateProduct:form.status")}</Label>
             <Select
               options={[
-                { value: "active", label: t("form.status_active") },
-                { value: "inactive", label: t("form.status_inactive") },
+                {
+                  value: "active",
+                  label: t("UpdateProduct:form.status_active"),
+                },
+                {
+                  value: "inactive",
+                  label: t("UpdateProduct:form.status_inactive"),
+                },
               ]}
               onChange={(value) => handleSelectChange(value, "status")}
               value={productData.status}
-              placeholder={t("form.select_status")}
+              placeholder={t("UpdateProduct:form.select_status")}
             />
-            {errors.status[0] && (
-              <p className="text-red-500 text-sm mt-1">{errors.status[0]}</p>
-            )}
+            {errors.status &&
+              errors.status[0] && ( // تم تعديل الوصول إلى العنصر الأول
+                <p className="text-red-500 text-sm mt-1">{errors.status[0]}</p>
+              )}
           </div>
           <div className="flex items-center space-x-3 mt-1">
-            <Label htmlFor="is_featured">{t("form.is_featured")}</Label>
+            <Label htmlFor="is_featured">
+              {t("UpdateProduct:form.is_featured")}
+            </Label>
             <Checkbox
               checked={productData.is_featured}
               onChange={(checked) =>
                 setProductData((prev) => ({ ...prev, is_featured: checked }))
               }
-              id="is_featured"
             />
-            {errors.is_featured && (
-              <p className="text-red-500 text-sm mt-1">{errors.is_featured}</p>
-            )}
+            {errors.is_featured &&
+              errors.is_featured[0] && ( // تم تعديل الوصول إلى العنصر الأول
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.is_featured[0]}
+                </p>
+              )}
             {clientSideErrors.is_featured && (
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.is_featured}
@@ -528,18 +707,23 @@ const UpdateProductPage: React.FC = () => {
             )}
           </div>
           <div>
-            <Label htmlFor="description">{t("form.description")}</Label>
+            <Label htmlFor="description">
+              {t("UpdateProduct:form.description")}
+            </Label>
             <TextArea
               name="description"
-              placeholder={t("placeholders.description")}
+              placeholder={t("UpdateProduct:placeholders.description")}
               value={productData.description}
               onChange={(value) =>
                 setProductData((prev) => ({ ...prev, description: value }))
               }
             />
-            {errors.description && (
-              <p className="text-red-500 text-sm mt-1">{errors.description}</p>
-            )}
+            {errors.description &&
+              errors.description[0] && ( // تم تعديل الوصول إلى العنصر الأول
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.description[0]}
+                </p>
+              )}
             {clientSideErrors.description && (
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.description}
@@ -550,11 +734,12 @@ const UpdateProductPage: React.FC = () => {
 
         {/* Upload New Images */}
         <div>
-          <Label>{t("form.upload_images")}</Label>
+          <Label>{t("UpdateProduct:form.upload_images")}</Label>
           <FileInput multiple onChange={handleImageChange} />
-          {errors.images[0] && (
-            <p className="text-red-500 text-sm mt-1">{errors.images[0]}</p>
-          )}
+          {errors.images &&
+            errors.images[0] && ( // تم تعديل الوصول إلى العنصر الأول
+              <p className="text-red-500 text-sm mt-1">{errors.images[0]}</p>
+            )}
           {clientSideErrors?.images && (
             <p className="text-red-500 text-sm mt-1">
               {clientSideErrors?.images}
@@ -564,7 +749,7 @@ const UpdateProductPage: React.FC = () => {
           {/* Existing Images */}
           {existingImages.length > 0 && (
             <div>
-              <Label>{t("form.existing_images")}</Label>
+              <Label>{t("UpdateProduct:form.existing_images")}</Label>
               <div className="flex gap-3 mt-3 flex-wrap">
                 {existingImages.map((src, i) => (
                   <img
@@ -606,18 +791,18 @@ const UpdateProductPage: React.FC = () => {
 
         {/* Attributes */}
         <div>
-          <Label>{t("form.attributes")}</Label>
+          <Label>{t("UpdateProduct:form.attributes")}</Label>
           {attributes.map((attr, i) => (
             <div key={i} className="flex gap-2 mb-2 items-center">
               <Input
-                placeholder={t("placeholders.attribute_label")}
+                placeholder={t("UpdateProduct:placeholders.attribute_label")}
                 value={attr.attribute_name}
                 onChange={(e) =>
                   handleAttributeChange(i, "attribute_name", e.target.value)
                 }
               />
               <Input
-                placeholder={t("placeholders.attribute_value")}
+                placeholder={t("UpdateProduct:placeholders.attribute_value")}
                 value={attr.attribute_value}
                 onChange={(e) =>
                   handleAttributeChange(i, "attribute_value", e.target.value)
@@ -637,22 +822,25 @@ const UpdateProductPage: React.FC = () => {
             onClick={addAttribute}
             className="text-blue-500 mt-1"
           >
-            {t("form.add_attribute")}
+            {t("UpdateProduct:form.add_attribute")}
           </button>
-          {errors.attributes[0] && (
-            <p className="text-red-500 text-sm mt-1">{errors.attributes[0]}</p>
-          )}
+          {errors.attributes &&
+            errors.attributes[0] && ( // تم تعديل الوصول إلى العنصر الأول
+              <p className="text-red-500 text-sm mt-1">
+                {errors.attributes[0]}
+              </p>
+            )}
         </div>
 
         {/* Tags */}
         <div>
-          <Label>{t("form.tags")}</Label>
+          <Label>{t("UpdateProduct:form.tags")}</Label>
           {tags.map((tag, i) => (
             <div key={i} className="mb-2 flex items-center gap-2">
               <Input
                 value={tag}
                 onChange={(e) => handleTagChange(i, e.target.value)}
-                placeholder={t("placeholders.tag")}
+                placeholder={t("UpdateProduct:placeholders.tag")}
               />
               <button
                 type="button"
@@ -668,11 +856,12 @@ const UpdateProductPage: React.FC = () => {
             onClick={addTag}
             className="text-blue-600 hover:underline mt-2"
           >
-            {t("form.add_tag")}
+            {t("UpdateProduct:form.add_tag")}
           </button>
-          {errors.tags[0] && (
-            <p className="text-red-500 text-sm mt-1">{errors.tags[0]}</p>
-          )}
+          {errors.tags &&
+            errors.tags[0] && ( // تم تعديل الوصول إلى العنصر الأول
+              <p className="text-red-500 text-sm mt-1">{errors.tags[0]}</p>
+            )}
         </div>
 
         <div className="text-center">
@@ -687,7 +876,9 @@ const UpdateProductPage: React.FC = () => {
             disabled={loading}
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg"
           >
-            {loading ? t("form.updating_button") : t("form.update_button")}
+            {loading
+              ? t("UpdateProduct:form.updating_button")
+              : t("UpdateProduct:form.update_button")}
           </button>
         </div>
       </form>

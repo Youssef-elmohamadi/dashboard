@@ -57,7 +57,7 @@ const MenuSidebar = ({ isMenuOpen, setIsMenuOpen }: MenuSidebarProps) => {
         <div className="flex flex-col items-center gap-1 text-center px-4">
           <div className="w-12 h-12 rounded-full overflow-hidden">
             <img
-              src={user?.avatar || "/images/default-avatar.jpg"}
+              src={user?.avatar || "/images/default-avatar.webp"}
               alt="User Avatar"
               className="w-full h-full object-cover"
             />

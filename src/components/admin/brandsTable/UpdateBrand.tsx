@@ -9,7 +9,8 @@ import {
   useGetBrandById,
   useUpdateBrand,
 } from "../../../hooks/Api/Admin/useBrands/useBrands";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // Commented out PageMeta import
+import SEO from "../../../components/common/SEO/seo"; // Imported SEO component
 import { AxiosError } from "axios";
 import {
   BrandApiError,
@@ -19,7 +20,7 @@ import {
 } from "../../../types/Brands";
 
 const UpdateBrandPage = () => {
-  const { t } = useTranslation("UpdateBrand");
+  const { t } = useTranslation(["UpdateBrand", "Meta"]); // Using namespaces here
   const { id } = useParams();
   const navigate = useNavigate();
   const [globalError, setGlobalError] = useState(false);
@@ -90,9 +91,9 @@ const UpdateBrandPage = () => {
       status: "",
     };
     if (!updateData.name) {
-      newErrors.name = t("errors.name");
+      newErrors.name = t("UpdateBrand:errors.name"); // Added namespace
     } else if (!updateData.status) {
-      newErrors.status = t("errors.status");
+      newErrors.status = t("UpdateBrand:errors.status"); // Added namespace
     }
     setClientSideErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");
@@ -107,20 +108,23 @@ const UpdateBrandPage = () => {
       const formData = new FormData();
       formData.append("name", updateData.name);
       formData.append("status", updateData.status);
+      formData.append("_method", "PUT"); // Required for Laravel PUT with FormData
 
       if (updateData.image && typeof updateData.image !== "string") {
         formData.append("image", updateData.image);
       }
 
       await mutateAsync({ brandData: formData, id: id! });
-      navigate("/admin/brands");
+      navigate("/admin/brands", {
+        state: { successEdit: t("UpdateBrand:update_success") }, // Added namespace
+      });
     } catch (error: any) {
-      console.error("Error creating admin:", error);
+      console.error("Error updating brand:", error);
       const status = error?.response?.status;
       if (status === 403 || status === 401) {
         setErrors({
           ...errors,
-          global: t("errors.global"),
+          global: t("UpdateBrand:errors.global"), // Added namespace
         });
         return;
       }
@@ -138,7 +142,10 @@ const UpdateBrandPage = () => {
 
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors((prev) => ({ ...prev, general: t("errors.general") }));
+        setErrors((prev) => ({
+          ...prev,
+          general: t("UpdateBrand:errors.general"),
+        })); // Added namespace
       }
     } finally {
       setLoading(false);
@@ -148,9 +155,34 @@ const UpdateBrandPage = () => {
   if (!id) {
     return (
       <>
-        <PageMeta title={t("main_title")} description="Update Brand" />
+        <SEO // PageMeta replaced with SEO, and data directly set
+          title={{
+            ar: "تشطيبة - تحديث ماركة - معرف غير موجود",
+            en: "Tashtiba - Update Brand - ID Missing",
+          }}
+          description={{
+            ar: "صفحة تحديث الماركة تتطلب معرف ماركة صالح. يرجى التأكد من توفير المعرف.",
+            en: "The brand update page requires a valid brand ID. Please ensure the ID is provided.",
+          }}
+          keywords={{
+            ar: [
+              "تحديث ماركة",
+              "خطأ معرف",
+              "ماركة غير صالحة",
+              "تشطيبة",
+              "إدارة الماركات",
+            ],
+            en: [
+              "update brand",
+              "ID error",
+              "invalid brand",
+              "Tashtiba",
+              "brand management",
+            ],
+          }}
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("no_data")}
+          {t("UpdateBrand:no_data")} {/* Added namespace */}
         </div>
       </>
     );
@@ -159,17 +191,68 @@ const UpdateBrandPage = () => {
   if (isLoading)
     return (
       <>
-        <PageMeta title={t("main_title")} description="Update Brand" />
-        <p className="text-center mt-5">{t("loading")}</p>
+        <SEO // PageMeta replaced with SEO, and data directly set
+          title={{
+            ar: "تشطيبة - تحديث ماركة",
+            en: "Tashtiba - Update Brand",
+          }}
+          description={{
+            ar: "جارٍ تحميل بيانات الماركة للتحديث في تشطيبة. يرجى الانتظار.",
+            en: "Loading brand data for update in Tashtiba. Please wait.",
+          }}
+          keywords={{
+            ar: [
+              "تحديث ماركة",
+              "تحميل بيانات",
+              "إدارة الماركات",
+              "تشطيبة",
+              "التحميل",
+            ],
+            en: [
+              "update brand",
+              "loading data",
+              "brand management",
+              "Tashtiba",
+              "loading",
+            ],
+          }}
+        />
+        <p className="text-center mt-5">{t("UpdateBrand:loading")}</p>{" "}
+        {/* Added namespace */}
       </>
     );
 
   if (!brandData && !globalError) {
     return (
       <>
-        <PageMeta title={t("main_title")} description="Update Brand" />
+        <SEO // PageMeta replaced with SEO, and data directly set
+          title={{
+            ar: "تشطيبة - ماركة غير موجودة",
+            en: "Tashtiba - Brand Not Found",
+          }}
+          description={{
+            ar: "الماركة المطلوبة للتحديث غير موجودة في نظام تشطيبة. يرجى التحقق من المعرف.",
+            en: "The requested brand for update was not found in Tashtiba system. Please check the ID.",
+          }}
+          keywords={{
+            ar: [
+              "ماركة غير موجودة",
+              "خطأ",
+              "تحديث ماركة",
+              "تشطيبة",
+              "إدارة الماركات",
+            ],
+            en: [
+              "brand not found",
+              "error",
+              "update brand",
+              "Tashtiba",
+              "brand management",
+            ],
+          }}
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("not_found")}
+          {t("UpdateBrand:not_found")} {/* Added namespace */}
         </div>
       </>
     );
@@ -177,9 +260,27 @@ const UpdateBrandPage = () => {
   if (globalError) {
     return (
       <>
-        <PageMeta title={t("main_title")} description="Update Brand" />
+        <SEO // PageMeta replaced with SEO, and data directly set
+          title={{
+            ar: "تشطيبة - خطأ عام في تحديث الماركة",
+            en: "Tashtiba - General Brand Update Error",
+          }}
+          description={{
+            ar: "حدث خطأ غير متوقع أثناء تحديث الماركة في تشطيبة. يرجى المحاولة لاحقًا.",
+            en: "An unexpected error occurred while updating the brand in Tashtiba. Please try again later.",
+          }}
+          keywords={{
+            ar: ["خطأ تحديث ماركة", "مشكلة تقنية", "تشطيبة", "فشل التحديث"],
+            en: [
+              "brand update error",
+              "technical issue",
+              "Tashtiba",
+              "update failed",
+            ],
+          }}
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("errors.general")}
+          {t("UpdateBrand:errors.general")} {/* Added namespace */}
         </div>
       </>
     );
@@ -187,11 +288,37 @@ const UpdateBrandPage = () => {
 
   return (
     <div>
-      <PageMeta title={t("main_title")} description="Update Brand" />
-
+      <SEO // PageMeta replaced with SEO, and data directly set
+        title={{
+          ar: "تشطيبة - تحديث ماركة",
+          en: "Tashtiba - Update Brand",
+        }}
+        description={{
+          ar: "صفحة تحديث بيانات الماركة في نظام تشطيبة. قم بتعديل اسم الماركة، حالتها، وشعارها.",
+          en: "Update brand details in Tashtiba system. Modify brand name, status, and logo.",
+        }}
+        keywords={{
+          ar: [
+            "تحديث ماركة",
+            "تعديل براند",
+            "إدارة الماركات",
+            "تشطيبة",
+            "منتجات",
+            "تعديل شعار",
+          ],
+          en: [
+            "update brand",
+            "edit brand",
+            "brand management",
+            "Tashtiba",
+            "products",
+            "update logo",
+          ],
+        }}
+      />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {t("update_title")}
+          {t("UpdateBrand:update_title")} {/* Added namespace */}
         </h3>
       </div>
 
@@ -206,14 +333,15 @@ const UpdateBrandPage = () => {
       <form onSubmit={handleSubmit} className="space-y-6 mt-4">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
-            <Label htmlFor="name">{t("name_label")}</Label>
+            <Label htmlFor="name">{t("UpdateBrand:name_label")}</Label>{" "}
+            {/* Added namespace */}
             <Input
               type="text"
               name="name"
               id="name"
               value={updateData.name}
               onChange={handleChange}
-              placeholder={t("name_placeholder_edit")}
+              placeholder={t("UpdateBrand:name_placeholder_edit")}
             />
             {clientSideErrors.name && (
               <p className="text-red-500 text-sm mt-1">
@@ -222,20 +350,21 @@ const UpdateBrandPage = () => {
             )}
             {errors.name[0] && (
               <p className="text-red-600 text-sm mt-1">
-                {t("errors.unique_name")}
+                {t("UpdateBrand:errors.unique_name")} {/* Added namespace */}
               </p>
             )}
           </div>
 
           <div>
-            <Label>{t("status_label")}</Label>
+            <Label>{t("UpdateBrand:status_label")}</Label>{" "}
+            {/* Added namespace */}
             <Select
               options={[
-                { label: t("status_active"), value: "active" },
-                { label: t("status_inactive"), value: "inactive" },
+                { label: t("UpdateBrand:status_active"), value: "active" }, // Added namespace
+                { label: t("UpdateBrand:status_inactive"), value: "inactive" }, // Added namespace
               ]}
               onChange={handleSelectChange}
-              placeholder={t("status_label")}
+              placeholder={t("UpdateBrand:status_label")}
               defaultValue={updateData.status}
             />
             {clientSideErrors.status && (
@@ -248,7 +377,8 @@ const UpdateBrandPage = () => {
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div className="w-full">
-            <Label>{t("image_label")}</Label>
+            <Label>{t("UpdateBrand:image_label")}</Label>{" "}
+            {/* Added namespace */}
             <ImageUpload
               file={updateData.image}
               onFileChange={handleFileChange}
@@ -259,7 +389,7 @@ const UpdateBrandPage = () => {
             {typeof updateData.image === "string" && updateData.image && (
               <div className="mt-4">
                 <p className="text-gray-700 dark:text-gray-400 font-medium mb-4 text-sm">
-                  {t("current_image")}
+                  {t("UpdateBrand:current_image")} {/* Added namespace */}
                 </p>
                 <img
                   src={updateData.image}
@@ -276,7 +406,10 @@ const UpdateBrandPage = () => {
           disabled={loading}
           className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
-          {loading ? t("loading_button") : t("submit_button")}
+          {loading
+            ? t("UpdateBrand:loading_button")
+            : t("UpdateBrand:submit_button")}{" "}
+          {/* Added namespace */}
         </button>
       </form>
     </div>

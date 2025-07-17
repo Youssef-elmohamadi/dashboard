@@ -5,13 +5,14 @@ import {
   useAllCategories,
 } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
 import { useTranslation } from "react-i18next";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
 import { AxiosError } from "axios";
 import { Category } from "../../../types/Categories";
 
 const CategoryDetails: React.FC = () => {
   const { id } = useParams();
-  const { t } = useTranslation(["CategoryDetails"]);
+  const { t } = useTranslation(["CategoryDetails", "Meta"]);
   const [globalError, setGlobalError] = useState("");
   //const [category, setCategory] = useState<Category | null>(null);
   //const [categories, setCategories] = useState<Category[] | null>(null);
@@ -48,7 +49,34 @@ const CategoryDetails: React.FC = () => {
   if (!id) {
     return (
       <>
-        <PageMeta title={t("mainTitle")} description="Category Details" />
+        <SEO // PageMeta replaced with SEO, and data directly set for missing ID
+          title={{
+            ar: "تشطيبة - تفاصيل الفئة - معرف مفقود (سوبر أدمن)",
+            en: "Tashtiba - Category Details - ID Missing (Super Admin)",
+          }}
+          description={{
+            ar: "صفحة تفاصيل الفئة تتطلب معرف فئة صالح. يرجى التأكد من توفير المعرف.",
+            en: "The category details page requires a valid category ID. Please ensure the ID is provided.",
+          }}
+          keywords={{
+            ar: [
+              "تفاصيل الفئة",
+              "معرف مفقود",
+              "فئة غير صالحة",
+              "تشطيبة",
+              "إدارة الفئات",
+              "سوبر أدمن",
+            ],
+            en: [
+              "category details",
+              "missing ID",
+              "invalid category",
+              "Tashtiba",
+              "category management",
+              "super admin",
+            ],
+          }}
+        />{" "}
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("no_data")}
         </div>
@@ -59,7 +87,32 @@ const CategoryDetails: React.FC = () => {
   if (loading) {
     return (
       <>
-        <PageMeta title={t("mainTitle")} description="Category Details" />
+        <SEO // PageMeta replaced with SEO, and data directly set for loading state
+          title={{
+            ar: "تشطيبة - تفاصيل الفئة - جارٍ التحميل (سوبر أدمن)",
+            en: "Tashtiba - Category Details - Loading (Super Admin)",
+          }}
+          description={{
+            ar: "جارٍ تحميل تفاصيل الفئة بواسطة المشرف العام في تشطيبة. يرجى الانتظار.",
+            en: "Loading category details by Super Admin on Tashtiba. Please wait.",
+          }}
+          keywords={{
+            ar: [
+              "تفاصيل الفئة",
+              "تحميل الفئة",
+              "إدارة الفئات",
+              "سوبر أدمن",
+              "تصنيفات المنتجات",
+            ],
+            en: [
+              "category details",
+              "loading category",
+              "category management",
+              "super admin",
+              "product classifications",
+            ],
+          }}
+        />{" "}
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("loading")}
         </div>
@@ -70,7 +123,32 @@ const CategoryDetails: React.FC = () => {
   if (!category && !globalError) {
     return (
       <>
-        <PageMeta title={t("mainTitle")} description="Category Details" />
+        <SEO // PageMeta replaced with SEO, and data directly set for not found state
+          title={{
+            ar: "تشطيبة - تفاصيل الفئة - غير موجودة (سوبر أدمن)",
+            en: "Tashtiba - Category Details - Not Found (Super Admin)",
+          }}
+          description={{
+            ar: "الفئة المطلوبة غير موجودة في نظام تشطيبة. يرجى التحقق من المعرف.",
+            en: "The requested category was not found on Tashtiba. Please verify the ID.",
+          }}
+          keywords={{
+            ar: [
+              "فئة غير موجودة",
+              "تفاصيل الفئة",
+              "خطأ 404",
+              "سوبر أدمن",
+              "إدارة الفئات",
+            ],
+            en: [
+              "category not found",
+              "category details",
+              "404 error",
+              "super admin",
+              "category management",
+            ],
+          }}
+        />{" "}
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("not_found")}
         </div>
@@ -80,7 +158,32 @@ const CategoryDetails: React.FC = () => {
   if (globalError) {
     return (
       <>
-        <PageMeta title={t("mainTitle")} description="Category Details" />
+        <SEO // PageMeta replaced with SEO, and data directly set for global error state
+          title={{
+            ar: "تشطيبة - تفاصيل الفئة - خطأ عام (سوبر أدمن)",
+            en: "Tashtiba - Category Details - Global Error (Super Admin)",
+          }}
+          description={{
+            ar: "حدث خطأ عام أثناء تحميل تفاصيل الفئة بواسطة المشرف العام في تشطيبة. يرجى المحاولة لاحقًا.",
+            en: "A global error occurred while loading category details by Super Admin on Tashtiba. Please try again later.",
+          }}
+          keywords={{
+            ar: [
+              "خطأ عام",
+              "مشكلة تقنية",
+              "تفاصيل الفئة",
+              "سوبر أدمن",
+              "فشل التحميل",
+            ],
+            en: [
+              "global error",
+              "technical issue",
+              "category details",
+              "super admin",
+              "loading failed",
+            ],
+          }}
+        />{" "}
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {globalError}
         </div>
@@ -90,11 +193,44 @@ const CategoryDetails: React.FC = () => {
 
   return (
     <div className="category-details p-6 max-w-5xl mx-auto space-y-8">
-      <PageMeta title={t("mainTitle")} description="Category Details" />
+      <SEO
+        title={{
+          ar: `تشطيبة - تفاصيل الفئة ${category?.name || ""}`,
+          en: `Tashtiba - Category Details ${category?.name || ""}`,
+        }}
+        description={{
+          ar: `استعرض التفاصيل الكاملة للفئة "${
+            category?.name || "غير معروف"
+          }" بواسطة المشرف العام في تشطيبة، بما في ذلك الوصف والعمولة والصورة.`,
+          en: `View full details for category "${
+            category?.name || "unknown"
+          }" by Super Admin on Tashtiba, including description, commission, and image.`,
+        }}
+        keywords={{
+          ar: [
+            `الفئة ${category?.name || ""}`,
+            "تفاصيل الفئة",
+            "عرض الفئة",
+            "عمولة الفئة",
+            "صورة الفئة",
+            "إدارة الفئات",
+            "سوبر أدمن",
+          ],
+          en: [
+            `category ${category?.name || ""}`,
+            "category details",
+            "view category",
+            "category commission",
+            "category image",
+            "category management",
+            "super admin",
+          ],
+        }}
+      />
+
       <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
         {t("title")}
       </h1>
-
       {/* Basic Info */}
       <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
         <h2 className="text-xl font-semibold mb-4 text-blue-700 dark:text-blue-400">
@@ -130,7 +266,6 @@ const CategoryDetails: React.FC = () => {
           </p>
         </div>
       </section>
-
       {/* Image */}
       {category?.image && (
         <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
@@ -146,7 +281,6 @@ const CategoryDetails: React.FC = () => {
           </div>
         </section>
       )}
-
       {/* Timestamps */}
       <section className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
         <h2 className="text-xl font-semibold mb-4 text-gray-700 dark:text-gray-300">

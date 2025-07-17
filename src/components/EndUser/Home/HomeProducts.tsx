@@ -1,18 +1,19 @@
-import React, { useMemo } from "react";
+import React, { useMemo, lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "./customSwiper.css";
-import ProductCard from "../Product/ProductCard";
 import { useTranslation } from "react-i18next";
 import {
   useHomeData,
   useProductForEveryCategory,
 } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
-import AdBanner from "../Home/AdBanner";
-import LazyImage from "../../common/LazyImage";
 import { Banner } from "../../../types/Home";
 import { Product } from "../../../types/Product";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+
+const ProductCard = lazy(() => import("../Product/ProductCard"));
+const ProductCardSkeleton = lazy(() => import("../Product/ProductCardSkeleton"));
+const AdBanner = lazy(() => import("../Home/AdBanner"));
 
 const HomeProducts: React.FC = () => {
   const { t } = useTranslation(["EndUserHome"]);
@@ -21,6 +22,7 @@ const HomeProducts: React.FC = () => {
   const { data: homeData, isLoading: isHomeLoading } = useHomeData();
 
   const isLoading = isHomeLoading || isProductsLoading;
+
   const filteredCategories = useMemo(() => {
     return productCategories?.filter(
       (category) => category.products && category.products.length > 0
@@ -31,17 +33,19 @@ const HomeProducts: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="enduser_container flex flex-col items-center justify-center px-4 py-10 text-gray-500 min-h-[50vh]">
-        <div className="flex flex-col items-center justify-center w-full h-full">
-          <LazyImage
-            src="images/product/placeholder-image.jpg"
-            alt={t("homeProducts.loadingAlt", "Loading products...")}
-            className="w-24 h-24 mb-4 animate-pulse mx-auto"
-          />
-          <span className="text-base">
-            {t("loading", "Loading products...")}
-          </span>
-        </div>
+      <div className="enduser_container px-4 py-10">
+        {[...Array(2)].map((_, i) => (
+          <div key={i} className="mb-12 flex justify-around">
+            <div className="h-4 w-32 bg-gray-200 mb-4 animate-pulse rounded" />
+            <div className="flex gap-3 overflow-x-auto">
+              {[...Array(4)].map((_, j) => (
+                <Suspense fallback={null} key={j}>
+                  <ProductCardSkeleton />
+                </Suspense>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     );
   }
@@ -62,13 +66,15 @@ const HomeProducts: React.FC = () => {
 
         return (
           <div key={category.id} className="mb-12">
+            {/* Lazy AdBanner */}
             {relatedBanners?.map((banner: Banner, idx: number) => (
-              <AdBanner
-                key={idx}
-                imageUrl={banner.image}
-                linkUrl={banner.url || `/${lang}/category/${category.id}`}
-                altText={bannerAltText}
-              />
+              <Suspense fallback={null} key={idx}>
+                <AdBanner
+                  imageUrl={banner.image}
+                  linkUrl={banner.url || `/${lang}/category/${category.id}`}
+                  altText={bannerAltText}
+                />
+              </Suspense>
             ))}
 
             <div className="flex items-center justify-between mb-4">
@@ -93,9 +99,14 @@ const HomeProducts: React.FC = () => {
                 0: { slidesPerView: 1 },
               }}
             >
-              {category.products.map((product: any) => (
+              {category.products.map((product: any, index: number) => (
                 <SwiperSlide key={product.id}>
-                  <ProductCard product={product as Product} />
+                  <Suspense fallback={null}>
+                    <ProductCard
+                      product={product as Product}
+                      loadingPriority={index < 2 ? "eager" : "lazy"}
+                    />
+                  </Suspense>
                 </SwiperSlide>
               ))}
             </Swiper>

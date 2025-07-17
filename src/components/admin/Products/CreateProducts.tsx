@@ -11,7 +11,8 @@ import Select from "../../common/form/Select";
 import { useCreateProduct } from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { useAllBrands } from "../../../hooks/Api/Admin/useBrands/useBrands";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // Removed PageMeta import
+import SEO from "../../../components/common/SEO/seo"; // Ensured SEO component is imported
 import { Category } from "../../../types/Categories";
 import { Brand } from "../../../types/Brands";
 import {
@@ -45,7 +46,7 @@ export default function CreateProducts() {
     global: "",
   });
   const [clientSideErrors, setClientSideErrors] = useState<ClientErrors>({});
-  const { t } = useTranslation(["CreateProduct"]);
+  const { t } = useTranslation(["CreateProduct", "Meta"]);
   const [productData, setProductData] = useState<productInputData>({
     name: "",
     description: "",
@@ -72,10 +73,12 @@ export default function CreateProducts() {
       if (status === 401 || status === 403) {
         setErrors((prev) => ({
           ...prev,
-          global: t("errors.global"),
+          global: t("CreateProduct:errors.global"),
         }));
       } else {
-        setFetchingCategoriesError(t("errors.fetching_categories"));
+        setFetchingCategoriesError(
+          t("CreateProduct:errors.fetching_categories")
+        );
       }
     }
   }, [isCategoryError, categoryError, t]);
@@ -91,10 +94,10 @@ export default function CreateProducts() {
       if (status === 401 || status === 403) {
         setErrors((prev) => ({
           ...prev,
-          global: t("errors.global"),
+          global: t("CreateProduct:errors.global"),
         }));
       } else {
-        setFetchingBrandsError(t("errors.fetching_brands"));
+        setFetchingBrandsError(t("CreateProduct:errors.fetching_brands"));
       }
     }
   }, [isBrandError, brandError, t]);
@@ -166,17 +169,19 @@ export default function CreateProducts() {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!productData.name) newErrors.name = t("validation.name");
-    if (!productData.price) newErrors.price = t("validation.price");
+    if (!productData.name) newErrors.name = t("CreateProduct:validation.name");
+    if (!productData.price)
+      newErrors.price = t("CreateProduct:validation.price");
     if (!productData.stock_quantity)
-      newErrors.stock_quantity = t("validation.stock_quantity");
+      newErrors.stock_quantity = t("CreateProduct:validation.stock_quantity");
     if (!productData.category_id)
-      newErrors.category_id = t("validation.category_id");
-    if (!productData.brand_id) newErrors.brand_id = t("validation.brand_id");
+      newErrors.category_id = t("CreateProduct:validation.category_id");
+    if (!productData.brand_id)
+      newErrors.brand_id = t("CreateProduct:validation.brand_id");
     if (!productData.description)
-      newErrors.description = t("validation.description");
+      newErrors.description = t("CreateProduct:validation.description");
     setClientSideErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.values(newErrors).every((error) => error === "");
   };
   const { mutateAsync } = useCreateProduct();
   const handleSubmit = async (e: React.FormEvent) => {
@@ -206,15 +211,15 @@ export default function CreateProducts() {
     try {
       await mutateAsync(formData);
       navigate("/admin/products", {
-        state: { successCreate: t("success_create") },
+        state: { successCreate: t("CreateProduct:success_create") },
       });
     } catch (error: any) {
-      console.error("Error creating admin:", error);
+      console.error("Error creating product:", error);
       const status = error?.response?.status;
       if (status === 403 || status === 401) {
         setErrors({
           ...errors,
-          global: t("errors.global"),
+          global: t("CreateProduct:errors.global"),
         });
         return;
       }
@@ -230,9 +235,9 @@ export default function CreateProducts() {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors((prev) => ({ ...prev, formattedErrors }));
+        setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors({ ...errors, general: t("errors.general") });
+        setErrors({ ...errors, general: t("CreateProduct:errors.general") });
       }
     } finally {
       setLoading(false);
@@ -241,10 +246,39 @@ export default function CreateProducts() {
 
   return (
     <div className="">
-      <PageMeta title={t("main_title")} description="Update Role" />
+      <SEO // PageMeta replaced with SEO, and data directly set
+        title={{
+          ar: "تشطيبة - إضافة منتج جديد",
+          en: "Tashtiba - Add New Product",
+        }}
+        description={{
+          ar: "صفحة إضافة منتج جديد إلى متجر تشطيبة. أدخل تفاصيل المنتج، الصور، والسمات.",
+          en: "Add a new product to Tashtiba store. Enter product details, upload images, and specify attributes.",
+        }}
+        keywords={{
+          ar: [
+            "إضافة منتج",
+            "منتج جديد",
+            "إنشاء منتج",
+            "تشطيبة",
+            "إدارة المنتجات",
+            "المخزون",
+            "متجر إلكتروني",
+          ],
+          en: [
+            "add product",
+            "new product",
+            "create product",
+            "Tashtiba",
+            "product management",
+            "inventory",
+            "e-commerce store",
+          ],
+        }}
+      />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {t("title")}
+          {t("CreateProduct:title")}
         </h3>
       </div>
       <form onSubmit={handleSubmit} className="space-y-6 mt-4">
@@ -256,11 +290,11 @@ export default function CreateProducts() {
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <Label htmlFor="name">{t("form.name")}</Label>
+            <Label htmlFor="name">{t("CreateProduct:form.name")}</Label>
             <Input
               name="name"
               value={productData.name}
-              placeholder={t("placeholders.name")}
+              placeholder={t("CreateProduct:placeholders.name")}
               onChange={handleChange}
               id="name"
             />
@@ -269,16 +303,16 @@ export default function CreateProducts() {
                 {clientSideErrors.name}
               </p>
             )}
-            {errors.name && (
+            {errors.name && errors.name[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
             )}
           </div>
           <div>
-            <Label htmlFor="price">{t("form.price")}</Label>
+            <Label htmlFor="price">{t("CreateProduct:form.price")}</Label>
             <Input
               type="text"
               name="price"
-              placeholder={t("placeholders.price")}
+              placeholder={t("CreateProduct:placeholders.price")}
               value={productData.price}
               onChange={handleChange}
               id="price"
@@ -288,16 +322,18 @@ export default function CreateProducts() {
                 {clientSideErrors.price}
               </p>
             )}
-            {errors.price && (
+            {errors.price && errors.price[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.price[0]}</p>
             )}
           </div>
           <div>
-            <Label htmlFor="discount_price">{t("form.discount_price")}</Label>
+            <Label htmlFor="discount_price">
+              {t("CreateProduct:form.discount_price")}
+            </Label>
             <Input
               type="text"
               name="discount_price"
-              placeholder={t("placeholders.discount_price")}
+              placeholder={t("CreateProduct:placeholders.discount_price")}
               value={productData.discount_price}
               onChange={handleChange}
               id="discount_price"
@@ -307,16 +343,18 @@ export default function CreateProducts() {
                 {clientSideErrors.price}
               </p>
             )}
-            {errors.price && (
+            {errors.price && errors.price[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.price[0]}</p>
             )}
           </div>
           <div>
-            <Label htmlFor="stock_quantity">{t("form.stock_quantity")}</Label>
+            <Label htmlFor="stock_quantity">
+              {t("CreateProduct:form.stock_quantity")}
+            </Label>
             <Input
               type="text"
               name="stock_quantity"
-              placeholder={t("placeholders.stock_quantity")}
+              placeholder={t("CreateProduct:placeholders.stock_quantity")}
               value={productData.stock_quantity}
               onChange={handleChange}
               id="stock_quantity"
@@ -326,14 +364,16 @@ export default function CreateProducts() {
                 {clientSideErrors.stock_quantity}
               </p>
             )}
-            {errors.stock_quantity && (
+            {errors.stock_quantity && errors.stock_quantity[0] && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.stock_quantity[0]}
               </p>
             )}
           </div>
           <div>
-            <Label htmlFor="category_id">{t("form.category")}</Label>
+            <Label htmlFor="category_id">
+              {t("CreateProduct:form.category")}
+            </Label>
             <Select
               options={categories?.map((category: Category) => ({
                 value: category.id,
@@ -341,14 +381,14 @@ export default function CreateProducts() {
               }))}
               onChange={(value) => handleSelectChange(value, "category_id")}
               value={productData.category_id}
-              placeholder={t("form.select_category")}
+              placeholder={t("CreateProduct:form.select_category")}
             />
             {clientSideErrors.category_id && (
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.category_id}
               </p>
             )}
-            {errors.category_id && (
+            {errors.category_id && errors.category_id[0] && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.category_id[0]}
               </p>
@@ -360,7 +400,7 @@ export default function CreateProducts() {
             )}
           </div>
           <div>
-            <Label htmlFor="brand_id">{t("form.brand")}</Label>
+            <Label htmlFor="brand_id">{t("CreateProduct:form.brand")}</Label>
             <Select
               options={brands?.map((brand: Brand) => ({
                 label: brand.name,
@@ -368,37 +408,24 @@ export default function CreateProducts() {
               }))}
               onChange={(value) => handleSelectChange(value, "brand_id")}
               value={productData.brand_id}
-              placeholder={t("form.select_brand")}
+              placeholder={t("CreateProduct:form.select_brand")}
             />
             {clientSideErrors.brand_id && (
               <p className="text-red-500 text-sm mt-1">
                 {clientSideErrors.brand_id}
               </p>
             )}
-            {errors.brand_id && (
+            {errors.brand_id && errors.brand_id[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.brand_id[0]}</p>
             )}
             {fetchingBrandsError && (
               <p className="text-red-500 text-sm mt-1">{fetchingBrandsError}</p>
             )}
           </div>
-          {/* <div>
-            <Label htmlFor="status">{t("form.status")}</Label>
-            <Select
-              options={[
-                { value: "active", label: t("form.status_active") },
-                { value: "inactive", label: t("form.status_inactive") },
-              ]}
-              onChange={(value) => handleSelectChange(value, "status")}
-              value={productData.status}
-              placeholder={t("form.select_status")}
-            />
-            {errors.status && (
-              <p className="text-red-500 text-sm mt-1">{errors.status[0]}</p>
-            )}
-          </div> */}
           <div className="flex gap-2 items-center">
-            <Label htmlFor="is_featured">{t("form.is_featured")}</Label>
+            <Label htmlFor="is_featured">
+              {t("CreateProduct:form.is_featured")}
+            </Label>
             <Checkbox
               checked={productData.is_featured}
               onChange={(checked) =>
@@ -406,14 +433,18 @@ export default function CreateProducts() {
               }
               id="is_featured"
             />
-            {errors.is_featured && (
-              <p className="text-red-500 text-sm mt-1">{errors.brand_id[0]}</p>
+            {errors.is_featured && errors.is_featured[0] && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.is_featured[0]}
+              </p>
             )}
           </div>
         </div>
 
         <div>
-          <Label htmlFor="">{t("form.upload_images")}</Label>
+          <Label htmlFor="images">
+            {t("CreateProduct:form.upload_images")}
+          </Label>
           <FileInput multiple={true} onChange={handleImageChange} />
           <div className="flex gap-4 mt-2 flex-wrap">
             {imagePreviews.map((src, index) => (
@@ -436,10 +467,12 @@ export default function CreateProducts() {
         </div>
 
         <div>
-          <Label htmlFor="description">{t("form.description")}</Label>
+          <Label htmlFor="description">
+            {t("CreateProduct:form.description")}
+          </Label>
           <TextArea
             name="description"
-            placeholder={t("placeholders.description")}
+            placeholder={t("CreateProduct:placeholders.description")}
             value={productData.description}
             onChange={(value) =>
               setProductData((prev) => ({ ...prev, description: value }))
@@ -450,24 +483,24 @@ export default function CreateProducts() {
               {clientSideErrors.description}
             </p>
           )}
-          {errors.description && (
+          {errors.description && errors.description[0] && (
             <p className="text-red-500 text-sm mt-1">{errors.description[0]}</p>
           )}
         </div>
 
         <div>
-          <Label>{t("form.attributes")}</Label>
+          <Label>{t("CreateProduct:form.attributes")}</Label>
           {attributes.map((attr, index) => (
             <div key={index} className="flex gap-2 mb-2 items-center">
               <Input
-                placeholder={t("placeholders.attribute_label")}
+                placeholder={t("CreateProduct:placeholders.attribute_label")}
                 value={attr.attribute_name}
                 onChange={(e) =>
                   handleAttributeChange(index, "attribute_name", e.target.value)
                 }
               />
               <Input
-                placeholder={t("placeholders.attribute_value")}
+                placeholder={t("CreateProduct:placeholders.attribute_value")}
                 value={attr.attribute_value}
                 onChange={(e) =>
                   handleAttributeChange(
@@ -496,18 +529,18 @@ export default function CreateProducts() {
             }
             className="text-blue-500 mt-1"
           >
-            {t("form.add_attribute")}
+            {t("CreateProduct:form.add_attribute")}
           </button>
         </div>
 
         <div>
           {tags.length > 0 && (
             <div>
-              <Label>{t("form.tags")}</Label>
+              <Label>{t("CreateProduct:form.tags")}</Label>
               {tags.map((tag, index) => (
                 <div key={index} className="mb-2 flex gap-2 items-center">
                   <Input
-                    placeholder={t("placeholders.tag")}
+                    placeholder={t("CreateProduct:placeholders.tag")}
                     value={tag}
                     onChange={(e) => handleTagChange(index, e.target.value)}
                   />
@@ -523,7 +556,7 @@ export default function CreateProducts() {
             </div>
           )}
           <button type="button" onClick={addTag} className="text-blue-500 mt-1">
-            {t("form.add_tag")}
+            {t("CreateProduct:form.add_tag")}
           </button>
         </div>
         <button
@@ -531,7 +564,9 @@ export default function CreateProducts() {
           disabled={loading}
           className="rounded-lg bg-blue-600 text-white px-6 py-2 hover:bg-blue-700 w-1/4 mx-auto"
         >
-          {loading ? t("form.creating_button") : t("form.create_button")}
+          {loading
+            ? t("CreateProduct:form.creating_button")
+            : t("CreateProduct:form.create_button")}
         </button>
       </form>
     </div>

@@ -37,7 +37,7 @@ export default function UserControlLayout() {
           <div className="text-center flex flex-col items-center">
             <div className="w-20 h-20 rounded-full">
               <img
-                src={user?.avatar || "/images/default-avatar.jpg"}
+                src={user?.avatar || "/images/default-avatar.webp"}
                 className="w-full h-full rounded-full"
                 alt="User Avatar"
               />

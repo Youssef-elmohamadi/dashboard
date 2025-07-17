@@ -1,19 +1,22 @@
 import { BrowserRouter as Router } from "react-router-dom";
-import { ScrollToTop } from "./components/common/ScrollToTop";
+import { Suspense, lazy } from "react";
 import DirectionAndLanguageProvider from "./context/DirectionContext";
-import AppRoutes from "./Routes/AppRoutes";
 import { HelmetProvider } from "react-helmet-async";
 import "./i18n";
 
+// Lazy imports
+const AppRoutes = lazy(() => import("./Routes/AppRoutes"));
+
 export default function App() {
   return (
-    <Router basename="/">
-      <HelmetProvider>
-        <DirectionAndLanguageProvider>
-          <ScrollToTop />
-          <AppRoutes />
-        </DirectionAndLanguageProvider>
-      </HelmetProvider>
+    <Router>
+      <DirectionAndLanguageProvider>
+        <HelmetProvider>
+          <Suspense fallback={null}>
+            <AppRoutes />
+          </Suspense>
+        </HelmetProvider>
+      </DirectionAndLanguageProvider>
     </Router>
   );
 }

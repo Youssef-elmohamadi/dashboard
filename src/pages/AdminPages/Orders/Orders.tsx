@@ -1,4 +1,5 @@
-import PageMeta from "../../../components/common/SEO/PageMeta";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // Removed PageMeta import
+import SEO from "../../../components/common/SEO/seo"; // Ensured SEO component is imported
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/admin/Tables/BasicTableTS";
@@ -27,7 +28,7 @@ const Orders = () => {
 
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
-  const { t } = useTranslation(["OrdersTable"]);
+  const { t } = useTranslation(["OrdersTable", "Meta"]); // Using namespaces here
   const { data, isLoading, isError, refetch, error } = useAllOrdersPaginate(
     pageIndex,
     searchValues
@@ -59,15 +60,15 @@ const Orders = () => {
   const { mutateAsync: cancelOrder } = useCancelOrder();
   const handleCancel = async (id: ID) => {
     await alertDelete(id, cancelOrder, refetch, {
-      confirmTitle: t("ordersPage.cancel.confirmTitle"),
-      confirmText: t("ordersPage.cancel.confirmText"),
-      confirmButtonText: t("ordersPage.cancel.confirmButtonText"),
-      cancelButtonText: t("ordersPage.cancel.cancelButtonText"),
-      successTitle: t("ordersPage.cancel.successTitle"),
-      successText: t("ordersPage.cancel.successText"),
-      errorTitle: t("ordersPage.cancel.errorTitle"),
-      errorText: t("ordersPage.cancel.errorText"),
-      lastButton: t("ordersPage.cancel.lastButton"),
+      confirmTitle: t("OrdersTable:ordersPage.cancel.confirmTitle"), // Added namespace
+      confirmText: t("OrdersTable:ordersPage.cancel.confirmText"), // Added namespace
+      confirmButtonText: t("OrdersTable:ordersPage.cancel.confirmButtonText"), // Added namespace
+      cancelButtonText: t("OrdersTable:ordersPage.cancel.cancelButtonText"), // Added namespace
+      successTitle: t("OrdersTable:ordersPage.cancel.successTitle"), // Added namespace
+      successText: t("OrdersTable:ordersPage.cancel.successText"), // Added namespace
+      errorTitle: t("OrdersTable:ordersPage.cancel.errorTitle"), // Added namespace
+      errorText: t("OrdersTable:ordersPage.cancel.errorText"), // Added namespace
+      lastButton: t("OrdersTable:ordersPage.cancel.lastButton"), // Added namespace
     });
   };
 
@@ -82,56 +83,109 @@ const Orders = () => {
   });
   return (
     <>
-      <PageMeta
-        title={t("ordersPage.mainTitle")}
-        description="Show and Manage Your orders"
+      <SEO // PageMeta replaced with SEO, and data directly set
+        title={{
+          ar: "تشطيبة - إدارة الطلبات",
+          en: "Tashtiba - Order Management",
+        }}
+        description={{
+          ar: "صفحة إدارة طلبات العملاء في تشطيبة. عرض، تتبع، وإلغاء الطلبات.",
+          en: "Manage customer orders on Tashtiba. View, track, and cancel orders.",
+        }}
+        keywords={{
+          ar: [
+            "الطلبات",
+            "إدارة الطلبات",
+            "تتبع الطلبات",
+            "تشطيبة",
+            "المبيعات",
+            "طلبات العملاء",
+          ],
+          en: [
+            "orders",
+            "order management",
+            "order tracking",
+            "Tashtiba",
+            "sales",
+            "customer orders",
+          ],
+        }}
       />
-      <PageBreadcrumb pageTitle={t("ordersPage.title")} userType="admin" />
+      <PageBreadcrumb
+        pageTitle={t("OrdersTable:ordersPage.title")}
+        userType="admin"
+      />{" "}
+      {/* Added namespace */}
       <div>
         <SearchTable
           fields={[
-            { key: "tracking_number", label: "Tracking Number", type: "input" },
+            {
+              key: "tracking_number",
+              label: t("OrdersTable:search.tracking_number"),
+              type: "input",
+            }, // Added namespace
 
             {
               key: "status",
-              label: "Status",
+              label: t("OrdersTable:search.status"), // Added namespace
               type: "select",
               options: [
-                { label: t("ordersPage.statuses.pending"), value: "pending" },
-                { label: t("ordersPage.statuses.paid"), value: "paid" },
-                { label: t("ordersPage.statuses.shipped"), value: "shipped" },
                 {
-                  label: t("ordersPage.statuses.delivered"),
+                  label: t("OrdersTable:ordersPage.statuses.pending"),
+                  value: "pending",
+                }, // Added namespace
+                {
+                  label: t("OrdersTable:ordersPage.statuses.paid"),
+                  value: "paid",
+                }, // Added namespace
+                {
+                  label: t("OrdersTable:ordersPage.statuses.shipped"),
+                  value: "shipped",
+                }, // Added namespace
+                {
+                  label: t("OrdersTable:ordersPage.statuses.delivered"), // Added namespace
                   value: "delivered",
                 },
                 {
-                  label: t("ordersPage.statuses.canceled"),
+                  label: t("OrdersTable:ordersPage.statuses.canceled"), // Added namespace
                   value: "cancelled",
                 },
               ],
             },
             {
               key: "shipping_status",
-              label: "Shipping Status",
+              label: t("OrdersTable:search.shipping_status"), // Added namespace
               type: "select",
               options: [
-                { label: t("ordersPage.statuses.pending"), value: "pending" },
-                { label: t("ordersPage.statuses.shipped"), value: "shipped" },
                 {
-                  label: t("ordersPage.statuses.delivered"),
+                  label: t("OrdersTable:ordersPage.statuses.pending"),
+                  value: "pending",
+                }, // Added namespace
+                {
+                  label: t("OrdersTable:ordersPage.statuses.shipped"),
+                  value: "shipped",
+                }, // Added namespace
+                {
+                  label: t("OrdersTable:ordersPage.statuses.delivered"), // Added namespace
                   value: "delivered",
                 },
               ],
             },
-            { key: "from_date", label: "From", type: "date" },
-            { key: "to_date", label: "To", type: "date" },
+            {
+              key: "from_date",
+              label: t("OrdersTable:search.from"),
+              type: "date",
+            }, // Added namespace
+            { key: "to_date", label: t("OrdersTable:search.to"), type: "date" }, // Added namespace
           ]}
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />
       </div>
       <div className="space-y-6">
-        <ComponentCard title={t("ordersPage.all")}>
+        <ComponentCard title={t("OrdersTable:ordersPage.all")}>
+          {" "}
+          {/* Added namespace */}
           <BasicTable
             columns={columns}
             data={ordersData}
@@ -145,7 +199,7 @@ const Orders = () => {
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
             globalError={globalError}
-            loadingText={t("ordersPage.table.loadingText")}
+            loadingText={t("OrdersTable:ordersPage.table.loadingText")}
           />
         </ComponentCard>
       </div>

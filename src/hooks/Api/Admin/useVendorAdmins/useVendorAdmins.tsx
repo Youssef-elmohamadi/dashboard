@@ -72,7 +72,7 @@ export const useCreateAdmin = () => {
   });
 };
 
-export const useUpdateAdmin = (id: string) => {
+export const useUpdateAdmin = (id: ID) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, adminData }: UpdateAdminArguments) => {

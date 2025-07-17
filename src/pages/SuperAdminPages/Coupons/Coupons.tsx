@@ -1,4 +1,3 @@
-import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
@@ -16,6 +15,8 @@ import {
 import { AxiosError } from "axios";
 import { CouponFilters } from "../../../types/Coupons";
 import { TableAlert } from "../../../types/Common";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
 
 const Coupons = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -29,7 +30,7 @@ const Coupons = () => {
     to_date: "",
   });
   const location = useLocation();
-  const { t } = useTranslation(["CouponsTable"]);
+  const { t } = useTranslation(["CouponsTable", "Meta"]);
   const { data, isLoading, isError, refetch, error } = useAllCoupons(
     pageIndex,
     searchValues
@@ -119,9 +120,33 @@ const Coupons = () => {
           message={alertData.message}
         />
       )}
-      <PageMeta
-        title={t("couponsPage.mainTitle")}
-        description="Create and Update Your Coupons"
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إدارة الكوبونات (سوبر أدمن)",
+          en: "Tashtiba - Coupon Management (Super Admin)",
+        }}
+        description={{
+          ar: "صفحة إدارة الكوبونات بواسطة المشرف العام في تشطيبة. عرض، إضافة، تعديل، وحذف الكوبونات.",
+          en: "Manage discount coupons by Super Admin on Tashtiba. View, add, edit, and delete coupons.",
+        }}
+        keywords={{
+          ar: [
+            "كوبونات المشرف العام",
+            "إدارة الكوبونات",
+            "خصومات",
+            "تشطيبة",
+            "سوبر أدمن",
+            "العروض",
+          ],
+          en: [
+            "super admin coupons",
+            "coupon management",
+            "discounts",
+            "Tashtiba",
+            "super admin",
+            "promotions",
+          ],
+        }}
       />
       <PageBreadcrumb
         pageTitle={t("couponsPage.title")}
@@ -130,11 +155,11 @@ const Coupons = () => {
       <div>
         <SearchTable
           fields={[
-            { key: "code", label: "Code", type: "input" },
+            { key: "code", label: "Code", type: "input" }, // تم الإبقاء عليها كما هي حسب التعليمات
 
             {
               key: "status",
-              label: "Status",
+              label: "Status", // تم الإبقاء عليها كما هي حسب التعليمات
               type: "select",
               options: [
                 { label: t("couponsPage.status.active"), value: "1" },
@@ -143,15 +168,15 @@ const Coupons = () => {
             },
             {
               key: "type",
-              label: "Type",
+              label: "Type", // تم الإبقاء عليها كما هي حسب التعليمات
               type: "select",
               options: [
                 { label: t("couponsPage.types.fixed"), value: "fixed" },
                 { label: t("couponsPage.types.percent"), value: "percent" },
               ],
             },
-            { key: "from_date", label: "From", type: "date" },
-            { key: "to_date", label: "To", type: "date" },
+            { key: "from_date", label: "From", type: "date" }, // تم الإبقاء عليها كما هي حسب التعليمات
+            { key: "to_date", label: "To", type: "date" }, // تم الإبقاء عليها كما هي حسب التعليمات
           ]}
           setSearchParam={handleSearch}
           searchValues={searchValues}

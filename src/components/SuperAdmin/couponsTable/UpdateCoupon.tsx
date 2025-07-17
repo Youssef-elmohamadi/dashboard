@@ -8,7 +8,8 @@ import {
   useGetCouponById,
   useUpdateCoupon,
 } from "../../../hooks/Api/SuperAdmin/useCoupons/useCoupons";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
 import { ClientErrors, CouponInput, ServerError } from "../../../types/Coupons";
 import { AxiosError } from "axios";
 
@@ -16,7 +17,7 @@ const UpdateCoupon = () => {
   const { id } = useParams();
 
   const navigate = useNavigate();
-  const { t } = useTranslation(["UpdateCoupon"]);
+  const { t } = useTranslation(["UpdateCoupon", "Meta"]);
   const [loading, setLoading] = useState<boolean>(false);
   const [couponData, setCouponData] = useState<CouponInput>({
     code: "",
@@ -191,7 +192,32 @@ const UpdateCoupon = () => {
   if (isLoading)
     return (
       <>
-        <PageMeta title={t("coupon.mainTitle")} description="Update Coupon" />
+        <SEO // PageMeta replaced with SEO, and data directly set for loading state
+          title={{
+            ar: "تشطيبة - تحديث كوبون - جارٍ التحميل (سوبر أدمن)",
+            en: "Tashtiba - Update Coupon - Loading (Super Admin)",
+          }}
+          description={{
+            ar: "جارٍ تحميل بيانات الكوبون للتحديث بواسطة المشرف العام في تشطيبة. يرجى الانتظار.",
+            en: "Loading coupon data for update by Super Admin on Tashtiba. Please wait.",
+          }}
+          keywords={{
+            ar: [
+              "تحديث كوبون",
+              "تحميل كوبون",
+              "إدارة الكوبونات",
+              "سوبر أدمن",
+              "خصومات",
+            ],
+            en: [
+              "update coupon",
+              "loading coupon",
+              "coupon management",
+              "super admin",
+              "discounts",
+            ],
+          }}
+        />{" "}
         <p className="text-center mt-5">
           {t("coupon.loading") || "Loading..."}
         </p>
@@ -200,7 +226,32 @@ const UpdateCoupon = () => {
   if (!data && !errors.general)
     return (
       <>
-        <PageMeta title={t("coupon.mainTitle")} description="Update Coupon" />
+        <SEO // PageMeta replaced with SEO, and data directly set for not found state
+          title={{
+            ar: "تشطيبة - تحديث كوبون - غير موجود (سوبر أدمن)",
+            en: "Tashtiba - Update Coupon - Not Found (Super Admin)",
+          }}
+          description={{
+            ar: "الكوبون المطلوب للتحديث غير موجود في نظام تشطيبة. يرجى التحقق من المعرف.",
+            en: "The requested coupon for update was not found on Tashtiba. Please verify the ID.",
+          }}
+          keywords={{
+            ar: [
+              "كوبون غير موجود",
+              "تحديث كوبون",
+              "خطأ 404",
+              "سوبر أدمن",
+              "إدارة الكوبونات",
+            ],
+            en: [
+              "coupon not found",
+              "update coupon",
+              "404 error",
+              "super admin",
+              "coupon management",
+            ],
+          }}
+        />{" "}
         <p className="text-center mt-5">{t("coupon.notFound")}</p>
       </>
     );
@@ -208,7 +259,32 @@ const UpdateCoupon = () => {
   if (errors.general) {
     return (
       <>
-        <PageMeta title={t("coupon.mainTitle")} description="Update Coupon" />
+        <SEO // PageMeta replaced with SEO, and data directly set for general error state
+          title={{
+            ar: "تشطيبة - خطأ في تحديث الكوبون (سوبر أدمن)",
+            en: "Tashtiba - Coupon Update Error (Super Admin)",
+          }}
+          description={{
+            ar: "حدث خطأ عام أثناء محاولة تحديث بيانات الكوبون بواسطة المشرف العام في تشطيبة. يرجى المحاولة مرة أخرى.",
+            en: "An error occurred while attempting to update coupon data by Super Admin on Tashtiba. Please try again.",
+          }}
+          keywords={{
+            ar: [
+              "خطأ تحديث كوبون",
+              "مشكلة كوبون",
+              "تحديث تشطيبة",
+              "سوبر أدمن",
+              "فشل التعديل",
+            ],
+            en: [
+              "coupon update error",
+              "coupon issue",
+              "Tashtiba update",
+              "super admin",
+              "update failed",
+            ],
+          }}
+        />{" "}
         <p className="text-center mt-5">{errors.general}</p>
       </>
     );
@@ -216,7 +292,39 @@ const UpdateCoupon = () => {
 
   return (
     <div className="p-4">
-      <PageMeta title={t("coupon.mainTitle")} description="Update Coupon" />
+      <SEO
+        title={{
+          ar: `تشطيبة - تحديث كوبون ${coupon?.code || ""}`,
+          en: `Tashtiba - Update Coupon ${coupon?.code || ""} (Super Admin)`,
+        }}
+        description={{
+          ar: `صفحة تحديث الكوبون "${
+            coupon?.code || "غير معروف"
+          }" بواسطة المشرف العام في تشطيبة. عدّل تفاصيل الكوبون وقيمته وحد الاستخدام.`,
+          en: `Update coupon "${
+            coupon?.code || "unknown"
+          }" details by Super Admin on Tashtiba. Modify coupon value and usage limit.`,
+        }}
+        keywords={{
+          ar: [
+            `تحديث كوبون ${coupon?.code || ""}`,
+            "تعديل خصم",
+            "إدارة الكوبونات",
+            "سوبر أدمن",
+            "رموز الخصم",
+            "تشطيبة",
+          ],
+          en: [
+            `update coupon ${coupon?.code || ""}`,
+            "edit discount",
+            "coupon management",
+            "super admin",
+            "discount codes",
+            "Tashtiba",
+          ],
+        }}
+      />
+
       <h3 className="text-lg font-semibold mb-4 dark:text-white">
         {t("coupon.editCoupon")}
       </h3>

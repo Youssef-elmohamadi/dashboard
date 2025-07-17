@@ -1,14 +1,39 @@
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import UserInfoCard from "../../../components/admin/UserProfile/UserInfoCard";
-import PageMeta from "../../../components/common/SEO/PageMeta";
 import { useTranslation } from "react-i18next";
 export default function UserProfiles() {
-  const { t } = useTranslation(["UserProfile"]);
+  const { t } = useTranslation(["UserProfile", "Meta"]);
   return (
     <>
-      <PageMeta
-        title="React.js Profile Dashboard | TailAdmin - Next.js Admin Dashboard Template"
-        description="This is React.js Profile Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - الملف الشخصي للمشرف العام",
+          en: "Tashtiba - Super Admin Profile",
+        }}
+        description={{
+          ar: "صفحة الملف الشخصي للمشرف العام في تشطيبة. استعرض وحدث بياناتك الشخصية وإعدادات الحساب كمسؤول أعلى.",
+          en: "Super Admin profile page on Tashtiba. View and update your personal information and account settings as a super administrator.",
+        }}
+        keywords={{
+          ar: [
+            "الملف الشخصي للمشرف العام",
+            "بيانات السوبر أدمن",
+            "إعدادات حساب المشرف",
+            "تشطيبة",
+            "البروفايل الإداري",
+            "إدارة السوبر أدمن",
+          ],
+          en: [
+            "super admin profile",
+            "super admin data",
+            "admin account settings",
+            "Tashtiba",
+            "admin profile",
+            "super admin management",
+          ],
+        }}
       />
       <PageBreadcrumb
         pageTitle={t("userProfile.title")}

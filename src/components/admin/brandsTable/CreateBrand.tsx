@@ -6,7 +6,8 @@ import Select from "../../common/form/Select";
 import { useNavigate } from "react-router-dom";
 import ImageUpload from "../../common/ImageUpload";
 import { useCreateBrand } from "../../../hooks/Api/Admin/useBrands/useBrands";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم التعليق على استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
 import {
   BrandClientSideErrors,
   BrandFormErrors,
@@ -14,7 +15,7 @@ import {
 } from "../../../types/Brands";
 
 export default function CreateBrand() {
-  const { t } = useTranslation(["CreateBrand"]);
+  const { t } = useTranslation(["CreateBrand", "Meta"]); // استخدام الـ namespaces هنا
 
   const [brandData, setBrandData] = useState<MutateBrand>({
     name: "",
@@ -64,9 +65,9 @@ export default function CreateBrand() {
       status: "",
     };
     if (!brandData.name) {
-      newErrors.name = t("errors.name");
+      newErrors.name = t("CreateBrand:errors.name"); // إضافة namespace
     } else if (!brandData.status) {
-      newErrors.status = t("errors.status");
+      newErrors.status = t("CreateBrand:errors.status"); // إضافة namespace
     }
     setClientSideErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");
@@ -88,7 +89,7 @@ export default function CreateBrand() {
 
       await mutateAsync(brandFormData);
       navigate("/admin/brands", {
-        state: { successCreate: t("create_success") },
+        state: { successCreate: t("CreateBrand:create_success") }, // إضافة namespace
       });
     } catch (error: any) {
       console.error("Error creating admin:", error);
@@ -96,7 +97,7 @@ export default function CreateBrand() {
       if (status === 403 || status === 401) {
         setErrors({
           ...errors,
-          global: t("errors.global"),
+          global: t("CreateBrand:errors.global"), // إضافة namespace
         });
         return;
       }
@@ -114,7 +115,7 @@ export default function CreateBrand() {
 
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
-        setErrors((prev) => ({ ...prev, general: t("errors.general") }));
+        setErrors((prev) => ({ ...prev, general: t("CreateBrand:errors.general") })); // إضافة namespace
       }
     } finally {
       setLoading(false);
@@ -123,10 +124,39 @@ export default function CreateBrand() {
 
   return (
     <div className="">
-      <PageMeta title={t("main_title")} description="Create Brand" />
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إنشاء ماركة جديدة",
+          en: "Tashtiba - Create New Brand",
+        }}
+        description={{
+          ar: "صفحة إنشاء ماركة (براند) جديدة للمنتجات في تشطيبة. أدخل اسم الماركة وحالتها، وقم بتحميل الشعار.",
+          en: "Create a new product brand on Tashtiba. Enter the brand name, status, and upload the logo.",
+        }}
+        keywords={{
+          ar: [
+            "إنشاء ماركة",
+            "إضافة براند",
+            "ماركة جديدة",
+            "إدارة الماركات",
+            "تشطيبة",
+            "منتجات",
+            "شعار",
+          ],
+          en: [
+            "create brand",
+            "add new brand",
+            "new product brand",
+            "brand management",
+            "Tashtiba",
+            "products",
+            "logo",
+          ],
+        }}
+      />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {t("create_title")}
+          {t("CreateBrand:create_title")} {/* إضافة namespace */}
         </h3>
       </div>
       {errors.global && (
@@ -140,14 +170,14 @@ export default function CreateBrand() {
       <form onSubmit={handleSubmit} className="space-y-6 pt-3">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
-            <Label htmlFor="name">{t("name_label")}</Label>
+            <Label htmlFor="name">{t("CreateBrand:name_label")}</Label> {/* إضافة namespace */}
             <Input
               type="text"
               name="name"
               id="name"
               value={brandData.name}
               onChange={handleChange}
-              placeholder={t("name_placeholder")}
+              placeholder={t("CreateBrand:name_placeholder")}
             />
             {clientSideErrors.name && (
               <p className="text-red-500 text-sm mt-1">
@@ -156,19 +186,19 @@ export default function CreateBrand() {
             )}
             {errors.name[0] && (
               <p className="text-red-600 text-sm mt-1">
-                {t("errors.name_unique")}
+                {t("CreateBrand:errors.name_unique")} {/* إضافة namespace */}
               </p>
             )}
           </div>
           <div>
-            <Label>{t("status_label")}</Label>
+            <Label>{t("CreateBrand:status_label")}</Label> {/* إضافة namespace */}
             <Select
               options={[
-                { label: t("status_active"), value: "active" },
-                { label: t("status_inactive"), value: "inactive" },
+                { label: t("CreateBrand:status_active"), value: "active" }, // إضافة namespace
+                { label: t("CreateBrand:status_inactive"), value: "inactive" }, // إضافة namespace
               ]}
               onChange={handleSelectChange}
-              placeholder={t("status_label")}
+              placeholder={t("CreateBrand:status_label")}
               value={brandData.status}
             />
             {clientSideErrors.status && (
@@ -180,7 +210,7 @@ export default function CreateBrand() {
         </div>
 
         <div>
-          <Label>{t("image_label")}</Label>
+          <Label>{t("CreateBrand:image_label")}</Label> {/* إضافة namespace */}
           <ImageUpload file={brandData.image} onFileChange={handleFileChange} />
         </div>
 
@@ -189,7 +219,7 @@ export default function CreateBrand() {
           disabled={loading}
           className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
-          {loading ? t("loading_button") : t("submit_button")}
+          {loading ? t("CreateBrand:loading_button") : t("CreateBrand:submit_button")} {/* إضافة namespace */}
         </button>
       </form>
     </div>

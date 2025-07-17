@@ -1,4 +1,3 @@
-import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/admin/Tables/BasicTableTS";
@@ -16,6 +15,9 @@ import Alert from "../../../components/ui/alert/Alert";
 import { AxiosError } from "axios";
 import { SearchValues } from "../../../types/Brands";
 import { ID, TableAlert } from "../../../types/Common";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // This was already commented out, good.
+import SEO from "../../../components/common/SEO/seo";
+
 const Brands = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
@@ -24,16 +26,16 @@ const Brands = () => {
     name: "",
   });
   const location = useLocation();
-  const { t } = useTranslation(["BrandsTable"]);
+  const { t } = useTranslation(["BrandsTable"]); // Using namespaces here
   const { data, isLoading, isError, refetch, error } = useAllBrandsPaginate(
     pageIndex,
     searchValues
   );
-  console.log(data);
 
   const pageSize = data?.per_page ?? 15;
   const brandsData = data?.data ?? [];
   const totalBrands = data?.total ?? 0;
+
   useEffect(() => {
     if (isError && error instanceof AxiosError) {
       const status = error.response?.status;
@@ -52,22 +54,29 @@ const Brands = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: t("brandsPage.createdSuccess"),
-        message: location.state.successCreate,
+        title: t("BrandsTable:brandsPage.createdSuccessTitle"), // Added namespace
+        message: t("BrandsTable:brandsPage.createdSuccessMessage", {
+          message: location.state.successCreate,
+        }), // Added namespace
       });
+      window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
-        title: t("brandsPage.updatedSuccess"),
-        message: location.state.successEdit,
+        title: t("BrandsTable:brandsPage.updatedSuccessTitle"), // Added namespace
+        message: t("BrandsTable:brandsPage.updatedSuccessMessage", {
+          message: location.state.successEdit,
+        }), // Added namespace
       });
+      window.history.replaceState({}, document.title);
     }
     const timer = setTimeout(() => {
       setAlertData(null);
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [location.state]);
+  }, [location.state, t]); // Added t to dependencies
+
   const handleSearch = (key: string, value: string) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -75,24 +84,26 @@ const Brands = () => {
     }));
     setPageIndex(0);
   };
+
   const { mutateAsync } = useDeleteBrand();
   const handleDelete = async (id: ID) => {
     await alertDelete(id, mutateAsync, refetch, {
-      confirmTitle: t("brandsPage.delete.confirmTitle"),
-      confirmText: t("brandsPage.delete.confirmText"),
-      confirmButtonText: t("brandsPage.delete.confirmButtonText"),
-      cancelButtonText: t("brandsPage.delete.cancelButtonText"),
-      successTitle: t("brandsPage.delete.successTitle"),
-      successText: t("brandsPage.delete.successText"),
-      errorTitle: t("brandsPage.delete.errorTitle"),
-      errorText: t("brandsPage.delete.errorText"),
-      lastButton: t("brandsPage.delete.lastButton"),
+      confirmTitle: t("BrandsTable:brandsPage.delete.confirmTitle"), // Added namespace
+      confirmText: t("BrandsTable:brandsPage.delete.confirmText"), // Added namespace
+      confirmButtonText: t("BrandsTable:brandsPage.delete.confirmButtonText"), // Added namespace
+      cancelButtonText: t("BrandsTable:brandsPage.delete.cancelButtonText"), // Added namespace
+      successTitle: t("BrandsTable:brandsPage.delete.successTitle"), // Added namespace
+      successText: t("BrandsTable:brandsPage.delete.successText"), // Added namespace
+      errorTitle: t("BrandsTable:brandsPage.delete.errorTitle"), // Added namespace
+      errorText: t("BrandsTable:brandsPage.delete.errorText"), // Added namespace
+      lastButton: t("BrandsTable:brandsPage.delete.lastButton"), // Added namespace
     });
   };
 
   const columns = buildColumns({
     includeImageAndNameCell: true,
     includeStatus: true,
+    includeCommissionRate: true,
     includeUpdatedAt: true,
     includeCreatedAt: true,
     includeActions: true,
@@ -107,22 +118,60 @@ const Brands = () => {
           message={alertData.message}
         />
       )}
-      <PageMeta
-        title={t("brandsPage.mainTitle")}
-        description="Create and Update Your Brands"
+      {/* --- CORRECTED SEO CONTENT FOR BRANDS PAGE --- */}
+      <SEO
+        title={{
+          ar: "تشطيبة - إدارة الماركات",
+          en: "Tashtiba - Brand Management",
+        }}
+        description={{
+          ar: "صفحة إدارة الماركات والبراندات في تشطيبة. عرض، إضافة، تعديل، وحذف الماركات.",
+          en: "Manage product brands on Tashtiba. View, add, edit, and delete brands.",
+        }}
+        keywords={{
+          ar: [
+            "الماركات",
+            "إدارة الماركات",
+            "البراندات",
+            "تشطيبة",
+            "إدارة المتجر",
+            "المنتجات",
+            "الشركات",
+          ],
+          en: [
+            "brands",
+            "brand management",
+            "product brands",
+            "Tashtiba",
+            "store management",
+            "companies",
+          ],
+        }}
+        alternates={[
+          { lang: "ar", href: "https://tashtiba.vercel.app/admin/brands" }, // Updated href to be specific for brands page
+          { lang: "en", href: "https://tashtiba.vercel.app/en/admin/brands" }, // Updated href to be specific for brands page
+          // { lang: "x-default", href: "https://tashtiba.vercel.app/en" }, // Removed this as it was a generic homepage example
+        ]}
       />
-      <PageBreadcrumb pageTitle={t("brandsPage.title")} userType="admin" />
+      {/* --- END OF CORRECTED SEO CONTENT --- */}
+      <PageBreadcrumb
+        pageTitle={t("BrandsTable:brandsPage.title")}
+        userType="admin"
+      />{" "}
+      {/* Added namespace */}
       <div>
         <SearchTable
-          fields={[{ key: "name", label: "Name", type: "input" }]}
+          fields={[
+            { key: "name", label: t("BrandsTable:search.name"), type: "input" },
+          ]} // Added namespace
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />
       </div>
       <div className="space-y-6">
         <ComponentCard
-          title={t("brandsPage.all")}
-          headerAction={t("brandsPage.addNew")}
+          title={t("BrandsTable:brandsPage.all")} // Added namespace
+          headerAction={t("BrandsTable:brandsPage.addNew")} // Added namespace
           href="/admin/brands/create"
         >
           <BasicTable
@@ -137,7 +186,7 @@ const Brands = () => {
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
             globalError={globalError}
-            loadingText={t("brandsPage.table.loadingText")}
+            loadingText={t("BrandsTable:brandsPage.table.loadingText")} // Added namespace
           />
         </ComponentCard>
       </div>

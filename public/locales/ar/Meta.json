@@ -1,0 +1,134 @@
+{
+  "userProfile": {
+    "title": "الملف الشخصي",
+    "description": "عرض وتعديل بيانات المستخدم الشخصية"
+  },
+  "admins": {
+    "title": "كل المديرين",
+    "description": "إدارة جميع حسابات المديرين في النظام"
+  },
+  "createAdmin": {
+    "title": "إنشاء مدير",
+    "description": "إضافة مدير جديد للنظام وتحديد صلاحياته"
+  },
+  "updateAdmin": {
+    "title": "تعديل مدير",
+    "description": "تحديث بيانات مدير حالي"
+  },
+  "roles": {
+    "title": "كل الصلاحيات",
+    "description": "إدارة الصلاحيات وتوزيعها على المستخدمين"
+  },
+  "createRole": {
+    "title": "إنشاء صلاحية",
+    "description": "إضافة صلاحية جديدة وتحديد خصائصها"
+  },
+  "updateRole": {
+    "title": "تعديل صلاحية",
+    "description": "تحديث تفاصيل صلاحية موجودة"
+  },
+  "categories": {
+    "title": "كل الفئات",
+    "description": "إدارة الفئات الرئيسية والفرعية للمنتجات"
+  },
+  "createCategory": {
+    "title": "إنشاء فئة",
+    "description": "إضافة فئة جديدة ضمن التصنيفات"
+  },
+  "updateCategory": {
+    "title": "تعديل فئة",
+    "description": "تحديث بيانات فئة موجودة"
+  },
+  "products": {
+    "title": "كل المنتجات",
+    "description": "عرض وإدارة جميع المنتجات في المنصة"
+  },
+  "createProduct": {
+    "title": "إنشاء منتج",
+    "description": "إضافة منتج جديد بكامل تفاصيله"
+  },
+  "updateProduct": {
+    "title": "تعديل منتج",
+    "description": "تحديث معلومات منتج حالي"
+  },
+  "productDetails": {
+    "title": "تفاصيل المنتج",
+    "description": "عرض التفاصيل الكاملة للمنتج"
+  },
+  "productsReport": {
+    "title": "تقرير المنتجات",
+    "description": "تحليلات وتقارير شاملة عن المنتجات"
+  },
+  "brands": {
+    "title": "كل العلامات التجارية",
+    "description": "إدارة العلامات التجارية المضافة إلى النظام"
+  },
+  "createBrand": {
+    "title": "إنشاء علامة تجارية",
+    "description": "إضافة علامة تجارية جديدة إلى المنصة"
+  },
+  "updateBrand": {
+    "title": "تعديل علامة تجارية",
+    "description": "تحديث معلومات علامة تجارية موجودة"
+  },
+  "brandDetails": {
+    "title": "تفاصيل العلامة التجارية",
+    "description": "عرض تفاصيل العلامة التجارية"
+  },
+  "orders": {
+    "title": "كل الطلبات",
+    "description": "إدارة وتتبع جميع الطلبات في النظام"
+  },
+  "orderDetails": {
+    "title": "تفاصيل الطلب",
+    "description": "عرض معلومات الطلب وحالته"
+  },
+  "ordersReport": {
+    "title": "تقرير الطلبات",
+    "description": "تحليلات وتقارير شاملة حول الطلبات"
+  },
+  "vendors": {
+    "title": "كل المتاجر",
+    "description": "عرض وإدارة جميع المتاجر والبائعين"
+  },
+  "vendorDetails": {
+    "title": "تفاصيل المتجر",
+    "description": "عرض معلومات المتجر والبائع"
+  },
+  "coupons": {
+    "title": "كل الكوبونات",
+    "description": "إدارة الكوبونات والعروض الترويجية"
+  },
+  "createCoupon": {
+    "title": "إنشاء كوبون",
+    "description": "إضافة كوبون خصم جديد"
+  },
+  "updateCopoun": {
+    "title": "تعديل الكوبون",
+    "description": "تحديث تفاصيل كوبون موجود"
+  },
+  "copounDetails": {
+    "title": "تفاصيل الكوبون",
+    "description": "عرض معلومات الكوبون الكامل"
+  },
+  "banners": {
+    "title": "كل البانرات",
+    "description": "إدارة البانرات الترويجية في الموقع"
+  },
+  "createBanner": {
+    "title": "إنشاء بانر",
+    "description": "إضافة بانر جديد للعرض في الواجهة"
+  },
+  "updateBanner": {
+    "title": "تعديل بانر",
+    "description": "تحديث تصميم أو محتوى بانر موجود"
+  },
+  "bannerDetails": {
+    "title": "تفاصيل البانر",
+    "description": "عرض معلومات بانر محدد"
+  },
+  "vendorSettings": {
+    "title": "إعدادات المتجر",
+    "description": "تعديل إعدادات ومعلومات المتجر"
+  }
+}

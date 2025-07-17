@@ -14,11 +14,19 @@ import {
 import { Product } from "../../../types/Product";
 import { toast } from "react-toastify";
 import LazyImage from "../../common/LazyImage";
-const ProductCard = ({ product }: { product: Product }) => {
-  const { openModal } = useModal();
-  const { t } = useTranslation(["EndUserProductCard"]);
-  const [is_fav, setIs_fav] = useState<boolean | undefined>(product?.is_fav);
 
+interface ProductCardProps {
+  product: Product;
+  loadingPriority?: "eager" | "lazy";
+}
+
+const ProductCard = ({
+  product,
+  loadingPriority = "lazy",
+}: ProductCardProps) => {
+  const { openModal } = useModal();
+  const { t } = useTranslation("EndUserProductCard");
+  const [is_fav, setIs_fav] = useState<boolean | undefined>(product?.is_fav);
   const { lang } = useParams();
   const { mutateAsync: addToFavorite } = useAddFavorite();
   const { mutateAsync: removeFromFavorite } = useRemoveFavorite();
@@ -55,6 +63,8 @@ const ProductCard = ({ product }: { product: Product }) => {
           src={product?.images[0]?.image}
           alt={altText}
           className="w-full h-full object-cover rounded"
+          loading={loadingPriority}
+          fetchPriority={loadingPriority === "eager" ? "high" : undefined}
         />
       </div>
 

@@ -9,13 +9,15 @@ import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useCreateAdmin } from "../../../hooks/Api/Admin/useVendorAdmins/useVendorAdmins";
 import { useRoles } from "../../../hooks/Api/Admin/useRoles/useRoles";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم التعليق على استيراد PageMeta
+import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
 import {
   ClientErrors,
   CreateAdminInput,
   ServerErrors,
 } from "../../../types/Admins";
 import { AxiosError } from "axios";
+
 export default function CreateAdmin() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -47,7 +49,7 @@ export default function CreateAdmin() {
     role: "",
   });
 
-  const { t } = useTranslation(["CreateAdmin"]);
+  const { t } = useTranslation(["CreateAdmin", "Meta"]);
   const validate = () => {
     const newErrors = {
       first_name: "",
@@ -58,25 +60,25 @@ export default function CreateAdmin() {
       role: "",
     };
     if (!adminData.first_name) {
-      newErrors.first_name = t("admin.errors.first_name");
+      newErrors.first_name = t("CreateAdmin:admin.errors.first_name");
     } else if (!adminData.last_name) {
-      newErrors.last_name = t("admin.errors.last_name");
+      newErrors.last_name = t("CreateAdmin:admin.errors.last_name");
     } else if (!adminData.email) {
-      newErrors.email = t("admin.errors.email_required");
+      newErrors.email = t("CreateAdmin:admin.errors.email_required");
     } else if (
       !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(adminData.email)
     ) {
-      newErrors.email = t("admin.errors.email_invalid");
+      newErrors.email = t("CreateAdmin:admin.errors.email_invalid");
     } else if (!adminData.phone) {
-      newErrors.phone = t("admin.errors.phone_required");
+      newErrors.phone = t("CreateAdmin:admin.errors.phone_required");
     } else if (!/^01[0125][0-9]{8}$/.test(adminData.phone)) {
-      newErrors.phone = t("admin.errors.phone_invalid");
+      newErrors.phone = t("CreateAdmin:admin.errors.phone_invalid");
     } else if (!adminData.password) {
-      newErrors.password = t("admin.errors.password");
+      newErrors.password = t("CreateAdmin:admin.errors.password");
     } else if (adminData.password.length < 8) {
-      newErrors.password = t("admin.errors.length_password");
+      newErrors.password = t("CreateAdmin:admin.errors.length_password");
     } else if (!adminData.role) {
-      newErrors.role = t("admin.errors.role");
+      newErrors.role = t("CreateAdmin:admin.errors.role");
     }
     setClientSideErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");
@@ -105,9 +107,9 @@ export default function CreateAdmin() {
     if (isRoleError && roleError instanceof AxiosError) {
       const status = roleError?.response?.status;
       if (status === 401 || status === 403) {
-        setFetchingRoleError(t("admin.errors.global"));
+        setFetchingRoleError(t("CreateAdmin:admin.errors.global"));
       } else {
-        setFetchingRoleError(t("admin.errors.fetching_roles"));
+        setFetchingRoleError(t("CreateAdmin:admin.errors.fetching_roles"));
       }
     }
   }, [isRoleError, roleError, t, options]);
@@ -131,7 +133,7 @@ export default function CreateAdmin() {
     try {
       await mutateAsync(adminData);
       navigate("/admin/admins", {
-        state: { successCreate: t("admin.success_message") },
+        state: { successCreate: t("CreateAdmin:admin.success_message") },
       });
     } catch (error: any) {
       console.error("Error creating admin:", error);
@@ -140,7 +142,7 @@ export default function CreateAdmin() {
       if (status === 403 || status === 401) {
         setErrors((prev) => ({
           ...prev,
-          global: t("admin.errors.global"),
+          global: t("CreateAdmin:admin.errors.global"),
         }));
       } else {
         const rawErrors = error?.response?.data.errors;
@@ -162,7 +164,7 @@ export default function CreateAdmin() {
         } else {
           setErrors((prev) => ({
             ...prev,
-            general: t("admin.errors.general"),
+            general: t("CreateAdmin:admin.errors.general"),
           }));
         }
       }
@@ -173,10 +175,37 @@ export default function CreateAdmin() {
 
   return (
     <div>
-      <PageMeta title={t("admin.main_title")} description="Create Admin" />
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إنشاء مسؤول جديد",
+          en: "Tashtiba - Create New Admin",
+        }}
+        description={{
+          ar: "صفحة إنشاء حساب مسؤول جديد في نظام تشطيبة. املأ البيانات المطلوبة لإنشاء حساب إداري.",
+          en: "Create a new administrator account on Tashtiba system. Fill in the required details to set up an admin account.",
+        }}
+        keywords={{
+          ar: [
+            "إنشاء مسؤول",
+            "إضافة أدمن",
+            "حساب مسؤول جديد",
+            "تشطيبة",
+            "إدارة المستخدمين",
+            "صلاحيات",
+          ],
+          en: [
+            "create admin",
+            "add administrator",
+            "new admin account",
+            "Tashtiba",
+            "user management",
+            "permissions",
+          ],
+        }}
+      />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {t("admin.create_title")}
+          {t("CreateAdmin:admin.create_title")}
         </h3>
       </div>
       <form
@@ -195,12 +224,12 @@ export default function CreateAdmin() {
         )}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
-            <Label htmlFor="input">{t("admin.first_name")}</Label>
+            <Label htmlFor="input">{t("CreateAdmin:admin.first_name")}</Label>
             <Input
               type="text"
               id="input"
               name="first_name"
-              placeholder={t("admin.placeholder.first_name")}
+              placeholder={t("CreateAdmin:admin.placeholder.first_name")}
               onChange={handleChange}
             />
             {errors.first_name?.[0] && (
@@ -215,12 +244,12 @@ export default function CreateAdmin() {
             )}
           </div>
           <div>
-            <Label htmlFor="inputTwo">{t("admin.last_name")}</Label>
+            <Label htmlFor="inputTwo">{t("CreateAdmin:admin.last_name")}</Label>
             <Input
               type="text"
               id="inputTwo"
               name="last_name"
-              placeholder={t("admin.placeholder.last_name")}
+              placeholder={t("CreateAdmin:admin.placeholder.last_name")}
               onChange={handleChange}
             />
             {errors.last_name?.[0] && (
@@ -234,7 +263,7 @@ export default function CreateAdmin() {
           </div>
         </div>
         <div className="w-full">
-          <Label>{t("admin.select_role")}</Label>
+          <Label>{t("CreateAdmin:admin.select_role")}</Label>
           <Select
             options={options?.map((role: { name: string }) => ({
               value: role.name,
@@ -242,7 +271,7 @@ export default function CreateAdmin() {
             }))}
             value={adminData.role}
             onChange={handleSelectChange}
-            placeholder={t("admin.placeholder.select_role")}
+            placeholder={t("CreateAdmin:admin.placeholder.select_role")}
             className="dark:bg-dark-900"
           />
           {errors.role?.[0] && (
@@ -256,17 +285,17 @@ export default function CreateAdmin() {
           )}
         </div>
         <div className="w-full">
-          <Label htmlFor="inputTwo">{t("admin.email")}</Label>
+          <Label htmlFor="inputTwo">{t("CreateAdmin:admin.email")}</Label>
           <Input
             type="email"
             id="inputTwo"
             name="email"
-            placeholder={t("admin.placeholder.email")}
+            placeholder={t("CreateAdmin:admin.placeholder.email")}
             onChange={handleChange}
           />
           {errors.email?.[0] && (
             <p className="text-red-500 text-sm mt-1">
-              {t("admin.errors.email_taken")}
+              {t("CreateAdmin:admin.errors.email_taken")}
             </p>
           )}
           {clientSideErrors.email && (
@@ -276,17 +305,17 @@ export default function CreateAdmin() {
           )}
         </div>
         <div className="w-full">
-          <Label htmlFor="inputTwo">{t("admin.phone")}</Label>
+          <Label htmlFor="inputTwo">{t("CreateAdmin:admin.phone")}</Label>
           <Input
             type="text"
             id="inputTwo"
             name="phone"
-            placeholder={t("admin.placeholder.phone")}
+            placeholder={t("CreateAdmin:admin.placeholder.phone")}
             onChange={handleChange}
           />
           {errors.phone?.[0] && (
             <p className="text-red-500 text-sm mt-1">
-              {t("admin.errors.phone_taken")}
+              {t("CreateAdmin:admin.errors.phone_taken")}
             </p>
           )}
           {clientSideErrors.phone && (
@@ -296,12 +325,12 @@ export default function CreateAdmin() {
           )}
         </div>
         <div className="w-full">
-          <Label>{t("admin.password")}</Label>
+          <Label>{t("CreateAdmin:admin.password")}</Label>
           <div className="relative">
             <Input
               type={showPassword ? "text" : "password"}
               name="password"
-              placeholder={t("admin.placeholder.password")}
+              placeholder={t("CreateAdmin:admin.placeholder.password")}
               onChange={handleChange}
             />
             {errors.password?.[0] && (
@@ -333,7 +362,9 @@ export default function CreateAdmin() {
           className="bg-blue-600 flex gap-4 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
           <FiUserPlus size={20} />
-          {loading ? t("admin.button.submitting") : t("admin.button.submit")}
+          {loading
+            ? t("CreateAdmin:admin.button.submitting")
+            : t("CreateAdmin:admin.button.submit")}
         </button>
       </form>
     </div>

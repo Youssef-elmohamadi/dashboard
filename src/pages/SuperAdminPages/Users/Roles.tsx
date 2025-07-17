@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
-import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
+import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal"; // هذا الاستيراد غير مستخدم في هذه الصفحة، لذا سيبقى كما هو
 import { useTranslation } from "react-i18next";
 import {
   useDeleteRole,
@@ -15,6 +15,8 @@ import {
 } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
 import { AxiosError } from "axios";
 import { SearchValues } from "../../../types/Roles";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
 
 const Roles = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -24,7 +26,7 @@ const Roles = () => {
     name: "",
   });
   const location = useLocation();
-  const { t } = useTranslation(["RolesTable"]);
+  const { t } = useTranslation(["RolesTable", "Meta"]);
   const { data, isLoading, isError, error, refetch } = useRolesPaginate(
     pageIndex,
     searchValues
@@ -111,14 +113,38 @@ const Roles = () => {
           message={alertData.message}
         />
       )}
-      <PageMeta
-        title={t("rolesPage.mainTitle")}
-        description="This is the roles listing page."
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إدارة الصلاحيات (سوبر أدمن)",
+          en: "Tashtiba - Role Management (Super Admin)",
+        }}
+        description={{
+          ar: "صفحة إدارة صلاحيات المستخدمين بواسطة المشرف العام في تشطيبة. عرض، إضافة، تعديل، وحذف الأدوار والصلاحيات.",
+          en: "Manage user roles and permissions by Super Admin on Tashtiba. View, add, edit, and delete roles and their access rights.",
+        }}
+        keywords={{
+          ar: [
+            "صلاحيات المشرف العام",
+            "إدارة الصلاحيات",
+            "أدوار المستخدمين",
+            "تشطيبة",
+            "سوبر أدمن",
+            "إدارة الموقع",
+          ],
+          en: [
+            "super admin roles",
+            "role management",
+            "user permissions",
+            "Tashtiba",
+            "super admin",
+            "site management",
+          ],
+        }}
       />
       <PageBreadcrumb pageTitle={t("rolesPage.title")} userType="super_admin" />
       <div>
         <SearchTable
-          fields={[{ key: "name", label: "Name", type: "input" }]}
+          fields={[{ key: "name", label: "Name", type: "input" }]} // تم الإبقاء عليها كما هي حسب التعليمات
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />

@@ -25,14 +25,14 @@ const VendorsCarousel = () => {
     return (
       <section
         dir="rtl"
-        className="py-16 bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900"
+        className="py-16 bg-gradient-to-b from-white to-gray-50"
       >
         <div className="enduser_container flex flex-col items-center justify-center px-4 py-10 min-h-[30vh]">
           <div className="animate-pulse flex flex-col items-center">
-            <div className="w-28 h-28 mb-4 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+            <div className="w-28 h-28 mb-4 rounded-full bg-gray-200 flex items-center justify-center">
               {/* Placeholder for image */}
               <svg
-                className="w-16 h-16 text-gray-300 dark:text-gray-600"
+                className="w-16 h-16 text-gray-300"
                 fill="currentColor"
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"
@@ -44,9 +44,9 @@ const VendorsCarousel = () => {
                 ></path>
               </svg>
             </div>
-            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-2"></div>
-            <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-32"></div>
-            <span className="mt-4 text-base text-gray-500 dark:text-gray-400">
+            <div className="h-4 bg-gray-200  rounded w-48 mb-2"></div>
+            <div className="h-3 bg-gray-200  rounded w-32"></div>
+            <span className="mt-4 text-base text-gray-500 ">
               {loadingAltText}
             </span>
           </div>
@@ -94,17 +94,17 @@ const VendorsCarousel = () => {
           {vendors.map((vendor: Vendor) => (
             <SwiperSlide key={vendor.id}>
               <div
-                className="group relative bg-white dark:bg-gray-800 rounded-2xl p-6 min-h-[300px] flex flex-col items-center justify-between text-center 
+                className="group relative bg-white  rounded-2xl p-6 min-h-[300px] flex flex-col items-center justify-between text-center 
                           transition-all duration-500 transform hover:-translate-y-2 hover:shadow-md
-                          border border-gray-100 dark:border-gray-700 overflow-hidden"
+                          border border-gray-100  overflow-hidden"
               >
                 {/* Background overlay/gradient for visual interest */}
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-white to-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 dark:from-gray-900 dark:via-gray-800 dark:to-gray-800"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-white to-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 "></div>
                 <div className="relative z-10 flex flex-col items-center justify-between h-full w-full">
                   {/* Logo */}
                   <div
-                    className="w-28 h-28 mb-4 rounded-full bg-purple-100 dark:bg-purple-900 overflow-hidden 
-                                  flex items-center justify-center p-1 border-4 border-white dark:border-gray-800 
+                    className="w-28 h-28 mb-4 rounded-full bg-purple-100  overflow-hidden 
+                                  flex items-center justify-center p-1 border-4 border-white 
                                  transition-all duration-300 group-hover:border-purple-300"
                   >
                     <LazyImage
@@ -119,13 +119,13 @@ const VendorsCarousel = () => {
                   </div>
 
                   {/* Name */}
-                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900  mb-2">
                     {vendor.name}
                   </h3>
 
                   {/* Description */}
                   {vendor.description && (
-                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 line-clamp-3 leading-relaxed">
+                    <p className="mt-2 text-sm text-gray-600  line-clamp-3 leading-relaxed">
                       {vendor.description}
                     </p>
                   )}

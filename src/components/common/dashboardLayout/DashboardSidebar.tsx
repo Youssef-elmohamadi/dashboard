@@ -96,29 +96,6 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
         handleLogout("admin", navigate);
       },
     },
-    // {
-    //   icon: <CalenderIcon />,
-    //   name: "Calendar",
-    //   path: "/calendar",
-    // },
-    // {
-    //   name: "Forms",
-    //   icon: <ListIcon />,
-    //   subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
-    // },
-    // {
-    //   name: "Tables",
-    //   icon: <TableIcon />,
-    //   subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-    // },
-    // {
-    //   name: "Pages",
-    //   icon: <PageIcon />,
-    //   subItems: [
-    //     { name: "Blank Page", path: "/blank", pro: false },
-    //     { name: "404 Error", path: "/error-404", pro: false },
-    //   ],
-    // },
   ];
   const SuperAdminNavItems: NavItem[] = [
     {
@@ -441,7 +418,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
                 />
                 <img
                   className="hidden dark:block"
-                  src="/images/logo/logo-white.png"
+                  src="/images/logo/dark-logo.webp"
                   alt="Logo"
                   width={150}
                   height={40}
@@ -469,7 +446,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
                 />
                 <img
                   className="hidden dark:block"
-                  src="/images/logo/logo-white.png"
+                  src="/images/logo/dark-logo.webp"
                   alt="Logo"
                   width={150}
                   height={40}

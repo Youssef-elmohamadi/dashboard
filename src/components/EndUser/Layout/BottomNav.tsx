@@ -2,10 +2,13 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoHomeOutline } from "react-icons/io5";
 import { BiCategory } from "react-icons/bi";
 import { FiShoppingCart, FiUser, FiBell } from "react-icons/fi";
-import { useState } from "react";
-import MenuSidebar from "../Layout/MenuSidebar";
+import { useState, Suspense, lazy } from "react"; // استيراد Suspense و lazy
+// import MenuSidebar from "../Layout/MenuSidebar"; // لن نستوردها مباشرة بعد الآن
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+
+// تعريف MenuSidebar كـ component يتم تحميله كسولاً
+const LazyMenuSidebar = lazy(() => import("../Layout/MenuSidebar"));
 
 const BottomNav = () => {
   const location = useLocation();
@@ -17,19 +20,24 @@ const BottomNav = () => {
   const hiddenRoutes = [
     `/${lang}/signin`,
     `/${lang}/signup`,
-    `/${lang}//reset-password`,
+    `/${lang}//reset-password`, // تحقق من هذا المسار المكرر لـ "//"
   ];
   const shouldHide = hiddenRoutes.includes(location.pathname);
 
   const { t } = useTranslation(["EndUserBottomNav"]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   if (shouldHide) {
     return null;
   }
 
   return (
     <>
-      <MenuSidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+      {/* تضمين LazyMenuSidebar داخل Suspense مع fallback={null} */}
+      <Suspense fallback={null}>
+        <LazyMenuSidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+      </Suspense>
+
       <div className="flex justify-center items-center">
         <div className="lg:hidden flex h-20 w-[600px] max-w-full fixed bottom-5 rounded-4xl justify-between items-center px-5 py-2 bg-[rgba(255,255,255,0.9)] border border-gray-200 z-10 shadow-md">
           {/* Home */}

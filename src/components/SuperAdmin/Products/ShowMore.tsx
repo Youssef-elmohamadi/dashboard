@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetProductById } from "../../../hooks/Api/SuperAdmin/useProducts/useSuperAdminProductsManage";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
 import { AxiosError } from "axios";
 
 const ProductDetails: React.FC = () => {
   const { id } = useParams();
-  const { t } = useTranslation(["ProductDetails"]);
+  const { t } = useTranslation(["ProductDetails", "Meta"]);
   const [globalError, setGlobalError] = useState(false);
   const { data, isLoading: loading, error, isError } = useGetProductById(id!!);
   const product = data?.data.data;
@@ -31,7 +32,34 @@ const ProductDetails: React.FC = () => {
   if (!id) {
     return (
       <>
-        <PageMeta title={t("main_title")} description="Update Product" />
+        <SEO // PageMeta replaced with SEO, and data directly set for missing ID
+          title={{
+            ar: "تشطيبة - تفاصيل المنتج - معرف مفقود (سوبر أدمن)",
+            en: "Tashtiba - Product Details - ID Missing (Super Admin)",
+          }}
+          description={{
+            ar: "صفحة تفاصيل المنتج تتطلب معرف منتج صالح. يرجى التأكد من توفير المعرف.",
+            en: "The product details page requires a valid product ID. Please ensure the ID is provided.",
+          }}
+          keywords={{
+            ar: [
+              "تفاصيل منتج",
+              "معرف مفقود",
+              "منتج غير صالح",
+              "تشطيبة",
+              "إدارة المنتجات",
+              "سوبر أدمن",
+            ],
+            en: [
+              "product details",
+              "missing ID",
+              "invalid product",
+              "Tashtiba",
+              "product management",
+              "super admin",
+            ],
+          }}
+        />{" "}
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("no_data")}
         </div>
@@ -42,7 +70,32 @@ const ProductDetails: React.FC = () => {
   if (loading) {
     return (
       <>
-        <PageMeta title={t("main_title")} description="Update Product" />
+        <SEO // PageMeta replaced with SEO, and data directly set for loading state
+          title={{
+            ar: "تشطيبة - تفاصيل المنتج - جارٍ التحميل (سوبر أدمن)",
+            en: "Tashtiba - Product Details - Loading (Super Admin)",
+          }}
+          description={{
+            ar: "جارٍ تحميل تفاصيل المنتج بواسطة المشرف العام في تشطيبة. يرجى الانتظار.",
+            en: "Loading product details by Super Admin on Tashtiba. Please wait.",
+          }}
+          keywords={{
+            ar: [
+              "تفاصيل منتج",
+              "تحميل المنتج",
+              "منتجات تشطيبة",
+              "إدارة المنتجات",
+              "سوبر أدمن",
+            ],
+            en: [
+              "product details",
+              "loading product",
+              "Tashtiba products",
+              "product management",
+              "super admin",
+            ],
+          }}
+        />{" "}
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("loading")}
         </div>
@@ -53,7 +106,34 @@ const ProductDetails: React.FC = () => {
   if (!product && !globalError) {
     return (
       <>
-        <PageMeta title={t("main_title")} description="Update Product" />
+        <SEO // PageMeta replaced with SEO, and data directly set for not found state
+          title={{
+            ar: "تشطيبة - تفاصيل المنتج - غير موجود (سوبر أدمن)",
+            en: "Tashtiba - Product Details - Not Found (Super Admin)",
+          }}
+          description={{
+            ar: "المنتج المطلوب غير موجود في نظام تشطيبة. يرجى التحقق من المعرف.",
+            en: "The requested product was not found in Tashtiba. Please check the ID.",
+          }}
+          keywords={{
+            ar: [
+              "منتج غير موجود",
+              "تفاصيل منتج",
+              "خطأ 404",
+              "تشطيبة",
+              "إدارة المنتجات",
+              "سوبر أدمن",
+            ],
+            en: [
+              "product not found",
+              "product details",
+              "404 error",
+              "Tashtiba",
+              "product management",
+              "super admin",
+            ],
+          }}
+        />{" "}
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("not_found")}
         </div>
@@ -63,7 +143,34 @@ const ProductDetails: React.FC = () => {
   if (globalError) {
     return (
       <>
-        <PageMeta title={t("main_title")} description="Update Product" />
+        <SEO // PageMeta replaced with SEO, and data directly set for global error state
+          title={{
+            ar: "تشطيبة - تفاصيل المنتج - خطأ عام (سوبر أدمن)",
+            en: "Tashtiba - Product Details - Error (Super Admin)",
+          }}
+          description={{
+            ar: "حدث خطأ عام أثناء تحميل تفاصيل المنتج بواسطة المشرف العام في تشطيبة. يرجى المحاولة لاحقًا.",
+            en: "A global error occurred while loading product details by Super Admin on Tashtiba. Please try again later.",
+          }}
+          keywords={{
+            ar: [
+              "خطأ",
+              "مشكلة تقنية",
+              "تفاصيل المنتج",
+              "تشطيبة",
+              "فشل التحميل",
+              "سوبر أدمن",
+            ],
+            en: [
+              "error",
+              "technical issue",
+              "product details",
+              "Tashtiba",
+              "loading failed",
+              "super admin",
+            ],
+          }}
+        />{" "}
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("global_error")}
         </div>
@@ -73,11 +180,45 @@ const ProductDetails: React.FC = () => {
 
   return (
     <div className="product-details p-6 max-w-6xl mx-auto space-y-10">
-      <PageMeta title={t("main_title")} description="Update Product" />
+      <SEO
+        title={{
+          ar: `تشطيبة - ${product?.name || "تفاصيل المنتج"} (سوبر أدمن)`,
+          en: `Tashtiba - ${product?.name || "Product Details"} (Super Admin)`,
+        }}
+        description={{
+          ar: `استعرض تفاصيل المنتج "${
+            product?.name || "غير معروف"
+          }" بواسطة المشرف العام في تشطيبة، بما في ذلك السعر، الوصف، والصور.`,
+          en: `View details for product "${
+            product?.name || "Unknown"
+          }" by Super Admin on Tashtiba, including price, description, and images.`,
+        }}
+        keywords={{
+          ar: [
+            `${product?.name || "منتج"}`,
+            "تفاصيل المنتج",
+            "عرض منتج",
+            "سعر المنتج",
+            "وصف المنتج",
+            "صور المنتج",
+            "تشطيبة",
+            "سوبر أدمن",
+          ],
+          en: [
+            `${product?.name || "product"}`,
+            "product details",
+            "view product",
+            "product price",
+            "product description",
+            "product images",
+            "Tashtiba",
+            "super admin",
+          ],
+        }}
+      />
       <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-4">
         {t("title")}
       </h1>
-
       {/* Section 1: Basic Info */}
       <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
         <h2 className="text-xl font-semibold mb-4 text-blue-700">
@@ -102,7 +243,6 @@ const ProductDetails: React.FC = () => {
           </p>
         </div>
       </section>
-
       {/* Section 2: Pricing & Stock */}
       <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
         <h2 className="text-xl font-semibold mb-4 text-green-700">
@@ -122,7 +262,6 @@ const ProductDetails: React.FC = () => {
           </p>
         </div>
       </section>
-
       {/* Section 3: Category & Brand */}
       <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
         <h2 className="text-xl font-semibold mb-4 text-purple-700">
@@ -137,7 +276,6 @@ const ProductDetails: React.FC = () => {
           </p>
         </div>
       </section>
-
       {/* Section 4: Vendor */}
       <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
         <h2 className="text-xl font-semibold mb-4 text-yellow-700">
@@ -155,7 +293,6 @@ const ProductDetails: React.FC = () => {
           </p>
         </div>
       </section>
-
       {/* Section 5: Attributes */}
       {product.attributes?.length > 0 && (
         <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
@@ -171,7 +308,6 @@ const ProductDetails: React.FC = () => {
           </ul>
         </section>
       )}
-
       {/* Section 6: Tags */}
       {product.tags?.length > 0 && (
         <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
@@ -190,7 +326,6 @@ const ProductDetails: React.FC = () => {
           </div>
         </section>
       )}
-
       {/* Section 7: Images */}
       {product.images?.length > 0 && (
         <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
@@ -209,13 +344,12 @@ const ProductDetails: React.FC = () => {
           </div>
         </section>
       )}
-
       {/* Section 8: Dates */}
       <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
         <h2 className="text-xl font-semibold mb-4 text-gray-700">
           {t("sections.timestamps")}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700  dark:text-white">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700  dark:text-white">
           <p>
             <strong>{t("fields.created_at")}:</strong>{" "}
             {formatDate(product.created_at)}

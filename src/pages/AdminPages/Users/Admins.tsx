@@ -1,4 +1,3 @@
-import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/admin/Tables/BasicTableTS";
@@ -16,6 +15,8 @@ import {
 import { AxiosError } from "axios";
 import { ID, TableAlert } from "../../../types/Common";
 import { AdminFilters } from "../../../types/Admins";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم التعليق على استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
 
 const Admins = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -27,7 +28,7 @@ const Admins = () => {
     phone: "",
   });
   const location = useLocation();
-  const { t } = useTranslation(["AdminsTable"]);
+  const { t } = useTranslation(["AdminsTable", "Meta"]);
 
   const { data, isLoading, isError, refetch, error } = useAllAdmins(
     pageIndex,
@@ -57,15 +58,19 @@ const Admins = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: t("adminsPage.createdSuccess"),
-        message: location.state.successCreate,
+        title: t("AdminsTable:adminsPage.createdSuccessTitle"),
+        message: t("AdminsTable:adminsPage.createdSuccessMessage", {
+          message: location.state.successCreate,
+        }), // تم التعديل
       });
       window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
-        title: t("adminsPage.updatedSuccess"),
-        message: location.state.successEdit,
+        title: t("AdminsTable:adminsPage.updatedSuccessTitle"),
+        message: t("AdminsTable:adminsPage.updatedSuccessMessage", {
+          message: location.state.successEdit,
+        }),
       });
       window.history.replaceState({}, document.title);
     }
@@ -75,7 +80,7 @@ const Admins = () => {
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [location.state]);
+  }, [location.state, t]);
 
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
@@ -88,15 +93,15 @@ const Admins = () => {
 
   const handleDelete = async (id: ID) => {
     await alertDelete(id, deleteAdminMutate, refetch, {
-      confirmTitle: t("adminsPage.delete.confirmTitle"),
-      confirmText: t("adminsPage.delete.confirmText"),
-      confirmButtonText: t("adminsPage.delete.confirmButtonText"),
-      cancelButtonText: t("adminsPage.delete.cancelButtonText"),
-      successTitle: t("adminsPage.delete.successTitle"),
-      successText: t("adminsPage.delete.successText"),
-      errorTitle: t("adminsPage.delete.errorTitle"),
-      errorText: t("adminsPage.delete.errorText"),
-      lastButton: t("adminsPage.delete.lastButton"),
+      confirmTitle: t("AdminsTable:adminsPage.delete.confirmTitle"),
+      confirmText: t("AdminsTable:adminsPage.delete.confirmText"),
+      confirmButtonText: t("AdminsTable:adminsPage.delete.confirmButtonText"),
+      cancelButtonText: t("AdminsTable:adminsPage.delete.cancelButtonText"),
+      successTitle: t("AdminsTable:adminsPage.delete.successTitle"),
+      successText: t("AdminsTable:adminsPage.delete.successText"),
+      errorTitle: t("AdminsTable:adminsPage.delete.errorTitle"),
+      errorText: t("AdminsTable:adminsPage.delete.errorText"),
+      lastButton: t("AdminsTable:adminsPage.delete.lastButton"),
     });
   };
 
@@ -107,7 +112,6 @@ const Admins = () => {
     includeCreatedAt: true,
     includeActions: true,
   });
-
   return (
     <>
       {alertData && (
@@ -117,20 +121,52 @@ const Admins = () => {
           message={alertData.message}
         />
       )}
-      <PageMeta title={t("adminsPage.mainTitle")} description="Admins" />
-      <PageBreadcrumb pageTitle={t("adminsPage.title")} userType="admin" />
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إدارة المسؤولين",
+          en: "Tashtiba - Admin Management",
+        }}
+        description={{
+          ar: "إدارة حسابات المسؤولين في نظام تشطيبة. عرض، إضافة، تعديل، وحذف المسؤولين.",
+          en: "Manage administrator accounts in Tashtiba system. View, add, edit, and delete administrators.",
+        }}
+        keywords={{
+          ar: [
+            "المسؤولين",
+            "إدارة المسؤولين",
+            "حسابات المسؤولين",
+            "تشطيبة",
+            "أدمن",
+            "تحكم",
+            "صلاحيات",
+          ],
+          en: [
+            "admins",
+            "admin management",
+            "admin accounts",
+            "Tashtiba",
+            "administrator",
+            "control panel",
+            "permissions",
+          ],
+        }}
+      />
+      <PageBreadcrumb
+        pageTitle={t("AdminsTable:adminsPage.title")}
+        userType="admin"
+      />
       <SearchTable
         fields={[
-          { key: "name", label: "Name", type: "input" },
-          { key: "email", label: "Email", type: "input" },
-          { key: "phone", label: "Phone", type: "input" },
+          { key: "name", label: t("AdminsTable:search.name"), type: "input" }, // تم التعديل
+          { key: "email", label: t("AdminsTable:search.email"), type: "input" }, // تم التعديل
+          { key: "phone", label: t("AdminsTable:search.phone"), type: "input" }, // تم التعديل
         ]}
         setSearchParam={handleSearch}
         searchValues={searchValues}
       />
       <ComponentCard
-        title={t("adminsPage.all")}
-        headerAction={t("adminsPage.addNew")}
+        title={t("AdminsTable:adminsPage.all")}
+        headerAction={t("AdminsTable:adminsPage.addNew")}
         href="/admin/admins/create"
       >
         <BasicTable
@@ -145,7 +181,7 @@ const Admins = () => {
           onPageChange={setPageIndex}
           unauthorized={unauthorized}
           globalError={globalError}
-          loadingText={t("adminsPage.table.loadingText")}
+          loadingText={t("AdminsTable:adminsPage.table.loadingText")}
         />
       </ComponentCard>
     </>

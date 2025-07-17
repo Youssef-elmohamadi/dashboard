@@ -19,7 +19,7 @@ export default function AuthLayout({
   const description = {
     admin: t("adminLayoutText"),
     super_admin: t("adminLayoutText"),
-    end_user: t("adminLayoutText"),
+    end_user: t("endUserLayoutText"),
   };
 
   const routeMap: Record<string, string> = {
@@ -37,9 +37,8 @@ export default function AuthLayout({
           <div className="lg:hidden flex flex-col items-center mt-8">
             <Link to={linkTo} className="block mb-4">
               <img
-                width={231}
-                height={48}
-                src="/images/logo/logo.png"
+                className="h-[76px] w-[200px] mb-3 drop-shadow-lg"
+                src="/images/logo/dark-logo.webp"
                 alt="Tashtiba logo"
               />
             </Link>
@@ -57,9 +56,8 @@ export default function AuthLayout({
             <div className="flex flex-col items-center max-w-xs">
               <Link to={linkTo} className="block mb-4">
                 <img
-                  width={231}
-                  height={48}
-                  src="/images/logo/logo.png"
+                  className="h-[76px] w-[200px] mb-3 drop-shadow-lg"
+                  src="/images/logo/dark-logo.webp"
                   alt="Tashtiba logo"
                 />
               </Link>

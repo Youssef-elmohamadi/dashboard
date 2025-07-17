@@ -1,4 +1,5 @@
-import PageMeta from "../../../components/common/SEO/PageMeta";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
@@ -23,7 +24,7 @@ const Vendors = () => {
     email: "",
     phone: "",
   });
-  const { t } = useTranslation(["VendorsTable"]);
+  const { t } = useTranslation(["VendorsTable", "Meta"]);
   const handleSearch = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -95,9 +96,33 @@ const Vendors = () => {
   });
   return (
     <>
-      <PageMeta
-        title={t("vendorsPage.mainTitle")}
-        description="Manage Your Vendors"
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إدارة البائعين",
+          en: "Tashtiba - Vendor Management",
+        }}
+        description={{
+          ar: "صفحة إدارة البائعين في تشطيبة. عرض، تغيير حالة، والتحكم في حسابات البائعين.",
+          en: "Manage vendor accounts on Tashtiba. View, change status, and control vendor accounts.",
+        }}
+        keywords={{
+          ar: [
+            "البائعين",
+            "إدارة البائعين",
+            "حسابات البائعين",
+            "تشطيبة",
+            "سوبر أدمن",
+            "المتاجر",
+          ],
+          en: [
+            "vendors",
+            "vendor management",
+            "vendor accounts",
+            "Tashtiba",
+            "super admin",
+            "stores",
+          ],
+        }}
       />
       <PageBreadcrumb
         pageTitle={t("vendorsPage.title")}

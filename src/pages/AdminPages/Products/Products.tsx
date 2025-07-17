@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import PageMeta from "../../../components/common/SEO/PageMeta";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // This was already commented out, good.
+import SEO from "../../../components/common/SEO/seo"; // Imported SEO component
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
@@ -32,7 +33,7 @@ const Products = () => {
     name: "",
   });
   const location = useLocation();
-  const { t } = useTranslation(["ProductsTable"]);
+  const { t } = useTranslation(["ProductsTable", "Meta"]); // استخدام الـ namespaces هنا
   const {
     data: products,
     isLoading,
@@ -62,22 +63,28 @@ const Products = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: t("productsPage.createdSuccess"),
-        message: location.state.successCreate,
+        title: t("ProductsTable:productsPage.createdSuccessTitle"), // إضافة namespace
+        message: t("ProductsTable:productsPage.createdSuccessMessage", {
+          message: location.state.successCreate,
+        }), // إضافة namespace
       });
+      window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
-        title: t("productsPage.updatedSuccess"),
-        message: location.state.successEdit,
+        title: t("ProductsTable:productsPage.updatedSuccessTitle"), // إضافة namespace
+        message: t("ProductsTable:productsPage.updatedSuccessMessage", {
+          message: location.state.successEdit,
+        }), // إضافة namespace
       });
+      window.history.replaceState({}, document.title);
     }
     const timer = setTimeout(() => {
       setAlertData(null);
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [location.state]);
+  }, [location.state, t]);
 
   const handleSearch = (key: string, value: string) => {
     setSearchValues((prev) => ({
@@ -88,7 +95,6 @@ const Products = () => {
   };
 
   const { data: allCategories } = useAllCategories();
-
   const categories = allCategories?.original;
 
   const { data: allBrands } = useAllBrands();
@@ -97,15 +103,17 @@ const Products = () => {
   const { mutateAsync: deleteProductMutate } = useDeleteProduct();
   const handleDelete = async (id: ID) => {
     await alertDelete(id, deleteProductMutate, refetch, {
-      confirmTitle: t("productsPage.delete.confirmTitle"),
-      confirmText: t("productsPage.delete.confirmText"),
-      confirmButtonText: t("productsPage.delete.confirmButtonText"),
-      cancelButtonText: t("productsPage.delete.cancelButtonText"),
-      successTitle: t("productsPage.delete.successTitle"),
-      successText: t("productsPage.delete.successText"),
-      errorTitle: t("productsPage.delete.errorTitle"),
-      errorText: t("productsPage.delete.errorText"),
-      lastButton: t("productsPage.delete.lastButton"),
+      confirmTitle: t("ProductsTable:productsPage.delete.confirmTitle"), // إضافة namespace
+      confirmText: t("ProductsTable:productsPage.delete.confirmText"), // إضافة namespace
+      confirmButtonText: t(
+        "ProductsTable:productsPage.delete.confirmButtonText"
+      ), // إضافة namespace
+      cancelButtonText: t("ProductsTable:productsPage.delete.cancelButtonText"), // إضافة namespace
+      successTitle: t("ProductsTable:productsPage.delete.successTitle"), // إضافة namespace
+      successText: t("ProductsTable:productsPage.delete.successText"), // إضافة namespace
+      errorTitle: t("ProductsTable:productsPage.delete.errorTitle"), // إضافة namespace
+      errorText: t("ProductsTable:productsPage.delete.errorText"), // إضافة namespace
+      lastButton: t("ProductsTable:productsPage.delete.lastButton"), // إضافة namespace
     });
   };
 
@@ -119,9 +127,34 @@ const Products = () => {
 
   return (
     <>
-      <PageMeta
-        title={t("productsPage.mainTitle")}
-        description="Create and Update Your Products"
+      {/* Replaced PageMeta with SEO and updated content */}
+      <SEO
+        title={{
+          ar: "تشطيبة - إدارة المنتجات",
+          en: "Tashtiba - Product Management",
+        }}
+        description={{
+          ar: "صفحة إدارة المنتجات في تشطيبة. عرض، إضافة، تعديل، وحذف المنتجات.",
+          en: "Manage products on Tashtiba. View, add, edit, and delete products.",
+        }}
+        keywords={{
+          ar: [
+            "المنتجات",
+            "إدارة المنتجات",
+            "قائمة المنتجات",
+            "تشطيبة",
+            "متجر إلكتروني",
+            "إدارة المخزون",
+          ],
+          en: [
+            "products",
+            "product management",
+            "product list",
+            "Tashtiba",
+            "e-commerce store",
+            "inventory management",
+          ],
+        }}
       />
       {alertData && (
         <Alert
@@ -130,36 +163,46 @@ const Products = () => {
           message={alertData.message}
         />
       )}
-      <PageBreadcrumb pageTitle={t("productsPage.title")} userType="admin" />
+      <PageBreadcrumb
+        pageTitle={t("ProductsTable:productsPage.title")}
+        userType="admin"
+      />{" "}
+      {/* إضافة namespace */}
       <div>
         <SearchTable
           fields={[
-            { key: "name", label: "Name", type: "input" },
+            { key: "name", label: t("ProductsTable:search.name"), type: "input" }, // Corrected namespace usage for "Name"
             {
               key: "category_id",
-              label: "Category",
+              label: t("ProductsTable:search.category"), // إضافة namespace
               type: "select",
               options: categories?.map((category: Category) => ({
-                label: category.name,
+                label: category.name, // قد لا يكون هذا مترجمًا، فهو يأتي من الـ API
                 value: category.id,
               })),
             },
             {
               key: "brand_id",
-              label: "Brand",
+              label: t("ProductsTable:search.brand"), // إضافة namespace
               type: "select",
               options: brands?.map((brand: Brand) => ({
-                label: brand.name,
+                label: brand.name, // قد لا يكون هذا مترجمًا، فهو يأتي من الـ API
                 value: String(brand.id),
               })),
             },
             {
               key: "status",
-              label: "Status",
+              label: t("ProductsTable:search.status"), // إضافة namespace
               type: "select",
               options: [
-                { label: t("productsPage.status.active"), value: "active" },
-                { label: t("productsPage.status.inactive"), value: "inactive" },
+                {
+                  label: t("ProductsTable:productsPage.status.active"),
+                  value: "active",
+                }, // إضافة namespace
+                {
+                  label: t("ProductsTable:productsPage.status.inactive"),
+                  value: "inactive",
+                }, // إضافة namespace
               ],
             },
           ]}
@@ -169,8 +212,8 @@ const Products = () => {
       </div>
       <div className="space-y-6">
         <ComponentCard
-          title={t("productsPage.all")}
-          headerAction={t("productsPage.addNew")}
+          title={t("ProductsTable:productsPage.all")} // إضافة namespace
+          headerAction={t("ProductsTable:productsPage.addNew")} // إضافة namespace
           href="/admin/products/create"
         >
           <BasicTable
@@ -186,7 +229,7 @@ const Products = () => {
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
             globalError={globalError}
-            loadingText={t("productsPage.table.loadingText")}
+            loadingText={t("ProductsTable:productsPage.table.loadingText")} // إضافة namespace
           />
         </ComponentCard>
       </div>

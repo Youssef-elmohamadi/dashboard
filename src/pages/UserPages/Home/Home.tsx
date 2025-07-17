@@ -1,16 +1,24 @@
 import FeaturesSection from "../../../components/EndUser/Home/FeaturedSection";
-import CircleSlider from "../../../components/EndUser/Home/CircleSlider";
-import HomeProducts from "../../../components/EndUser/Home/HomeProducts";
-import LatestProducts from "../../../components/EndUser/Home/HomeLatest";
 import { useTranslation } from "react-i18next";
 import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import LandingSection from "../../../components/EndUser/Home/LandingSection";
-import VendorsCarousel from "../../../components/EndUser/Home/VendorsBar";
 import SEO from "../../../components/common/SEO/seo";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import i18n from "../../../i18n";
+const HomeProducts = React.lazy(
+  () => import("../../../components/EndUser/Home/HomeProducts")
+);
+const VendorsCarousel = React.lazy(
+  () => import("../../../components/EndUser/Home/VendorsBar")
+);
+const LatestProducts = React.lazy(
+  () => import("../../../components/EndUser/Home/HomeLatest")
+);
+const CircleSlider = React.lazy(
+  () => import("../../../components/EndUser/Home/CircleSlider")
+);
 
 const Home = () => {
   const { t } = useTranslation(["EndUserHome"]);

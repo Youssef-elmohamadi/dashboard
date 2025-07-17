@@ -9,7 +9,8 @@ import {
   useCreateRole,
   useGetAllPermissions,
 } from "../../../hooks/Api/Admin/useRoles/useRoles";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم التعليق على استيراد PageMeta
+import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
 import {
   CreateRoleInput,
   Permission,
@@ -34,7 +35,7 @@ export default function CreateRole() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const navigate = useNavigate();
-  const { t } = useTranslation(["CreateRole"]);
+  const { t } = useTranslation(["CreateRole", "Meta"]);
 
   const {
     data,
@@ -52,10 +53,12 @@ export default function CreateRole() {
       if (status === 401 || status === 403) {
         setErrors((prev) => ({
           ...prev,
-          global: t("role.errors.global"),
+          global: t("CreateRole:role.errors.global"),
         }));
       } else {
-        setFetchingPermissionsError(t("role.errors.fetching_permissions"));
+        setFetchingPermissionsError(
+          t("CreateRole:role.errors.fetching_permissions")
+        );
       }
     }
   }, [isPermissionError, permissionError, t]);
@@ -83,10 +86,10 @@ export default function CreateRole() {
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
     if (!roleData.name.trim()) {
-      errors.name = t("role.errors.name");
+      errors.name = t("CreateRole:role.errors.name");
     }
     if (roleData.permissions.length === 0) {
-      errors.permissions = t("role.errors.permission");
+      errors.permissions = t("CreateRole:role.errors.permission");
     }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -106,7 +109,7 @@ export default function CreateRole() {
     try {
       await mutateAsync(roleData);
       navigate("/admin/roles", {
-        state: { successCreate: t("role.success_message") },
+        state: { successCreate: t("CreateRole:role.success_message") },
       });
     } catch (error: any) {
       const status = error?.response?.status;
@@ -114,7 +117,7 @@ export default function CreateRole() {
       if (status === 403 || status === 401) {
         setErrors({
           ...errors,
-          global: t("role.errors.global"),
+          global: t("CreateRole:role.errors.global"),
         });
         return;
       }
@@ -136,7 +139,7 @@ export default function CreateRole() {
       } else {
         setErrors((prev) => ({
           ...prev,
-          general: t("admin.errors.general"),
+          general: t("CreateRole:admin.errors.general"), // This might need to be 'CreateRole:role.errors.general' if "admin" is not accessible
         }));
       }
     } finally {
@@ -146,10 +149,39 @@ export default function CreateRole() {
 
   return (
     <div className=" p-6">
-      <PageMeta title={t("role.main_title")} description="Create New Role" />
-      <div className="p-4 border-b  dark:border-gray-600 border-gray-200">
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إنشاء صلاحية جديدة",
+          en: "Tashtiba - Create New Role",
+        }}
+        description={{
+          ar: "صفحة إنشاء صلاحية (دور) جديد للمستخدمين في نظام تشطيبة. حدد الاسم والصلاحيات المخصصة.",
+          en: "Create a new user role (permission set) in Tashtiba system. Define the role name and assigned permissions.",
+        }}
+        keywords={{
+          ar: [
+            "إنشاء صلاحية",
+            "إضافة دور",
+            "صلاحية جديدة",
+            "أدوار المستخدمين",
+            "تشطيبة",
+            "صلاحيات",
+            "تحكم",
+          ],
+          en: [
+            "create role",
+            "add new role",
+            "new permission set",
+            "user roles",
+            "Tashtiba",
+            "permissions",
+            "access control",
+          ],
+        }}
+      />
+      <div className="p-4 border-b  dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {t("role.create_title")}
+          {t("CreateRole:role.create_title")}
         </h3>
       </div>
       <form onSubmit={handleSubmit} className="p-4 md:p-5">
@@ -165,31 +197,31 @@ export default function CreateRole() {
         )}
         <div className="grid gap-4 mb-4 grid-cols-2">
           <div className="col-span-2 sm:col-span-1">
-            <Label htmlFor="name">{t("role.name")}</Label>
+            <Label htmlFor="name">{t("CreateRole:role.name")}</Label>
             <Input
               type="text"
               name="name"
               id="name"
               value={roleData.name}
               onChange={handleChange}
-              placeholder={t("role.placeholder.name")}
+              placeholder={t("CreateRole:role.placeholder.name")}
             />
             {formErrors.name && (
               <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
             )}
             {errors.name[0] && (
               <p className="text-red-500 text-sm mt-1">
-                {t("role.errors.name_unique")}
+                {t("CreateRole:role.errors.name_unique")}
               </p>
             )}
           </div>
 
           {isLoading ? (
-            <Loading text={t("role.get_permissions")} />
+            <Loading text={t("CreateRole:role.get_permissions")} />
           ) : (
             <div className="col-span-2">
               <h2 className="text-sm font-medium mb-4 text-gray-700 dark:text-gray-400">
-                {t("role.permission")}
+                {t("CreateRole:role.permission")}
               </h2>
               <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
                 {permissions?.map((permission: Permission) => (
@@ -227,7 +259,9 @@ export default function CreateRole() {
             isSubmitting ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          {isSubmitting ? t("role.button.submitting") : t("role.button.submit")}
+          {isSubmitting
+            ? t("CreateRole:role.button.submitting")
+            : t("CreateRole:role.button.submit")}
         </button>
       </form>
     </div>

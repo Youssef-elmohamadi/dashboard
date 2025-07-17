@@ -47,9 +47,9 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-gray-700 pb-8">
           <div>
             <LazyImage
-              src="/images/logo/logo-white.png"
+              src="/images/logo/dark-logo.webp"
               alt="Company Logo"
-              className="h-16 w-auto mb-3 drop-shadow-lg"
+              className="h-[76px] w-[200px] mb-3 drop-shadow-lg"
             />
             <p className="text-sm text-gray-300 italic tracking-wide">
               {t("footer.tagline")}
@@ -99,15 +99,25 @@ export default function Footer() {
               </p>
               <div className="flex gap-4">
                 {[
-                  { src: "/images/appstore.webp", alt: "App Store" },
-                  { src: "/images/googleplay.webp", alt: "Google Play" },
+                  {
+                    src: "/images/Application/appstore.webp",
+                    alt: "App Store",
+                  },
+                  {
+                    src: "/images/Application/googleplay.webp",
+                    alt: "Google Play",
+                  },
                 ].map(({ src, alt }, i) => (
                   <Link
                     key={i}
                     to="/"
                     className="hover:scale-105 transition duration-300"
                   >
-                    <LazyImage src={src} alt={alt} className="h-10 w-auto" />
+                    <LazyImage
+                      src={src}
+                      alt={alt}
+                      className="h-[59px] w-[200px"
+                    />
                   </Link>
                 ))}
               </div>
@@ -228,9 +238,9 @@ export default function Footer() {
             {["card-01", "card-02", "card-03"].map((card) => (
               <LazyImage
                 key={card}
-                src={`/images/cards/${card}.jpg`}
+                src={`/images/partners/${card}.webp`}
                 alt="Payment Option"
-                className="h-6 rounded shadow-sm"
+                className="h-[80px] rounded shadow-sm"
               />
             ))}
           </div>

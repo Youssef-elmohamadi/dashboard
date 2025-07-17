@@ -58,14 +58,16 @@ const LandingSection = () => {
   };
 
   return (
-    <section className="relative h-[550px] flex items-center justify-center text-white bg-black overflow-hidden rtl">
+    <section className="relative h-[550px] flex items-center justify-center text-white bg-black overflow-hidden">
       <div className="absolute inset-0">
         <img
           src="/images/landing.webp"
+          width={1920}
+          height={1080}
           alt={backgroundAlt}
           className="w-full h-full object-cover"
-          loading="lazy"
-          decoding="async"
+          fetchPriority="high"
+          loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-purple-800/70" />
       </div>

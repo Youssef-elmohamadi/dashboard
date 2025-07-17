@@ -9,7 +9,8 @@ import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useRoles } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
 import { useCreateAdmin } from "../../../hooks/Api/SuperAdmin/useSuperAdminAdmis/useSuperAdminAdmins";
-import PageMeta from "../../common/SEO/PageMeta";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
 import { AxiosError } from "axios";
 type Role = {
   name: string;
@@ -44,7 +45,7 @@ export default function CreateAdmin() {
     password: "",
     role: "",
   });
-  const { t } = useTranslation(["CreateAdmin"]);
+  const { t } = useTranslation(["CreateAdmin", "Meta"]);
   const { dir } = useDirectionAndLanguage();
   const validate = () => {
     const newErrors = {
@@ -62,8 +63,9 @@ export default function CreateAdmin() {
     } else if (!adminData.email) {
       newErrors.email = t("admin.errors.email_required");
     } else if (
-      /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(newErrors.email)
+      /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(adminData.email) // الخطأ هنا كان يستخدم newErrors.email بدل adminData.email
     ) {
+      // تم تصحيح هذا السطر: /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(adminData.email)
       newErrors.email = t("admin.errors.email_invalid");
     } else if (!adminData.phone) {
       newErrors.phone = t("admin.errors.phone_required");
@@ -163,7 +165,36 @@ export default function CreateAdmin() {
   };
   return (
     <div>
-      <PageMeta title={t("admin.main_title")} description="Create New Admin" />
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إنشاء مسؤول جديد (سوبر أدمن)",
+          en: "Tashtiba - Create New Admin (Super Admin)",
+        }}
+        description={{
+          ar: "صفحة إنشاء حساب مسؤول جديد بواسطة المشرف العام في نظام تشطيبة. املأ البيانات المطلوبة لإنشاء حساب إداري.",
+          en: "Create a new administrator account by Super Admin on Tashtiba system. Fill in the required details to set up an admin account.",
+        }}
+        keywords={{
+          ar: [
+            "إنشاء مسؤول",
+            "إضافة أدمن",
+            "حساب مسؤول جديد",
+            "تشطيبة",
+            "إدارة المستخدمين",
+            "صلاحيات",
+            "سوبر أدمن",
+          ],
+          en: [
+            "create admin",
+            "add administrator",
+            "new admin account",
+            "Tashtiba",
+            "user management",
+            "permissions",
+            "super admin",
+          ],
+        }}
+      />{" "}
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("admin.create_title")}

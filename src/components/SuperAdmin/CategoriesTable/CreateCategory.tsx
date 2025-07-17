@@ -16,9 +16,11 @@ import {
   ServerErrors,
 } from "../../../types/Categories";
 import { AxiosError } from "axios";
+// import PageMeta from "../../common/SEO/PageMeta"; // Removed PageMeta import
+import SEO from "../../common/SEO/seo"; // Ensured SEO component is imported
 
 export default function CreateCategory() {
-  const { t } = useTranslation(["CreateCategory"]);
+  const { t } = useTranslation(["CreateCategory", "Meta"]);
   const [categoryData, setCategoryData] = useState<CategoryInputData>({
     name: "",
     description: "",
@@ -170,6 +172,36 @@ export default function CreateCategory() {
 
   return (
     <div>
+      <SEO // PageMeta replaced with SEO, and data directly set
+        title={{
+          ar: "تشطيبة - إنشاء فئة جديدة (سوبر أدمن)",
+          en: "Tashtiba - Create New Category (Super Admin)",
+        }}
+        description={{
+          ar: "صفحة إنشاء فئة منتجات جديدة بواسطة المشرف العام في تشطيبة. أدخل تفاصيل الفئة واللجنة، وقم بتحميل الصورة.",
+          en: "Create a new product category by Super Admin on Tashtiba. Enter category details, commission, and upload image.",
+        }}
+        keywords={{
+          ar: [
+            "إنشاء فئة",
+            "إضافة تصنيف",
+            "فئة جديدة",
+            "سوبر أدمن",
+            "إدارة الفئات",
+            "عمولة الفئة",
+            "تشطيبة",
+          ],
+          en: [
+            "create category",
+            "add new category",
+            "new category",
+            "super admin",
+            "category management",
+            "category commission",
+            "Tashtiba",
+          ],
+        }}
+      />
       <div className="p-4 border-b border-gray-200 dark:border-gray-600">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("category.title")}

@@ -1,4 +1,3 @@
-import PageMeta from "../../../components/common/SEO/PageMeta";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
@@ -15,6 +14,8 @@ import {
 } from "../../../hooks/Api/SuperAdmin/useBrands/useSuperAdminBrandsManage";
 import { AxiosError } from "axios";
 import { TableAlert } from "../../../types/Common";
+// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
 
 const Brands = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -26,7 +27,7 @@ const Brands = () => {
     name: "",
   });
   const location = useLocation();
-  const { t } = useTranslation(["BrandsTable"]);
+  const { t } = useTranslation(["BrandsTable", "Meta"]);
   const { data, isLoading, isError, error } = useGetBrandsPaginate(
     pageIndex,
     searchValues
@@ -60,14 +61,14 @@ const Brands = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: "Admin Created Successfully",
+        title: "Admin Created Successfully", // تم الإبقاء عليها كما هي حسب التعليمات
         message: location.state.successCreate,
       });
       window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
-        title: "Admin Updated Successfully",
+        title: "Admin Updated Successfully", // تم الإبقاء عليها كما هي حسب التعليمات
         message: location.state.successEdit,
       });
       window.history.replaceState({}, document.title);
@@ -126,9 +127,33 @@ const Brands = () => {
           message={alertData.message}
         />
       )}
-      <PageMeta
-        title={t("brandsPage.mainTitle")}
-        description="This is React.js Basic Tables Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
+      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+        title={{
+          ar: "تشطيبة - إدارة الماركات (سوبر أدمن)",
+          en: "Tashtiba - Brand Management (Super Admin)",
+        }}
+        description={{
+          ar: "صفحة إدارة الماركات بواسطة المشرف العام في تشطيبة. عرض، تغيير حالة، والتحكم في حسابات الماركات.",
+          en: "Manage product brands by Super Admin on Tashtiba. View, change status, and control brand accounts.",
+        }}
+        keywords={{
+          ar: [
+            "ماركات المشرف العام",
+            "إدارة الماركات",
+            "براندات المنتجات",
+            "تشطيبة",
+            "سوبر أدمن",
+            "إدارة الموقع",
+          ],
+          en: [
+            "super admin brands",
+            "brand management",
+            "product brands",
+            "Tashtiba",
+            "super admin",
+            "site management",
+          ],
+        }}
       />
       <PageBreadcrumb
         pageTitle={t("brandsPage.title")}
@@ -136,7 +161,7 @@ const Brands = () => {
       />
       <div>
         <SearchTable
-          fields={[{ key: "name", label: "Name", type: "input" }]}
+          fields={[{ key: "name", label: "Name", type: "input" }]} // تم الإبقاء عليها كما هي حسب التعليمات
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />

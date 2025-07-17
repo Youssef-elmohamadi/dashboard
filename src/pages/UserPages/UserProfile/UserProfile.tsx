@@ -52,7 +52,7 @@ const UserProfile = () => {
   });
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-    const { lang } = useDirectionAndLanguage();
+  const { lang } = useDirectionAndLanguage();
   useEffect(() => {
     const token = localStorage.getItem("end_user_token");
     if (!token) {
@@ -79,7 +79,7 @@ const UserProfile = () => {
         password_confirmation: "",
         avatar: null,
       });
-      setExistingImage(userProfileData.avatar || "/images/default-avatar.jpg");
+      setExistingImage(userProfileData.avatar || "/images/default-avatar.webp");
     }
   }, [userProfileData]);
 

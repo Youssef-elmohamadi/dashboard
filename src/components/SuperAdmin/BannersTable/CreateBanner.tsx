@@ -14,9 +14,11 @@ import {
   ServerErrors,
 } from "../../../types/Banners";
 import { Category } from "../../../types/Categories";
+// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
+import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
 
 const CreateBanner = () => {
-  const { t } = useTranslation(["CreateBanner"]);
+  const { t } = useTranslation(["CreateBanner", "Meta"]);
   const [bannerData, setBannerData] = useState<BannerInput>({
     title: "",
     image: "",
@@ -188,6 +190,36 @@ const CreateBanner = () => {
 
   return (
     <div>
+      <SEO // PageMeta replaced with SEO, and data directly set
+        title={{
+          ar: "تشطيبة - إنشاء بانر جديد (سوبر أدمن)",
+          en: "Tashtiba - Create New Banner (Super Admin)",
+        }}
+        description={{
+          ar: "صفحة إنشاء بانر إعلاني جديد بواسطة المشرف العام في تشطيبة. أدخل التفاصيل، نوع الرابط، الموضع، وقم بتحميل الصورة.",
+          en: "Create a new advertising banner by Super Admin on Tashtiba. Enter details, link type, position, and upload image.",
+        }}
+        keywords={{
+          ar: [
+            "إنشاء بانر",
+            "إضافة إعلان",
+            "بانر جديد",
+            "سوبر أدمن",
+            "إدارة البانرات",
+            "إعلانات الموقع",
+            "تشطيبة",
+          ],
+          en: [
+            "create banner",
+            "add new ad",
+            "new banner",
+            "super admin",
+            "banner management",
+            "website ads",
+            "Tashtiba",
+          ],
+        }}
+      />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("banner.title")}
