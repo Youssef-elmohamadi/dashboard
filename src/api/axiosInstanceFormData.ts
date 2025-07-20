@@ -2,7 +2,7 @@ import axios from "axios";
 import { Token } from "./_modales";
 
 const axiosInstanceFormData = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: "http://jht.535.mytemp.website",
   headers: {
     "Content-Type": "multipart/form-data", // لاستخدام FormData كـ content-type
   },

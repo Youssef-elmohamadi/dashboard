@@ -2,7 +2,7 @@ import axios from "axios";
 import { Token } from "./_modales";
 
 const axiosInstance = axios.create({
-    baseURL: "http://localhost:8000",
+    baseURL: "http://jht.535.mytemp.website",
     headers: {
         "Content-Type": "application/json",
     },
