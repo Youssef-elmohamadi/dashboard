@@ -145,15 +145,15 @@ const ProductDetails: React.FC = () => {
           // Use product ID in the URL for language alternates
           {
             lang: "ar",
-            href: `https://tashtiba.vercel.app/ar/product/${product.id}`,
+            href: `https://tashtiba.com/ar/product/${product.id}`,
           },
           {
             lang: "en",
-            href: `https://tashtiba.vercel.app/en/product/${product.id}`,
+            href: `https://tashtiba.com/en/product/${product.id}`,
           },
           {
             lang: "x-default",
-            href: `https://tashtiba.vercel.app/en/product/${product.id}`,
+            href: `https://tashtiba.com/en/product/${product.id}`,
           }, // Consider a default if you have one
         ]}
       />

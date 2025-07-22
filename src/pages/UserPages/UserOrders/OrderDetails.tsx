@@ -140,11 +140,11 @@ const OrderDetailsPage: React.FC = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: `https://tashtiba.vercel.app/ar/orders/${id}` },
-          { lang: "en", href: `https://tashtiba.vercel.app/en/orders/${id}` },
+          { lang: "ar", href: `https://tashtiba.com/ar/orders/${id}` },
+          { lang: "en", href: `https://tashtiba.com/en/orders/${id}` },
           {
             lang: "x-default",
-            href: `https://tashtiba.vercel.app/en/orders/${id}`,
+            href: `https://tashtiba.com/en/orders/${id}`,
           },
         ]}
       />

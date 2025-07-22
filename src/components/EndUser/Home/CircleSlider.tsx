@@ -4,6 +4,7 @@ import "./customSwiper.css";
 import { Link, useParams } from "react-router-dom";
 import { Category } from "../../../types/Categories";
 import LazyImage from "../../common/LazyImage";
+import CircleSkeletonSlider from "./CircleSkeletonSlider";
 
 interface CategorySliderProps {
   items?: Category[];
@@ -16,12 +17,7 @@ const CircleSlider: FC<CategorySliderProps> = ({ items, rtl = false }) => {
   if (!items) {
     return (
       <div className="flex gap-4 overflow-x-auto justify-center my-10 px-4">
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className="w-[120px] h-[120px] bg-gray-200 animate-pulse rounded-full"
-          />
-        ))}
+        <CircleSkeletonSlider />
       </div>
     );
   }

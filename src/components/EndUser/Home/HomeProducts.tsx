@@ -12,7 +12,9 @@ import { Product } from "../../../types/Product";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const ProductCard = lazy(() => import("../Product/ProductCard"));
-const ProductCardSkeleton = lazy(() => import("../Product/ProductCardSkeleton"));
+const ProductCardSkeleton = lazy(
+  () => import("../Product/ProductCardSkeleton")
+);
 const AdBanner = lazy(() => import("../Home/AdBanner"));
 
 const HomeProducts: React.FC = () => {
@@ -33,17 +35,28 @@ const HomeProducts: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="enduser_container px-4 py-10">
+      <div className="enduser_container px-4 py-10 ">
         {[...Array(2)].map((_, i) => (
-          <div key={i} className="mb-12 flex justify-around">
-            <div className="h-4 w-32 bg-gray-200 mb-4 animate-pulse rounded" />
-            <div className="flex gap-3 overflow-x-auto">
+          <div key={i} className="mb-12 flex ">
+            <div className="h-4 w-1/5 bg-gray-200 mb-4 animate-pulse rounded" />
+            <Swiper
+              spaceBetween={12}
+              breakpoints={{
+                0: { slidesPerView: 1 },
+                640: { slidesPerView: 2 }, // sm
+                768: { slidesPerView: 3 }, // md
+                1024: { slidesPerView: 4 }, // lg
+              }}
+              className="w-full mt-6"
+            >
               {[...Array(4)].map((_, j) => (
-                <Suspense fallback={null} key={j}>
-                  <ProductCardSkeleton />
-                </Suspense>
+                <SwiperSlide key={j}>
+                  <Suspense fallback={null}>
+                    <ProductCardSkeleton />
+                  </Suspense>
+                </SwiperSlide>
               ))}
-            </div>
+            </Swiper>
           </div>
         ))}
       </div>

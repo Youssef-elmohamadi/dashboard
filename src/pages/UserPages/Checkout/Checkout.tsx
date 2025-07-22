@@ -56,8 +56,8 @@ const Checkout = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar/checkout" }, // Adjust the path if your actual checkout URL is different
-          { lang: "en", href: "https://tashtiba.vercel.app/en/checkout" }, // Adjust the path if your actual checkout URL is different
+          { lang: "ar", href: "https://tashtiba.com/ar/checkout" }, // Adjust the path if your actual checkout URL is different
+          { lang: "en", href: "https://tashtiba.com/en/checkout" }, // Adjust the path if your actual checkout URL is different
         ]}
       />
       <header className="sticky top-0 z-20 bg-white border-b border-gray-200">

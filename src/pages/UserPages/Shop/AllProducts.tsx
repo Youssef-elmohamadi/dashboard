@@ -65,9 +65,9 @@ const AllProducts = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar" },
-          { lang: "en", href: "https://tashtiba.vercel.app/en" },
-          // { lang: "x-default", href: "https://tashtiba.vercel.app/en" },
+          { lang: "ar", href: "https://tashtiba.com/ar" },
+          { lang: "en", href: "https://tashtiba.com/en" },
+          // { lang: "x-default", href: "https://tashtiba.com/en" },
         ]}
       />
 

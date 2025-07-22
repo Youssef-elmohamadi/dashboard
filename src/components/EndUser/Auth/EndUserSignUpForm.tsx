@@ -154,200 +154,192 @@ export default function SignUpForm() {
   }
 
   return (
-    <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
-      <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
-        <div className="mb-5 sm:mb-8 flex flex-col items-center">
-          <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-            {t("signUpTitle")}
-          </h1>
-        </div>
+    <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto py-4">
+      <div className="mb-5 sm:mb-8 flex flex-col items-center">
+        <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
+          {t("signUpTitle")}
+        </h1>
+      </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-5">
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <div className="sm:col-span-1">
-                <Label>
-                  {t("basicInformation.firstName")}
-                  <span className="text-error-500">*</span>
-                </Label>
-                <Input
-                  type="text"
-                  id="first_name"
-                  name="first_name"
-                  placeholder={t("basicInformation.placeholder.firstName")}
-                  value={dataForm.first_name}
-                  onChange={handleChange}
-                />
-                {clientErrors.first_name && (
-                  <p className="text-error-500 text-xs mt-1">
-                    {clientErrors.first_name}
-                  </p>
-                )}
-              </div>
-
-              <div className="sm:col-span-1">
-                <Label>
-                  {t("basicInformation.lastName")}
-                  <span className="text-error-500">*</span>
-                </Label>
-                <Input
-                  type="text"
-                  id="last_name"
-                  name="last_name"
-                  placeholder={t("basicInformation.placeholder.lastName")}
-                  value={dataForm.last_name}
-                  onChange={handleChange}
-                />
-                {clientErrors.last_name && (
-                  <p className="text-error-500 text-xs mt-1">
-                    {clientErrors.last_name}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div>
+      <form onSubmit={handleSubmit}>
+        <div className="space-y-5">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div className="sm:col-span-1">
               <Label>
-                {t("basicInformation.phone")}
+                {t("basicInformation.firstName")}
                 <span className="text-error-500">*</span>
               </Label>
               <Input
                 type="text"
-                id="phone"
-                name="phone"
-                placeholder={t("basicInformation.placeholder.phone")}
-                value={dataForm.phone}
+                id="first_name"
+                name="first_name"
+                placeholder={t("basicInformation.placeholder.firstName")}
+                value={dataForm.first_name}
                 onChange={handleChange}
               />
-              {clientErrors.phone && (
+              {clientErrors.first_name && (
                 <p className="text-error-500 text-xs mt-1">
-                  {clientErrors.phone}
-                </p>
-              )}
-              {serverErrors?.["phone"] && (
-                <p className="text-error-500 text-xs mt-1">
-                  {t("errors.endUserPhoneTaken")}
+                  {clientErrors.first_name}
                 </p>
               )}
             </div>
 
-            <div>
+            <div className="sm:col-span-1">
               <Label>
-                {t("basicInformation.email")}
+                {t("basicInformation.lastName")}
                 <span className="text-error-500">*</span>
               </Label>
               <Input
-                type="email"
-                id="email"
-                name="email"
-                placeholder={t("basicInformation.placeholder.email")}
-                value={dataForm.email}
+                type="text"
+                id="last_name"
+                name="last_name"
+                placeholder={t("basicInformation.placeholder.lastName")}
+                value={dataForm.last_name}
                 onChange={handleChange}
               />
-              {clientErrors.email && (
+              {clientErrors.last_name && (
                 <p className="text-error-500 text-xs mt-1">
-                  {clientErrors.email}
+                  {clientErrors.last_name}
                 </p>
               )}
-              {serverErrors?.["email"] && (
-                <p className="text-error-500 text-xs mt-1">
-                  {t("errors.endUserEmailTaken")}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <Label>
-                {t("password")}
-                <span className="text-error-500">*</span>
-              </Label>
-              <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder={t("basicInformation.placeholder.password")}
-                  name="password"
-                  value={dataForm.password}
-                  onChange={handleChange}
-                />
-                {clientErrors.password && (
-                  <p className="text-error-500 text-xs mt-1">
-                    {clientErrors.password}
-                  </p>
-                )}
-                <span
-                  onClick={() => setShowPassword(!showPassword)}
-                  className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
-                    document.documentElement.dir === "rtl"
-                      ? "left-4"
-                      : "right-4"
-                  }`}
-                >
-                  {showPassword ? (
-                    <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                  ) : (
-                    <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                  )}
-                </span>
-              </div>
-            </div>
-
-            <div>
-              <Label>
-                {t("basicInformation.confirmPassword")}
-                <span className="text-error-500">*</span>
-              </Label>
-              <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder={t(
-                    "basicInformation.placeholder.confirmPassword"
-                  )}
-                  value={dataForm.confirm_password}
-                  name="confirm_password"
-                  onChange={handleChange}
-                />
-                {clientErrors.confirm_password && (
-                  <p className="text-error-500 text-xs mt-1">
-                    {clientErrors.confirm_password}
-                  </p>
-                )}
-                <span
-                  onClick={() => setShowPassword(!showPassword)}
-                  className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
-                    document.documentElement.dir === "rtl"
-                      ? "left-4"
-                      : "right-4"
-                  }`}
-                >
-                  {showPassword ? (
-                    <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                  ) : (
-                    <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                  )}
-                </span>
-              </div>
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-brand-500 mt-5 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700 text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300"
-          >
-            {t("buttons.createButton")}
-          </button>
-        </form>
+          <div>
+            <Label>
+              {t("basicInformation.phone")}
+              <span className="text-error-500">*</span>
+            </Label>
+            <Input
+              type="text"
+              id="phone"
+              name="phone"
+              placeholder={t("basicInformation.placeholder.phone")}
+              value={dataForm.phone}
+              onChange={handleChange}
+            />
+            {clientErrors.phone && (
+              <p className="text-error-500 text-xs mt-1">
+                {clientErrors.phone}
+              </p>
+            )}
+            {serverErrors?.["phone"] && (
+              <p className="text-error-500 text-xs mt-1">
+                {t("errors.endUserPhoneTaken")}
+              </p>
+            )}
+          </div>
 
-        <div className="mt-5">
-          <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-            {t("alreadyHaveAccount")}{" "}
-            <Link
-              to={`/${lang}/signin`}
-              className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
-            >
-              {t("buttons.loginButton")}
-            </Link>
-          </p>
+          <div>
+            <Label>
+              {t("basicInformation.email")}
+              <span className="text-error-500">*</span>
+            </Label>
+            <Input
+              type="email"
+              id="email"
+              name="email"
+              placeholder={t("basicInformation.placeholder.email")}
+              value={dataForm.email}
+              onChange={handleChange}
+            />
+            {clientErrors.email && (
+              <p className="text-error-500 text-xs mt-1">
+                {clientErrors.email}
+              </p>
+            )}
+            {serverErrors?.["email"] && (
+              <p className="text-error-500 text-xs mt-1">
+                {t("errors.endUserEmailTaken")}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <Label>
+              {t("password")}
+              <span className="text-error-500">*</span>
+            </Label>
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder={t("basicInformation.placeholder.password")}
+                name="password"
+                value={dataForm.password}
+                onChange={handleChange}
+              />
+              {clientErrors.password && (
+                <p className="text-error-500 text-xs mt-1">
+                  {clientErrors.password}
+                </p>
+              )}
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
+                  document.documentElement.dir === "rtl" ? "left-4" : "right-4"
+                }`}
+              >
+                {showPassword ? (
+                  <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                ) : (
+                  <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                )}
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <Label>
+              {t("basicInformation.confirmPassword")}
+              <span className="text-error-500">*</span>
+            </Label>
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder={t("basicInformation.placeholder.confirmPassword")}
+                value={dataForm.confirm_password}
+                name="confirm_password"
+                onChange={handleChange}
+              />
+              {clientErrors.confirm_password && (
+                <p className="text-error-500 text-xs mt-1">
+                  {clientErrors.confirm_password}
+                </p>
+              )}
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
+                  document.documentElement.dir === "rtl" ? "left-4" : "right-4"
+                }`}
+              >
+                {showPassword ? (
+                  <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                ) : (
+                  <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                )}
+              </span>
+            </div>
+          </div>
         </div>
+
+        <button
+          type="submit"
+          className="w-full bg-brand-500 mt-5 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700 text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300"
+        >
+          {t("buttons.createButton")}
+        </button>
+      </form>
+
+      <div className="mt-5">
+        <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
+          {t("alreadyHaveAccount")}{" "}
+          <Link
+            to={`/${lang}/signin`}
+            className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
+          >
+            {t("buttons.loginButton")}
+          </Link>
+        </p>
       </div>
     </div>
   );

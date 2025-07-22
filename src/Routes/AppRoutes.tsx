@@ -6,7 +6,8 @@ const LazyToastContainer = lazy(() =>
   }))
 );
 
-const LazyEndUserRoutes = lazy(() => import("./EndUserRoute/EndUserRoute"));
+import EndUserRoutes from "./EndUserRoute/EndUserRoute";
+// const LazyEndUserRoutes = lazy(() => import("./EndUserRoute/EndUserRoute"));
 const LazyAdminRoutes = lazy(() => import("./AdminRoute/AdminRoute"));
 const LazySuperAdminRoutes = lazy(
   () => import("./SuperAdminRoute/SuperAdminRoutes")
@@ -28,9 +29,10 @@ export default function AppRoutes() {
         <Route
           path="/*" // This will match any path not caught by admin/super_admin
           element={
-            <Suspense fallback={null}>
-              <LazyEndUserRoutes />
-            </Suspense>
+            // <Suspense fallback={null}>
+            //   <LazyEndUserRoutes />
+            // </Suspense>
+            <EndUserRoutes />
           }
         />
 

@@ -116,7 +116,7 @@ export default function Footer() {
                     <LazyImage
                       src={src}
                       alt={alt}
-                      className="h-[59px] w-[200px"
+                      className="h-[59px] w-[200px]"
                     />
                   </Link>
                 ))}

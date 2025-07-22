@@ -51,9 +51,9 @@ const ProductsCompare = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar/compare" }, // Adjust if your actual compare URL is different
-          { lang: "en", href: "https://tashtiba.vercel.app/en/compare" }, // Adjust if your actual compare URL is different
-          { lang: "x-default", href: "https://tashtiba.vercel.app/en/compare" }, // Consider a default if you have one
+          { lang: "ar", href: "https://tashtiba.com/ar/compare" }, // Adjust if your actual compare URL is different
+          { lang: "en", href: "https://tashtiba.com/en/compare" }, // Adjust if your actual compare URL is different
+          { lang: "x-default", href: "https://tashtiba.com/en/compare" }, // Consider a default if you have one
         ]}
       />
 

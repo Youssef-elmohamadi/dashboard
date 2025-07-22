@@ -69,11 +69,11 @@ const ProductsFavorite = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar/u-favorite" },
-          { lang: "en", href: "https://tashtiba.vercel.app/en/u-favorite" },
+          { lang: "ar", href: "https://tashtiba.com/ar/u-favorite" },
+          { lang: "en", href: "https://tashtiba.com/en/u-favorite" },
           {
             lang: "x-default",
-            href: "https://tashtiba.vercel.app/en/u-favorite",
+            href: "https://tashtiba.com/en/u-favorite",
           }, // Added x-default
         ]}
       />

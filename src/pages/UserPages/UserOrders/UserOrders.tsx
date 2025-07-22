@@ -20,7 +20,7 @@ const Orders = () => {
   const [globalError, setGlobalError] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation(["EndUserOrderHistory"]);
-    const { lang } = useDirectionAndLanguage();
+  const { lang } = useDirectionAndLanguage();
   // Brand colors from your UserProfile/UserNotifications components
   const primaryColor = "#9810fa"; // Lighter purple for accents/active states
   const secondaryColor = "#542475"; // Deeper purple for text/main elements
@@ -117,9 +117,9 @@ const Orders = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar/orders" }, // Adjust if your actual orders URL is different
-          { lang: "en", href: "https://tashtiba.vercel.app/en/orders" }, // Adjust if your actual orders URL is different
-          { lang: "x-default", href: "https://tashtiba.vercel.app/en/orders" }, // Consider a default if you have one
+          { lang: "ar", href: "https://tashtiba.com/ar/orders" }, // Adjust if your actual orders URL is different
+          { lang: "en", href: "https://tashtiba.com/en/orders" }, // Adjust if your actual orders URL is different
+          { lang: "x-default", href: "https://tashtiba.com/en/orders" }, // Consider a default if you have one
         ]}
       />
 

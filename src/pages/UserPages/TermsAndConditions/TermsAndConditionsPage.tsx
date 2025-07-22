@@ -113,8 +113,8 @@ const CreativeTermsPage: React.FC = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar/terms" },
-          { lang: "en", href: "https://tashtiba.vercel.app/en/terms" },
+          { lang: "ar", href: "https://tashtiba.com/ar/terms" },
+          { lang: "en", href: "https://tashtiba.com/en/terms" },
         ]}
       />
 

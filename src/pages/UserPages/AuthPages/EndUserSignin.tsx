@@ -52,9 +52,9 @@ export default function EndUserSignIn() {
         }}
         alternates={[
           // Assuming your sign-in page URL structure is like /ar/signin
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar/signin" },
-          { lang: "en", href: "https://tashtiba.vercel.app/en/signin" },
-          { lang: "x-default", href: "https://tashtiba.vercel.app/en/signin" }, // Default to English
+          { lang: "ar", href: "https://tashtiba.com/ar/signin" },
+          { lang: "en", href: "https://tashtiba.com/en/signin" },
+          { lang: "x-default", href: "https://tashtiba.com/en/signin" }, // Default to English
         ]}
       />
       <AuthLayout userType="end_user">

@@ -126,8 +126,8 @@ const ReturnPolicyPage: React.FC = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar/return-policy" },
-          { lang: "en", href: "https://tashtiba.vercel.app/en/return-policy" },
+          { lang: "ar", href: "https://tashtiba.com/ar/return-policy" },
+          { lang: "en", href: "https://tashtiba.com/en/return-policy" },
         ]}
       />
 

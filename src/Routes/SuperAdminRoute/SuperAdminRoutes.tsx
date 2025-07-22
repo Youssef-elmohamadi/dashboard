@@ -14,46 +14,47 @@ const ScrollToTop = lazy(() => import("../../components/common/ScrollToTop"));
 
 const SuperAdminRoutes = () => {
   return (
-    <Routes>
-      {/* Note: The base path /super_admin is handled in AppRoutes.tsx */}
-      <Route
-        element={
-          <ProtectedSuperAdminRoute>
-            <SuperAdminLayout />
-          </ProtectedSuperAdminRoute>
-        }
-      >
-        <Route index element={<Home userType="super_admin" />} />
+    <>
+      <Routes>
         <Route
-          path="*" // Matches /super_admin/* other than index
+          element={
+            <ProtectedSuperAdminRoute>
+              <SuperAdminLayout />
+            </ProtectedSuperAdminRoute>
+          }
+        >
+          <Route index element={<Home userType="super_admin" />} />
+          <Route
+            path="*" // Matches /super_admin/* other than index
+            element={
+              <Suspense fallback={null}>
+                <LazyPages />
+              </Suspense>
+            }
+          />
+        </Route>
+
+        {/* Auth Routes - Relative to the root if they don't have the layout.
+          These paths will be /super_admin/signin, etc. */}
+        <Route
+          path="signin" // Full path will be /super_admin/signin
           element={
             <Suspense fallback={null}>
-              <LazyPages />
+              <SuperAdminSignIn />
             </Suspense>
           }
         />
-      </Route>
-
-      {/* Auth Routes - Relative to the root if they don't have the layout.
-          These paths will be /super_admin/signin, etc. */}
-      <Route
-        path="signin" // Full path will be /super_admin/signin
-        element={
-          <Suspense fallback={null}>
-            <SuperAdminSignIn />
-          </Suspense>
-        }
-      />
-      <Route
-        path="reset-password" // Full path will be /super_admin/reset-password
-        element={
-          <Suspense fallback={null}>
-            <SuperAdminForgotPassword />
-          </Suspense>
-        }
-      />
+        <Route
+          path="reset-password" // Full path will be /super_admin/reset-password
+          element={
+            <Suspense fallback={null}>
+              <SuperAdminForgotPassword />
+            </Suspense>
+          }
+        />
+      </Routes>
       <ScrollToTop />
-    </Routes>
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 {
   "footer": {
     "tagline": "Best Choice for E-Commerce",
-    "newsletter_title": "Stay Updated 📬",
+    "newsletter_title": "Stay Updated",
     "newsletter_description": "Subscribe to get hot offers & product launches.",
     "newsletter_placeholder": "Enter your email",
     "newsletter_button": "Subscribe",
@@ -11,7 +11,7 @@
     "contact": "Contact",
     "location": "Egypt - Cairo",
     "phone": "966501326310",
-    "email": "admin@sfqa.io",
+    "email": "support@tashtiba.com",
     "my_account": "My Account",
     "order_history": "Order History",
     "favorite_list": "Favorite List",
@@ -19,6 +19,6 @@
     "logout": "Logout",
     "seller_zone": "Seller Zone",
     "join_seller_portal": "Join Seller Portal",
-    "rights_reserved": "&copy; 2025 SFQA — All rights reserved."
+    "rights_reserved": "&copy; 2025 TASHTIBA — All rights reserved."
   }
 }

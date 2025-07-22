@@ -148,9 +148,9 @@ const Brands = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/admin/brands" }, // Updated href to be specific for brands page
-          { lang: "en", href: "https://tashtiba.vercel.app/en/admin/brands" }, // Updated href to be specific for brands page
-          // { lang: "x-default", href: "https://tashtiba.vercel.app/en" }, // Removed this as it was a generic homepage example
+          { lang: "ar", href: "https://tashtiba.com/admin/brands" }, // Updated href to be specific for brands page
+          { lang: "en", href: "https://tashtiba.com/en/admin/brands" }, // Updated href to be specific for brands page
+          // { lang: "x-default", href: "https://tashtiba.com/en" }, // Removed this as it was a generic homepage example
         ]}
       />
       {/* --- END OF CORRECTED SEO CONTENT --- */}

@@ -20,11 +20,11 @@ const NavBar = React.memo(() => {
   const { data: categories } = useCategories();
 
   return (
-    <nav className="bg-primary w-full md:block hidden">
+    <nav className="bg-primary w-full min-h-14 md:block hidden">
       <div className="flex enduser_container w-full justify-center lg:justify-baseline items-center relative">
         <CategoriesDropdown dir={dir} />
 
-        <ul className="flex justify-center lg:justify-start flex-[2] gap-5">
+        <ul className="flex justify-center lg:justify-start flex-[2] gap-5 ">
           {categories?.slice(0, 4).map((category: Category) => (
             <li key={category.id} className="text-white py-3">
               <Link

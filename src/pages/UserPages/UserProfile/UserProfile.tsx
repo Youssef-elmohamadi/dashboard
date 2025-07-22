@@ -258,9 +258,9 @@ const UserProfile = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar/profile" },
-          { lang: "en", href: "https://tashtiba.vercel.app/en/profile" },
-          { lang: "x-default", href: "https://tashtiba.vercel.app/en/profile" },
+          { lang: "ar", href: "https://tashtiba.com/ar/profile" },
+          { lang: "en", href: "https://tashtiba.com/en/profile" },
+          { lang: "x-default", href: "https://tashtiba.com/en/profile" },
         ]}
       />
 

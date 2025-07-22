@@ -140,7 +140,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ type }) => {
     switch (step) {
       case 1:
         return (
-          <div className="border border-gray-200 dark:border-gray-800 p-12 rounded-2xl">
+          <div className="border border-gray-200 dark:border-gray-800  rounded-2xl p-4">
             <h2 className="text-2xl font-bold text-center mb-2 text-gray-800 dark:text-white">
               {t("forgotPasswordPage.title")}
             </h2>
@@ -256,18 +256,16 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ type }) => {
   };
 
   return (
-    <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
-      <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
-        {renderStep()}
-        {step > 1 && (
-          <button
-            onClick={() => setStep(step > 1 ? step - 1 : 1)}
-            className="w-full mt-4 py-2 border dark:text-gray-100 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-700 rounded-lg hover:bg-gray-100 transition"
-          >
-            {t("forgotPasswordPage.back")}
-          </button>
-        )}
-      </div>
+    <div>
+      {renderStep()}
+      {step > 1 && (
+        <button
+          onClick={() => setStep(step > 1 ? step - 1 : 1)}
+          className="w-full mt-4 py-2 border dark:text-gray-100 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-700 rounded-lg hover:bg-gray-100 transition"
+        >
+          {t("forgotPasswordPage.back")}
+        </button>
+      )}
     </div>
   );
 };

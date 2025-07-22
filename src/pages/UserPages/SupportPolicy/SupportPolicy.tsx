@@ -122,8 +122,8 @@ const SupportPolicyPage: React.FC = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar/support-policy" },
-          { lang: "en", href: "https://tashtiba.vercel.app/en/support-policy" },
+          { lang: "ar", href: "https://tashtiba.com/ar/support-policy" },
+          { lang: "en", href: "https://tashtiba.com/en/support-policy" },
         ]}
       />
 

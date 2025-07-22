@@ -27,9 +27,13 @@ interface CouponStatus {
 const Cart: React.FC = () => {
   const { t } = useTranslation(["EndUserCart"]);
   const dispatch = useDispatch();
-  const items = useSelector((state: RootState) => state.cart.items) as Product[];
+  const items = useSelector(
+    (state: RootState) => state.cart.items
+  ) as Product[];
   const totalPrice = useSelector((state: RootState) => state.cart.totalPrice);
-  const totalQuantity = useSelector((state: RootState) => state.cart.totalQuantity);
+  const totalQuantity = useSelector(
+    (state: RootState) => state.cart.totalQuantity
+  );
   const discount = useSelector((state: RootState) => state.cart.discount);
   const navigate = useNavigate();
 
@@ -120,8 +124,8 @@ const Cart: React.FC = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar/cart" }, // Adjust the path if your actual cart URL is different
-          { lang: "en", href: "https://tashtiba.vercel.app/en/cart" }, // Adjust the path if your actual cart URL is different
+          { lang: "ar", href: "https://tashtiba.com/ar/cart" }, // Adjust the path if your actual cart URL is different
+          { lang: "en", href: "https://tashtiba.com/en/cart" }, // Adjust the path if your actual cart URL is different
         ]}
       />
 

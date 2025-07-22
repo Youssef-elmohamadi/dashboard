@@ -55,9 +55,9 @@ export default function EndUserSignUp() {
         }}
         alternates={[
           // Assuming your sign-up page URL structure is like /ar/signup
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar/signup" },
-          { lang: "en", href: "https://tashtiba.vercel.app/en/signup" },
-          { lang: "x-default", href: "https://tashtiba.vercel.app/en/signup" }, // Default to English
+          { lang: "ar", href: "https://tashtiba.com/ar/signup" },
+          { lang: "en", href: "https://tashtiba.com/en/signup" },
+          { lang: "x-default", href: "https://tashtiba.com/en/signup" }, // Default to English
         ]}
       />
       <AuthLayout>

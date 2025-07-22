@@ -57,15 +57,15 @@ const UserForgotPassword = () => {
           // Assuming your forgot password page URL structure is like /ar/forgot-password
           {
             lang: "ar",
-            href: "https://tashtiba.vercel.app/ar/forgot-password",
+            href: "https://tashtiba.com/ar/forgot-password",
           },
           {
             lang: "en",
-            href: "https://tashtiba.vercel.app/en/forgot-password",
+            href: "https://tashtiba.com/en/forgot-password",
           },
           {
             lang: "x-default",
-            href: "https://tashtiba.vercel.app/en/forgot-password",
+            href: "https://tashtiba.com/en/forgot-password",
           }, // Default to English
         ]}
       />

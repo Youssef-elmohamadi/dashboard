@@ -151,13 +151,13 @@ const TopBar = () => {
 
       {/* Seller Links */}
       <div className="items-center flex-[2] hidden lg:flex">
-        <Link to="/admin">
+        <Link to="/admin/signup">
           <div className="p-2 text-sm text-secondary hover:text-black transition duration-300 cursor-pointer">
             {t("be_a_seller")}
           </div>
         </Link>
         <Separator />
-        <Link to="/admin">
+        <Link to="/admin/login">
           <div className="p-2 text-sm text-secondary hover:text-black transition duration-300 cursor-pointer">
             {t("login_as_seller")}
           </div>

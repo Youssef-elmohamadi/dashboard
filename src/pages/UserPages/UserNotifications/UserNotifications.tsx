@@ -22,7 +22,7 @@ import {
 } from "../../../hooks/Api/EndUser/useNotification/useEndUserNotification";
 const UserNotifications: React.FC = () => {
   const navigate = useNavigate();
-  const { lang } = useParams(); 
+  const { lang } = useParams();
   const { t } = useTranslation("EndUserNotifications");
 
   const primaryColor = "#9810fa";
@@ -149,11 +149,11 @@ const UserNotifications: React.FC = () => {
           ],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.vercel.app/ar/notifications" },
-          { lang: "en", href: "https://tashtiba.vercel.app/en/notifications" },
+          { lang: "ar", href: "https://tashtiba.com/ar/notifications" },
+          { lang: "en", href: "https://tashtiba.com/en/notifications" },
           {
             lang: "x-default",
-            href: "https://tashtiba.vercel.app/en/notifications",
+            href: "https://tashtiba.com/en/notifications",
           },
         ]}
       />
