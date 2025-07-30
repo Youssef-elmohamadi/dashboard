@@ -152,8 +152,8 @@ const Coupons = () => {
               label: "Status",
               type: "select",
               options: [
-                { label: t("couponsPage.status.active"), value: "1" },
-                { label: t("couponsPage.status.inactive"), value: "0" },
+                { label: "Active", value: "1" },
+                { label: "Inactive", value: "0" },
               ],
             },
             {
@@ -161,8 +161,8 @@ const Coupons = () => {
               label: "Type",
               type: "select",
               options: [
-                { label: t("couponsPage.types.fixed"), value: "fixed" },
-                { label: t("couponsPage.types.percent"), value: "percent" },
+                { label: "Fixed", value: "fixed" },
+                { label: "Percent", value: "percent" },
               ],
             },
             { key: "from_date", label: "From", type: "date" },

@@ -20,7 +20,7 @@ const BottomNav = () => {
   const hiddenRoutes = [
     `/${lang}/signin`,
     `/${lang}/signup`,
-    `/${lang}//reset-password`, // تحقق من هذا المسار المكرر لـ "//"
+    `/end_user/reset-password`, // تحقق من هذا المسار المكرر لـ "//"
   ];
   const shouldHide = hiddenRoutes.includes(location.pathname);
 

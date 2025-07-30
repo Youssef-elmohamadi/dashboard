@@ -1,3 +1,4 @@
+import React from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
 
 const FooterSection = ({
@@ -42,4 +43,4 @@ const FooterSection = ({
   );
 };
 
-export default FooterSection;
+export default React.memo(FooterSection);

@@ -118,6 +118,11 @@ export default function RecentOrders({ orders, userType }: RecentOrdersProps) {
             ))}
           </TableBody>
         </Table>
+        {orders?.length === 0 ? (
+          <p className="py-6 text-center text-gray-500 dark:text-gray-400">
+            {t("recentOrders.noData", "No recent orders available")}
+          </p>
+        ) : null}
       </div>
     </div>
   );

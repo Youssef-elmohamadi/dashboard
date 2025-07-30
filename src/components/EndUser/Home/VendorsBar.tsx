@@ -6,6 +6,7 @@ import LazyImage from "../../common/LazyImage";
 import { Vendor } from "../../../types/Home";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import React from "react";
 
 // Install Swiper modules
 // Swiper.use([Autoplay]); // No longer needed this way if using Swiper 9+ and importing directly
@@ -139,4 +140,4 @@ const VendorsCarousel = () => {
   );
 };
 
-export default VendorsCarousel;
+export default React.memo(VendorsCarousel);

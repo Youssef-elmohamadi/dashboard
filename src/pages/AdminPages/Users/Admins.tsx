@@ -157,9 +157,9 @@ const Admins = () => {
       />
       <SearchTable
         fields={[
-          { key: "name", label: t("AdminsTable:search.name"), type: "input" }, // تم التعديل
-          { key: "email", label: t("AdminsTable:search.email"), type: "input" }, // تم التعديل
-          { key: "phone", label: t("AdminsTable:search.phone"), type: "input" }, // تم التعديل
+          { key: "name", label: "Name", type: "input" }, // تم التعديل
+          { key: "email", label: "Email", type: "input" }, // تم التعديل
+          { key: "phone", label: "Phone", type: "input" }, // تم التعديل
         ]}
         setSearchParam={handleSearch}
         searchValues={searchValues}

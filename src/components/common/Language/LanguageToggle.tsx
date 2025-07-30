@@ -10,6 +10,7 @@ const LanguageToggle = () => {
   useEffect(() => {
     window.localStorage.setItem("i18nextLng", lang);
     window.localStorage.setItem("dir", dir);
+    document.documentElement.setAttribute("dir", dir);
   }, [lang, dir]);
 
   const changeLanguage = (lang: "en" | "ar") => {

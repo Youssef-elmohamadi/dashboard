@@ -10,7 +10,7 @@ i18n
   .init({
     supportedLngs: ["en", "ar"],
     detection: {
-      order: ["localStorage", "htmlTag", "cookie", "path", "subdomain"],
+      order: ["path", "localStorage", "htmlTag", "cookie", "subdomain"],
       caches: ["localStorage", "cookie"],
     },
     backend: {
@@ -23,7 +23,7 @@ i18n
       "AdminsTablesActions", //problem
       "OrderDetails", //problem
       "DateFilter", //problem
-      "TopSellingTable",//problem
+      "TopSellingTable", //problem
     ],
 
     defaultNS: "Signup",

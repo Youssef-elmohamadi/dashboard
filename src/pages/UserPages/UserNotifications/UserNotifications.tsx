@@ -56,9 +56,8 @@ const UserNotifications: React.FC = () => {
   const markAllAsReadMutation = useMarkAllNotificationsAsRead();
 
   const handleDeleteNotification = async (id: string) => {
-    // Changed type to string to match data
     try {
-      await deleteNotificationMutation.mutateAsync(id); // Ensure mutationFn accepts string if ID is string
+      await deleteNotificationMutation.mutateAsync(id);
       toast.success(
         t("notificationDeleted", {
           defaultValue: "Notification deleted successfully!",
@@ -72,9 +71,8 @@ const UserNotifications: React.FC = () => {
   };
 
   const handleMarkAsRead = async (id: string) => {
-    // Changed type to string to match data
     try {
-      await markAsReadMutation.mutateAsync(id); // Ensure mutationFn accepts string if ID is string
+      await markAsReadMutation.mutateAsync(id);
     } catch (error) {
       toast.error(
         t("markReadError", {
@@ -260,7 +258,7 @@ const UserNotifications: React.FC = () => {
                       </div>
                     </div>
                     <div className="flex-shrink-0 flex flex-col gap-2">
-                      {notification.is_read === 0 && ( // Only show if unread
+                      {notification.is_read === 0 && (
                         <button
                           onClick={() => handleMarkAsRead(notification.id)}
                           className="text-gray-500 hover:text-green-600 transition p-1 rounded-full hover:bg-gray-200"
@@ -318,4 +316,4 @@ const UserNotifications: React.FC = () => {
   );
 };
 
-export default UserNotifications;
+export default React.memo(UserNotifications);

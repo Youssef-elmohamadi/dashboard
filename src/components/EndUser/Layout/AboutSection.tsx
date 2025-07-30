@@ -177,4 +177,4 @@ const TashtibaAboutPage: React.FC = () => {
   );
 };
 
-export default TashtibaAboutPage;
+export default React.memo(TashtibaAboutPage);

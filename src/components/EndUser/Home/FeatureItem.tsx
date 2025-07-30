@@ -1,3 +1,4 @@
+import React from "react";
 import { FeatureItemProps } from "../../../types/Home";
 
 const FeatureItem = ({ icon, title, description }: FeatureItemProps) => {
@@ -10,4 +11,4 @@ const FeatureItem = ({ icon, title, description }: FeatureItemProps) => {
   );
 };
 
-export default FeatureItem;
+export default React.memo(FeatureItem);

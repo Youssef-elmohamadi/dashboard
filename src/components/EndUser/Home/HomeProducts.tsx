@@ -130,4 +130,4 @@ const HomeProducts: React.FC = () => {
   );
 };
 
-export default HomeProducts;
+export default React.memo(HomeProducts);

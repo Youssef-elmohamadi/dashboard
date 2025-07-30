@@ -3,7 +3,7 @@ import { Token } from "./_modales";
 import { setupCache } from "axios-cache-interceptor";
 const axiosInstanceEndUser = setupCache(
   axios.create({
-    baseURL: "http://127.0.0.1:8000",
+    baseURL: "https://tashtiba.com",
     headers: {
       "Content-Type": "application/json",
     },

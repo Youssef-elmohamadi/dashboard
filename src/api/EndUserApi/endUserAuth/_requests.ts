@@ -7,7 +7,7 @@ const getProfile = async () => {
   return await axiosJson.get("/api/user/profile");
 };
 
-const updateProfile = async (data) => {
+const updateProfile = async (data:any) => {
   return await axiosFormData.post("/api/user/profile/update", data);
 };
 

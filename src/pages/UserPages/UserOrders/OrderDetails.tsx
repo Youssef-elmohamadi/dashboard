@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { useNavigate, useParams } from "react-router-dom";
 import { showReviewPopup } from "../../../components/EndUser/Table/RateProduct";
-import { reviewProduct } from "../../../api/EndUserApi/ensUserProducts/_requests";
 import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 import { useTranslation } from "react-i18next";
@@ -10,8 +9,9 @@ import { useGetOrderById } from "../../../hooks/Api/EndUser/useOrders/useOrders"
 import { AxiosError } from "axios";
 import { Order } from "../../../types/Orders";
 import SEO from "../../../components/common/SEO/seo"; // Import your custom SEO component
-import { HiOutlineDocumentText, HiOutlineShoppingCart } from "react-icons/hi2"; // Icons for order details
+import { HiOutlineShoppingCart } from "react-icons/hi2"; // Icons for order details
 import { Circles } from "react-loader-spinner"; // For loaders
+import { useReviewProduct } from "../../../hooks/Api/EndUser/useProducts/useProducts";
 
 // Helper function to get status color
 const getStatusColor = (status: string) => {
@@ -60,7 +60,7 @@ const OrderDetailsPage: React.FC = () => {
       }
     }
   }, [isError, error]);
-
+ const {mutateAsync: reviewProduct} = useReviewProduct();
   const handleRateProduct = async (productId: number) => {
     const result = await showReviewPopup(
       productId,
@@ -72,7 +72,7 @@ const OrderDetailsPage: React.FC = () => {
     );
     if (result) {
       try {
-        reviewProduct(result);
+        await reviewProduct(result);
         Swal.fire(
           t("common.success"),
           t("orderDetails.reviewSubmitted"),

@@ -96,7 +96,7 @@ const Categories = () => {
           fields={[
             {
               key: "name",
-              label: t("CategoriesTable:search.name"),
+              label: "Name",
               type: "input",
             },
           ]}

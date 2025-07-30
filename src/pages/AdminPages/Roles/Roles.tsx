@@ -151,7 +151,7 @@ const Roles = () => {
       <div>
         <SearchTable
           fields={[
-            { key: "name", label: t("RolesTable:search.name"), type: "input" },
+            { key: "name", label: "Name", type: "input" },
           ]}
           setSearchParam={handleSearch}
           searchValues={searchValues}

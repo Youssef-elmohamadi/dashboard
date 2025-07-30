@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import StarRatings from "react-star-ratings";
 import { MdOutlineStarBorder } from "react-icons/md";
@@ -114,4 +114,4 @@ const ProductCard = ({
   );
 };
 
-export default ProductCard;
+export default React.memo(ProductCard);

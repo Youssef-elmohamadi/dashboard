@@ -14,7 +14,9 @@
     "price": "Price",
     "na": "N/A",
     "unknown": "Unknown",
+
     "egp": "EGP",
+    "noData": "No recent orders available",
     "statuses": {
       "delivered": "Delivered",
       "shipped": "Shipped",

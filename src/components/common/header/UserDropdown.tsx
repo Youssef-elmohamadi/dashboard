@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
 import { DropdownItem } from "../../ui/dropdown/DropdownItem";
 import { Dropdown } from "../../ui/dropdown/Dropdown";
-import { showUser } from "../../../api/AdminApi/profileApi/_requests";
 import { handleLogout } from "../../common/Auth/Logout";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useNavigate } from "react-router";
+import { useAdminUser } from "../../../hooks/Api/Admin/useProfile/useAdminProfile";
+import { useSuperAdminProfile } from "../../../hooks/Api/SuperAdmin/useProfile/useSuperAdminProfile";
 interface UserDropDownProps {
   userType: "admin" | "super_admin";
 }
 export default function UserDropdown({ userType }: UserDropDownProps) {
   const { t } = useTranslation(["UserDropdown"]);
   const [isOpen, setIsOpen] = useState(false);
-  const { dir } = useDirectionAndLanguage();
+  const { dir, lang } = useDirectionAndLanguage();
+
   function toggleDropdown() {
     setIsOpen(!isOpen);
   }
@@ -29,31 +31,18 @@ export default function UserDropdown({ userType }: UserDropDownProps) {
     avatar: "",
   });
   const navigate = useNavigate();
+  const storedUserId = localStorage.getItem("admin_id");
+  const { data: adminUserData } = useAdminUser(storedUserId || "");
+  const { data: superAdminUserData } = useSuperAdminProfile(
+    userType === "super_admin"
+  );
   useEffect(() => {
-    const storedUserId = localStorage.getItem("admin_id");
-    if (!storedUserId) return;
-
-    const fetchData = async (id: string) => {
-      try {
-        if (userType === "admin") {
-          const res = await showUser(id);
-          setDataUser(res.data.data);
-        } else {
-          setDataUser({
-            first_name: "Mariam",
-            last_name: "Darouch",
-            roles: [],
-            avatar: "",
-            email: "Mariam@SuperAdmin.Tash",
-          });
-        }
-      } catch (error) {
-        console.error("Failed to get data", error);
-      }
-    };
-
-    fetchData(storedUserId);
-  }, [userType]);
+    if (userType === "admin" && adminUserData) {
+      setDataUser(adminUserData.data.data);
+    } else if (userType === "super_admin" && superAdminUserData) {
+      setDataUser(superAdminUserData.data.data);
+    }
+  }, [adminUserData, superAdminUserData, userType]);
   return (
     <div className="relative">
       <button
@@ -108,7 +97,7 @@ export default function UserDropdown({ userType }: UserDropDownProps) {
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
-              to="/admin/profile"
+              to={`/${userType}/profile`}
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               <svg
@@ -133,7 +122,7 @@ export default function UserDropdown({ userType }: UserDropDownProps) {
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
-              to="/admin/profile"
+              to={`/${userType}/profile`}
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               <svg
@@ -154,7 +143,7 @@ export default function UserDropdown({ userType }: UserDropDownProps) {
               {t("accountSettings")}
             </DropdownItem>
           </li>
-          <li>
+          {/* <li>
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
@@ -178,11 +167,11 @@ export default function UserDropdown({ userType }: UserDropDownProps) {
               </svg>
               {t("support")}
             </DropdownItem>
-          </li>
+          </li> */}
         </ul>
         <button
           onClick={() => {
-            handleLogout(userType, navigate);
+            handleLogout(userType, navigate, lang);
           }}
           className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
         >

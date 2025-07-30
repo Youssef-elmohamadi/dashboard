@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import ProductCard from "../../../components/EndUser/Product/ProductCard";
 import { useAllFavoriteProducts } from "../../../hooks/Api/EndUser/useProducts/useFavoriteProducts";
 import { Circles } from "react-loader-spinner";
@@ -12,9 +12,8 @@ import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 const ProductsFavorite = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("EndUserFavProducts");
-  // Brand colors from your UserProfile/UserNotifications components
-  const primaryColor = "#9810fa"; // Lighter purple for accents/active states
-  const secondaryColor = "#542475"; // Deeper purple for text/main elements
+  const primaryColor = "#9810fa"; 
+  const secondaryColor = "#542475"; 
   const { lang } = useDirectionAndLanguage();
   useEffect(() => {
     const token = localStorage.getItem("end_user_token");
@@ -26,7 +25,7 @@ const ProductsFavorite = () => {
       );
       navigate(`/${lang}/signin`, { replace: true });
     }
-  }, [navigate, t]); // Add 't' to dependency array
+  }, [navigate, t]); 
 
   const { data, isLoading, isFetching, hasNextPage, fetchNextPage, isError } =
     useAllFavoriteProducts();
@@ -168,4 +167,4 @@ const ProductsFavorite = () => {
   );
 };
 
-export default ProductsFavorite;
+export default React.memo(ProductsFavorite); 

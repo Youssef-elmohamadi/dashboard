@@ -1,13 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-    cancelOrder,
+  cancelOrder,
   getOrderById,
   getOrdersWithPaginate,
 } from "../../../../api/EndUserApi/endUserOrders/_requests";
 
 export const useAllOrdersPaginate = (page: number) => {
   return useQuery({
-    queryKey: ["EndUsersOrders", page],
+    queryKey: ["EndUserOrders", page],
     queryFn: async () => {
       const response = await getOrdersWithPaginate({
         page: page + 1,
@@ -36,8 +36,8 @@ export const useCancelOrder = () => {
       return await cancelOrder(id);
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["EndUsersOrders"] });
-      queryClient.invalidateQueries({ queryKey: ["EndUsersOrders", "all"] });
+      queryClient.invalidateQueries({ queryKey: ["EndUserOrders"] });
+      queryClient.invalidateQueries({ queryKey: ["EndUserOrders", "all"] });
       queryClient.invalidateQueries({ queryKey: ["endUserOrder", variables] });
     },
     onError: (error) => {

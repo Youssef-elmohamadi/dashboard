@@ -2,12 +2,10 @@ import { useEffect } from "react";
 import AuthLayout from "../../../components/common/Auth/AuthPageLayout";
 import ResetPassword from "../../../components/common/Auth/ResetPassword";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import SEO from "../../../components/common/SEO/seo"; // Import your custom SEO component
 
 const UserForgotPassword = () => {
-  const { t } = useTranslation(["auth"]);
   const navigate = useNavigate();
   const { lang } = useDirectionAndLanguage(); // Assuming this context provides 'lang'
 

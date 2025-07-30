@@ -76,8 +76,6 @@ const ProductDetails: React.FC = () => {
       </div>
     );
   }
-
-  // Generate dynamic keywords and description based on product data
   const generateKeywords = () => {
     const baseKeywords =
       lang === "ar"
@@ -142,7 +140,6 @@ const ProductDetails: React.FC = () => {
           en: generateKeywords(),
         }}
         alternates={[
-          // Use product ID in the URL for language alternates
           {
             lang: "ar",
             href: `https://tashtiba.com/ar/product/${product.id}`,
@@ -154,17 +151,17 @@ const ProductDetails: React.FC = () => {
           {
             lang: "x-default",
             href: `https://tashtiba.com/en/product/${product.id}`,
-          }, // Consider a default if you have one
+          }, 
         ]}
       />
       <div className="grid lg:grid-cols-2 gap-10">
         {/* Left: Product Image + Thumbnails */}
         <div>
-          <div className="border border-gray-200 rounded-2xl overflow-hidden shadow-md">
+          <div className="border min-h-[400px] border-gray-200 rounded-2xl overflow-hidden shadow-md">
             {selectedImage && (
               <InnerImageZoom
                 src={selectedImage}
-                className="w-full h-[350px] object-contain"
+                className="w-full h-[400px] object-contain"
               />
             )}
           </div>
@@ -183,13 +180,11 @@ const ProductDetails: React.FC = () => {
           </div>
         </div>
 
-        {/* Right: Product Info */}
         <div className="space-y-6">
           <h1 className="text-3xl font-semibold text-gray-800">
             {product.name}
           </h1>
 
-          {/* Rating */}
           <div className="flex items-center gap-2">
             <StarRatings
               rating={product.rate || 0}
@@ -333,4 +328,4 @@ const ProductDetails: React.FC = () => {
   );
 };
 
-export default ProductDetails;
+export default React.memo(ProductDetails);

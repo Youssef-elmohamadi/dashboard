@@ -1,35 +1,48 @@
-import React, { createContext, useState, ReactNode, useEffect } from "react";
-import { showUser } from "../../../api/AdminApi/profileApi/_requests";
+import { createContext, useState, useEffect, ReactNode } from "react";
+import { getSuperAdminProfile } from "../../../api/SuperAdminApi/profileApi/_request";
 import { handleLogout } from "../../common/Auth/Logout";
+import { useNavigate } from "react-router-dom";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
-interface UserContextType {
-  userId: number | null;
-  setUserId: (id: number) => void;
+interface SuperAdminContextType {
+  isAuthenticated: boolean;
+  setIsAuthenticated: (value: boolean) => void;
 }
 
-export const UserContext = createContext<UserContextType>({
-  userId: null,
-  setUserId: () => {},
+export const SuperAdminContext = createContext<SuperAdminContextType>({
+  isAuthenticated: false,
+  setIsAuthenticated: () => {},
 });
 
-interface UserProviderProps {
+interface SuperAdminProviderProps {
   children: ReactNode;
 }
 
-export const SuperAdminProvider = ({ children }: UserProviderProps) => {
-  const [userId, setUserId] = useState<number | null>(null);
+export const SuperAdminProvider = ({ children }: SuperAdminProviderProps) => {
+  const navigate = useNavigate();
+  const { lang } = useDirectionAndLanguage();
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const storedSuperAdminId = localStorage.getItem("super_admin_token");
+    const fetchProfile = async () => {
+      try {
+        await getSuperAdminProfile();
+        setIsAuthenticated(true);
+      } catch (error: any) {
+        console.error("Failed to fetch super admin profile", error);
+        if (error.response?.status === 401) {
+          handleLogout("super_admin", navigate, lang);
+        }
+      }
+    };
 
-    if (storedSuperAdminId) {
-      setUserId(Number(storedSuperAdminId));
-    }
+    fetchProfile();
   }, []);
 
   return (
-    <UserContext.Provider value={{ userId, setUserId }}>
+    <SuperAdminContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
       {children}
-    </UserContext.Provider>
+    </SuperAdminContext.Provider>
   );
 };

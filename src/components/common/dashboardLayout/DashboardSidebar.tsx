@@ -93,7 +93,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       icon: <PiSignOut />,
       name: t("Logout"),
       action: () => {
-        handleLogout("admin", navigate);
+        handleLogout("admin", navigate, lang);
       },
     },
   ];
@@ -155,7 +155,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       icon: <PiSignOut />,
       name: t("Logout"),
       action: () => {
-        handleLogout("super_admin", navigate);
+        handleLogout("super_admin", navigate, lang);
       },
     },
   ];
@@ -163,7 +163,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
     userType === "super_admin" ? SuperAdminNavItems : AdminNavItems;
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
-  const { dir } = useDirectionAndLanguage();
+  const { dir, lang } = useDirectionAndLanguage();
 
   const [openSubmenu, setOpenSubmenu] = useState<{
     type: "main" | "others";
@@ -411,7 +411,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
               <>
                 <img
                   className="dark:hidden"
-                  src="/images/logo/logo.png"
+                  src="/images/logo/light-logo.webp"
                   alt="Logo"
                   width={150}
                   height={40}
@@ -426,7 +426,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
               </>
             ) : (
               <img
-                src="/images/logo/logo-icon.svg"
+                src="/images/logo/logo-icon.png"
                 alt="Logo"
                 width={32}
                 height={32}
@@ -439,7 +439,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
               <>
                 <img
                   className="dark:hidden"
-                  src="/images/logo/logo.png"
+                  src="/images/logo/light-logo.webp"
                   alt="Logo"
                   width={150}
                   height={40}
@@ -454,7 +454,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
               </>
             ) : (
               <img
-                src="/images/logo/logo-icon.svg"
+                src="/images/logo/logo-icon.png"
                 alt="Logo"
                 width={32}
                 height={32}

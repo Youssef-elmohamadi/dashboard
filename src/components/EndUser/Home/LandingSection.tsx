@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
@@ -62,6 +62,11 @@ const LandingSection = () => {
       <div className="absolute inset-0">
         <img
           src="/images/landing.webp"
+          srcSet="
+      /images/landing-mobile.webp 600w,
+      /images/landing.webp 1200w
+    "
+          sizes="(max-width: 768px) 100vw, 100vw"
           width={1920}
           height={1080}
           alt={backgroundAlt}
@@ -107,4 +112,4 @@ const LandingSection = () => {
   );
 };
 
-export default LandingSection;
+export default memo(LandingSection);

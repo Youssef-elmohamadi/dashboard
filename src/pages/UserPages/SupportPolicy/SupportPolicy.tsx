@@ -186,4 +186,4 @@ const SupportPolicyPage: React.FC = () => {
   );
 };
 
-export default SupportPolicyPage;
+export default React.memo(SupportPolicyPage);

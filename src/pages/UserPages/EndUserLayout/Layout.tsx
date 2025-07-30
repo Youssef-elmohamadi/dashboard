@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Outlet } from "react-router-dom";
 import AppHeader from "../../../components/EndUser/Layout/AppHeader";
 import NavBar from "../../../components/EndUser/Layout/NavBar";
@@ -8,28 +8,31 @@ import AboutTashtiba from "../../../components/EndUser/Layout/AboutSection";
 
 export default function EndUserLayout() {
   const [hidden, setHidden] = useState(false);
-  const [lastScroll, setLastScroll] = useState(0);
+  const lastScrollRef = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
+      const lastScroll = lastScrollRef.current;
 
-      if (currentScroll <= 10) {
+      
+      if (currentScroll <= 10 && hidden) {
         setHidden(false);
-      } else if (currentScroll > lastScroll && currentScroll > 100) {
+      } else if (currentScroll > lastScroll && currentScroll > 100 && !hidden) {
         setHidden(true);
       }
 
-      setLastScroll(currentScroll);
+      
+      lastScrollRef.current = currentScroll;
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScroll]);
+  }, [hidden]); 
 
   return (
     <div className="bg-white! text-black dark:bg-white!  dark:text-black min-h-screen">
-      {/* TopBar */}
+      
       <div
         className={`sticky z-[50] !bg-white shadow-md transition-all duration-400 ease-in-out ${
           hidden ? "top-0" : "top-12"
@@ -44,7 +47,6 @@ export default function EndUserLayout() {
         </div>
         <AppHeader />
       </div>
-
       {/* NavBar */}
       <div
         className={`fixed left-0 w-full z-[10] transition-transform duration-500 ease-in-out ${
@@ -54,12 +56,9 @@ export default function EndUserLayout() {
       >
         <NavBar />
       </div>
-
-      {/* Main content */}
       <main className="md:pt-[95px] !bg-white pt-[50px]">
         <Outlet />
       </main>
-
       <footer>
         <AboutTashtiba />
         <Footer />

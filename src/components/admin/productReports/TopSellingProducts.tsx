@@ -67,23 +67,32 @@ export default function TopSelligProducts({
             </TableRow>
           </TableHeader>
 
-          <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
-            {products?.map((product, idx) => (
-              <TableRow key={idx}>
-                <TableCell className="py-3 !text-center">
-                  <div className="flex justify-center !text-center items-center gap-3 text-gray-500">
-                    {product.id}
-                  </div>
-                </TableCell>
-                <TableCell className="py-3 text-gray-500 !text-center text-theme-sm dark:text-gray-400">
-                  {product.name}
-                </TableCell>
-                <TableCell className="py-3 text-gray-500 !text-center text-theme-sm dark:text-gray-400">
-                  {product.total_sold}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+<TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
+  {products.length > 0 ? (
+    products.map((product, idx) => (
+      <TableRow key={idx}>
+        <TableCell className="py-3 !text-center">
+          <div className="flex justify-center items-center gap-3 text-gray-500">
+            {product.id}
+          </div>
+        </TableCell>
+        <TableCell className="py-3 text-gray-500 !text-center text-theme-sm dark:text-gray-400">
+          {product.name}
+        </TableCell>
+        <TableCell className="py-3 text-gray-500 !text-center text-theme-sm dark:text-gray-400">
+          {product.total_sold}
+        </TableCell>
+      </TableRow>
+    ))
+  ) : (
+    <TableRow>
+      <td colSpan={3} className="py-6 text-center text-gray-400 text-theme-sm">
+        {t("noData", "لا توجد بيانات")}
+      </td>
+    </TableRow>
+  )}
+</TableBody>
+
         </Table>
       </div>
     </div>

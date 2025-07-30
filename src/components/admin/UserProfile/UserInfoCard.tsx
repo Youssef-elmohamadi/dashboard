@@ -4,13 +4,15 @@ import Button from "../../ui/button/Button";
 import Input from "../../common/input/InputField";
 import Label from "../../common/form/Label";
 import { useEffect, useState } from "react";
-import {
-  getAdminById,
-  updateAdmin,
-} from "../../../api/AdminApi/usersApi/_requests";
 import { useTranslation } from "react-i18next";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+
+import { useAdminUser } from "../../../hooks/Api/Admin/useProfile/useAdminProfile"; // Assuming this hook fetches admin profile data
+import { useSuperAdminProfile } from "../../../hooks/Api/SuperAdmin/useProfile/useSuperAdminProfile"; // Assuming this hook fetches super admin profile data
+
+// Import the dedicated update hooks
+import { useUpdateAdminUser } from "../../../hooks/Api/Admin/useProfile/useAdminProfile"; // Your existing useUpdateAdmin hook
+import { useUpdateSuperAdminProfile } from "../../../hooks/Api/SuperAdmin/useProfile/useSuperAdminProfile"; // The new hook we just created
 
 interface UserData {
   first_name: string;
@@ -49,41 +51,41 @@ export default function UserInfoCard({ userType }: { userType: string }) {
     Record<string, string>
   >({});
 
-  const queryClient = useQueryClient();
+  const storedAdminId = localStorage.getItem("admin_id");
+  const adminId = userType === "admin" ? storedAdminId : undefined;
 
   const {
-    data: userData,
-    isLoading,
-    error,
-  } = useQuery<UserData, Error>({
-    queryKey: ["userData"],
-    queryFn: async () => {
-      const storedUserId = localStorage.getItem("admin_id");
-      if (!storedUserId) throw new Error("User ID not found in localStorage");
-      if (userType === "admin") {
-        const res = await getAdminById(storedUserId);
-        return res.data.data;
-      } else {
-        return {
-          first_name: "Mariam",
-          last_name: "Darouich",
-          email: "Mariam@yahoo.com",
-          phone: "796423522",
-          roles: [{ name: "" }],
-          avatar: "",
-          password: "",
-        };
-      }
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+    data: adminUserData,
+    isLoading: isAdminLoading,
+    error: adminError,
+  } = useAdminUser(adminId || "");
 
-  // تحديث dataUser لما userData تتغير
+  const {
+    data: superAdminProfileData,
+    isLoading: isSuperAdminLoading,
+    error: superAdminError,
+  } = useSuperAdminProfile();
+
+  const userData = userType === "admin" ? adminUserData : superAdminProfileData;
+  const isLoading = userType === "admin" ? isAdminLoading : isSuperAdminLoading;
+  const error = userType === "admin" ? adminError : superAdminError;
+
+  const { mutateAsync: updateAdminMutate, isPending: isUpdateAdminLoading } =
+    useUpdateAdminUser();
+  const {
+    mutateAsync: updateSuperAdminMutate,
+    isPending: isUpdateSuperAdminLoading,
+  } = useUpdateSuperAdminProfile();
+
   useEffect(() => {
     if (userData) {
-      setDataUser(userData);
+      if (userType === "admin" && userData.data) {
+        setDataUser(userData.data.data);
+      } else if (userType === "super_admin" && userData.data) {
+        setDataUser(userData.data.data);
+      }
     }
-  }, [userData]);
+  }, [userData, userType]);
 
   useEffect(() => {
     return () => {
@@ -128,7 +130,6 @@ export default function UserInfoCard({ userType }: { userType: string }) {
     }));
   };
 
-  // التحقق من الحقول
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!updateData.first_name)
@@ -145,26 +146,6 @@ export default function UserInfoCard({ userType }: { userType: string }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  // تحديث بيانات المستخدم باستخدام useMutation
-  const updateUserMutation = useMutation({
-    mutationFn: (formData: FormData) => {
-      const userId = localStorage.getItem("admin_id");
-      if (!userId) throw new Error("User ID not found in localStorage");
-      return updateAdmin(userId, formData);
-    },
-    onSuccess: () => {
-      toast.success(t("editInfoCard.successUpdate"));
-      queryClient.invalidateQueries({ queryKey: ["userData"] });
-      closeModal();
-      setSelectedImage(null);
-      setImageFile(null);
-    },
-    onError: (error: any) => {
-      toast.error(t("editInfoCard.errorUpdate"));
-      console.error("Failed to update user", error);
-    },
-  });
-
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -172,19 +153,54 @@ export default function UserInfoCard({ userType }: { userType: string }) {
 
     const formData = new FormData();
     formData.append("first_name", updateData.first_name);
+    console.log(updateData.first_name);
+    console.log(formData.get("first_name"));
+
     formData.append("last_name", updateData.last_name);
     formData.append("email", updateData.email);
     formData.append("phone", updateData.phone);
     if (updateData.password) {
       formData.append("password", updateData.password);
     }
-    formData.append("role", dataUser.roles[0].name);
+
+    if (dataUser.roles && dataUser.roles.length > 0 && dataUser.roles[0].name) {
+      formData.append("role", dataUser.roles[0].name);
+    }
     if (imageFile) {
       formData.append("avatar", imageFile);
     }
+    console.log(updateData);
+    console.log(formData);
 
-    updateUserMutation.mutate(formData);
+    try {
+      if (userType === "admin") {
+        if (!adminId) {
+          toast.error("Admin ID is missing for update.");
+          return;
+        }
+        console.log(formData.get("first_name"));
+        console.log(formData.get("last_name"));
+        console.log(formData.get("email"));
+        console.log(formData.get("phone"));
+        console.log(formData.get("role"));
+        await updateAdminMutate({ id: adminId, adminData: formData });
+        toast.success(t("editInfoCard.successUpdate"));
+      } else if (userType === "super_admin") {
+        console.log("submit");
+        await updateSuperAdminMutate(formData);
+        toast.success(t("editInfoCard.successUpdate"));
+      }
+      closeModal();
+      setSelectedImage(null);
+      setImageFile(null);
+    } catch (error: any) {
+      toast.error(t("editInfoCard.errorUpdate"));
+      console.error("Failed to update user", error);
+    }
   };
+
+  const isUpdating =
+    userType === "admin" ? isUpdateAdminLoading : isUpdateSuperAdminLoading;
 
   if (isLoading) {
     return (
@@ -195,10 +211,19 @@ export default function UserInfoCard({ userType }: { userType: string }) {
   }
   if (error) {
     return (
-      <div className="text-red-600">{t("userInfoCard.errorFetching")}</div>
+      <div className="text-red-600">
+        {t("userInfoCard.errorFetching")}: {error.message}
+      </div>
     );
   }
 
+  if (!dataUser || !dataUser.first_name) {
+    return (
+      <div className="text-center text-gray-600 dark:text-gray-300">
+        {t("userInfoCard.noData")}
+      </div>
+    );
+  }
   return (
     <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
@@ -411,7 +436,13 @@ export default function UserInfoCard({ userType }: { userType: string }) {
               <Button size="sm" variant="outline" onClick={closeModal}>
                 {t("editInfoCard.close")}
               </Button>
-              <button type="submit">{t("editInfoCard.save")}</button>
+              <button
+                type="submit"
+                className="flex items-center justify-center gap-2 rounded-full bg-primary-500 px-4 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isUpdating}
+              >
+                {isUpdating ? t("editInfoCard.saving") : t("editInfoCard.save")}
+              </button>
             </div>
           </form>
         </div>

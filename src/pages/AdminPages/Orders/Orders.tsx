@@ -121,13 +121,13 @@ const Orders = () => {
           fields={[
             {
               key: "tracking_number",
-              label: t("OrdersTable:search.tracking_number"),
+              label: "Tracking Number",
               type: "input",
-            }, // Added namespace
+            },
 
             {
               key: "status",
-              label: t("OrdersTable:search.status"), // Added namespace
+              label: "Status",
               type: "select",
               options: [
                 {
@@ -154,13 +154,13 @@ const Orders = () => {
             },
             {
               key: "shipping_status",
-              label: t("OrdersTable:search.shipping_status"), // Added namespace
+              label: "Shipping Status", // Added namespace
               type: "select",
               options: [
                 {
                   label: t("OrdersTable:ordersPage.statuses.pending"),
                   value: "pending",
-                }, // Added namespace
+                },
                 {
                   label: t("OrdersTable:ordersPage.statuses.shipped"),
                   value: "shipped",
@@ -173,10 +173,10 @@ const Orders = () => {
             },
             {
               key: "from_date",
-              label: t("OrdersTable:search.from"),
+              label: "From", // Added namespace
               type: "date",
             }, // Added namespace
-            { key: "to_date", label: t("OrdersTable:search.to"), type: "date" }, // Added namespace
+            { key: "to_date", label: "To", type: "date" }, // Added namespace
           ]}
           setSearchParam={handleSearch}
           searchValues={searchValues}

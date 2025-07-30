@@ -5,5 +5,6 @@
   "total": "Total Sold",
   "seeAll": "See All",
   "filter": "Filter",
-  "loading": "Loading Data..."
+  "loading": "Loading Data...",
+  "noData": "No Data Available"
 }

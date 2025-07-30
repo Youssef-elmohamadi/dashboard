@@ -1,13 +1,13 @@
-import { useParams, useSearchParams } from "react-router-dom";
-import ProductCard from "../../../components/EndUser/Product/ProductCard";
-import { Circles } from "react-loader-spinner";
-import { useTranslation } from "react-i18next";
-import { useProductsByCategory } from "../../../hooks/Api/EndUser/useProducts/useProducts";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { Category } from "../../../types/Categories";
 import LazyImage from "../../../components/common/LazyImage";
 import SEO from "../../../components/common/SEO/seo";
+import { useParams, useSearchParams } from "react-router-dom";
+import { useProductsByCategory } from "../../../hooks/Api/EndUser/useProducts/useProducts";
+import { Circles } from "react-loader-spinner";
+import ProductCard from "../../../components/EndUser/Product/ProductCard";
+import { useTranslation } from "react-i18next";
 
 const Shop = () => {
   const { category_id, lang } = useParams();
@@ -128,4 +128,4 @@ const Shop = () => {
   );
 };
 
-export default Shop;
+export default React.memo(Shop);

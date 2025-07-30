@@ -3,7 +3,8 @@ import GridShape from "./GridShape";
 import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 import ThemeTogglerTwo from "../Theme/ThemeTogglerTwo";
-
+import { useLocation } from "react-router-dom";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 interface AuthLayoutProps {
   children: React.ReactNode;
   userType?: "admin" | "super_admin" | "end_user" | string;
@@ -29,11 +30,23 @@ export default function AuthLayout({
   };
 
   const linkTo = routeMap[userType] ?? "/";
-
+  const location = useLocation();
+  const { lang } = useDirectionAndLanguage();
+  const loginPath =
+    location.pathname === `/${lang}/signin` ||
+    location.pathname === `/admin/signin` ||
+    location.pathname === `/super_admin/signin` ||
+    location.pathname === `/super_admin/reset-password` ||
+    location.pathname === `/admin/reset-password` ||
+    location.pathname === `/end_user/reset-password`;
   return (
-    <div className="relative p-6 bg-white z-1 dark:bg-gray-900 sm:p-0">
-      <div className="relative flex justify-center w-full h-screen dark:bg-gray-900 sm:p-0">
-        <div className="flex flex-col lg:justify-center items-center gap-5 w-full h-full lg:w-1/2 p-6 sm:p-0">
+    <div className="relative p-4 bg-white z-1 dark:bg-gray-900 sm:p-0">
+      <div
+        className={`relative flex ${
+          loginPath && "items-center"
+        } w-full  dark:bg-gray-900 sm:p-0`}
+      >
+        <div className="flex flex-col justify-center items-center gap-5 w-full h-full lg:w-1/2 p-4 sm:p-0">
           <div className="lg:hidden flex flex-col justify-center lg:flex-row lg:items-center mt-8">
             <Link to={linkTo} className="flex justify-center mb-4">
               <img
@@ -55,7 +68,7 @@ export default function AuthLayout({
           {children}
         </div>
 
-        <div className="items-center hidden w-full h-full lg:w-1/2 bg-brand-950 dark:bg-white/5 lg:grid">
+        <div className="hidden w-full h-screen lg:w-1/2 bg-brand-950 dark:bg-white/5 lg:grid sticky top-0">
           <div className="relative flex items-center justify-center z-1">
             <GridShape />
             <div className="flex flex-col items-center max-w-xs">
@@ -73,14 +86,13 @@ export default function AuthLayout({
             </div>
           </div>
         </div>
-
-        <div
-          className={`fixed z-50 hidden bottom-6 sm:block ${
-            isRTL ? "left-6" : "right-6"
-          }`}
-        >
-          <ThemeTogglerTwo />
-        </div>
+      </div>
+      <div
+        className={`fixed z-50 hidden bottom-6 sm:block ${
+          isRTL ? "left-6" : "right-6"
+        }`}
+      >
+        <ThemeTogglerTwo />
       </div>
     </div>
   );

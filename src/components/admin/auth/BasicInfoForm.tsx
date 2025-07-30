@@ -13,6 +13,7 @@ function BasicInfoForm({
   const [showPassword, setShowPassword] = useState(false);
 
   const { t } = useTranslation(["auth"]);
+  console.log(serverErrors.errors["adminInfo.phone"]);
 
   return (
     <div className="">
@@ -28,6 +29,7 @@ function BasicInfoForm({
             {t("basicInformation.firstName")}
             <span className="text-error-500">*</span>
           </Label>
+
           <Input
             type="text"
             id="first_name"

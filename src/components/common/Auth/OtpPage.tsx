@@ -107,7 +107,7 @@ const OTPPage: React.FC<OTPPageProps> = ({
               }}
               type="text"
               maxLength={1}
-              className="md:w-12 md:h-12 h-8 w-8 **: text-center text-xl border  dark:border-gray-800 dark:bg-gray-600 dark:text-gray-100 border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="md:w-7 md:h-7 h-6 w-6 text-center text-xl border  dark:border-gray-800 dark:bg-gray-600 dark:text-gray-100 border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={digit}
               onKeyDown={(e) => handleKeyDown(e, idx)}
               onChange={(e) => handleChange(e.target.value, idx)}

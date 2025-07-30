@@ -1,20 +1,22 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "./customSwiper.css";
 import { Link, useParams } from "react-router-dom";
 import { Category } from "../../../types/Categories";
 import LazyImage from "../../common/LazyImage";
 import CircleSkeletonSlider from "./CircleSkeletonSlider";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 interface CategorySliderProps {
-  items?: Category[];
-  rtl?: boolean;
+  items: Category[];
+  loading?: boolean;
 }
 
-const CircleSlider: FC<CategorySliderProps> = ({ items, rtl = false }) => {
+const CircleSlider: FC<CategorySliderProps> = ({ items, loading }) => {
   const { lang } = useParams();
+  const { dir } = useDirectionAndLanguage();
 
-  if (!items) {
+  if (loading) {
     return (
       <div className="flex gap-4 overflow-x-auto justify-center my-10 px-4">
         <CircleSkeletonSlider />
@@ -23,9 +25,10 @@ const CircleSlider: FC<CategorySliderProps> = ({ items, rtl = false }) => {
   }
 
   return (
-    <Swiper
+ <div className="w-full h-52">
+      <Swiper
       spaceBetween={20}
-      dir={rtl ? "rtl" : "ltr"}
+      dir={dir}
       breakpoints={{
         1024: { slidesPerView: 5 },
         768: { slidesPerView: 4 },
@@ -39,12 +42,12 @@ const CircleSlider: FC<CategorySliderProps> = ({ items, rtl = false }) => {
             ? `تصنيف تشطيبة ${item.name}`
             : `Tashtiba Category ${item.name}`;
 
-        const shouldEagerLoad = index < 3;
+        const shouldEagerLoad = index < 2;
 
         return (
           <SwiperSlide key={index}>
             <Link
-              to={`/category/${item.id}`}
+              to={`/${lang}/category/${item.id}`}
               className="flex flex-col items-center justify-center gap-2 my-10"
             >
               <LazyImage
@@ -53,7 +56,7 @@ const CircleSlider: FC<CategorySliderProps> = ({ items, rtl = false }) => {
                 width={120}
                 height={120}
                 loading={shouldEagerLoad ? "eager" : "lazy"}
-                fetchPriority={shouldEagerLoad ? "high" : undefined}
+                fetchPriority={shouldEagerLoad ? "high" : "low"}
                 className="w-[120px] h-[120px] rounded-full object-cover border border-gray-200 shadow-sm"
               />
               <span className="text-center font-medium text-purple-600">
@@ -64,7 +67,8 @@ const CircleSlider: FC<CategorySliderProps> = ({ items, rtl = false }) => {
         );
       })}
     </Swiper>
+ </div>
   );
 };
 
-export default CircleSlider;
+export default memo(CircleSlider);

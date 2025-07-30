@@ -61,7 +61,6 @@ const Orders = () => {
   const { mutateAsync: cancelOrderMutation } = useCancelOrder(); // Use isPending for loading state
   const handleCancel = async (id: number) => {
     await alertDelete(id, cancelOrderMutation, refetch, {
-      // Pass the mutation function
       confirmTitle: t("cancelAlert.cancelTitle"),
       confirmText: t("cancelAlert.cancelText"),
       confirmButtonText: t("cancelAlert.confirmButtonText"),

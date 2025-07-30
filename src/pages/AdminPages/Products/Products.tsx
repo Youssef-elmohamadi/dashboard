@@ -171,10 +171,10 @@ const Products = () => {
       <div>
         <SearchTable
           fields={[
-            { key: "name", label: t("ProductsTable:search.name"), type: "input" }, // Corrected namespace usage for "Name"
+            { key: "name", label: "Name", type: "input" }, // Corrected namespace usage for "Name"
             {
               key: "category_id",
-              label: t("ProductsTable:search.category"), // إضافة namespace
+              label: "Category", // إضافة namespace
               type: "select",
               options: categories?.map((category: Category) => ({
                 label: category.name, // قد لا يكون هذا مترجمًا، فهو يأتي من الـ API
@@ -183,7 +183,7 @@ const Products = () => {
             },
             {
               key: "brand_id",
-              label: t("ProductsTable:search.brand"), // إضافة namespace
+              label: "Brand", // إضافة namespace
               type: "select",
               options: brands?.map((brand: Brand) => ({
                 label: brand.name, // قد لا يكون هذا مترجمًا، فهو يأتي من الـ API
@@ -192,7 +192,7 @@ const Products = () => {
             },
             {
               key: "status",
-              label: t("ProductsTable:search.status"), // إضافة namespace
+              label: "Status", // إضافة namespace
               type: "select",
               options: [
                 {

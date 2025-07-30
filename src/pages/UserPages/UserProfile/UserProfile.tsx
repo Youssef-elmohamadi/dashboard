@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
 import { Circles } from "react-loader-spinner";
 import { EyeCloseIcon, EyeIcon } from "../../../icons"; // Assuming these are valid paths
-import { useNavigate, useParams } from "react-router-dom"; // Import useParams
+import { useNavigate } from "react-router-dom"; // Import useParams
 import {
   useProfile,
   useUpdateProfile,
@@ -280,8 +280,6 @@ const UserProfile = () => {
             })}
           </p>
         </div>
-
-        {/* Profile Content */}
         <div className="p-6">
           {isLoading && !userProfileData ? (
             <div className="flex justify-center items-center py-10">
@@ -432,7 +430,6 @@ const UserProfile = () => {
                     </p>
                   )}
                 </div>
-                {/* Password Fields */}
                 {(["password", "password_confirmation"] as const).map(
                   (field) => (
                     <div key={field} className="relative">
@@ -459,7 +456,6 @@ const UserProfile = () => {
                       <span
                         onClick={() => setShowPassword(!showPassword)}
                         className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 mt-4 ${
-                          // Adjusted top for label
                           document.documentElement.dir === "rtl"
                             ? "left-4"
                             : "right-4"
@@ -475,21 +471,17 @@ const UserProfile = () => {
                   )
                 )}
               </div>
-              {/* General/Global Server Error */}
               {(errors.general || errors.global) && (
                 <p className="text-red-600 text-sm text-center mt-4">
                   {errors.general || errors.global}
                 </p>
               )}
-              {/* Submit Button */}
               <div className="flex justify-start pt-4">
-                {" "}
-                {/* Flex start for button alignment */}
                 <button
                   type="submit"
-                  disabled={isUpdating} // Use isUpdating from useUpdateProfile
+                  disabled={isUpdating}
                   className="bg-purple-700 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-purple-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ minWidth: "150px" }} // Give button a min-width
+                  style={{ minWidth: "150px" }}
                 >
                   {isUpdating ? (
                     <Circles
@@ -512,4 +504,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default React.memo(UserProfile);

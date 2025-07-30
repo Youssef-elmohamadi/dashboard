@@ -59,6 +59,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                       !category_id ? "text-purple-600 font-semibold" : ""
                     }`}
                     to={`/${lang}/category/`}
+                    onClick={closeMenu}
                   >
                     {t("allCategories")}
                   </Link>
@@ -72,6 +73,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                           : ""
                       }`}
                       to={`/${lang}/category/${category.id}`}
+                      onClick={closeMenu}
                     >
                       {category.name}
                     </Link>

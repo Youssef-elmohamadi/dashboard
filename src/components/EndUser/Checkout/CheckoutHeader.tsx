@@ -8,7 +8,7 @@ const CheckoutHeader = () => {
       <div className="container mx-auto px-4 flex justify-center">
         <Link to={`/${lang}/`} className="flex items-center">
           <img
-            src="/images/logo/logo.png"
+            src="/images/logo/light-logo.webp"
             alt="Logo"
             className="w-[120px] hover:opacity-90 transition duration-300"
           />

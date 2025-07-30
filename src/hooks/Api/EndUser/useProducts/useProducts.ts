@@ -1,8 +1,14 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   getAllProducts,
   getProductCategoriesById,
   showProduct,
+  reviewProduct,
 } from "../../../../api/EndUserApi/ensUserProducts/_requests";
 
 interface UseAllProductsProps {
@@ -76,7 +82,7 @@ export const useProductsByCategory = ({
         lastPage.current_page < lastPage.last_page
           ? lastPage.current_page + 1
           : undefined,
-      enabled: !!category_id, // Important: only runs if category_id exists
+      enabled: !!category_id,
       staleTime: 1000 * 60 * 5,
     });
 
@@ -92,12 +98,27 @@ export const useProductsByCategory = ({
   };
 };
 
-
 export const useGetProductById = (id?: number | string) => {
   return useQuery({
     queryKey: ["productData", id],
     queryFn: () => showProduct(id!),
     staleTime: 1000 * 60 * 5,
     enabled: !!id,
-  })
+  });
+};
+
+export const useReviewProduct = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (reviewData) => {
+      const res = await reviewProduct(reviewData);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["productData"] });
+      queryClient.invalidateQueries({ queryKey: ["endUserAllProducts"] });
+      queryClient.invalidateQueries({ queryKey: ["endUserProducts"] });
+    },
+  });
 };

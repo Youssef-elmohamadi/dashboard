@@ -19,6 +19,7 @@ const SEO = ({
   alternates,
 }: SEOProps) => {
   const currentLang = i18n.language;
+  
   const isArabic = currentLang === "ar";
 
   const pageTitle = isArabic ? title.ar : title.en;

@@ -1,20 +1,28 @@
-import { useEffect, useState, useRef } from "react";
+import {
+  memo,
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+} from "react";
 import {
   Outlet,
   useLocation,
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import CategoryBreadCrump from "../../../components/EndUser/Shop/CategoryBreadCrump";
+import { useTranslation } from "react-i18next";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaFilter } from "react-icons/fa";
-import FilterSidebar from "../../../components/EndUser/Shop/FilterSidebar";
-import { useTranslation } from "react-i18next";
-import Sidebar from "../../../components/EndUser/Shop/Sidebar";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { Category } from "../../../types/Categories";
 import { PriceChangeParams } from "../../../types/Shop";
-export default function CategoriesLayout() {
+import CategoryBreadCrump from "../../../components/EndUser/Shop/CategoryBreadCrump";
+import FilterSidebar from "../../../components/EndUser/Shop/FilterSidebar";
+import Sidebar from "../../../components/EndUser/Shop/Sidebar";
+
+function CategoriesLayout() {
   const [showCategories, setShowCategories] = useState<boolean>(true);
   const { t } = useTranslation(["EndUserShop"]);
   const [currentPage, setCurrentPage] = useState<string>(t("allCategories"));
@@ -25,6 +33,7 @@ export default function CategoriesLayout() {
   const { category_id } = useParams<{ category_id?: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedSort = searchParams.get("sort");
+  const { lang } = useDirectionAndLanguage();
 
   const sortOptions = [
     { label: t("sortByMenu.title"), value: "" },
@@ -32,15 +41,16 @@ export default function CategoriesLayout() {
     { label: t("sortByMenu.oldest"), value: "oldest" },
   ];
 
-  // Handle price range update
-  const handlePriceChange = ({ min, max }: PriceChangeParams) => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("min", min);
-    newParams.set("max", max);
-    setSearchParams(newParams);
-  };
+  const handlePriceChange = useCallback(
+    ({ min, max }: PriceChangeParams) => {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set("min", min);
+      newParams.set("max", max);
+      setSearchParams(newParams);
+    },
+    [searchParams, setSearchParams]
+  );
 
-  // Handle sort option update
   const handleSortChange = (value: string) => {
     const newParams = new URLSearchParams(searchParams);
     if (value) {
@@ -67,8 +77,8 @@ export default function CategoriesLayout() {
 
   useEffect(() => {
     if (
-      location.pathname === "/category" ||
-      location.pathname === "/category/"
+      location.pathname === `/${lang}/category` ||
+      location.pathname === `/${lang}/category/`
     ) {
       setCurrentPage(t("allCategories"));
     } else {
@@ -93,7 +103,6 @@ export default function CategoriesLayout() {
         handlePriceChange={handlePriceChange}
       />
 
-      {/* Sidebar */}
       <Sidebar
         setCurrentPage={setCurrentPage}
         handlePriceChange={handlePriceChange}
@@ -101,14 +110,12 @@ export default function CategoriesLayout() {
         showCategories={showCategories}
       />
 
-      {/* Main Content */}
       <main className="flex-1 p-6">
         <CategoryBreadCrump currentPage={currentPage} />
         <div>
           <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-6">
             <h2 className="md:text-lg font-bold">{currentPage}</h2>
             <div className="flex items-center gap-4">
-              {/* Filter Button */}
               <button
                 className="flex items-center 2xl:hidden gap-2 px-4 py-2 border border-gray-200 rounded hover:bg-gray-100 transition"
                 onClick={() => setIsFilterOpen((prev) => !prev)}
@@ -117,7 +124,6 @@ export default function CategoriesLayout() {
                 <span className="font-semibold">{t("mainContent.filter")}</span>
               </button>
 
-              {/* Sort Dropdown */}
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setIsMenuOpen((prev) => !prev)}
@@ -151,10 +157,10 @@ export default function CategoriesLayout() {
             </div>
           </div>
 
-          {/* Outlet with Context if needed */}
           <Outlet context={setCurrentPage} />
         </div>
       </main>
     </div>
   );
 }
+export default memo(CategoriesLayout);

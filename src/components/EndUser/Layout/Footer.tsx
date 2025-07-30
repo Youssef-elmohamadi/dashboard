@@ -198,7 +198,7 @@ export default function Footer() {
                 <FaSignOutAlt className="text-purple-400" />
                 <button
                   onClick={() => {
-                    handleLogout("end_user", navigate);
+                    handleLogout("end_user", navigate, lang);
                   }}
                   className="hover:text-red-500"
                   aria-label="Logout"

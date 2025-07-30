@@ -81,4 +81,4 @@ const LatestProducts: React.FC<CategorySliderProps> = ({ title }) => {
   );
 };
 
-export default LatestProducts;
+export default React.memo(LatestProducts);

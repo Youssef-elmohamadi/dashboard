@@ -156,6 +156,7 @@ export default function SignUpForm() {
 
         if (res?.status === 200 || res?.status === 201) {
           setIsRegistered(true);
+          toast.success(t("auth:registerSuccess"));
         } else {
           return;
         }
@@ -178,7 +179,7 @@ export default function SignUpForm() {
           formattedErrors[err.code].push(err.message);
         });
 
-        setErrors((prev) => ({ ...prev, ...formattedErrors }));
+        setErrors((prev) => ({ ...prev, errors: { ...formattedErrors } }));
 
         const errorKeys = Object.keys(formattedErrors);
 
@@ -205,103 +206,102 @@ export default function SignUpForm() {
       setIsSendingOtp(false);
     }
   };
+  console.log(errors);
 
   return (
-    <div className="flex flex-col flex-1 w-full h-full lg:w-1/2 mb-3">
-      <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
-        <div className="mb-5 sm:mb-8 flex flex-col items-center">
-          <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-            {t("signUpTitle")}
-          </h1>
-        </div>
+    <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto pb-5">
+      <div className="mb-5 sm:mb-8 flex flex-col items-center">
+        <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
+          {t("signUpTitle")}
+        </h1>
+      </div>
 
-        <BreadCrump step={step} setStep={setStep} />
+      <BreadCrump step={step} setStep={setStep} />
 
-        <form onSubmit={handleSubmit}>
-          {errors.general && (
-            <div className="text-red-600 bg-red-200 p-4 mt-0.5 rounded-md mb-4">
-              {errors.general}
-            </div>
-          )}
-          {step === 1 && (
-            <BasicInfoForm
-              adminInfo={dataForm.adminInfo}
-              handleChange={handleAdminChange}
-              clientErrors={clientErrors}
-              serverErrors={errors}
-            />
-          )}
-
-          {step === 2 && (
-            <StoreInfoForm
-              documentInfo={dataForm.documentInfo}
-              vendorInfo={dataForm.vendorInfo}
-              handleFileChange={handleFileChange}
-              handleChange={handleVendorChange}
-              clientErrors={clientErrors}
-              serverErrors={errors}
-            />
-          )}
-
-          {step === 3 && (
-            <OTPPage
-              identifier={dataForm.vendorInfo.phone}
-              otp={otp}
-              setOtp={setOtp}
-              onSubmit={handleSubmitOtp}
-              onResend={handleSendOtp}
-              title={t("otp.title")}
-              subtitle={t("otp.subtitle")}
-              resendText={t("otp.resendBtn")}
-              continueText={t("otp.continue")}
-              otpError={otpError}
-              setOtpError={setOtpError}
-            />
-          )}
-
-          <div className="mt-5">
-            {step < 2 && (
-              <button
-                type="button"
-                onClick={handleNextStep}
-                className="w-full bg-brand-500 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700 text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300"
-              >
-                {t("buttons.next")}
-              </button>
-            )}
-            {step === 2 && (
-              <button
-                type="submit"
-                disabled={isRegistering || isSendingOtp}
-                className={`w-full ${
-                  isRegistering || isSendingOtp
-                    ? "bg-brand-300 cursor-not-allowed"
-                    : "bg-brand-500 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700"
-                } text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300`}
-              >
-                {isRegistering
-                  ? t("buttons.loadingRegister")
-                  : isSendingOtp
-                  ? t("otp.loadingOtp")
-                  : isRegistered
-                  ? t("otp.sendOtpButton")
-                  : t("buttons.createButton")}
-              </button>
-            )}
+      <form onSubmit={handleSubmit}>
+        {errors.general && (
+          <div className="text-red-600 bg-red-200 p-4 mt-0.5 rounded-md mb-4">
+            {errors.general}
           </div>
-        </form>
+        )}
+        {step === 1 && (
+          <BasicInfoForm
+            adminInfo={dataForm.adminInfo}
+            handleChange={handleAdminChange}
+            clientErrors={clientErrors}
+            serverErrors={errors}
+          />
+        )}
+
+        {step === 2 && (
+          <StoreInfoForm
+            documentInfo={dataForm.documentInfo}
+            vendorInfo={dataForm.vendorInfo}
+            handleFileChange={handleFileChange}
+            handleChange={handleVendorChange}
+            clientErrors={clientErrors}
+            serverErrors={errors}
+          />
+        )}
+
+        {step === 3 && (
+          <OTPPage
+            identifier={dataForm.vendorInfo.phone}
+            otp={otp}
+            setOtp={setOtp}
+            onSubmit={handleSubmitOtp}
+            onResend={handleSendOtp}
+            title={t("otp.title")}
+            subtitle={t("otp.subtitle")}
+            resendText={t("otp.resendBtn")}
+            continueText={t("otp.continue")}
+            otpError={otpError}
+            setOtpError={setOtpError}
+          />
+        )}
 
         <div className="mt-5">
-          <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-            {t("alreadyHaveAccount")}{" "}
-            <Link
-              to="/admin/signin"
-              className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
+          {step < 2 && (
+            <button
+              type="button"
+              onClick={handleNextStep}
+              className="w-full bg-brand-500 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700 text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300"
             >
-              {t("buttons.loginButton")}
-            </Link>
-          </p>
+              {t("buttons.next")}
+            </button>
+          )}
+          {step === 2 && (
+            <button
+              type="submit"
+              disabled={isRegistering || isSendingOtp}
+              className={`w-full ${
+                isRegistering || isSendingOtp
+                  ? "bg-brand-300 cursor-not-allowed"
+                  : "bg-brand-500 hover:bg-brand-600 active:bg-brand-700 focus:bg-brand-700"
+              } text-white font-semibold text-sm sm:text-base py-3 rounded-lg transition duration-300`}
+            >
+              {isRegistering
+                ? t("buttons.loadingRegister")
+                : isSendingOtp
+                ? t("otp.loadingOtp")
+                : isRegistered
+                ? t("otp.sendOtpButton")
+                : t("buttons.createButton")}
+            </button>
+          )}
         </div>
+      </form>
+
+      <div className="mt-5">
+        <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
+          {t("alreadyHaveAccount")}{" "}
+          <Link
+            to="/admin/signin"
+            className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
+          >
+            {t("buttons.loginButton")}
+          </Link>
+        </p>
       </div>
     </div>
   );

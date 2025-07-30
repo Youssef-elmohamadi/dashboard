@@ -5,7 +5,6 @@ import Radio from "../../common/input/Radio";
 import { SlWallet } from "react-icons/sl";
 import Checkbox from "../../common/input/Checkbox";
 import { useSelector, useDispatch } from "react-redux";
-import { checkout } from "../../../api/EndUserApi/ensUserProducts/_requests";
 import TextArea from "../../common/input/TextArea";
 import { SweetAlert } from "../../common/SweetAlert";
 import { clearCart } from "../Redux/cartSlice/CartSlice";
@@ -16,6 +15,7 @@ import { Checkout, ClientErrors, Location } from "../../../types/CheckoutType";
 import { RootState } from "../Redux/Store";
 import { Product } from "../../../types/Product";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { useCheckout } from "../../../hooks/Api/EndUser/Checkout/useCheckout";
 
 const CheckoutForm: React.FC = () => {
   const { t } = useTranslation(["EndUserCheckout"]);
@@ -156,6 +156,8 @@ const CheckoutForm: React.FC = () => {
     dispatch(clearCart());
     navigate(`/${lang}/`);
   };
+
+  const {mutateAsync:  checkout} = useCheckout();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

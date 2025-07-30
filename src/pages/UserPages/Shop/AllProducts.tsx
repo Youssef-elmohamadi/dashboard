@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useAllProducts } from "../../../hooks/Api/EndUser/useProducts/useProducts";
 import SEO from "../../../components/common/SEO/seo";
 import LazyImage from "../../../components/common/LazyImage";
+import React from "react";
 
 const AllProducts = () => {
   const [searchParams] = useSearchParams();
@@ -127,4 +128,4 @@ const AllProducts = () => {
   );
 };
 
-export default AllProducts;
+export default React.memo(AllProducts);

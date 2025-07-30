@@ -2,7 +2,7 @@ import axios from "axios";
 import { Token } from "./_modales";
 
 const axiosInstanceFormData = axios.create({
-  baseURL: "http://127.0.0.1:8000",
+  baseURL: "https://tashtiba.com",
   headers: {
     "Content-Type": "multipart/form-data",
   },

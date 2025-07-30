@@ -22,7 +22,7 @@ const CircleSlider = React.lazy(
 
 const Home = () => {
   const { t } = useTranslation(["EndUserHome"]);
-  const { data: categories } = useCategories();
+  const { data: categories, isLoading } = useCategories();
   const { lang } = useParams();
   const { setLang, setDir } = useDirectionAndLanguage();
   const navigate = useNavigate();
@@ -84,18 +84,23 @@ const Home = () => {
       />
 
       <LandingSection />
+
       <div className="enduser_container">
         <FeaturesSection />
-        <CircleSlider items={categories} />
+      </div>
+      <div className="enduser_container">
+        <CircleSlider items={categories || []} loading={isLoading} />
       </div>
 
       <div className="enduser_container">
         <HomeProducts />
         <LatestProducts title={t("latestProducts")} />
+      </div>
+      <div className="enduser_container h-[400px]">
         <VendorsCarousel />
       </div>
     </section>
   );
 };
 
-export default Home;
+export default React.memo(Home);

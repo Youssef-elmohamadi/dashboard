@@ -6,13 +6,14 @@ import {
   updateQuantity,
 } from "../../../components/EndUser/Redux/cartSlice/CartSlice";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { useNavigate } from "react-router-dom"; // Import useParams
+import { Link, useNavigate } from "react-router-dom"; // Import useParams
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { useApplyCoupon } from "../../../hooks/Api/EndUser/useCopouns/useCopouns";
 import type { RootState } from "../../../components/EndUser/Redux/Store";
 import SEO from "../../../components/common/SEO/seo"; // Import your custom SEO component
 import { Product } from "../../../types/Product";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 interface CouponFormData {
   code: string;
@@ -36,7 +37,7 @@ const Cart: React.FC = () => {
   );
   const discount = useSelector((state: RootState) => state.cart.discount);
   const navigate = useNavigate();
-
+  const { lang } = useDirectionAndLanguage();
   const [cuponData, setCuponData] = useState<CouponFormData>({
     code: "",
     order_total: totalPrice,
@@ -219,7 +220,11 @@ const Cart: React.FC = () => {
                     className="w-20 h-20 object-cover rounded"
                   />
                   <div>
-                    <div className="font-medium text-sm mb-1">{item.name}</div>
+                    <Link to={`/${lang}/product/${item.id}`}>
+                      <h3 className="text-sm font-semibold text-gray-800">
+                        {item.name}
+                      </h3>
+                    </Link>
                     <div className="text-xs text-gray-500">
                       {t("tax_label", {
                         amount: item.tax?.toFixed(2) || "0.00",
@@ -279,4 +284,4 @@ const Cart: React.FC = () => {
   );
 };
 
-export default Cart;
+export default React.memo(Cart);

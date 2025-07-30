@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Separator } from "../Common/Separator";
@@ -28,6 +28,7 @@ const TopBar = () => {
 
   useEffect(() => {
     setLanguage(i18n.language === "ar" ? t("arabic") : t("english"));
+    setDir(i18n.language === "ar" ? "rtl" : "ltr");
   }, [i18n.language]);
 
   useEffect(() => {
@@ -176,4 +177,4 @@ const TopBar = () => {
   );
 };
 
-export default TopBar;
+export default React.memo(TopBar);

@@ -1,5 +1,6 @@
+// src/components/auth/ResetPassword/ResetPassword.tsx
 import { useState } from "react";
-import OTPPage from "./OtpPage";
+import OTPPage from "./OtpPage"; // تأكد من المسار الصحيح
 import { useNavigate } from "react-router-dom";
 import {
   sendOtp,
@@ -8,9 +9,9 @@ import {
 } from "../../../api/OtpApi/_requests";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { EyeCloseIcon, EyeIcon } from "../../../icons";
-import Input from "../input/InputField";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import Step1_PhoneInput from "./Step1_PhoneInput";
+import Step3_NewPassword from "./Step3_NewPassword";
 
 type ResetPasswordProps = {
   type: "admin" | "user" | "super_admin";
@@ -27,30 +28,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ type }) => {
   const [phoneError, setPhoneError] = useState("");
   const { t } = useTranslation(["auth"]);
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
   const { lang } = useDirectionAndLanguage();
-
-  const handleNext = async () => {
-    if (step === 1) {
-      if (!phone) {
-        setPhoneError(t("forgotPasswordPage.errors.phone"));
-        return;
-      }
-      if (!/^01[0125][0-9]{8}$/.test(phone)) {
-        setPhoneError(t("forgotPasswordPage.errors.phoneInvalid"));
-        return;
-      }
-
-      const success = await handleSendOtp();
-      if (success) {
-        setStep(2);
-      }
-    } else if (step === 2 && otp.length === 6) {
-      await handleSubmitOtp();
-    } else if (step === 3) {
-      await handleResetPassword();
-    }
-  };
 
   const handleSendOtp = async (): Promise<boolean> => {
     try {
@@ -70,7 +48,6 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ type }) => {
       return false;
     }
   };
-
   const handleSubmitOtp = async () => {
     const enteredOtp = otp.join("");
     if (enteredOtp.length < 6) {
@@ -136,49 +113,48 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ type }) => {
     }
   };
 
+  const handleNext = async () => {
+    if (step === 1) {
+      if (!phone) {
+        setPhoneError(t("forgotPasswordPage.errors.phone"));
+        return;
+      }
+      if (!/^01[0125][0-9]{8}$/.test(phone)) {
+        setPhoneError(t("forgotPasswordPage.errors.phoneInvalid"));
+        return;
+      }
+
+      const success = await handleSendOtp();
+      if (success) {
+        setStep(2);
+        setPhoneError(""); // مسح الخطأ بعد الانتقال بنجاح
+      }
+    } else if (step === 2 && otp.length === 6) {
+      await handleSubmitOtp();
+    } else if (step === 3) {
+      await handleResetPassword();
+    }
+  };
+
   const renderStep = () => {
     switch (step) {
       case 1:
         return (
-          <div className="border border-gray-200 dark:border-gray-800  rounded-2xl p-4">
-            <h2 className="text-2xl font-bold text-center mb-2 text-gray-800 dark:text-white">
-              {t("forgotPasswordPage.title")}
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-100 text-center mb-6">
-              {t("forgotPasswordPage.description")}
-            </p>
-            <input
-              type="text"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder={t("forgotPasswordPage.phonePlaceholder")}
-              className="w-full px-4 py-2 border dark:text-gray-100 border-gray-300 dark:border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-            />
-            {phoneError && (
-              <p className="text-red-500 text-sm mt-2">{phoneError}</p>
-            )}
-            <button
-              onClick={handleNext}
-              className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-            >
-              {t("forgotPasswordPage.submit")}
-            </button>
-            <button
-              onClick={() => navigate(`/${type}/signin`)}
-              className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-            >
-              {t("forgotPasswordPage.backToLogin")}
-            </button>
-          </div>
+          <Step1_PhoneInput
+            phone={phone}
+            setPhone={setPhone}
+            phoneError={phoneError}
+            onNext={handleNext}
+            onBackToLogin={() => navigate(`/${type}/signin`)}
+          />
         );
-
       case 2:
         return (
           <OTPPage
             identifier={phone}
             otp={otp}
             setOtp={setOtp}
-            onSubmit={handleSubmitOtp}
+            onSubmit={handleNext} // تم تغييرها لتستدعي handleNext
             onResend={handleSendOtp}
             title={t("otp.title")}
             subtitle={t("otp.subtitle")}
@@ -188,79 +164,28 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ type }) => {
             setOtpError={setOtpError}
           />
         );
-
       case 3:
         return (
-          <div className="border p-12 rounded-2xl">
-            <h2 className="text-2xl font-bold text-center mb-2 text-gray-800 dark:text-gray-100 ">
-              {t("forgotPasswordPage.resetPassword")}
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-300 text-center mb-6">
-              {t("forgotPasswordPage.enterAndConfirmPassword")}
-            </p>
-            <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder={t("forgotPasswordPage.newPasswordPlaceholder")}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
-                  document.documentElement.dir === "rtl" ? "left-4" : "right-4"
-                }`}
-              >
-                {showPassword ? (
-                  <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                ) : (
-                  <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                )}
-              </span>
-            </div>
-            <div className="relative mt-2">
-              <Input
-                type={showPassword ? "text" : "password"}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder={t("forgotPasswordPage.confirmPasswordPlaceholder")}
-              />
-              {passwordError && (
-                <p className="text-red-500 text-sm mt-2">{passwordError}</p>
-              )}
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                className={`absolute z-30 -translate-y-1/2 cursor-pointer top-1/2 ${
-                  document.documentElement.dir === "rtl" ? "left-4" : "right-4"
-                }`}
-              >
-                {showPassword ? (
-                  <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                ) : (
-                  <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                )}
-              </span>
-            </div>
-            <button
-              onClick={handleNext}
-              className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-            >
-              {t("forgotPasswordPage.resetPasswordBtn")}
-            </button>
-          </div>
+          <Step3_NewPassword
+            password={password}
+            setPassword={setPassword}
+            confirmPassword={confirmPassword}
+            setConfirmPassword={setConfirmPassword}
+            passwordError={passwordError}
+            onResetPassword={handleNext} // تم تغييرها لتستدعي handleNext
+          />
         );
-
       default:
         return null;
     }
   };
 
   return (
-    <div>
+    <div className="sm:min-w-[400px] md:min-w-[450px]">
       {renderStep()}
       {step > 1 && (
         <button
-          onClick={() => setStep(step > 1 ? step - 1 : 1)}
+          onClick={() => setStep(step - 1)}
           className="w-full mt-4 py-2 border dark:text-gray-100 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-700 rounded-lg hover:bg-gray-100 transition"
         >
           {t("forgotPasswordPage.back")}

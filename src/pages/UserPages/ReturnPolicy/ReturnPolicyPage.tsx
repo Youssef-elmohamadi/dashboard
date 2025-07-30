@@ -191,4 +191,4 @@ const ReturnPolicyPage: React.FC = () => {
   );
 };
 
-export default ReturnPolicyPage;
+export default React.memo(ReturnPolicyPage);

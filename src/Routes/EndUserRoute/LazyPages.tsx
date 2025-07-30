@@ -21,9 +21,9 @@ const OrderDetailsPage = lazy(
 const UserNotifications = lazy(
   () => import("../../pages/UserPages/UserNotifications/UserNotifications")
 );
-const ProductsCompare = lazy(
-  () => import("../../pages/UserPages/ProductsCompare/ProductsCompare")
-);
+// const ProductsCompare = lazy(
+//   () => import("../../pages/UserPages/ProductsCompare/ProductsCompare")
+// );
 const ProductsFavorite = lazy(
   () => import("../../pages/UserPages/ProductsFavorite/ProductsFavorite")
 );
@@ -60,7 +60,7 @@ export default function LazyPages() {
           <Route path="u-orders" element={<UserOrders />} />
           <Route path="u-orders/details/:id" element={<OrderDetailsPage />} />
           <Route path="u-notification" element={<UserNotifications />} />
-          <Route path="u-compare" element={<ProductsCompare />} />
+          {/* <Route path="u-compare" element={<ProductsCompare />} /> */}
           <Route path="u-favorite" element={<ProductsFavorite />} />
         </Route>
         <Route path="terms" element={<TermsAndConditionsPage />} />

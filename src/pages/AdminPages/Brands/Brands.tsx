@@ -158,20 +158,20 @@ const Brands = () => {
         pageTitle={t("BrandsTable:brandsPage.title")}
         userType="admin"
       />{" "}
-      {/* Added namespace */}
+      
       <div>
         <SearchTable
           fields={[
-            { key: "name", label: t("BrandsTable:search.name"), type: "input" },
-          ]} // Added namespace
+            { key: "name", label: "Name", type: "input" },
+          ]} 
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />
       </div>
       <div className="space-y-6">
         <ComponentCard
-          title={t("BrandsTable:brandsPage.all")} // Added namespace
-          headerAction={t("BrandsTable:brandsPage.addNew")} // Added namespace
+          title={t("BrandsTable:brandsPage.all")} 
+          headerAction={t("BrandsTable:brandsPage.addNew")} 
           href="/admin/brands/create"
         >
           <BasicTable
@@ -186,7 +186,7 @@ const Brands = () => {
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
             globalError={globalError}
-            loadingText={t("BrandsTable:brandsPage.table.loadingText")} // Added namespace
+            loadingText={t("BrandsTable:brandsPage.table.loadingText")} 
           />
         </ComponentCard>
       </div>

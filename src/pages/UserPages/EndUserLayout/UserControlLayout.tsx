@@ -1,30 +1,23 @@
+import { memo } from "react";
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { TiDocumentText } from "react-icons/ti";
-import { getProfile } from "../../../api/EndUserApi/endUserAuth/_requests";
 import { handleLogout } from "../../../components/common/Auth/Logout";
 import { handleDeleteAccount } from "../../../components/EndUser/Auth/DeleteAccount";
 import { RiProfileFill } from "react-icons/ri";
-import { MdCompareArrows, MdDelete, MdFavorite } from "react-icons/md";
+import { MdDelete, MdFavorite } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi";
-import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { IoMdNotifications } from "react-icons/io";
+import { useProfile } from "../../../hooks/Api/EndUser/useProfile/useProfile";
 
-export default function UserControlLayout() {
-  const { data: user } = useQuery({
-    queryKey: ["endUserProfileData"],
-    queryFn: async () => {
-      const res = await getProfile();
-      return res.data.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+function UserControlLayoutComponent() {
+  const { data: user } = useProfile();
+
   const { lang } = useDirectionAndLanguage();
   const { t } = useTranslation(["EndUserControlMenu"]);
   const navigate = useNavigate();
 
-  // Helper function to generate NavLink class names
   const getNavLinkClassName = ({ isActive }: { isActive: boolean }) =>
     `p-2 px-3 rounded-3xl flex items-center group gap-2 transition-all duration-300 pl-2 ${
       isActive ? "bg-[#8826bd35] pl-4" : "hover:bg-[#8826bd35] hover:pl-4"
@@ -56,12 +49,6 @@ export default function UserControlLayout() {
               {t("orders_history")}
             </NavLink>
 
-            <NavLink to={`/${lang}/u-compare`} className={getNavLinkClassName}>
-              <MdCompareArrows className="text-lg text-gray-500 transition-all duration-300" />
-              {t("compare_product")}
-            </NavLink>
-
-            {/* Note: There are two NavLinks for favorites. If 'u-favorites' and 'u-favorite' lead to the same place, you might want to consolidate. */}
             <NavLink to={`/${lang}/u-favorite`} className={getNavLinkClassName}>
               <MdFavorite className="text-lg text-gray-500 transition duration-400" />
               {t("favorite_products")}
@@ -76,7 +63,7 @@ export default function UserControlLayout() {
 
             <button
               onClick={() => {
-                handleLogout("end_user", navigate);
+                handleLogout("end_user", navigate, lang);
               }}
               className="flex items-center group gap-3 transition-all duration-400 px-4 py-2 rounded-3xl hover:bg-red-300 cursor-pointer pl-2 hover:pl-4 w-full"
             >
@@ -100,3 +87,7 @@ export default function UserControlLayout() {
     </div>
   );
 }
+
+const UserControlLayout = memo(UserControlLayoutComponent);
+
+export default UserControlLayout;

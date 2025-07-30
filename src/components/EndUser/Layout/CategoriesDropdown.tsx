@@ -69,4 +69,4 @@ const CategoriesDropdown: React.FC<CategoriesDropdownProps> = ({ dir }) => {
   );
 };
 
-export default CategoriesDropdown;
+export default React.memo(CategoriesDropdown);

@@ -1,80 +1,73 @@
 import { FormDataType, SetErrorsFn } from "../../../types/Auth";
 
-export const validateAdminForm = (setErrors:SetErrorsFn , dataForm: FormDataType, t: any) => {
-  // First Name
+export const validateAdminForm = (
+  setErrors: SetErrorsFn,
+  dataForm: FormDataType,
+  t: any
+) => {
+  const errors: Record<string, string> = {};
+
   if (!dataForm.adminInfo.first_name.trim()) {
-    setErrors({ firstName: t("errors.firstNameError") });
-    return false;
-  }
-  // Last Name
-  if (!dataForm.adminInfo.last_name.trim()) {
-    setErrors({ lastName: t("errors.lastNameError") });
-    return false;
+    errors.firstName = t("errors.firstNameError");
   }
 
-  // Phone Admin
+  if (!dataForm.adminInfo.last_name.trim()) {
+    errors.lastName = t("errors.lastNameError");
+  }
+
   if (!dataForm.adminInfo.phone.trim()) {
-    setErrors({ phoneAdmin: t("errors.phoneError") });
-    return false;
+    errors.phoneAdmin = t("errors.phoneError");
   }
-  // Email Admin
+
   if (!dataForm.adminInfo.email.trim()) {
-    setErrors({ emailAdmin: t("errors.emailError") });
-    return false;
+    errors.emailAdmin = t("errors.emailError");
   } else if (!/\S+@\S+\.\S+/.test(dataForm.adminInfo.email)) {
-    setErrors({ emailAdmin: t("errors.emailFormatError") });
-    return false;
+    errors.emailAdmin = t("errors.emailFormatError");
   }
-  // Password
+
   if (!dataForm.adminInfo.password) {
-    setErrors({ password: t("errors.passwordError") });
-    return false;
-  }
-  if (dataForm.adminInfo.password.length < 8) {
-    setErrors({ password: t("errors.passwordLengthError") });
-    return false;
+    errors.password = t("errors.passwordError");
+  } else if (dataForm.adminInfo.password.length < 8) {
+    errors.password = t("errors.passwordLengthError");
   }
 
   if (dataForm.adminInfo.confirm_password !== dataForm.adminInfo.password) {
-    setErrors({ confirm_password: t("errors.passwordMatchError") });
-    return false;
+    errors.confirm_password = t("errors.passwordMatchError");
   }
 
-  setErrors({});
-  return true;
+  setErrors(errors);
+
+  return Object.keys(errors).length === 0;
 };
 
 export const validateVendorForm = (setErrors: any, dataForm: any, t: any) => {
-  // Store Name
+  const errors: Record<string, string> = {};
+
   if (!dataForm.vendorInfo.name.trim()) {
-    setErrors({ storeName: t("errors.storeNameError") });
-    return false;
+    errors.storeName = t("errors.storeNameError");
   }
-  // Store Phone
+
   if (!dataForm.vendorInfo.phone.trim()) {
-    setErrors({ storePhone: t("errors.storePhoneError") });
-    return false;
+    errors.storePhone = t("errors.storePhoneError");
   }
-  // Store Email
+
   if (!dataForm.vendorInfo.email.trim()) {
-    setErrors({ storeEmail: t("errors.storeEmailError") });
-    return false;
+    errors.storeEmail = t("errors.storeEmailError");
   } else if (!/\S+@\S+\.\S+/.test(dataForm.vendorInfo.email)) {
-    setErrors({ storeEmail: t("errors.emailFormatError") });
-    return false;
+    errors.storeEmail = t("errors.emailFormatError");
   }
-  // Document
+
   if (!dataForm.documentInfo[0].document_file) {
-    setErrors({
-      commercialRegisterDocument: t("errors.commercialRegisterDocumentError"),
-    });
-    return false;
+    errors.commercialRegisterDocument = t(
+      "errors.commercialRegisterDocumentError"
+    );
   }
 
   if (!dataForm.documentInfo[1].document_file) {
-    setErrors({ taxRegisterDocument: t("errors.taxRegisterDocumentError") });
-    return false;
+    errors.taxRegisterDocument = t("errors.taxRegisterDocumentError");
   }
-  setErrors({});
-  return true;
+
+  setErrors(errors);
+
+  return Object.keys(errors).length === 0;
 };

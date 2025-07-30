@@ -1,8 +1,8 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
-import { showUser } from "../api/AdminApi/profileApi/_requests";
-import { handleLogout } from "../components/common/Auth/Logout";
-import { useNavigate } from "react-router";
-
+import { getAdminUser } from "../../../api/AdminApi/profileApi/_requests";
+import { handleLogout } from "../../../components/common/Auth/Logout";
+import { useNavigate } from "react-router-dom";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 interface UserContextType {
   userId: number | null;
   setUserId: (id: number) => void;
@@ -19,6 +19,7 @@ interface UserProviderProps {
 
 export const AdminProvider = ({ children }: UserProviderProps) => {
   const navigate = useNavigate();
+  const { lang } = useDirectionAndLanguage();
   useEffect(() => {
     const storedAdminId = localStorage.getItem("admin_id");
     console.log("Stored Admin ID:", storedAdminId);
@@ -26,11 +27,11 @@ export const AdminProvider = ({ children }: UserProviderProps) => {
     if (storedAdminId) {
       const fetchData = async (id: number) => {
         try {
-          await showUser(id);
+          await getAdminUser(id);
         } catch (error: any) {
           console.error("Failed to get data", error);
           if (error.response && error.response.status === 401) {
-            handleLogout("admin", navigate);
+            handleLogout("admin", navigate, lang);
           }
         }
       };

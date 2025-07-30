@@ -1,22 +1,18 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import React, { useCallback, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import CategoriesDropdown from "./CategoriesDropdown";
 import CartPopup from "./CartPopup";
-import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData"; // Keep this import if static links are needed
-import { Category } from "../../../types/Categories"; // Keep this import if static links are needed
+import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 
 const NavBar = React.memo(() => {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { lang, dir } = useDirectionAndLanguage(); // Destructure dir here
-  const { t } = useTranslation(["EndUserNavBar"]);
+  const { lang, dir } = useDirectionAndLanguage();
 
-  const toggleCartPopup = () => {
+  const toggleCartPopup = useCallback(() => {
     setIsCartOpen((prev) => !prev);
-  };
+  }, []);
 
-  // Fetch categories for static links if needed
   const { data: categories } = useCategories();
 
   return (
@@ -25,14 +21,18 @@ const NavBar = React.memo(() => {
         <CategoriesDropdown dir={dir} />
 
         <ul className="flex justify-center lg:justify-start flex-[2] gap-5 ">
-          {categories?.slice(0, 4).map((category: Category) => (
+          {categories?.slice(0, 4).map((category) => (
             <li key={category.id} className="text-white py-3">
-              <Link
+              <NavLink
                 to={`/${lang}/category/${category.id}`}
-                className="py-3 font-semibold"
+                className={({ isActive }) =>
+                  isActive
+                    ? "py-3 font-semibold border-b-2 border-white"
+                    : "py-3 font-semibold"
+                }
               >
                 {category.name}
-              </Link>
+              </NavLink>
             </li>
           ))}
         </ul>

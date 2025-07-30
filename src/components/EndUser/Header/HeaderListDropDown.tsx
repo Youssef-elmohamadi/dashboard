@@ -1,7 +1,7 @@
 import React from "react"; // تأكد من استيراد React إذا لم يكن موجودًا
 import { useTranslation } from "react-i18next";
 import { GrLogout } from "react-icons/gr";
-import { MdCompareArrows, MdFavorite } from "react-icons/md";
+import { MdFavorite } from "react-icons/md";
 import { RiProfileFill } from "react-icons/ri";
 import { TiDocumentText } from "react-icons/ti";
 import { NavLink } from "react-router-dom";
@@ -33,12 +33,12 @@ const HeaderListDropDown = ({ dir, handleLogout }: HeaderListDropDownProps) => {
       textKey: "orders_history",
       iconColorClass: "text-secondary",
     },
-    {
-      to: (currentLang) => `/${currentLang}/u-compare`,
-      icon: MdCompareArrows,
-      textKey: "compare_product",
-      iconColorClass: "text-gray-500",
-    },
+    // {
+    //   to: (currentLang) => `/${currentLang}/u-compare`,
+    //   icon: MdCompareArrows,
+    //   textKey: "compare_product",
+    //   iconColorClass: "text-gray-500",
+    // },
     {
       to: (currentLang) => `/${currentLang}/u-favorite`,
       icon: MdFavorite,

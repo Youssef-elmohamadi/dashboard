@@ -10,7 +10,7 @@ import useClickOutside from "../context/useClickOutside";
 
 interface CartItem {
   id: string;
-  title: string;
+  name: string;
   quantity: number;
   price: number;
   images: { image: string }[];
@@ -28,6 +28,7 @@ const CartPopup: React.FC<CartPopupProps> = ({
   lang,
 }) => {
   const items: CartItem[] = useSelector((state: any) => state.cart.items);
+
   const totalPrice: number = useSelector((state: any) => state.cart.totalPrice);
   const totalQuantity: number = useSelector(
     (state: any) => state.cart.totalQuantity
@@ -74,13 +75,20 @@ const CartPopup: React.FC<CartPopupProps> = ({
                       item.images[0]?.image ||
                       "https://placehold.co/60x60/E0E0E0/FFFFFF?text=No+Image"
                     }
-                    alt={item.title}
+                    alt={item.name}
                     className="w-14 h-14 object-cover rounded"
                   />
                   <div className="flex-1">
-                    <div className="font-semibold">{item.title}</div>
+                    <Link
+                      to={`/${lang}/product/${item.id}`}
+                      onClick={toggleCartPopup}
+                    >
+                      <div className="font-semibold line-clamp-1">
+                        {item.name}
+                      </div>
+                    </Link>
                     <div className="text-sm text-gray-500">
-                      {t("navbar.qty")} {item.quantity}
+                      {t("navbar.qty")} : {item.quantity}
                     </div>
                   </div>
                   <div className="text-sm font-medium">
@@ -130,4 +138,4 @@ const CartPopup: React.FC<CartPopupProps> = ({
   );
 };
 
-export default CartPopup;
+export default React.memo(CartPopup);

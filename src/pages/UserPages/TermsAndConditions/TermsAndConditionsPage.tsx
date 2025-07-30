@@ -179,4 +179,4 @@ const CreativeTermsPage: React.FC = () => {
   );
 };
 
-export default CreativeTermsPage;
+export default React.memo(CreativeTermsPage);
