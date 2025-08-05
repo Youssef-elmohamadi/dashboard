@@ -28,7 +28,7 @@ export default function MonthlySalesChart({
   const data = sortedEntries.map(([, value]) => value);
 
   const options: ApexOptions = {
-    colors: ["#465fff"],
+    colors: ["#d62828"],
     chart: {
       fontFamily: "Outfit, sans-serif",
       type: "bar",

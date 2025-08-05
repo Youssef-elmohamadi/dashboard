@@ -1,7 +1,5 @@
-import React, { lazy, Suspense } from "react"; // استورد lazy و Suspense
+import { lazy, Suspense } from "react"; 
 import { Route, Routes } from "react-router-dom";
-
-// استخدم React.lazy لكل مكون
 const Vendors = lazy(
   () => import("../../pages/SuperAdminPages/vendors/Vendors")
 );
@@ -78,7 +76,6 @@ const OrderDetails = lazy(
 
 export default function LazyPages() {
   return (
-    // غلف الـ Routes بالكامل بـ Suspense
     <Suspense fallback={null}>
       <Routes>
         <Route path="vendors" element={<Vendors />} />

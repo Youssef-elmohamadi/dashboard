@@ -3,7 +3,7 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
 import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 import { openShipmentModal } from "../../../components/SuperAdmin/ordersTable/ShipmentModal";
 import { useTranslation } from "react-i18next";
@@ -14,8 +14,7 @@ import {
 } from "../../../hooks/Api/SuperAdmin/useOrders/useOrders";
 import { AxiosError } from "axios";
 import { SearchValuesOrders } from "../../../types/Orders";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo";
 
 const Orders = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -88,7 +87,7 @@ const Orders = () => {
   });
   return (
     <>
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO 
         title={{
           ar: "تشطيبة - إدارة الطلبات (سوبر أدمن)",
           en: "Tashtiba - Order Management (Super Admin)",
@@ -115,16 +114,17 @@ const Orders = () => {
             "sales",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb pageTitle={t("ordersPage.title")} userType="admin" />
       <div>
         <SearchTable
           fields={[
-            { key: "tracking_number", label: "Tracking Number", type: "input" }, // تم الإبقاء عليها كما هي حسب التعليمات
+            { key: "tracking_number", label: "Tracking Number", type: "input" },
 
             {
               key: "status",
-              label: "Status", // تم الإبقاء عليها كما هي حسب التعليمات
+              label: "Status",
               type: "select",
               options: [
                 { label: t("ordersPage.statuses.pending"), value: "pending" },
@@ -142,7 +142,7 @@ const Orders = () => {
             },
             {
               key: "shipping_status",
-              label: "Shipping Status", // تم الإبقاء عليها كما هي حسب التعليمات
+              label: "Shipping Status", 
               type: "select",
               options: [
                 { label: t("ordersPage.statuses.pending"), value: "pending" },
@@ -153,8 +153,8 @@ const Orders = () => {
                 },
               ],
             },
-            { key: "from_date", label: "From", type: "date" }, // تم الإبقاء عليها كما هي حسب التعليمات
-            { key: "to_date", label: "To", type: "date" }, // تم الإبقاء عليها كما هي حسب التعليمات
+            { key: "from_date", label: "From", type: "date" }, 
+            { key: "to_date", label: "To", type: "date" }, 
           ]}
           setSearchParam={handleSearch}
           searchValues={searchValues}

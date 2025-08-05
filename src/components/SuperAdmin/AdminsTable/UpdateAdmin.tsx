@@ -6,14 +6,12 @@ import Select from "../../common/form/Select";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
-import { FiUserPlus } from "react-icons/fi";
 import {
   useGetAdminById,
   useUpdateAdmin,
 } from "../../../hooks/Api/SuperAdmin/useSuperAdminAdmis/useSuperAdminAdmins";
 import { useRoles } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
-// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../common/SEO/seo";
 import {
   ClientErrors,
   ServerErrors,
@@ -21,6 +19,13 @@ import {
 } from "../../../types/Admins";
 import { AxiosError } from "axios";
 import { Role } from "../../../types/Roles";
+import useCheckOnline from "../../../hooks/useCheckOnline";
+import { toast } from "react-toastify";
+import UserPlusIcon from "../../../icons/UserPlusIcon";
+import PageStatusHandler, {
+  PageStatus,
+} from "../../common/PageStatusHandler/PageStatusHandler";
+
 const UpdateAdmin = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -128,8 +133,6 @@ const UpdateAdmin = () => {
       }
     }
   }, [isErrorFetchAdmin, errorFetchAdmin, t]);
-
-  // Fetch roles
   const { data: roles, isError: isRoleError, error: roleError } = useRoles();
   const options = roles?.data.data;
   useEffect(() => {
@@ -142,7 +145,6 @@ const UpdateAdmin = () => {
       }
     }
   }, [isRoleError, roleError, t]);
-  // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUpdateData((prev) => ({
@@ -159,7 +161,7 @@ const UpdateAdmin = () => {
     }));
   };
   const { mutateAsync } = useUpdateAdmin(id!!);
-  // Handle form submit
+  const isCurrentlyOnline = useCheckOnline();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
@@ -174,6 +176,12 @@ const UpdateAdmin = () => {
       global: "",
       general: "",
     });
+
+    if (!isCurrentlyOnline()) {
+      toast.error(t("admin.errors.no_internet"));
+      setLoading(false);
+      return;
+    }
     try {
       if (id) {
         const dataToSend = {
@@ -217,323 +225,240 @@ const UpdateAdmin = () => {
     }
   };
 
-  if (isLoading)
-    return (
-      <>
-        <SEO // PageMeta replaced with SEO, and data directly set for loading state
-          title={{
-            ar: "تشطيبة - تحديث مسؤول - جارٍ التحميل (سوبر أدمن)",
-            en: "Tashtiba - Update Admin - Loading (Super Admin)",
-          }}
-          description={{
-            ar: "جارٍ تحميل بيانات المسؤول للتحديث بواسطة المشرف العام في تشطيبة. يرجى الانتظار.",
-            en: "Loading admin data for update by Super Admin on Tashtiba. Please wait.",
-          }}
-          keywords={{
-            ar: [
-              "تحديث مسؤول",
-              "تحميل مسؤول",
-              "إدارة المسؤولين",
-              "سوبر أدمن",
-              "حسابات المسؤولين",
-            ],
-            en: [
-              "update admin",
-              "loading admin",
-              "admin management",
-              "super admin",
-              "admin accounts",
-            ],
-          }}
-        />{" "}
-        <p className="text-center mt-5">{t("admin.loading") || "Loading..."}</p>
-      </>
-    );
-
-  if (!data && !errors.general) {
-    return (
-      <>
-        <SEO // PageMeta replaced with SEO, and data directly set for not found state
-          title={{
-            ar: "تشطيبة - تحديث مسؤول - غير موجود (سوبر أدمن)",
-            en: "Tashtiba - Update Admin - Not Found (Super Admin)",
-          }}
-          description={{
-            ar: "المسؤول المطلوب للتحديث غير موجود في نظام تشطيبة. يرجى التحقق من المعرف.",
-            en: "The requested admin for update was not found on Tashtiba. Please verify the ID.",
-          }}
-          keywords={{
-            ar: [
-              "مسؤول غير موجود",
-              "تحديث مسؤول",
-              "خطأ 404",
-              "سوبر أدمن",
-              "إدارة المسؤولين",
-            ],
-            en: [
-              "admin not found",
-              "update admin",
-              "404 error",
-              "super admin",
-              "admin management",
-            ],
-          }}
-        />{" "}
-        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("not_found")}
-        </div>
-      </>
-    );
-  }
-  if (errors.general) {
-    return (
-      <>
-        <SEO // PageMeta replaced with SEO, and data directly set for general error state
-          title={{
-            ar: "تشطيبة - خطأ في تحديث المسؤول (سوبر أدمن)",
-            en: "Tashtiba - Admin Update Error (Super Admin)",
-          }}
-          description={{
-            ar: "حدث خطأ عام أثناء محاولة تحديث بيانات المسؤول بواسطة المشرف العام في تشطيبة. يرجى المحاولة مرة أخرى.",
-            en: "An error occurred while attempting to update admin data by Super Admin on Tashtiba. Please try again.",
-          }}
-          keywords={{
-            ar: [
-              "خطأ تحديث مسؤول",
-              "مشكلة مسؤول",
-              "تحديث تشطيبة",
-              "سوبر أدمن",
-              "فشل التعديل",
-            ],
-            en: [
-              "admin update error",
-              "admin issue",
-              "Tashtiba update",
-              "super admin",
-              "update failed",
-            ],
-          }}
-        />{" "}
-        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {errors.general || t("admin.errors.general")}
-        </div>
-      </>
-    );
+  let status = PageStatus.SUCCESS;
+  let pageError = "";
+  if (isLoading) {
+    status = PageStatus.LOADING;
+  } else if (isErrorFetchAdmin) {
+    status = PageStatus.ERROR;
+  } else if (!data) {
+    status = PageStatus.NOT_FOUND;
   }
 
   return (
-    <div>
-      <div className="p-4 border-b border-gray-200 dark:border-gray-600">
-        <SEO
-          title={{
-            ar: `تشطيبة - تحديث مسؤول ${admin?.first_name || ""}`,
-            en: `Tashtiba - Update Admin ${
-              admin?.first_name || ""
-            } (Super Admin)`,
-          }}
-          description={{
-            ar: `صفحة تحديث بيانات المسؤول "${
-              admin?.first_name || "غير معروف"
-            }" بواسطة المشرف العام في تشطيبة. عدّل المعلومات والصلاحيات.`,
-            en: `Update administrator "${
-              admin?.first_name || "unknown"
-            }" details by Super Admin on Tashtiba. Modify info and permissions.`,
-          }}
-          keywords={{
-            ar: [
-              `تحديث مسؤول ${admin?.first_name || ""}`,
-              "تعديل أدمن",
-              "إدارة المسؤولين",
-              "سوبر أدمن",
-              "حسابات المسؤولين",
-              "تشطيبة",
-            ],
-            en: [
-              `update admin ${admin?.first_name || ""}`,
-              "edit admin",
-              "admin management",
-              "super admin",
-              "admin accounts",
-              "Tashtiba",
-            ],
-          }}
-        />
+    <PageStatusHandler
+      status={status}
+      loadingText={t("admin.loading")}
+      errorMessage={errors.general || t("admin.errors.general")}
+    >
+      <div>
+        <div className="p-4 border-b border-gray-200 dark:border-gray-600">
+          <SEO
+            title={{
+              ar: `تشطيبة - تحديث مسؤول ${admin?.first_name || ""}`,
+              en: `Tashtiba - Update Admin ${
+                admin?.first_name || ""
+              } (Super Admin)`,
+            }}
+            description={{
+              ar: `صفحة تحديث بيانات المسؤول "${
+                admin?.first_name || "غير معروف"
+              }" بواسطة المشرف العام في تشطيبة. عدّل المعلومات والصلاحيات.`,
+              en: `Update administrator "${
+                admin?.first_name || "unknown"
+              }" details by Super Admin on Tashtiba. Modify info and permissions.`,
+            }}
+            keywords={{
+              ar: [
+                `تحديث مسؤول ${admin?.first_name || ""}`,
+                "تعديل أدمن",
+                "إدارة المسؤولين",
+                "سوبر أدمن",
+                "حسابات المسؤولين",
+                "تشطيبة",
+              ],
+              en: [
+                `update admin ${admin?.first_name || ""}`,
+                "edit admin",
+                "admin management",
+                "super admin",
+                "admin accounts",
+                "Tashtiba",
+              ],
+            }}
+            robotsTag="noindex, nofollow"
+          />
 
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {t("admin.update_title")}
-        </h3>
-      </div>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            {t("admin.update_title")}
+          </h3>
+        </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6 w-full mt-10 flex flex-col items-center"
-      >
-        {errors.global && (
-          <p className="text-error-500 text-sm mt-1">{errors.global}</p>
-        )}
-        {errors.general && (
-          <p className="text-red-500 text-sm mt-4">{errors.general}</p>
-        )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-          {/* First Name */}
-          <div className="col-span-1">
-            <Label htmlFor="first_name">{t("admin.first_name")}</Label>
-            <Input
-              type="text"
-              name="first_name"
-              id="first_name"
-              value={updateData.first_name}
-              placeholder={t("admin.placeholder.first_name")}
-              onChange={handleChange}
-            />
-            {errors.first_name?.[0] && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.first_name[0]}
-              </p>
-            )}
-            {clientSideErrors.first_name && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.first_name}
-              </p>
-            )}
-          </div>
-
-          {/* Last Name */}
-          <div className="col-span-1">
-            <Label htmlFor="last_name">{t("admin.last_name")}</Label>
-            <Input
-              type="text"
-              name="last_name"
-              id="last_name"
-              value={updateData.last_name}
-              placeholder={t("admin.placeholder.last_name")}
-              onChange={handleChange}
-            />
-            {errors.last_name?.[0] && (
-              <p className="text-red-500 text-sm mt-1">{errors.last_name[0]}</p>
-            )}
-            {clientSideErrors.last_name && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.last_name}
-              </p>
-            )}
-          </div>
-          {/* Role */}
-          <div className="col-span-1">
-            <Label htmlFor="role">{t("admin.select_role")}</Label>
-            <Select
-              options={options?.map((role: Role) => ({
-                value: role.name,
-                label: role.name,
-              }))}
-              onChange={handleSelectChange}
-              value={updateData.role}
-              placeholder={t("admin.placeholder.select_role")}
-            />
-            {errors.role?.[0] && (
-              <p className="text-red-500 text-sm mt-1">{errors.role[0]}</p>
-            )}
-            {clientSideErrors.role && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.role}
-              </p>
-            )}
-            {fetchingRoleError && (
-              <p className="text-red-500 text-sm mt-1">{fetchingRoleError}</p>
-            )}
-          </div>
-          {/* Email */}
-          <div className="col-span-1">
-            <Label htmlFor="email">{t("admin.email")}</Label>
-            <Input
-              type="email"
-              name="email"
-              id="email"
-              value={updateData.email}
-              placeholder={t("admin.placeholder.email")}
-              onChange={handleChange}
-            />
-            {errors.email?.[0] && (
-              <p className="text-red-500 text-sm mt-1">
-                {t("admin.errors.email_taken")}
-              </p>
-            )}
-            {clientSideErrors.email && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.email}
-              </p>
-            )}
-          </div>
-
-          {/* Phone */}
-          <div className="col-span-1">
-            <Label htmlFor="phone">{t("admin.phone")}</Label>
-            <Input
-              type="text"
-              name="phone"
-              id="phone"
-              value={updateData.phone}
-              placeholder={t("admin.placeholder.phone")}
-              onChange={handleChange}
-            />
-            {errors.phone?.[0] && (
-              <p className="text-red-500 text-sm mt-1">
-                {t("admin.errors.phone_taken")}
-              </p>
-            )}
-            {clientSideErrors.phone && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.phone}
-              </p>
-            )}
-          </div>
-          {/* Password */}
-          <div className="col-span-1">
-            <Label htmlFor="password">{t("admin.password")}</Label>
-            <div className="relative">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6 w-full mt-10 flex flex-col items-center"
+        >
+          {errors.global && (
+            <p className="text-error-500 text-sm mt-1">{errors.global}</p>
+          )}
+          {errors.general && (
+            <p className="text-red-500 text-sm mt-4">{errors.general}</p>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+            {/* First Name */}
+            <div className="col-span-1">
+              <Label htmlFor="first_name">{t("admin.first_name")}</Label>
               <Input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                id="password"
-                value={updateData.password}
-                placeholder={t("admin.placeholder.password")}
+                type="text"
+                name="first_name"
+                id="first_name"
+                value={updateData.first_name}
+                placeholder={t("admin.placeholder.first_name")}
                 onChange={handleChange}
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className={`absolute z-30 -translate-y-1/2 cursor-pointer ${
-                  dir === "rtl" ? "left-4" : "right-4"
-                } top-1/2`}
-              >
-                {showPassword ? (
-                  <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                ) : (
-                  <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                )}
-              </button>
+              {errors.first_name?.[0] && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.first_name[0]}
+                </p>
+              )}
+              {clientSideErrors.first_name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientSideErrors.first_name}
+                </p>
+              )}
             </div>
-            {errors.password?.[0] && (
-              <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>
-            )}
-            {clientSideErrors.password && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.password}
-              </p>
-            )}
+
+            {/* Last Name */}
+            <div className="col-span-1">
+              <Label htmlFor="last_name">{t("admin.last_name")}</Label>
+              <Input
+                type="text"
+                name="last_name"
+                id="last_name"
+                value={updateData.last_name}
+                placeholder={t("admin.placeholder.last_name")}
+                onChange={handleChange}
+              />
+              {errors.last_name?.[0] && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.last_name[0]}
+                </p>
+              )}
+              {clientSideErrors.last_name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientSideErrors.last_name}
+                </p>
+              )}
+            </div>
+            {/* Role */}
+            <div className="col-span-1">
+              <Label htmlFor="role">{t("admin.select_role")}</Label>
+              <Select
+                options={options?.map((role: Role) => ({
+                  value: role.name,
+                  label: role.name,
+                }))}
+                onChange={handleSelectChange}
+                value={updateData.role}
+                placeholder={t("admin.placeholder.select_role")}
+              />
+              {errors.role?.[0] && (
+                <p className="text-red-500 text-sm mt-1">{errors.role[0]}</p>
+              )}
+              {clientSideErrors.role && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientSideErrors.role}
+                </p>
+              )}
+              {fetchingRoleError && (
+                <p className="text-red-500 text-sm mt-1">{fetchingRoleError}</p>
+              )}
+            </div>
+            {/* Email */}
+            <div className="col-span-1">
+              <Label htmlFor="email">{t("admin.email")}</Label>
+              <Input
+                type="email"
+                name="email"
+                id="email"
+                value={updateData.email}
+                placeholder={t("admin.placeholder.email")}
+                onChange={handleChange}
+              />
+              {errors.email?.[0] && (
+                <p className="text-red-500 text-sm mt-1">
+                  {t("admin.errors.email_taken")}
+                </p>
+              )}
+              {clientSideErrors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientSideErrors.email}
+                </p>
+              )}
+            </div>
+
+            {/* Phone */}
+            <div className="col-span-1">
+              <Label htmlFor="phone">{t("admin.phone")}</Label>
+              <Input
+                type="text"
+                name="phone"
+                id="phone"
+                value={updateData.phone}
+                placeholder={t("admin.placeholder.phone")}
+                onChange={handleChange}
+              />
+              {errors.phone?.[0] && (
+                <p className="text-red-500 text-sm mt-1">
+                  {t("admin.errors.phone_taken")}
+                </p>
+              )}
+              {clientSideErrors.phone && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientSideErrors.phone}
+                </p>
+              )}
+            </div>
+            {/* Password */}
+            <div className="col-span-1">
+              <Label htmlFor="password">{t("admin.password")}</Label>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  id="password"
+                  value={updateData.password}
+                  placeholder={t("admin.placeholder.password")}
+                  onChange={handleChange}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={`absolute z-30 -translate-y-1/2 cursor-pointer ${
+                    dir === "rtl" ? "left-4" : "right-4"
+                  } top-1/2`}
+                >
+                  {showPassword ? (
+                    <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                  ) : (
+                    <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
+                  )}
+                </button>
+              </div>
+              {errors.password?.[0] && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.password[0]}
+                </p>
+              )}
+              {clientSideErrors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientSideErrors.password}
+                </p>
+              )}
+            </div>
           </div>
-        </div>
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-600 flex gap-4 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          <FiUserPlus size={20} />
-          {loading ? t("admin.button.submitting") : t("admin.button.submit")}
-        </button>
-      </form>
-    </div>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-brand-600 hover:bg-brand-600 flex gap-4 text-white px-5 py-2 rounded  disabled:opacity-50"
+          >
+            <UserPlusIcon className="fill-white" />
+            {loading ? t("admin.button.submitting") : t("admin.button.submit")}
+          </button>
+        </form>
+      </div>
+    </PageStatusHandler>
   );
 };
 

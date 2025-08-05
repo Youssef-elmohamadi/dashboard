@@ -1,14 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import {
-  HiOutlineClipboardDocumentList,
-  HiOutlineCog,
-  HiOutlineShieldCheck,
-  HiOutlineAdjustmentsHorizontal,
-} from "react-icons/hi2";
 import { useParams } from "react-router-dom";
-import SEO from "../../../components/common/SEO/seo"; // Assuming you have this SEO component
+import SEO from "../../../components/common/SEO/seo";
+import DocumentIcon from "../../../icons/DocumentIcon";
+import DataIcon from "../../../icons/DataIcon";
+import PrivacyIcon from "../../../icons/PrivacyIcon";
+import { UserCircleIcon } from "../../../icons";
 
 interface Section {
   title: string;
@@ -18,7 +16,7 @@ interface Section {
 
 const PrivacyPolicyPage: React.FC = () => {
   const { t } = useTranslation("PrivacyPolicy");
-  const brandColor = "#542475";
+  const brandColor = "#d62828";
   const { lang } = useParams();
   const cardVariants = {
     offscreen: { y: 50, opacity: 0 },
@@ -36,12 +34,7 @@ const PrivacyPolicyPage: React.FC = () => {
   const sections: Section[] = [
     {
       title: t("privacy.sections.collection.title"),
-      icon: (
-        <HiOutlineClipboardDocumentList
-          className="h-5 w-5"
-          style={{ color: brandColor }}
-        />
-      ),
+      icon: <DocumentIcon className="h-5 w-5" style={{ color: brandColor }} />,
       content: (
         <ul className="list-disc list-inside space-y-2">
           <li>{t("privacy.sections.collection.point1")}</li>
@@ -51,7 +44,7 @@ const PrivacyPolicyPage: React.FC = () => {
     },
     {
       title: t("privacy.sections.usage.title"),
-      icon: <HiOutlineCog className="h-5 w-5" style={{ color: brandColor }} />,
+      icon: <DataIcon className="h-5 w-5" style={{ color: brandColor }} />,
       content: (
         <ul className="list-disc list-inside space-y-2">
           <li>{t("privacy.sections.usage.point1")}</li>
@@ -62,21 +55,13 @@ const PrivacyPolicyPage: React.FC = () => {
     },
     {
       title: t("privacy.sections.protection.title"),
-      icon: (
-        <HiOutlineShieldCheck
-          className="h-5 w-5"
-          style={{ color: brandColor }}
-        />
-      ),
+      icon: <PrivacyIcon className="h-5 w-5" style={{ color: brandColor }} />,
       content: <p>{t("privacy.sections.protection.description")}</p>,
     },
     {
       title: t("privacy.sections.rights.title"),
       icon: (
-        <HiOutlineAdjustmentsHorizontal
-          className="h-5 w-5"
-          style={{ color: brandColor }}
-        />
+        <UserCircleIcon className="h-5 w-5" style={{ color: brandColor }} />
       ),
       content: (
         <ul className="list-disc list-inside space-y-2">
@@ -124,9 +109,12 @@ const PrivacyPolicyPage: React.FC = () => {
             "privacy",
           ],
         }}
+        image="https://tashtiba.com/og-image.png"
+        url={`https://tashtiba.com/${lang}/privacy-policy`}
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/privacy-policy" },
           { lang: "en", href: "https://tashtiba.com/en/privacy-policy" },
+          { lang: "x-default", href: "https://tashtiba.com/en/privacy-policy" },
         ]}
       />
 
@@ -145,7 +133,7 @@ const PrivacyPolicyPage: React.FC = () => {
           <div
             className={`absolute ${
               lang === "ar" ? "right-9" : "left-9"
-            } top-2 h-full w-0.5 bg-purple-200 hidden md:block`}
+            } top-2 h-full w-0.5 bg-red-200 hidden md:block`}
           ></div>
 
           {sections.map((section, index) => (
@@ -169,7 +157,7 @@ const PrivacyPolicyPage: React.FC = () => {
                     {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <div className="h-8 w-8 flex items-center justify-center rounded-full bg-purple-100">
+                <div className="h-8 w-8 flex items-center justify-center rounded-full bg-red-100">
                   {section.icon}
                 </div>
               </div>

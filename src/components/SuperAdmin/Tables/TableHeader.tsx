@@ -16,7 +16,7 @@ const TableHeader = ({ headerGroup }: any) => {
           <th
             key={columnKey}
             {...restOfColumnProps}
-            className="px-5 py-3 text-white text-center bg-blue-600 font-bold text-theme-xs dark:text-white"
+            className="px-5 py-3 text-white text-center bg-brand-600 font-bold text-theme-xs dark:text-white"
           >
             {column.render("Header")}
           </th>

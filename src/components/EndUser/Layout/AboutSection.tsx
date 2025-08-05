@@ -2,58 +2,33 @@ import React, { Suspense } from "react";
 import LazyImage from "../../common/LazyImage";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
-
-// Lazy-loaded React Icons
-// We'll import each icon individually to allow for granular lazy loading
-const LazyFaShippingFast = React.lazy(() =>
-  import("react-icons/fa").then((module) => ({
-    default: module.FaShippingFast,
-  }))
-);
-const LazyFaUndo = React.lazy(() =>
-  import("react-icons/fa").then((module) => ({ default: module.FaUndo }))
-);
-const LazyFaLifeRing = React.lazy(() =>
-  import("react-icons/fa").then((module) => ({ default: module.FaLifeRing }))
-);
-const LazyFaClipboardCheck = React.lazy(() =>
-  import("react-icons/fa").then((module) => ({
-    default: module.FaClipboardCheck,
-  }))
-);
-const LazyFaFileAlt = React.lazy(() =>
-  import("react-icons/fa").then((module) => ({ default: module.FaFileAlt }))
-);
-const LazyFaMoneyBillTransfer = React.lazy(() =>
-  import("react-icons/fa6").then((module) => ({
-    default: module.FaMoneyBillTransfer,
-  }))
-);
-const LazyFaHouseLock = React.lazy(() =>
-  import("react-icons/fa6").then((module) => ({ default: module.FaHouseLock }))
-);
-
-// We still need the original types for `Feature` and `Policy`
 import { Feature, Policy } from "../../../types/Home";
+import MoneyIcon from "../../../icons/MoneyIcon";
+import DeliveryIcon from "../../../icons/DelivaryIcon";
+import QualityIcon from "../../../icons/QualityIcon";
+import ReturnIcon from "../../../icons/ReturnIcon";
+import DocumentIcon from "../../../icons/DocumentIcon";
+import SupportIcon from "../../../icons/SupportIcon";
+import PrivacyIcon from "../../../icons/PrivacyIcon";
 
 const TashtibaAboutPage: React.FC = () => {
   const { lang } = useParams();
-  const { t } = useTranslation("EndUserHome");
-  const brandColor: string = "#9810fa";
+  const { t } = useTranslation(["EndUserHome"]);
+  const brandColor: string = "#d62828";
 
   const features: Feature[] = [
     {
-      icon: LazyFaClipboardCheck, // Use the lazy-loaded icon
+      icon: QualityIcon,
       title: t("AboutSection.features.quality.title"),
       description: t("AboutSection.features.quality.description"),
     },
     {
-      icon: LazyFaMoneyBillTransfer, // Use the lazy-loaded icon
+      icon: MoneyIcon,
       title: t("AboutSection.features.price.title"),
       description: t("AboutSection.features.price.description"),
     },
     {
-      icon: LazyFaShippingFast, // Use the lazy-loaded icon
+      icon: DeliveryIcon,
       title: t("AboutSection.features.delivery.title"),
       description: t("AboutSection.features.delivery.description"),
     },
@@ -63,22 +38,22 @@ const TashtibaAboutPage: React.FC = () => {
     {
       href: `/${lang}/terms`,
       title: t("AboutSection.Politics.terms.title"),
-      icon: LazyFaFileAlt, // Use the lazy-loaded icon
+      icon: DocumentIcon,
     },
     {
       href: `/${lang}/return`,
       title: t("AboutSection.Politics.refund.title"),
-      icon: LazyFaUndo, // Use the lazy-loaded icon
+      icon: ReturnIcon,
     },
     {
       href: `/${lang}/support`,
       title: t("AboutSection.Politics.support.title"),
-      icon: LazyFaLifeRing, // Use the lazy-loaded icon
+      icon: SupportIcon,
     },
     {
       href: `/${lang}/privacy`,
       title: t("AboutSection.Politics.privacy.title"),
-      icon: LazyFaHouseLock, // Use the lazy-loaded icon
+      icon: PrivacyIcon,
     },
   ];
 
@@ -107,8 +82,6 @@ const TashtibaAboutPage: React.FC = () => {
                 className="absolute hidden xl:block  -right-10 -bottom-10 w-40 h-40 rounded-full opacity-10"
                 style={{ backgroundColor: brandColor }}
               ></div>
-
-              {/* LazyImage is already handling its own lazy loading */}
               <LazyImage
                 src="/images/about/about.webp"
                 alt={t("AboutSection.alt")}
@@ -129,7 +102,6 @@ const TashtibaAboutPage: React.FC = () => {
                   className="flex items-center justify-center h-12 w-12 rounded-full mx-auto"
                   style={{ backgroundColor: brandColor }}
                 >
-                  {/* Wrap the lazy-loaded icon with Suspense and null fallback */}
                   <Suspense fallback={null}>
                     <feature.icon className="h-6 w-6 text-white" />
                   </Suspense>
@@ -157,11 +129,10 @@ const TashtibaAboutPage: React.FC = () => {
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {policies.map((policy) => (
               <Link key={policy.title} to={policy.href} className="group">
-                <div className="bg-white shadow-sm rounded-xl p-6 text-center transition-all duration-300 ease-in-out hover:shadow-purple-200 hover:shadow-lg hover:-translate-y-2 border border-transparent hover:border-purple-200">
-                  <div className="flex items-center justify-center h-12 w-12 rounded-md mx-auto bg-gray-100 group-hover:bg-purple-100 transition-colors">
-                    {/* Wrap the lazy-loaded icon with Suspense and null fallback */}
+                <div className="bg-white shadow-sm rounded-xl p-6 text-center transition-all duration-300 ease-in-out hover:shadow-red-200 hover:shadow-lg hover:-translate-y-2 border border-transparent hover:border-red-300">
+                  <div className="flex items-center justify-center h-12 w-12 rounded-md mx-auto bg-gray-100 group-hover:bg-red-100 transition-colors">
                     <Suspense fallback={null}>
-                      <policy.icon className="h-6 w-6 text-gray-600 group-hover:text-purple-600 transition-colors" />
+                      <policy.icon className="h-6 w-6 text-gray-600 group-hover:text-red-600 transition-colors" />
                     </Suspense>
                   </div>
                   <h3 className="mt-5 text-lg font-medium text-gray-900">

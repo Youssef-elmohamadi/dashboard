@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
-import Select from "../../common/form/Select";
 import Checkbox from "../../common/input/Checkbox";
 import Loading from "../../common/Loading";
 import { useNavigate } from "react-router-dom";
@@ -10,19 +9,22 @@ import {
   useCreateRole,
   useGetAllPermissions,
 } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
-// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../common/SEO/seo";
 import { AxiosError } from "axios";
 import {
   CreateRoleInput,
   Permission,
   ServerErrors,
 } from "../../../types/Roles";
+import useCheckOnline from "../../../hooks/useCheckOnline";
+import { toast } from "react-toastify";
 export default function CreateRole() {
   const [roleData, setRoleData] = useState<CreateRoleInput>({
     name: "",
     permissions: [],
   });
+  const [fetchingPermissionsError, setFetchingPermissionsError] =
+    useState<string>("");
   const [clientSideErrors, setClientSideErrors] = useState<{
     [key: string]: string;
   }>({});
@@ -32,11 +34,9 @@ export default function CreateRole() {
     global: "",
     general: "",
   });
-  const [fetchingPermissionsError, setFetchingPermissionsError] =
-    useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { t } = useTranslation(["CreateRole", "Meta"]);
+  const { t } = useTranslation(["CreateRole"]);
   const {
     data,
     isLoading,
@@ -91,10 +91,16 @@ export default function CreateRole() {
     return Object.keys(errors).length === 0;
   };
   const { mutateAsync } = useCreateRole();
+  const isCurrentlyOnline = useCheckOnline();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     if (!validateForm()) {
+      setIsSubmitting(false);
+      return;
+    }
+    if (!isCurrentlyOnline()) {
+      toast.error(t("CreateRole:role.errors.no_internet"));
       setIsSubmitting(false);
       return;
     }
@@ -138,7 +144,7 @@ export default function CreateRole() {
 
   return (
     <div className=" p-6">
-      <SEO // PageMeta replaced with SEO, and data directly set
+      <SEO 
         title={{
           ar: "تشطيبة - إنشاء صلاحية جديدة (سوبر أدمن)",
           en: "Tashtiba - Create New Role (Super Admin)",
@@ -167,7 +173,8 @@ export default function CreateRole() {
             "permissions",
           ],
         }}
-      />{" "}
+        robotsTag="noindex, nofollow"
+      />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("role.create_title")}
@@ -245,7 +252,7 @@ export default function CreateRole() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ${
+          className={`text-white inline-flex items-center bg-brand-500 hover:bg-brand-600 focus:ring-4 focus:outline-none focus:ring-brand-500 font-medium rounded-lg text-sm px-5 py-2.5 ${
             isSubmitting ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >

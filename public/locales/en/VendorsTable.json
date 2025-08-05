@@ -59,7 +59,8 @@
       "noChangeMessage": "No change made",
       "errorResponse": "The Status didn't update",
       "confirmButtonText": "Confirm",
-      "cancelButtonText": "Cancel"
+      "cancelButtonText": "Cancel",
+      "documentNotApproved": "You can't change the status before all documents are approved"
     },
     "table": {
       "loadingText": "Vendors data Loading..."

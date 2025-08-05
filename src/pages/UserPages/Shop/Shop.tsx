@@ -43,39 +43,57 @@ const Shop = () => {
   });
 
   return (
-    <div className="min-h-[300px] flex flex-col items-center">
+    <div className="flex flex-col items-center min-h-[540px]">
       <SEO
         title={{
           ar: `تشطيبة - ${categoryName}`,
           en: `Tashtiba - ${categoryName}`,
         }}
         description={{
-          ar: `تصفح منتجات فئة ${categoryName} بأفضل الأسعار على تشطيبة.`,
-          en: `Browse the best deals in ${categoryName} on Tashtiba.`,
+          ar: `اكتشف أفضل منتجات ${categoryName} في تشطيبة بأسعار منافسة وجودة عالية.`,
+          en: `Discover top ${categoryName} finishing products on Tashtiba at great prices and premium quality.`,
         }}
         keywords={{
           ar: [
             "تشطيبة",
             categoryName,
-            "تسوق",
-            "منتجات",
-            "مصر",
-            "فئة",
-            "خصومات",
+            "تشطيبات",
+            "مواد بناء",
+            "سيراميك",
+            "دهانات",
+            "أدوات صحية",
+            "ديكور",
+            "مقاولات",
+            "تشطيب شقق",
           ],
           en: [
             "tashtiba",
             categoryName,
-            "shop",
-            "products",
-            "category",
-            "offers",
-            "Egypt",
+            "building materials",
+            "ceramic tiles",
+            "paint",
+            "sanitary ware",
+            "interior finishes",
+            "construction supplies",
+            "home finishing",
+            "egypt",
           ],
         }}
+        image="https://tashtiba.com/og-image.png"
+        url={`https://tashtiba.com/${lang}/category/${category_id}`}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.com/ar" },
-          { lang: "en", href: "https://tashtiba.com/en" },
+          {
+            lang: "ar",
+            href: `https://tashtiba.com/ar/category/${category_id}`,
+          },
+          {
+            lang: "en",
+            href: `https://tashtiba.com/en/category/${category_id}`,
+          },
+          {
+            lang: "x-default",
+            href: `https://tashtiba.com/en/category/${category_id}`,
+          },
         ]}
       />
 
@@ -97,7 +115,7 @@ const Shop = () => {
             }
             className="w-20 h-20 mb-4 animate-pulse"
           />
-          <Circles height="80" width="80" color="#6B46C1" ariaLabel="loading" />
+          <Circles height="80" width="80" color="#d62828" ariaLabel="loading" />
         </div>
       ) : products.length === 0 ? (
         <p className="text-gray-500 text-lg font-semibold mt-10">
@@ -117,7 +135,7 @@ const Shop = () => {
             <button
               onClick={() => fetchNextPage()}
               disabled={isFetching}
-              className="mt-6 px-6 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+              className="mt-6 px-6 py-2 bg-[#d62828] text-white rounded hover:bg-[#b21d1d] transition"
             >
               {isFetching ? t("mainContent.loadingMore") : t("showMore")}
             </button>

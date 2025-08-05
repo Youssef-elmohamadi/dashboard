@@ -6,14 +6,7 @@ import { useProfile } from "../../../hooks/Api/EndUser/useProfile/useProfile";
 import { useAllFavoriteProducts } from "../../../hooks/Api/EndUser/useProducts/useFavoriteProducts";
 import { handleLogout } from "../../common/Auth/Logout";
 
-// Lazy Loaded Components
 const LazyMobileMenu = lazy(() => import("../Header/MobileMenuContainer"));
-// const LazyUserAccountDropdown = lazy(
-//   () => import("../Header/UserAccountDropdown")
-// );
-// const LazyNotificationIcon = lazy(() => import("../Header/NotificationIcon"));
-
-// New Sub-components
 import HeaderLeftSection from "../Header/HeaderLeftSection";
 import DesktopSearchBar from "../Header/DesktopSearchBar";
 import UserActions from "../Header/UserActions";
@@ -60,13 +53,9 @@ const AppHeader = () => {
   } = useAllFavoriteProducts();
 
   const favoriteCount = favoriteProductsData?.pages?.[0]?.total;
-
-  // Logout handler
   const handleUserLogout = useCallback(() => {
     handleLogout("end_user", navigate, lang);
   }, [uToken, navigate, lang]);
-
-  // Alt texts for images
   const altTexts = {
     logo: {
       ar: "تشطيبة - السوق الإلكتروني",
@@ -81,7 +70,6 @@ const AppHeader = () => {
   return (
     <div>
       <header className="enduser_container py-4 flex items-center justify-start gap-12 relative">
-        {/* Left Section: Mobile Menu Toggle & Logo */}
         <HeaderLeftSection
           lang={lang}
           altTexts={altTexts}
@@ -89,12 +77,11 @@ const AppHeader = () => {
           toggleMobileSearch={toggleMobileSearch}
         />
 
-        {/* Mobile Search Overlay (conditionally rendered) */}
         <MobileSearchOverlay
           isMobileSearchOpen={isMobileSearchOpen}
           toggleMobileSearch={toggleMobileSearch}
-          t={t} // Pass translation function
-          dir={dir} // Pass direction
+          t={t} 
+          dir={dir} 
         />
 
         {/* Desktop Search Bar */}
@@ -125,7 +112,6 @@ const AppHeader = () => {
         </div>
       </header>
 
-      {/* Mobile Menu Overlay and LazyMobileMenu */}
       <Suspense fallback={null}>
         <LazyMobileMenu
           dir={dir}

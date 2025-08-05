@@ -1,5 +1,4 @@
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo"; 
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import UserInfoCard from "../../../components/admin/UserProfile/UserInfoCard";
 import { useTranslation } from "react-i18next";
@@ -7,7 +6,7 @@ export default function UserProfiles() {
   const { t } = useTranslation(["UserProfile", "Meta"]);
   return (
     <>
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO 
         title={{
           ar: "تشطيبة - الملف الشخصي للمشرف العام",
           en: "Tashtiba - Super Admin Profile",
@@ -34,6 +33,7 @@ export default function UserProfiles() {
             "super admin management",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb
         pageTitle={t("userProfile.title")}
@@ -44,7 +44,6 @@ export default function UserProfiles() {
           {t("userProfile.title")}
         </h3>
         <div className="space-y-6">
-          {/* <UserMetaCard /> */}
           <UserInfoCard userType="super_admin" />
         </div>
       </div>

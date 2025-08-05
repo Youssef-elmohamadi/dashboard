@@ -10,9 +10,9 @@ import {
 } from "../../../hooks/Api/EndUser/useOrders/useOrders";
 import { AxiosError } from "axios";
 import SEO from "../../../components/common/SEO/seo"; // Your custom SEO component
-import { HiOutlineDocumentText } from "react-icons/hi2"; // Icons for orders page
 import { toast } from "react-toastify"; // Ensure toast is imported for messages
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import DocumentIcon from "../../../icons/DocumentIcon";
 
 const Orders = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -21,9 +21,8 @@ const Orders = () => {
   const navigate = useNavigate();
   const { t } = useTranslation(["EndUserOrderHistory"]);
   const { lang } = useDirectionAndLanguage();
-  // Brand colors from your UserProfile/UserNotifications components
-  const primaryColor = "#9810fa"; // Lighter purple for accents/active states
-  const secondaryColor = "#542475"; // Deeper purple for text/main elements
+  const primaryColor = "#d62828"; 
+  const secondaryColor = "#d62828"; 
 
   const { data, isLoading, isError, refetch, error } =
     useAllOrdersPaginate(pageIndex);
@@ -48,7 +47,6 @@ const Orders = () => {
   useEffect(() => {
     const token = localStorage.getItem("end_user_token");
     if (!token) {
-      // Use toast for user feedback, similar to other components
       toast.error(
         t("authRequired", {
           defaultValue: "Please login first to view your orders.",
@@ -56,9 +54,9 @@ const Orders = () => {
       );
       navigate(`/${lang}/signin`, { replace: true });
     }
-  }, [navigate, t]); // Added 't' to dependencies
+  }, [navigate, t]); 
 
-  const { mutateAsync: cancelOrderMutation } = useCancelOrder(); // Use isPending for loading state
+  const { mutateAsync: cancelOrderMutation } = useCancelOrder();
   const handleCancel = async (id: number) => {
     await alertDelete(id, cancelOrderMutation, refetch, {
       confirmTitle: t("cancelAlert.cancelTitle"),
@@ -120,6 +118,7 @@ const Orders = () => {
           { lang: "en", href: "https://tashtiba.com/en/orders" }, // Adjust if your actual orders URL is different
           { lang: "x-default", href: "https://tashtiba.com/en/orders" }, // Consider a default if you have one
         ]}
+        robotsTag="noindex, nofollow"
       />
 
       <div className="max-w-6xl mx-auto bg-white rounded-2xl  overflow-hidden">
@@ -129,10 +128,10 @@ const Orders = () => {
             className="text-3xl font-bold flex items-center gap-3"
             style={{ color: secondaryColor }}
           >
-            <HiOutlineDocumentText className="h-8 w-8" />
+            <DocumentIcon className="md:h-8 md:w-8 w-6 h-6" />
             {t("pageTitle", { defaultValue: "طلباتي" })}
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-black">
             {t("pageSubtitle", {
               defaultValue: "مراجعة وتتبع جميع طلباتك السابقة والحالية.",
             })}

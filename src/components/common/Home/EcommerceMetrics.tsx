@@ -67,10 +67,10 @@ const EcommerceMetrics: FC<EcommerceMetricsProps> = ({
                 </h4>
               </div>
 
-              <Badge color={badgeColor}>
+              {/* <Badge color={badgeColor}>
                 <ArrowIcon />
                 {Math.abs(metric.percentage)}%
-              </Badge>
+              </Badge> */}
             </div>
           </div>
         );

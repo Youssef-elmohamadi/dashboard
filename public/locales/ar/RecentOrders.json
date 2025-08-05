@@ -17,6 +17,11 @@
     "unknown": "غير معروف",
     "noData": "لا توجد بيانات متاحة",
     "egp": "ج.م",
+    "paymentMethod": "طريقة الدفع",
+    "location": {
+      "fullName": "الاسم بالكامل",
+      "phone": "رقم الهاتف"
+    },
     "statuses": {
       "delivered": "تم التوصيل",
       "shipped": "تم الشحن",

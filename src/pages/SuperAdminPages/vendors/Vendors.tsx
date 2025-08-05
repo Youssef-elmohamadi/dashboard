@@ -1,10 +1,9 @@
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
 import { useTranslation } from "react-i18next";
@@ -82,6 +81,7 @@ const Vendors = () => {
         errorResponse: t("vendorsPage.changeStatus.errorResponse"),
         confirmButtonText: t("vendorsPage.changeStatus.confirmButtonText"),
         cancelButtonText: t("vendorsPage.changeStatus.cancelButtonText"),
+        documentNotApproved: t("vendorsPage.changeStatus.documentNotApproved"),
       },
     });
   };
@@ -96,7 +96,7 @@ const Vendors = () => {
   });
   return (
     <>
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO
         title={{
           ar: "تشطيبة - إدارة البائعين",
           en: "Tashtiba - Vendor Management",
@@ -123,6 +123,7 @@ const Vendors = () => {
             "stores",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb
         pageTitle={t("vendorsPage.title")}

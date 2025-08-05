@@ -1,17 +1,15 @@
-// src/components/EndUser/Layout/CategoriesDropdownContent.tsx
 import React from "react";
 import { Link } from "react-router-dom";
-import { IoIosArrowDown } from "react-icons/io";
 import { useTranslation } from "react-i18next";
-import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import { Category, Child } from "../../../types/Categories";
 import { Circles } from "react-loader-spinner";
+import ArrowDown from "../../../icons/ArrowDown";
 
 interface CategoriesDropdownContentProps {
   dir: string;
   closeDropdown: () => void;
-  lang: string; // Add lang prop
+  lang: string;
 }
 
 const CategoriesDropdownContent: React.FC<CategoriesDropdownContentProps> = ({
@@ -26,7 +24,7 @@ const CategoriesDropdownContent: React.FC<CategoriesDropdownContentProps> = ({
     isLoading: isCategoriesLoading,
     isError: isCategoriesError,
     error: categoriesError,
-  } = useCategories(); // useCategories hook is placed here now
+  } = useCategories();
 
   const renderSubCategories = (subCategory: Child) => (
     <li key={subCategory.id} className="p-2">
@@ -63,7 +61,7 @@ const CategoriesDropdownContent: React.FC<CategoriesDropdownContentProps> = ({
     <ul className="flex flex-col overflow-y-auto max-h-[74vh] scroll-bar-hide relative z-30">
       {isCategoriesLoading ? (
         <div className="flex justify-center items-center py-4">
-          <Circles height="40" width="40" color="#542475" />
+          <Circles height="40" width="40" color="#d62828" />
         </div>
       ) : isCategoriesError ? (
         <div className="px-4 py-2 text-red-500 text-center">
@@ -74,20 +72,18 @@ const CategoriesDropdownContent: React.FC<CategoriesDropdownContentProps> = ({
       ) : Array.isArray(categories) && categories.length > 0 ? (
         categories.map((category: Category) => (
           <li
-            // No onClick={closeDropdown} here, it's handled by Link internally.
-            // If the li itself needs to close dropdown, use it, but consider nested links.
             key={category.id}
-            className="group relative px-4 py-2 hover:bg-[#8826bd35] cursor-pointer"
+            className="group relative px-4 py-2 hover:bg-red-200 cursor-pointer"
           >
             <Link
               to={`/${lang}/category/${category.id}`}
               className="flex justify-between items-center w-full"
-              onClick={closeDropdown} // Close dropdown on main category click
+              onClick={closeDropdown}
             >
               <div className="">{category.name}</div>
               {category.childs && category.childs.length > 0 && (
-                <IoIosArrowDown
-                  className={`transform ${
+                <ArrowDown
+                  className={`transform w-4 ${
                     dir === "ltr" ? "rotate-[-90deg]" : "rotate-[90deg]"
                   } group-hover:rotate-0 transition duration-300 ml-2`}
                 />

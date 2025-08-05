@@ -9,8 +9,7 @@ import {
   useGetBrandById,
   useUpdateBrand,
 } from "../../../hooks/Api/Admin/useBrands/useBrands";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // Commented out PageMeta import
-import SEO from "../../../components/common/SEO/seo"; // Imported SEO component
+import SEO from "../../../components/common/SEO/seo";
 import { AxiosError } from "axios";
 import {
   BrandApiError,
@@ -18,12 +17,15 @@ import {
   BrandFormErrors,
   MutateBrand,
 } from "../../../types/Brands";
+import PageStatusHandler, {
+  PageStatus,
+} from "../../common/PageStatusHandler/PageStatusHandler";
 
 const UpdateBrandPage = () => {
-  const { t } = useTranslation(["UpdateBrand", "Meta"]); // Using namespaces here
+  const { t } = useTranslation(["UpdateBrand", "Meta"]);
   const { id } = useParams();
   const navigate = useNavigate();
-  const [globalError, setGlobalError] = useState(false);
+
   const [updateData, setUpdateData] = useState<MutateBrand>({
     name: "",
     status: "active",
@@ -40,27 +42,29 @@ const UpdateBrandPage = () => {
     useState<BrandClientSideErrors>({
       name: "",
       status: "",
+      image: "",
     });
   const [loading, setLoading] = useState(false);
-  const { data, isLoading, isError, error } = useGetBrandById(id);
+
+  const {
+    data: brandResponse,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useGetBrandById(id);
+  const brandData = brandResponse?.data?.data;
+
+  const { mutateAsync } = useUpdateBrand(id!);
 
   useEffect(() => {
-    if (isError && error instanceof AxiosError) {
-      const status = error?.response?.status;
-      if (status === 401 || status === 403) {
-        setGlobalError(true);
-      } else {
-        setGlobalError(true);
-      }
+    if (brandData) {
+      setUpdateData({
+        name: brandData.name || "",
+        status: brandData.status || "active",
+        image: brandData.image,
+      });
     }
-  }, [isError, error, t]);
-  const brandData = data?.data?.data;
-  useEffect(() => {
-    setUpdateData({
-      name: brandData?.name || "",
-      status: brandData?.status || "active",
-      image: brandData?.image,
-    });
   }, [brandData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,19 +90,20 @@ const UpdateBrandPage = () => {
   };
 
   const validate = () => {
-    const newErrors = {
-      name: "",
-      status: "",
-    };
+    const newErrors: BrandClientSideErrors = { name: "", status: "", image: "" };
     if (!updateData.name) {
-      newErrors.name = t("UpdateBrand:errors.name"); // Added namespace
-    } else if (!updateData.status) {
-      newErrors.status = t("UpdateBrand:errors.status"); // Added namespace
+      newErrors.name = t("UpdateBrand:errors.name");
+    }
+    if (!updateData.status) {
+      newErrors.status = t("UpdateBrand:errors.status");
+    }
+    if (!updateData.image) {
+      newErrors.image = t("UpdateBrand:errors.image");
     }
     setClientSideErrors(newErrors);
-    return Object.values(newErrors).every((error) => error === "");
+    return Object.values(newErrors).every((error) => !error);
   };
-  const { mutateAsync } = useUpdateBrand(id!);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
@@ -108,7 +113,6 @@ const UpdateBrandPage = () => {
       const formData = new FormData();
       formData.append("name", updateData.name);
       formData.append("status", updateData.status);
-      formData.append("_method", "PUT"); // Required for Laravel PUT with FormData
 
       if (updateData.image && typeof updateData.image !== "string") {
         formData.append("image", updateData.image);
@@ -116,186 +120,77 @@ const UpdateBrandPage = () => {
 
       await mutateAsync({ brandData: formData, id: id! });
       navigate("/admin/brands", {
-        state: { successEdit: t("UpdateBrand:update_success") }, // Added namespace
+        state: { successEdit: t("UpdateBrand:update_success") },
       });
     } catch (error: any) {
       console.error("Error updating brand:", error);
       const status = error?.response?.status;
       if (status === 403 || status === 401) {
-        setErrors({
-          ...errors,
-          global: t("UpdateBrand:errors.global"), // Added namespace
-        });
+        setErrors((prev) => ({
+          ...prev,
+          global: t("UpdateBrand:errors.global"),
+        }));
         return;
       }
       const rawErrors = error?.response?.data.errors;
 
       if (Array.isArray(rawErrors)) {
         const formattedErrors: Record<string, string[]> = {};
-
         rawErrors.forEach((err: BrandApiError) => {
           if (!formattedErrors[err.code]) {
             formattedErrors[err.code] = [];
           }
           formattedErrors[err.code].push(err.message);
         });
-
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
       } else {
         setErrors((prev) => ({
           ...prev,
           general: t("UpdateBrand:errors.general"),
-        })); // Added namespace
+        }));
       }
     } finally {
       setLoading(false);
     }
   };
 
-  if (!id) {
-    return (
-      <>
-        <SEO // PageMeta replaced with SEO, and data directly set
-          title={{
-            ar: "تشطيبة - تحديث ماركة - معرف غير موجود",
-            en: "Tashtiba - Update Brand - ID Missing",
-          }}
-          description={{
-            ar: "صفحة تحديث الماركة تتطلب معرف ماركة صالح. يرجى التأكد من توفير المعرف.",
-            en: "The brand update page requires a valid brand ID. Please ensure the ID is provided.",
-          }}
-          keywords={{
-            ar: [
-              "تحديث ماركة",
-              "خطأ معرف",
-              "ماركة غير صالحة",
-              "تشطيبة",
-              "إدارة الماركات",
-            ],
-            en: [
-              "update brand",
-              "ID error",
-              "invalid brand",
-              "Tashtiba",
-              "brand management",
-            ],
-          }}
-        />
-        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("UpdateBrand:no_data")} {/* Added namespace */}
-        </div>
-      </>
-    );
-  }
+  const getPageStatus = () => {
+    if (!id) return PageStatus.NOT_FOUND;
+    if (isLoading) return PageStatus.LOADING;
+    if (isError) return PageStatus.ERROR;
+    if (!brandData) return PageStatus.NOT_FOUND;
+    return PageStatus.SUCCESS;
+  };
 
-  if (isLoading)
-    return (
-      <>
-        <SEO // PageMeta replaced with SEO, and data directly set
-          title={{
-            ar: "تشطيبة - تحديث ماركة",
-            en: "Tashtiba - Update Brand",
-          }}
-          description={{
-            ar: "جارٍ تحميل بيانات الماركة للتحديث في تشطيبة. يرجى الانتظار.",
-            en: "Loading brand data for update in Tashtiba. Please wait.",
-          }}
-          keywords={{
-            ar: [
-              "تحديث ماركة",
-              "تحميل بيانات",
-              "إدارة الماركات",
-              "تشطيبة",
-              "التحميل",
-            ],
-            en: [
-              "update brand",
-              "loading data",
-              "brand management",
-              "Tashtiba",
-              "loading",
-            ],
-          }}
-        />
-        <p className="text-center mt-5">{t("UpdateBrand:loading")}</p>{" "}
-        {/* Added namespace */}
-      </>
-    );
+  const getErrorMessage = (): string | undefined => {
+    if (isError) {
+      const status = (error as AxiosError)?.response?.status;
+      if (status === 401 || status === 403) {
+        return t("UpdateBrand:errors.global");
+      }
+      return t("UpdateBrand:errors.general");
+    }
+    return undefined;
+  };
 
-  if (!brandData && !globalError) {
-    return (
-      <>
-        <SEO // PageMeta replaced with SEO, and data directly set
-          title={{
-            ar: "تشطيبة - ماركة غير موجودة",
-            en: "Tashtiba - Brand Not Found",
-          }}
-          description={{
-            ar: "الماركة المطلوبة للتحديث غير موجودة في نظام تشطيبة. يرجى التحقق من المعرف.",
-            en: "The requested brand for update was not found in Tashtiba system. Please check the ID.",
-          }}
-          keywords={{
-            ar: [
-              "ماركة غير موجودة",
-              "خطأ",
-              "تحديث ماركة",
-              "تشطيبة",
-              "إدارة الماركات",
-            ],
-            en: [
-              "brand not found",
-              "error",
-              "update brand",
-              "Tashtiba",
-              "brand management",
-            ],
-          }}
-        />
-        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("UpdateBrand:not_found")} {/* Added namespace */}
-        </div>
-      </>
-    );
-  }
-  if (globalError) {
-    return (
-      <>
-        <SEO // PageMeta replaced with SEO, and data directly set
-          title={{
-            ar: "تشطيبة - خطأ عام في تحديث الماركة",
-            en: "Tashtiba - General Brand Update Error",
-          }}
-          description={{
-            ar: "حدث خطأ غير متوقع أثناء تحديث الماركة في تشطيبة. يرجى المحاولة لاحقًا.",
-            en: "An unexpected error occurred while updating the brand in Tashtiba. Please try again later.",
-          }}
-          keywords={{
-            ar: ["خطأ تحديث ماركة", "مشكلة تقنية", "تشطيبة", "فشل التحديث"],
-            en: [
-              "brand update error",
-              "technical issue",
-              "Tashtiba",
-              "update failed",
-            ],
-          }}
-        />
-        <div className="p-8 text-center text-gray-500 dark:text-gray-300">
-          {t("UpdateBrand:errors.general")} {/* Added namespace */}
-        </div>
-      </>
-    );
-  }
+  const handleRetry = () => {
+    refetch();
+  };
 
   return (
-    <div>
-      <SEO // PageMeta replaced with SEO, and data directly set
+    <>
+      <SEO
         title={{
-          ar: "تشطيبة - تحديث ماركة",
-          en: "Tashtiba - Update Brand",
+          ar: `تشطيبة - تحديث ماركة ${updateData.name || ""}`,
+          en: `Tashtiba - Update Brand ${updateData.name || ""}`,
         }}
         description={{
-          ar: "صفحة تحديث بيانات الماركة في نظام تشطيبة. قم بتعديل اسم الماركة، حالتها، وشعارها.",
-          en: "Update brand details in Tashtiba system. Modify brand name, status, and logo.",
+          ar: `صفحة تحديث بيانات الماركة ${
+            updateData.name || ""
+          } في نظام تشطيبة. قم بتعديل اسم الماركة، حالتها، وشعارها.`,
+          en: `Update brand details for ${
+            updateData.name || ""
+          } in Tashtiba system. Modify brand name, status, and logo.`,
         }}
         keywords={{
           ar: [
@@ -315,104 +210,125 @@ const UpdateBrandPage = () => {
             "update logo",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
-      <div className="p-4 border-b dark:border-gray-600 border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {t("UpdateBrand:update_title")} {/* Added namespace */}
-        </h3>
-      </div>
 
-      {errors.global && (
-        <p className="text-red-500 text-sm mt-4 text-center">{errors.global}</p>
-      )}
-      {errors.general && (
-        <p className="text-red-500 text-sm mt-4 text-center">
-          {errors.general}
-        </p>
-      )}
-      <form onSubmit={handleSubmit} className="space-y-6 mt-4">
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
-          <div>
-            <Label htmlFor="name">{t("UpdateBrand:name_label")}</Label>{" "}
-            {/* Added namespace */}
-            <Input
-              type="text"
-              name="name"
-              id="name"
-              value={updateData.name}
-              onChange={handleChange}
-              placeholder={t("UpdateBrand:name_placeholder_edit")}
-            />
-            {clientSideErrors.name && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.name}
-              </p>
-            )}
-            {errors.name[0] && (
-              <p className="text-red-600 text-sm mt-1">
-                {t("UpdateBrand:errors.unique_name")} {/* Added namespace */}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <Label>{t("UpdateBrand:status_label")}</Label>{" "}
-            {/* Added namespace */}
-            <Select
-              options={[
-                { label: t("UpdateBrand:status_active"), value: "active" }, // Added namespace
-                { label: t("UpdateBrand:status_inactive"), value: "inactive" }, // Added namespace
-              ]}
-              onChange={handleSelectChange}
-              placeholder={t("UpdateBrand:status_label")}
-              defaultValue={updateData.status}
-            />
-            {clientSideErrors.status && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.status}
-              </p>
-            )}
-          </div>
+      <PageStatusHandler
+        status={getPageStatus()}
+        loadingText={t("UpdateBrand:loading")}
+        notFoundText={t("UpdateBrand:not_found")}
+        errorMessage={getErrorMessage()}
+        onRetry={handleRetry}
+      >
+        <div className="p-4 border-b dark:border-gray-600 border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            {t("UpdateBrand:update_title")}
+          </h3>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
-          <div className="w-full">
-            <Label>{t("UpdateBrand:image_label")}</Label>{" "}
-            {/* Added namespace */}
-            <ImageUpload
-              file={updateData.image}
-              onFileChange={handleFileChange}
-            />
-          </div>
-
-          <div>
-            {typeof updateData.image === "string" && updateData.image && (
-              <div className="mt-4">
-                <p className="text-gray-700 dark:text-gray-400 font-medium mb-4 text-sm">
-                  {t("UpdateBrand:current_image")} {/* Added namespace */}
+        {errors.global && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errors.global}
+          </p>
+        )}
+        {errors.general && (
+          <p className="text-red-500 text-sm mt-4 text-center">
+            {errors.general}
+          </p>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
+            <div>
+              <Label htmlFor="name">{t("UpdateBrand:name_label")}</Label>
+              <Input
+                type="text"
+                name="name"
+                id="name"
+                value={updateData.name}
+                onChange={handleChange}
+                placeholder={t("UpdateBrand:name_placeholder_edit")}
+              />
+              {clientSideErrors.name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientSideErrors.name}
                 </p>
-                <img
-                  src={updateData.image}
-                  alt="Brand Preview"
-                  className="w-32 h-32 object-cover rounded border border-gray-200 dark:border-gray-700"
-                />
-              </div>
-            )}
-          </div>
-        </div>
+              )}
+              {errors.name[0] && (
+                <p className="text-red-600 text-sm mt-1">
+                  {t("UpdateBrand:errors.unique_name")}
+                </p>
+              )}
+            </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading
-            ? t("UpdateBrand:loading_button")
-            : t("UpdateBrand:submit_button")}{" "}
-          {/* Added namespace */}
-        </button>
-      </form>
-    </div>
+            <div>
+              <Label>{t("UpdateBrand:status_label")}</Label>
+              <Select
+                options={[
+                  { label: t("UpdateBrand:status_active"), value: "active" },
+                  {
+                    label: t("UpdateBrand:status_inactive"),
+                    value: "inactive",
+                  },
+                ]}
+                onChange={handleSelectChange}
+                placeholder={t("UpdateBrand:status_label")}
+                value={updateData.status}
+                />
+              {clientSideErrors.status && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientSideErrors.status}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
+            <div className="w-full">
+              <Label>{t("UpdateBrand:image_label")}</Label>
+              <ImageUpload
+                file={updateData.image}
+                onFileChange={handleFileChange}
+                />
+                {clientSideErrors.image && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {clientSideErrors.name}
+                  </p>
+                )}
+                {errors.image[0] && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {t("UpdateBrand:errors.unique_name")}
+                  </p>
+                )}
+            </div>
+
+            <div>
+              {typeof updateData.image === "string" && updateData.image && (
+                <div className="mt-4">
+                  <p className="text-gray-700 dark:text-gray-400 font-medium mb-4 text-sm">
+                    {t("UpdateBrand:current_image")}
+                  </p>
+                  <img
+                    src={updateData.image}
+                    alt="Brand Preview"
+                    className="w-32 h-32 object-cover rounded border border-gray-200 dark:border-gray-700"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2 rounded disabled:opacity-50"
+          >
+            {loading
+              ? t("UpdateBrand:loading_button")
+              : t("UpdateBrand:submit_button")}
+          </button>
+        </form>
+      </PageStatusHandler>
+    </>
   );
 };
 

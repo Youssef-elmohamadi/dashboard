@@ -14,7 +14,7 @@ const SuperAdminForgotPassword = () => {
   }, []);
   return (
     <div>
-      <SEO // تم إضافة SEO component وتحديد البيانات مباشرة
+      <SEO
         title={{
           ar: "تشطيبة - استعادة كلمة مرور المشرف العام",
           en: "Tashtiba - Super Admin Forgot Password",
@@ -41,6 +41,7 @@ const SuperAdminForgotPassword = () => {
             "login help",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <AuthLayout userType="super_admin">
         <ResetPassword type="super_admin" />

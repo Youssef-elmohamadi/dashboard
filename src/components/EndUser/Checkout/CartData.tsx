@@ -1,9 +1,9 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { removeItem } from "../Redux/cartSlice/CartSlice";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../Redux/Store";
+import DeleteIcon from "../../../icons/DeleteIcon";
 
 const CartData: React.FC = () => {
   const { t } = useTranslation(["EndUserCheckout"]);
@@ -30,7 +30,7 @@ const CartData: React.FC = () => {
           {items.map((item: any) => (
             <li
               key={item.id}
-              className="py-4 flex items-center justify-between gap-5 hover:bg-purple-50 rounded-lg px-2 transition-colors cursor-pointer select-none"
+              className="py-4 flex items-center justify-between gap-5 hover:bg-red-200 rounded-lg px-2 transition-colors cursor-pointer select-none"
             >
               <img
                 src={item.images[0]?.image}
@@ -44,7 +44,7 @@ const CartData: React.FC = () => {
                 <p className="text-sm text-gray-500 truncate">
                   {item.description}
                 </p>
-                <p className="mt-1 text-sm font-medium text-purple-700">
+                <p className="mt-1 text-sm font-medium text-[#d62828]">
                   {t("cartData.quantity")}: {item.quantity}
                 </p>
               </div>
@@ -61,7 +61,7 @@ const CartData: React.FC = () => {
                 className="p-2 rounded-full hover:bg-red-100 transition-colors"
                 title={t("cartData.remove")}
               >
-                <RiDeleteBin6Line className="text-red-600 text-2xl hover:text-red-800" />
+                <DeleteIcon className="text-red-600 text-2xl hover:text-red-800" />
               </button>
             </li>
           ))}

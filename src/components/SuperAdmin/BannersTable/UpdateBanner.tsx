@@ -11,14 +11,18 @@ import {
   useUpdateBanner,
 } from "../../../hooks/Api/SuperAdmin/useBanners/useSuperAdminBanners";
 import { AxiosError } from "axios";
-// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../common/SEO/seo";
 import {
   BannerInput,
   ClientErrors,
   ServerErrors,
 } from "../../../types/Banners";
 import { Category } from "../../../types/Categories";
+import PageStatusHandler, {
+  PageStatus,
+} from "../../common/PageStatusHandler/PageStatusHandler";
+import { toast } from "react-toastify";
+import useCheckOnline from "../../../hooks/useCheckOnline";
 const UpdateBanner = () => {
   const { id } = useParams();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -32,7 +36,7 @@ const UpdateBanner = () => {
     link_id: [],
     is_active: [],
     image: [],
-    position: [], // إضافة 'position' هنا
+    position: [],
     global: "",
     general: "",
   });
@@ -43,7 +47,7 @@ const UpdateBanner = () => {
     link_id: "",
     is_active: "",
     image: "",
-    position: "", // إضافة 'position' هنا
+    position: "",
   });
   const [imagePreview, setImagePreview] = useState<string>("");
   const [existingImage, setExistingImage] = useState<string>("");
@@ -137,6 +141,7 @@ const UpdateBanner = () => {
     }
   };
   const { mutateAsync } = useUpdateBanner(id!!);
+  const isCurrentlyOnLine = useCheckOnline();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({
@@ -150,6 +155,10 @@ const UpdateBanner = () => {
       global: "",
       general: "",
     });
+    if (!isCurrentlyOnLine()) {
+      toast.error(t("banner.errors.no_internet"));
+      return;
+    }
     setIsSubmitting(true);
     if (!validate()) {
       setIsSubmitting(false);
@@ -206,109 +215,35 @@ const UpdateBanner = () => {
       setIsSubmitting(false);
     }
   };
-  if (isLoading)
-    return (
-      <>
-        <SEO // PageMeta replaced with SEO, and data directly set for loading state
-          title={{
-            ar: "تشطيبة - تحديث بانر - جارٍ التحميل (سوبر أدمن)",
-            en: "Tashtiba - Update Banner - Loading (Super Admin)",
-          }}
-          description={{
-            ar: "جارٍ تحميل بيانات البانر للتحديث بواسطة المشرف العام في تشطيبة. يرجى الانتظار.",
-            en: "Loading banner data for update by Super Admin on Tashtiba. Please wait.",
-          }}
-          keywords={{
-            ar: [
-              "تحديث بانر",
-              "تحميل بانر",
-              "إدارة البانرات",
-              "سوبر أدمن",
-              "إعلانات الموقع",
-            ],
-            en: [
-              "update banner",
-              "loading banner",
-              "banner management",
-              "super admin",
-              "website ads",
-            ],
-          }}
-        />{" "}
-        <p className="text-center mt-5">
-          {t("banner.loading") || "Loading..."}
-        </p>
-      </>
-    );
 
-  if (!data && !errors.general)
-    return (
-      <>
-        <SEO // PageMeta replaced with SEO, and data directly set for not found state
-          title={{
-            ar: "تشطيبة - تحديث بانر - غير موجود (سوبر أدمن)",
-            en: "Tashtiba - Update Banner - Not Found (Super Admin)",
-          }}
-          description={{
-            ar: "البانر المطلوب للتحديث غير موجود في نظام تشطيبة. يرجى التحقق من المعرف.",
-            en: "The requested banner for update was not found on Tashtiba. Please verify the ID.",
-          }}
-          keywords={{
-            ar: [
-              "بانر غير موجود",
-              "تحديث بانر",
-              "خطأ 404",
-              "سوبر أدمن",
-              "إدارة البانرات",
-            ],
-            en: [
-              "banner not found",
-              "update banner",
-              "404 error",
-              "super admin",
-              "banner management",
-            ],
-          }}
-        />{" "}
-        <p className="text-center mt-5">{t("banner.notFound")}</p>
-      </>
-    );
+  let pageStatus = PageStatus.SUCCESS;
+  let pageError = "";
 
-  if (errors.general) {
-    return (
-      <>
-        <SEO // PageMeta replaced with SEO, and data directly set for general error state
-          title={{
-            ar: "تشطيبة - خطأ في تحديث البانر (سوبر أدمن)",
-            en: "Tashtiba - Banner Update Error (Super Admin)",
-          }}
-          description={{
-            ar: "حدث خطأ عام أثناء محاولة تحديث بيانات البانر بواسطة المشرف العام في تشطيبة. يرجى المحاولة مرة أخرى.",
-            en: "An error occurred while attempting to update banner data by Super Admin on Tashtiba. Please try again.",
-          }}
-          keywords={{
-            ar: [
-              "خطأ تحديث بانر",
-              "مشكلة بانر",
-              "تحديث تشطيبة",
-              "سوبر أدمن",
-              "فشل التعديل",
-            ],
-            en: [
-              "banner update error",
-              "banner issue",
-              "Tashtiba update",
-              "super admin",
-              "update failed",
-            ],
-          }}
-        />{" "}
-        <p className="text-center mt-5">{errors.general}</p>
-      </>
-    );
+  if (!id) {
+    pageStatus = PageStatus.NOT_FOUND;
+  } else if (isLoading) {
+    pageStatus = PageStatus.LOADING;
+  } else if (isError) {
+    const axiosError = error as AxiosError;
+    pageStatus = PageStatus.ERROR;
+    if (
+      axiosError?.response?.status === 401 ||
+      axiosError?.response?.status === 403
+    ) {
+      pageError = t("coupon.errors.global");
+    } else {
+      pageError = t("coupon.errors.general");
+    }
+  } else if (!bannerData) {
+    pageStatus = PageStatus.NOT_FOUND;
   }
   return (
-    <div>
+    <PageStatusHandler
+      status={pageStatus}
+      loadingText={t("banner.loading")}
+      errorMessage={pageError}
+      notFoundMessage={t("coupon.notFound")}
+    >
       <SEO
         title={{
           ar: `تشطيبة - تحديث بانر ${banner?.title || ""}`,
@@ -340,6 +275,7 @@ const UpdateBanner = () => {
             "Tashtiba",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
 
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
@@ -531,14 +467,14 @@ const UpdateBanner = () => {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ${
+          className={`text-white inline-flex items-center bg-brand-600 hover:bg-brand-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ${
             isSubmitting ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
           {isSubmitting ? t("banner.submitting") : t("banner.submit")}
         </Button>
       </form>
-    </div>
+    </PageStatusHandler>
   );
 };
 

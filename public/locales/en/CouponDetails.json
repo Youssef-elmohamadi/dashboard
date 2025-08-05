@@ -24,6 +24,7 @@
     "not_found": "Coupon not found.",
     "no_limit": "No Limit",
     "general_error": "Something went wrong. Please try again later.",
-    "global_error": "You are not authorized to perform this action."
+    "global_error": "You are not authorized to perform this action.",
+    "no_internet": "No internet connection. Please check your connection and try again."
   }
 }

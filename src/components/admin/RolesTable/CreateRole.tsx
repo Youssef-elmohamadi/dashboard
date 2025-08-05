@@ -9,15 +9,15 @@ import {
   useCreateRole,
   useGetAllPermissions,
 } from "../../../hooks/Api/Admin/useRoles/useRoles";
-// import PageMeta from "../../common/SEO/PageMeta"; // تم التعليق على استيراد PageMeta
-import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../common/SEO/seo";
 import {
   CreateRoleInput,
   Permission,
   ServerErrors,
 } from "../../../types/Roles";
 import { AxiosError } from "axios";
-
+import { toast } from "react-toastify";
+import useCheckOnline from "../../../hooks/useCheckOnline";
 export default function CreateRole() {
   const [roleData, setRoleData] = useState<CreateRoleInput>({
     name: "",
@@ -97,11 +97,19 @@ export default function CreateRole() {
 
   const { mutateAsync } = useCreateRole();
 
+  const isCurrentlyOnline = useCheckOnline();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     if (!validateForm()) {
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!isCurrentlyOnline()) {
+      toast.error(t("CreateRole:role.errors.no_internet"));
       setIsSubmitting(false);
       return;
     }
@@ -139,7 +147,7 @@ export default function CreateRole() {
       } else {
         setErrors((prev) => ({
           ...prev,
-          general: t("CreateRole:admin.errors.general"), // This might need to be 'CreateRole:role.errors.general' if "admin" is not accessible
+          general: t("CreateRole:admin.errors.general"),
         }));
       }
     } finally {
@@ -149,7 +157,7 @@ export default function CreateRole() {
 
   return (
     <div className=" p-6">
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO
         title={{
           ar: "تشطيبة - إنشاء صلاحية جديدة",
           en: "Tashtiba - Create New Role",
@@ -178,8 +186,9 @@ export default function CreateRole() {
             "access control",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
-      <div className="p-4 border-b  dark:border-gray-600 border-gray-200">
+      <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("CreateRole:role.create_title")}
         </h3>
@@ -255,7 +264,7 @@ export default function CreateRole() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ${
+          className={`text-white inline-flex items-center bg-brand-500 hover:bg-brand-600 focus:ring-4 focus:outline-none focus:ring-brand-500 font-medium rounded-lg text-sm px-5 py-2.5 ${
             isSubmitting ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >

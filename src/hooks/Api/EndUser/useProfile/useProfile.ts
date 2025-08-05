@@ -4,6 +4,7 @@ import {
   updateProfile,
 } from "../../../../api/EndUserApi/endUserAuth/_requests";
 export const useProfile = () => {
+  const token = localStorage.getItem("end_user_token");
   return useQuery({
     queryKey: ["endUserProfileData"],
     queryFn: async () => {
@@ -11,6 +12,7 @@ export const useProfile = () => {
       return res.data.data;
     },
     staleTime: 1000 * 60 * 5,
+    enabled: !!token, 
   });
 };
 

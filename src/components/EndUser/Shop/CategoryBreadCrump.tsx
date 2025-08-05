@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { CategoryBreadCrumpProps } from "../../../types/Shop";
 
-
 const CategoryBreadCrump = ({ currentPage }: CategoryBreadCrumpProps) => {
   const { lang } = useDirectionAndLanguage();
   const { t } = useTranslation(["EndUserShop"]);
@@ -12,7 +11,7 @@ const CategoryBreadCrump = ({ currentPage }: CategoryBreadCrumpProps) => {
       <ol className="flex items-center whitespace-nowrap">
         <li className="inline-flex items-center">
           <Link
-            className="flex items-center text-sm text-gray-500 hover:text-blue-600 focus:outline-hidden  focus:text-blue-600"
+            className="flex items-center text-sm text-gray-500 hover:text-[#d62828] focus:outline-hidden  focus:text-[#d62828]"
             to={`/${lang}/`}
           >
             {t("breadcrumbCategory.home")}
@@ -33,7 +32,7 @@ const CategoryBreadCrump = ({ currentPage }: CategoryBreadCrumpProps) => {
           </svg>
         </li>
         <li
-          className="inline-flex items-center text-sm font-semibold text-gray-800 truncate"
+          className="inline-flex items-center text-sm font-semibold text-[#d62828] truncate"
           aria-current="page"
         >
           {currentPage}

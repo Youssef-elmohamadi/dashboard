@@ -1,12 +1,12 @@
 import React, { useRef } from "react";
-import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { removeItem } from "../Redux/cartSlice/CartSlice";
-import { RiDeleteBin4Fill } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import useClickOutside from "../context/useClickOutside";
+import CartIcon from "../../../icons/CartIcon";
+import DeleteIcon from "../../../icons/DeleteIcon";
 
 interface CartItem {
   id: string;
@@ -47,7 +47,7 @@ const CartPopup: React.FC<CartPopupProps> = ({
         className="lg:flex flex-[1] cart relative gap-3 cursor-pointer hidden items-center justify-end"
         onClick={toggleCartPopup}
       >
-        <FaShoppingCart className="text-white text-2xl" />
+        <CartIcon className="text-white w-6" />
         <div className="text-white">
           {t("navbar.items", { count: totalQuantity })}
         </div>
@@ -103,7 +103,7 @@ const CartPopup: React.FC<CartPopupProps> = ({
                     }}
                     className="ml-2"
                   >
-                    <RiDeleteBin4Fill className="text-xl text-red-500" />
+                    <DeleteIcon className="w-6 text-[#d62828]" />
                   </button>
                 </li>
               ))
@@ -126,7 +126,7 @@ const CartPopup: React.FC<CartPopupProps> = ({
               <Link
                 to={`/${lang}/cart`}
                 onClick={toggleCartPopup}
-                className="mt-4 w-full inline-block px-2 text-center bg-primary text-white py-2 rounded hover:bg-opacity-90 transition"
+                className="mt-4 w-full inline-block px-2 text-center end-user-bg-base text-white py-2 rounded hover:bg-opacity-90 transition"
               >
                 {t("navbar.goToShoppingCart")}
               </Link>

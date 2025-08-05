@@ -59,6 +59,7 @@ const Checkout = () => {
           { lang: "ar", href: "https://tashtiba.com/ar/checkout" }, // Adjust the path if your actual checkout URL is different
           { lang: "en", href: "https://tashtiba.com/en/checkout" }, // Adjust the path if your actual checkout URL is different
         ]}
+        robotsTag="noindex, nofollow"
       />
       <header className="sticky top-0 z-20 bg-white border-b border-gray-200">
         <CheckoutHeader />

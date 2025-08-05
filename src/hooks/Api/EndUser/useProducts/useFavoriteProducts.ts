@@ -8,10 +8,10 @@ import {
   getFavoriteProducts,
   removeFromFavorite,
 } from "../../../../api/EndUserApi/ensUserProducts/_requests";
-import { toast } from "react-toastify";
-import { useTranslation } from "react-i18next";
 
 export const useAllFavoriteProducts = () => {
+  const token = localStorage.getItem("end_user_token");
+
   return useInfiniteQuery({
     queryKey: ["endUserFavoriteProducts"],
     queryFn: async ({ pageParam = 1 }) => {
@@ -24,6 +24,7 @@ export const useAllFavoriteProducts = () => {
         ? lastPage.current_page + 1
         : undefined,
     staleTime: 1000 * 60 * 5,
+    enabled: !!token, // ⬅️ تمنع الريكوست لو مفيش توكن
   });
 };
 
@@ -32,7 +33,6 @@ const updateAllCaches = (
   productId: string | number,
   isFav: boolean
 ) => {
-  // homePage
   queryClient.setQueryData(["homePage"], (old: any) => {
     if (!old) return old;
     return {

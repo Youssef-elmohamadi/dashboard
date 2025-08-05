@@ -66,14 +66,14 @@ export default function DemographicCard() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="items-center w-full rounded-full max-w-8">
-              <img src="./images/country/country-01.svg" alt="usa" />
+              <img src="./images/country/country-03.png" alt="Egypt" />
             </div>
             <div>
               <p className="font-semibold text-gray-800 text-theme-sm dark:text-white/90">
-                {t("demographic.usa")}
+                {t("demographic.eg")}
               </p>
               <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                {t("demographic.usa_customers", { count: 2379 })}
+                {t("demographic.eg_customers", { count: 2379 })}
               </span>
             </div>
           </div>
@@ -88,7 +88,7 @@ export default function DemographicCard() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="items-center w-full rounded-full max-w-8">
               <img src="./images/country/country-02.svg" alt="france" />
@@ -111,7 +111,7 @@ export default function DemographicCard() {
               23%
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

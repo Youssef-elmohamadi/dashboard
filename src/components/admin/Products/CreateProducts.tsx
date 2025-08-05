@@ -5,13 +5,11 @@ import Input from "../../common/input/InputField";
 import Checkbox from "../../common/input/Checkbox";
 import FileInput from "../../common/input/FileInput";
 import TextArea from "../../common/input/TextArea";
-import { FiDelete } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import Select from "../../common/form/Select";
 import { useCreateProduct } from "../../../hooks/Api/Admin/useProducts/useAdminProducts";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { useAllBrands } from "../../../hooks/Api/Admin/useBrands/useBrands";
-// import PageMeta from "../../common/SEO/PageMeta"; // Removed PageMeta import
 import SEO from "../../../components/common/SEO/seo"; // Ensured SEO component is imported
 import { Category } from "../../../types/Categories";
 import { Brand } from "../../../types/Brands";
@@ -22,6 +20,9 @@ import {
   ServerError,
 } from "../../../types/Product";
 import { AxiosError } from "axios";
+import DeleteIcon from "../../../icons/DeleteIcon";
+import useCheckOnline from "../../../hooks/useCheckOnline";
+import { toast } from "react-toastify";
 
 export default function CreateProducts() {
   const [loading, setLoading] = useState(false);
@@ -184,10 +185,18 @@ export default function CreateProducts() {
     return Object.values(newErrors).every((error) => error === "");
   };
   const { mutateAsync } = useCreateProduct();
+  const isCurrentlyOnline = useCheckOnline();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     if (!validate()) {
+      setLoading(false);
+      return;
+    }
+
+    if (!isCurrentlyOnline()) {
+      toast.error(t("CreateProduct:errors.no_internet"));
       setLoading(false);
       return;
     }
@@ -246,7 +255,7 @@ export default function CreateProducts() {
 
   return (
     <div className="">
-      <SEO // PageMeta replaced with SEO, and data directly set
+      <SEO
         title={{
           ar: "تشطيبة - إضافة منتج جديد",
           en: "Tashtiba - Add New Product",
@@ -275,6 +284,7 @@ export default function CreateProducts() {
             "e-commerce store",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -433,10 +443,8 @@ export default function CreateProducts() {
               }
               id="is_featured"
             />
-            {errors.is_featured && errors.is_featured[0] && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.is_featured[0]}
-              </p>
+            {errors.is_featured && (
+              <p className="text-red-500 text-sm mt-1">{errors.is_featured}</p>
             )}
           </div>
         </div>
@@ -459,7 +467,7 @@ export default function CreateProducts() {
                   onClick={() => removeImage(index)}
                   className="absolute top-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 rounded-bl"
                 >
-                  <FiDelete />
+                  <DeleteIcon />
                 </button>
               </div>
             ))}
@@ -515,7 +523,7 @@ export default function CreateProducts() {
                 onClick={() => removeAttribute(index)}
                 className="text-red-600 text-xl"
               >
-                <FiDelete className="text-red-600 text-xl" />
+                <DeleteIcon className="text-red-600 text-xl" />
               </button>
             </div>
           ))}
@@ -527,7 +535,7 @@ export default function CreateProducts() {
                 { attribute_name: "", attribute_value: "" },
               ])
             }
-            className="text-blue-500 mt-1"
+            className="text-brand-500 mt-1"
           >
             {t("CreateProduct:form.add_attribute")}
           </button>
@@ -549,20 +557,24 @@ export default function CreateProducts() {
                     onClick={() => removeTag(index)}
                     className="text-red-600 text-xl"
                   >
-                    <FiDelete className="text-red-600 text-xl" />
+                    <DeleteIcon className="text-red-600 text-xl" />
                   </button>
                 </div>
               ))}
             </div>
           )}
-          <button type="button" onClick={addTag} className="text-blue-500 mt-1">
+          <button
+            type="button"
+            onClick={addTag}
+            className="text-brand-500 mt-1"
+          >
             {t("CreateProduct:form.add_tag")}
           </button>
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="rounded-lg bg-blue-600 text-white px-6 py-2 hover:bg-blue-700 w-1/4 mx-auto"
+          className="rounded-lg bg-brand-500 hover:bg-brand-600 text-white px-6 py-2  w-1/4 mx-auto"
         >
           {loading
             ? t("CreateProduct:form.creating_button")

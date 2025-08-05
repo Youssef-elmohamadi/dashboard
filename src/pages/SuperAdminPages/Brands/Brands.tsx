@@ -3,7 +3,7 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; 
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
@@ -14,8 +14,7 @@ import {
 } from "../../../hooks/Api/SuperAdmin/useBrands/useSuperAdminBrandsManage";
 import { AxiosError } from "axios";
 import { TableAlert } from "../../../types/Common";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo"; 
 
 const Brands = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -61,14 +60,14 @@ const Brands = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: "Admin Created Successfully", // تم الإبقاء عليها كما هي حسب التعليمات
+        title: "Admin Created Successfully", 
         message: location.state.successCreate,
       });
       window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
-        title: "Admin Updated Successfully", // تم الإبقاء عليها كما هي حسب التعليمات
+        title: "Admin Updated Successfully", 
         message: location.state.successEdit,
       });
       window.history.replaceState({}, document.title);
@@ -127,7 +126,7 @@ const Brands = () => {
           message={alertData.message}
         />
       )}
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO 
         title={{
           ar: "تشطيبة - إدارة الماركات (سوبر أدمن)",
           en: "Tashtiba - Brand Management (Super Admin)",
@@ -154,6 +153,7 @@ const Brands = () => {
             "site management",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb
         pageTitle={t("brandsPage.title")}
@@ -161,7 +161,7 @@ const Brands = () => {
       />
       <div>
         <SearchTable
-          fields={[{ key: "name", label: "Name", type: "input" }]} // تم الإبقاء عليها كما هي حسب التعليمات
+          fields={[{ key: "name", label: "Name", type: "input" }]}
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />

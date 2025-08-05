@@ -1,14 +1,13 @@
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // Removed PageMeta import
-import SEO from "../../../components/common/SEO/seo"; // Ensured SEO component is imported
+import SEO from "../../../components/common/SEO/seo";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import VendorEditPage from "./VendorInfoCard";
 import { useTranslation } from "react-i18next";
 
 const VendorSettings = () => {
-  const { t } = useTranslation(["UpdateVendor", "Meta"]); // Using namespaces here
+  const { t } = useTranslation(["UpdateVendor", "Meta"]);
   return (
     <>
-      <SEO // PageMeta replaced with SEO, and data directly set
+      <SEO
         title={{
           ar: "تشطيبة - إعدادات البائع",
           en: "Tashtiba - Vendor Settings",
@@ -33,12 +32,12 @@ const VendorSettings = () => {
             "vendor management",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb
         pageTitle={t("UpdateVendor:vendor.vendorProfile")}
         userType="admin"
-      />{" "}
-      {/* Added namespace */}
+      />
       <div className="space-y-6">
         <VendorEditPage />
       </div>

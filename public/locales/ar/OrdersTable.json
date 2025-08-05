@@ -18,7 +18,8 @@
       "successTitle": "تم الإلغاء!",
       "successText": "تم إلغاء الطلب.",
       "errorTitle": "خطاء",
-      "errorText": "تعذر إلغاء الطلب."
+      "errorText": "تعذر إلغاء الطلب.",
+      "lastButton": "خروج"
     },
     "ship": {
       "title": "أدخل تفاصيل الشحن",

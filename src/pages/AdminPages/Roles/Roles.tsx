@@ -15,8 +15,7 @@ import {
 import { AxiosError } from "axios";
 import { SearchValues } from "../../../types/Roles";
 import { ID, TableAlert } from "../../../types/Common";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم التعليق على استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo";
 
 const Roles = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -53,28 +52,28 @@ const Roles = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: t("RolesTable:rolesPage.createdSuccessTitle"), // Added namespace
+        title: t("RolesTable:rolesPage.createdSuccessTitle"),
         message: t("RolesTable:rolesPage.createdSuccessMessage", {
           message: location.state.successCreate,
-        }), // Added namespace
+        }),
       });
-      window.history.replaceState({}, document.title); // Keep this to clear state after showing alert
+      window.history.replaceState({}, document.title);
     } else if (location.state?.successUpdate) {
       setAlertData({
         variant: "success",
-        title: t("RolesTable:rolesPage.updatedSuccessTitle"), // Added namespace
+        title: t("RolesTable:rolesPage.updatedSuccessTitle"),
         message: t("RolesTable:rolesPage.updatedSuccessMessage", {
           message: location.state.successUpdate,
-        }), // Added namespace
+        }),
       });
-      window.history.replaceState({}, document.title); // Keep this to clear state after showing alert
+      window.history.replaceState({}, document.title);
     }
     const timer = setTimeout(() => {
       setAlertData(null);
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [location.state, t]); // Added t to dependencies
+  }, [location.state, t]);
 
   const handleSearch = (key: string, value: string) => {
     setSearchValues((prev) => ({
@@ -87,15 +86,15 @@ const Roles = () => {
   const { mutateAsync: deleteRoleMutate } = useDeleteRole();
   const handleDelete = async (id: ID) => {
     await alertDelete(id, deleteRoleMutate, refetch, {
-      confirmTitle: t("RolesTable:rolesPage.delete.confirmTitle"), // Added namespace
-      confirmText: t("RolesTable:rolesPage.delete.confirmText"), // Added namespace
-      confirmButtonText: t("RolesTable:rolesPage.delete.confirmButtonText"), // Added namespace
-      cancelButtonText: t("RolesTable:rolesPage.delete.cancelButtonText"), // Added namespace
-      successTitle: t("RolesTable:rolesPage.delete.successTitle"), // Added namespace
-      successText: t("RolesTable:rolesPage.delete.successText"), // Added namespace
-      errorTitle: t("RolesTable:rolesPage.delete.errorTitle"), // Added namespace
-      errorText: t("RolesTable:rolesPage.delete.errorText"), // Added namespace
-      lastButton: t("RolesTable:rolesPage.delete.lastButton"), // Added namespace
+      confirmTitle: t("RolesTable:rolesPage.delete.confirmTitle"),
+      confirmText: t("RolesTable:rolesPage.delete.confirmText"),
+      confirmButtonText: t("RolesTable:rolesPage.delete.confirmButtonText"),
+      cancelButtonText: t("RolesTable:rolesPage.delete.cancelButtonText"),
+      successTitle: t("RolesTable:rolesPage.delete.successTitle"),
+      successText: t("RolesTable:rolesPage.delete.successText"),
+      errorTitle: t("RolesTable:rolesPage.delete.errorTitle"),
+      errorText: t("RolesTable:rolesPage.delete.errorText"),
+      lastButton: t("RolesTable:rolesPage.delete.lastButton"),
     });
   };
   const columns = buildColumns({
@@ -115,7 +114,7 @@ const Roles = () => {
           message={alertData.message}
         />
       )}
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO
         title={{
           ar: "تشطيبة - إدارة الصلاحيات",
           en: "Tashtiba - Role Management",
@@ -142,6 +141,7 @@ const Roles = () => {
             "privileges",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb
         pageTitle={t("RolesTable:rolesPage.title")}
@@ -150,9 +150,7 @@ const Roles = () => {
       {/* Added namespace */}
       <div>
         <SearchTable
-          fields={[
-            { key: "name", label: "Name", type: "input" },
-          ]}
+          fields={[{ key: "name", label: "Name", type: "input" }]}
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />

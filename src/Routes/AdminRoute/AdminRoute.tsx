@@ -4,6 +4,7 @@ import Home from "../../pages/AdminPages/Dashboard/Home";
 import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import { lazy, Suspense } from "react";
 import LazyPages from "./LazyPages";
+import "../../index.css";
 const AdminSignIn = lazy(
   () => import("../../pages/AdminPages/AuthPages/AdminSignIn")
 );
@@ -19,7 +20,6 @@ const AdminRoutes = () => {
   return (
     <>
       <Routes>
-        {/* Note: The base path /admin is handled in AppRoutes.tsx, so here we define paths relative to /admin */}
         <Route
           element={
             <ProtectedAdminRoute>

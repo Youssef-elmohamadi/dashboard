@@ -24,9 +24,9 @@ const FooterSection = ({
         {/* Toggle Icon - Mobile Only */}
         <span className="md:hidden transition-transform duration-300">
           {isOpen ? (
-            <FaMinus className="text-sm text-purple-400" />
+            <FaMinus className="text-sm text-red-400" />
           ) : (
-            <FaPlus className="text-sm text-purple-400" />
+            <FaPlus className="text-sm text-red-400" />
           )}
         </span>
       </div>

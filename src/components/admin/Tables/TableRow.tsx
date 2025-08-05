@@ -29,19 +29,16 @@ const TableRow: React.FC<TableRowProps> = ({
 }) => {
   const rowData = row.original;
 
-  // 1. فصل الـ key عن باقي خصائص الصف
+
   const { key: rowKey, ...restOfRowProps } = row.getRowProps();
 
   return (
-    // 2. تطبيق الـ key وباقي الخصائص بشكل صحيح
     <tr key={rowKey} {...restOfRowProps}>
       {row.cells.map((cell: any) => {
-        // 3. فصل الـ key عن باقي خصائص الخلية
         const { key: cellKey, ...restOfCellProps } = cell.getCellProps();
         const isActionsColumn = cell.column.id === actionsColumnId;
 
         return (
-          // 4. تطبيق الـ key وباقي الخصائص بشكل صحيح
           <td
             key={cellKey}
             {...restOfCellProps}

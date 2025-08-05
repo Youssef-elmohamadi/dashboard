@@ -1,7 +1,7 @@
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { useTranslation } from "react-i18next";
-import { StatisticsChartProps } from "../../types/DashboardHome";
+import { StatisticsChartProps } from "../../../types/DashboardHome";
 
 export default function StatisticsChart({ ordersData }: StatisticsChartProps) {
   const { t } = useTranslation(["Home"]);
@@ -27,7 +27,7 @@ export default function StatisticsChart({ ordersData }: StatisticsChartProps) {
       position: "top",
       horizontalAlign: "left",
     },
-    colors: ["#465FFF"],
+    colors: ["#d62828"],
     chart: {
       fontFamily: "Outfit, sans-serif",
       height: 310,

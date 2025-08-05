@@ -8,6 +8,7 @@ type SEOProps = {
   image?: string;
   url?: string;
   alternates?: { lang: string; href: string }[];
+  robotsTag?: "index, follow" | "noindex, nofollow";
 };
 
 const SEO = ({
@@ -17,9 +18,9 @@ const SEO = ({
   image,
   url,
   alternates,
+  robotsTag = "index, follow",
 }: SEOProps) => {
   const currentLang = i18n.language;
-  
   const isArabic = currentLang === "ar";
 
   const pageTitle = isArabic ? title.ar : title.en;
@@ -32,7 +33,7 @@ const SEO = ({
       : selectedKeywords
     : undefined;
 
-  const pageUrl = url || "https://tashtiba.com/en/";
+  const pageUrl = url;
   const pageImage = image || "/favicon.png";
 
   return (
@@ -40,22 +41,19 @@ const SEO = ({
       <html lang={currentLang} />
       <title>{pageTitle}</title>
       <meta name="description" content={pageDescription} />
+      <link rel="canonical" href={pageUrl} />
+      <meta name="robots" content={robotsTag} />
       {metaKeywords && <meta name="keywords" content={metaKeywords} />}
-
-      {/* Open Graph */}
       <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={pageDescription} />
       <meta property="og:image" content={pageImage} />
       <meta property="og:url" content={pageUrl} />
       <meta property="og:type" content="website" />
-
-      {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={pageTitle} />
       <meta name="twitter:description" content={pageDescription} />
       <meta name="twitter:image" content={pageImage} />
 
-      {/* Hreflang tags */}
       {alternates?.map((alt) => (
         <link
           key={alt.lang}
@@ -64,14 +62,6 @@ const SEO = ({
           href={alt.href}
         />
       ))}
-      {/* Add a self-referencing hreflang for the current page */}
-      <link rel="alternate" hrefLang={currentLang} href={pageUrl} />
-      {/* Optionally, add an x-default hreflang if you have a default language page */}
-      <link
-        rel="alternate"
-        hrefLang="x-default"
-        href="https://tashtiba.com/en/"
-      />
     </Helmet>
   );
 };

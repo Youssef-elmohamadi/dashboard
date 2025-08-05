@@ -1,13 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import {
-  HiOutlineChatBubbleOvalLeftEllipsis,
-  HiOutlineClock,
-  HiOutlineBolt,
-} from "react-icons/hi2";
 import { useParams } from "react-router-dom";
 import SEO from "../../../components/common/SEO/seo";
+import ConversationIcon from "../../../icons/ConversationIcon";
+import ClockIcon from "../../../icons/ClockIcon";
+import PowerIcon from "../../../icons/PowerIcon";
 
 interface Section {
   title: string;
@@ -17,7 +15,7 @@ interface Section {
 
 const SupportPolicyPage: React.FC = () => {
   const { t } = useTranslation("SupportPolicy");
-  const brandColor = "#9810fa";
+  const brandColor = "#d62828";
   const { lang } = useParams();
   const cardVariants = {
     offscreen: { y: 50, opacity: 0 },
@@ -36,10 +34,7 @@ const SupportPolicyPage: React.FC = () => {
     {
       title: t("support.channels.title"),
       icon: (
-        <HiOutlineChatBubbleOvalLeftEllipsis
-          className="h-5 w-5"
-          style={{ color: brandColor }}
-        />
+        <ConversationIcon className="h-5 w-5" style={{ color: brandColor }} />
       ),
       content: (
         <div className="space-y-3">
@@ -50,7 +45,7 @@ const SupportPolicyPage: React.FC = () => {
               {t("support.channels.email")}{" "}
               <a
                 href="mailto:support@tashtiba.com"
-                className="font-semibold text-purple-700 hover:underline"
+                className="font-semibold text-[#d62828] hover:underline"
               >
                 support@tashtiba.com
               </a>
@@ -67,14 +62,12 @@ const SupportPolicyPage: React.FC = () => {
     },
     {
       title: t("support.hours.title"),
-      icon: (
-        <HiOutlineClock className="h-5 w-5" style={{ color: brandColor }} />
-      ),
+      icon: <ClockIcon className="h-5 w-5" style={{ color: brandColor }} />,
       content: <p>{t("support.hours.description")}</p>,
     },
     {
       title: t("support.response.title"),
-      icon: <HiOutlineBolt className="h-5 w-5" style={{ color: brandColor }} />,
+      icon: <PowerIcon className="h-5 w-5" style={{ color: brandColor }} />,
       content: (
         <ul className="list-disc list-inside space-y-2">
           <li>{t("support.response.first")}</li>
@@ -88,42 +81,41 @@ const SupportPolicyPage: React.FC = () => {
     <div className="min-h-screen">
       <SEO
         title={{
-          ar: `تشطيبة - سياسة الدعم والمساعدة`,
-          en: `Tashtiba - Support & Help Policy`,
+          ar: "تشطيبة - سياسة الدعم",
+          en: "Tashtiba - Support Policy",
         }}
         description={{
-          ar: `اكتشف سياسة الدعم والمساعدة في تشطيبة. تعرف على قنوات الاتصال المتاحة، ساعات العمل، وأوقات الاستجابة لضمان أفضل تجربة لعملائنا في مصر.`,
-          en: `Explore Tashtiba's comprehensive Support and Help Policy. Find out about our available contact channels, operating hours, and response times to ensure the best customer experience in Egypt.`,
+          ar: "اطلع على سياسة الدعم في تشطيبة لتعرف كيفية تقديم المساعدة قبل وبعد الشراء، وكيفية التواصل مع فريق الدعم الفني لدينا.",
+          en: "Learn about Tashtiba's support policy including how we assist you before and after your purchase, and how to contact our support team.",
         }}
         keywords={{
           ar: [
-            "تشطيبة",
-            "دعم فني",
-            "مساعدة",
-            "خدمة عملاء",
             "سياسة الدعم",
-            "اتصال",
-            "مصر",
-            "استفسارات",
-            "حلول",
-            "دعم تشطيبة",
+            "الدعم الفني تشطيبة",
+            "التواصل مع الدعم",
+            "خدمة العملاء",
+            "تشطيبة",
+            "مساعدة الشراء",
+            "مشاكل الطلبات",
+            "استرجاع المنتجات",
           ],
           en: [
-            "tashtiba",
-            "support",
-            "help",
-            "customer service",
             "support policy",
-            "contact us",
-            "Egypt",
-            "inquiries",
-            "solutions",
-            "Tashtiba support",
+            "customer support",
+            "tashtiba help",
+            "order issues",
+            "contact support",
+            "return policy",
+            "tashtiba",
+            "product assistance",
           ],
         }}
+        url={`https://tashtiba.com/${lang}/support-policy`}
+        image="https://tashtiba.com/og-image.png"
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/support-policy" },
           { lang: "en", href: "https://tashtiba.com/en/support-policy" },
+          { lang: "x-default", href: "https://tashtiba.com/en/support-policy" },
         ]}
       />
 
@@ -142,7 +134,7 @@ const SupportPolicyPage: React.FC = () => {
           <div
             className={`absolute ${
               lang === "ar" ? "right-9" : "left-9"
-            } top-2 h-full w-0.5 bg-purple-200 hidden md:block`}
+            } top-2 h-full w-0.5 bg-red-200 hidden md:block`}
           ></div>
           {sections.map((section, index) => (
             <motion.div
@@ -165,7 +157,7 @@ const SupportPolicyPage: React.FC = () => {
                     {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <div className="h-8 w-8 flex items-center justify-center rounded-full bg-purple-100">
+                <div className="h-8 w-8 flex items-center justify-center rounded-full bg-red-100">
                   {section.icon}
                 </div>
               </div>

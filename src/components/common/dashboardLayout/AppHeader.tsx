@@ -43,6 +43,8 @@ const AppHeader: React.FC<AppHeaderProps> = ({ userType }) => {
     };
   }, []);
 
+  const { lang } = useDirectionAndLanguage();
+
   return (
     <header className="sticky top-0 flex w-full bg-white border-gray-200 z-99999 dark:border-gray-800 dark:bg-gray-900 lg:border-b">
       <div className="flex flex-col items-center justify-between grow lg:flex-row lg:px-6">
@@ -83,19 +85,18 @@ const AppHeader: React.FC<AppHeaderProps> = ({ userType }) => {
                 />
               </svg>
             )}
-            {/* Cross Icon */}
           </button>
 
           {userType === "admin" ? (
             <Link to="/admin" className="lg:hidden">
               <img
                 className="dark:hidden h-12"
-                src="./images/logo/light-logo.webp"
+                src={`/images/logo/${lang}-light-logo.webp`}
                 alt="Logo"
               />
               <img
                 className="hidden dark:block h-12"
-                src="./images/logo/dark-logo.webp"
+                src={`/images/logo/${lang}-dark-logo.webp`}
                 alt="Logo"
               />
             </Link>
@@ -103,12 +104,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({ userType }) => {
             <Link to="/super_admin" className="lg:hidden">
               <img
                 className="dark:hidden h-12"
-                src="./images/logo/light-logo.webp"
+                src={`/images/logo/${lang}-light-logo.webp`}
                 alt="Logo"
               />
               <img
                 className="hidden dark:block h-12"
-                src="./images/logo/dark-logo.webp"
+                src={`/images/logo/${lang}-dark-logo.webp`}
                 alt="Logo"
               />
             </Link>

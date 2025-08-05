@@ -14,8 +14,9 @@ import {
   ServerErrors,
 } from "../../../types/Banners";
 import { Category } from "../../../types/Categories";
-// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../common/SEO/seo";
+import useCheckOnline from "../../../hooks/useCheckOnline";
+import { toast } from "react-toastify";
 
 const CreateBanner = () => {
   const { t } = useTranslation(["CreateBanner", "Meta"]);
@@ -119,6 +120,8 @@ const CreateBanner = () => {
     }
   };
 
+  const isCurrentlyOnline = useCheckOnline();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({
@@ -132,6 +135,11 @@ const CreateBanner = () => {
       global: "",
       general: "",
     });
+
+    if (!isCurrentlyOnline()) {
+      toast.error(t("CreateBanner:banner.errors.no_internet"));
+      return;
+    }
     setIsSubmitting(true);
     if (!validate()) {
       console.log(clientSideErrors);
@@ -190,7 +198,7 @@ const CreateBanner = () => {
 
   return (
     <div>
-      <SEO // PageMeta replaced with SEO, and data directly set
+      <SEO
         title={{
           ar: "تشطيبة - إنشاء بانر جديد (سوبر أدمن)",
           en: "Tashtiba - Create New Banner (Super Admin)",
@@ -219,6 +227,7 @@ const CreateBanner = () => {
             "Tashtiba",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">

@@ -15,7 +15,7 @@ export default function SuperAdminSignIn() {
   }, []);
   return (
     <>
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO 
         title={{
           ar: "تشطيبة - تسجيل دخول المشرف العام",
           en: "Tashtiba - Super Admin Sign In",
@@ -42,6 +42,7 @@ export default function SuperAdminSignIn() {
             "Tashtiba",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <AuthLayout userType="super_admin">
         <SignInForm userType="super_admin" />

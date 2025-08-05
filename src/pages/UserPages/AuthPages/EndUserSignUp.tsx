@@ -22,12 +22,12 @@ export default function EndUserSignUp() {
     <>
       <SEO
         title={{
-          ar: `تشطيبة - إنشاء حساب جديد`,
-          en: `Tashtiba - Create New Account`,
+          ar: `إنشاء حساب جديد على تشطيبة | تسوق مواد التشطيب في مصر`,
+          en: `Create Your Account on Tashtiba | Shop Finishing Materials in Egypt`,
         }}
         description={{
-          ar: `سجل الآن في تشطيبة واستمتع بتجربة تسوق فريدة. أنشئ حسابًا جديدًا للوصول إلى آلاف المنتجات والعروض الحصرية في مصر.`,
-          en: `Register now on Tashtiba and enjoy a unique shopping experience. Create a new account to access thousands of products and exclusive offers in Egypt.`,
+          ar: `انضم إلى آلاف المستخدمين وسجّل في تشطيبة لتستمتع بتجربة تسوق فريدة من نوعها تشمل السيراميك، السباكة، الدهانات وغيرها من مواد التشطيب في مصر.`,
+          en: `Join thousands of users and register on Tashtiba to enjoy a unique shopping experience for ceramic, plumbing, paints, and other finishing materials in Egypt.`,
         }}
         keywords={{
           ar: [
@@ -38,8 +38,9 @@ export default function EndUserSignUp() {
             "سجل الآن",
             "مستخدم جديد",
             "التسوق أونلاين",
+            "مواد تشطيب",
             "مصر",
-            "التسجيل",
+            "تشطيب",
           ],
           en: [
             "tashtiba",
@@ -49,17 +50,19 @@ export default function EndUserSignUp() {
             "new user",
             "join now",
             "online shopping",
+            "finishing materials",
             "Egypt",
-            "registration",
+            "construction supplies",
           ],
         }}
+        url={`https://tashtiba.com/${lang}/signup`}
+        image="https://tashtiba.com/og-image.png"
         alternates={[
-          // Assuming your sign-up page URL structure is like /ar/signup
           { lang: "ar", href: "https://tashtiba.com/ar/signup" },
           { lang: "en", href: "https://tashtiba.com/en/signup" },
-          { lang: "x-default", href: "https://tashtiba.com/en/signup" }, // Default to English
         ]}
       />
+
       <AuthLayout>
         <EndUserSignUpForm />
       </AuthLayout>

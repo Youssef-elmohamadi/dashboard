@@ -4,7 +4,7 @@ import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; 
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
@@ -15,8 +15,7 @@ import {
 import { AxiosError } from "axios";
 import { CouponFilters } from "../../../types/Coupons";
 import { TableAlert } from "../../../types/Common";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo";
 
 const Coupons = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -120,7 +119,7 @@ const Coupons = () => {
           message={alertData.message}
         />
       )}
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO 
         title={{
           ar: "تشطيبة - إدارة الكوبونات (سوبر أدمن)",
           en: "Tashtiba - Coupon Management (Super Admin)",
@@ -147,6 +146,7 @@ const Coupons = () => {
             "promotions",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb
         pageTitle={t("couponsPage.title")}
@@ -155,11 +155,11 @@ const Coupons = () => {
       <div>
         <SearchTable
           fields={[
-            { key: "code", label: "Code", type: "input" }, // تم الإبقاء عليها كما هي حسب التعليمات
+            { key: "code", label: "Code", type: "input" }, 
 
             {
               key: "status",
-              label: "Status", // تم الإبقاء عليها كما هي حسب التعليمات
+              label: "Status", 
               type: "select",
               options: [
                 { label: t("couponsPage.status.active"), value: "1" },
@@ -168,15 +168,15 @@ const Coupons = () => {
             },
             {
               key: "type",
-              label: "Type", // تم الإبقاء عليها كما هي حسب التعليمات
+              label: "Type", 
               type: "select",
               options: [
                 { label: t("couponsPage.types.fixed"), value: "fixed" },
                 { label: t("couponsPage.types.percent"), value: "percent" },
               ],
             },
-            { key: "from_date", label: "From", type: "date" }, // تم الإبقاء عليها كما هي حسب التعليمات
-            { key: "to_date", label: "To", type: "date" }, // تم الإبقاء عليها كما هي حسب التعليمات
+            { key: "from_date", label: "From", type: "date" }, 
+            { key: "to_date", label: "To", type: "date" }, 
           ]}
           setSearchParam={handleSearch}
           searchValues={searchValues}

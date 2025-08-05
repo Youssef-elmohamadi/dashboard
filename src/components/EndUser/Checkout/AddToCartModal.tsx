@@ -1,9 +1,10 @@
 import React from "react";
 import { useModal } from "../context/ModalContext";
-import { BsFillCartCheckFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import CartCheck from "../../../icons/CartCheckIcon";
+import CloseIcon from "../../../icons/CloseIcon";
 
 const AddToCartModal: React.FC = () => {
   const { modalType, modalProps, closeModal }: any = useModal();
@@ -19,17 +20,15 @@ const AddToCartModal: React.FC = () => {
         onClick={(e) => e.stopPropagation()}
         className="relative w-full max-w-lg p-8 bg-white rounded-2xl shadow-2xl space-y-6"
       >
-        {/* Close Button */}
         <button
           onClick={closeModal}
           className="absolute top-4 right-4 bg-gray-500 w-8 h-8 flex items-center justify-center rounded-full text-white text-lg hover:bg-gray-600 transition"
         >
-          ✕
+          <CloseIcon />
         </button>
 
-        {/* Success Message */}
         <div className="flex flex-col items-center text-center space-y-3">
-          <BsFillCartCheckFill className="text-green-600 text-6xl" />
+          <CartCheck className="text-green-600 text-6xl" />
           <h2 className="text-2xl font-bold text-green-700">
             {t("addedToCart")}
           </h2>
@@ -47,7 +46,7 @@ const AddToCartModal: React.FC = () => {
             <p className="text-base font-medium text-gray-800 line-clamp-2">
               {modalProps.name}
             </p>
-            <p className="text-purple-700 font-semibold mt-1">
+            <p className="text-[#d62828] font-semibold mt-1">
               {+modalProps.price * (modalProps.quantity || 1)} {t("egp")}
             </p>
             <p className="text-xs text-gray-500 italic mt-1">{t("thankYou")}</p>
@@ -59,7 +58,7 @@ const AddToCartModal: React.FC = () => {
           <Link
             to={`/${lang}/cart`}
             onClick={closeModal}
-            className="flex-1 py-2 bg-purple-700 text-center text-white rounded-md hover:bg-purple-800 transition font-medium"
+            className="flex-1 py-2 bg-[#d62828] text-center text-white rounded-md hover:bg-[#b71c1c] transition font-medium"
           >
             {t("checkout")}
           </Link>

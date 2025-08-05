@@ -55,6 +55,7 @@ const ProductsCompare = () => {
           { lang: "en", href: "https://tashtiba.com/en/compare" }, // Adjust if your actual compare URL is different
           { lang: "x-default", href: "https://tashtiba.com/en/compare" }, // Consider a default if you have one
         ]}
+        robotsTag="noindex, nofollow"
       />
 
       <h1 className="text-3xl font-bold text-center mb-8">

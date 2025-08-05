@@ -15,15 +15,15 @@ import {
   UserProfileFormData,
 } from "../../../types/UserProfile";
 import SEO from "../../../components/common/SEO/seo"; // Import your custom SEO component
-import { HiOutlineUserCircle, HiOutlinePhoto } from "react-icons/hi2"; // New icons for user profile and avatar
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import ProfileIcon from "../../../icons/ProfileIcon";
+import PhotoIcon from "../../../icons/PhotoIcon";
 
 const UserProfile = () => {
   const { t } = useTranslation(["EndUserProfile"]);
   const navigate = useNavigate();
-  // Brand colors from your other components
-  const primaryColor = "#9810fa"; // Lighter purple for accents/active states
-  const secondaryColor = "#542475"; // Deeper purple for text/main elements
+  const primaryColor = "#d62828";
+  const secondaryColor = "#d62828";
 
   const [formData, setFormData] = useState<UserProfileFormData>({
     id: "",
@@ -75,7 +75,7 @@ const UserProfile = () => {
         last_name: userProfileData.last_name,
         email: userProfileData.email,
         phone: userProfileData.phone,
-        password: "", // Passwords are not pre-filled for security
+        password: "",
         password_confirmation: "",
         avatar: null,
       });
@@ -262,18 +262,19 @@ const UserProfile = () => {
           { lang: "en", href: "https://tashtiba.com/en/profile" },
           { lang: "x-default", href: "https://tashtiba.com/en/profile" },
         ]}
+        robotsTag="noindex, nofollow"
       />
 
       <div className="bg-white rounded-2xl overflow-hidden">
         <div className="p-6 border-b-2" style={{ borderColor: primaryColor }}>
           <h1
-            className="text-3xl font-bold flex items-center gap-3"
+            className="md:text-3xl text-xl font-bold flex items-center gap-3"
             style={{ color: secondaryColor }}
           >
-            <HiOutlineUserCircle className="h-8 w-8" />
+            <ProfileIcon className="md:h-8 md:w-8 w-6 h-6" />
             {t("title", { defaultValue: "ملفي الشخصي" })}
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-black">
             {t("subtitle", {
               defaultValue:
                 "قم بإدارة معلومات حسابك وتفاصيل الاتصال الخاصة بك.",
@@ -304,9 +305,8 @@ const UserProfile = () => {
                     style={{ borderColor: primaryColor }} // Using primary brand color for border
                   />
                   <div className="absolute inset-0 bg-black/30 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <HiOutlinePhoto className="text-white h-8 w-8" />{" "}
-                    {/* Icon for changing photo */}
-                    <span className="text-white text-sm ml-2">
+                    <PhotoIcon className="text-white h-6 w-6 text-center mr-4" />
+                    <span className="text-white text-sm text-center">
                       {t("form.avatar")}
                     </span>
                   </div>
@@ -349,7 +349,7 @@ const UserProfile = () => {
                     value={formData.first_name}
                     onChange={handleChange}
                     placeholder={t("form.first_name")}
-                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-purple-300 focus:ring-purple-500/20" // Updated focus colors
+                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-red-200 focus:ring-red-500/20" // Updated focus colors
                   />
                   {(errors.first_name[0] || clientErrors.first_name) && (
                     <p className="text-red-600 text-sm mt-1">
@@ -372,7 +372,7 @@ const UserProfile = () => {
                     value={formData.last_name}
                     onChange={handleChange}
                     placeholder={t("form.last_name")}
-                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-purple-300 focus:ring-purple-500/20" // Updated focus colors
+                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-red-200 focus:ring-red-500/20" // Updated focus colors
                   />
                   {(errors.last_name[0] || clientErrors.last_name) && (
                     <p className="text-red-600 text-sm mt-1">
@@ -395,7 +395,7 @@ const UserProfile = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder={t("form.email")}
-                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-purple-300 focus:ring-purple-500/20" // Updated focus colors
+                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-red-200 focus:ring-red-500/20" // Updated focus colors
                   />
                   {(errors.email[0] || clientErrors.email) && (
                     <p className="text-red-600 text-sm mt-1">
@@ -420,7 +420,7 @@ const UserProfile = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder={t("form.phone")}
-                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-purple-300 focus:ring-purple-500/20" // Updated focus colors
+                    className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-red-200 focus:ring-red-500/20" // Updated focus colors
                   />
                   {(errors.phone[0] || clientErrors.phone) && (
                     <p className="text-red-600 text-sm mt-1">
@@ -446,7 +446,7 @@ const UserProfile = () => {
                         value={(formData[field] as string) || ""}
                         onChange={handleChange}
                         placeholder={t(`form.${field}`)}
-                        className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-purple-300 focus:ring-purple-500/20" // Updated focus colors
+                        className="h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-red-200 focus:ring-red-500/20" // Updated focus colors
                       />
                       {(errors[field][0] || clientErrors[field]) && (
                         <p className="text-red-600 text-sm mt-1">
@@ -480,7 +480,7 @@ const UserProfile = () => {
                 <button
                   type="submit"
                   disabled={isUpdating}
-                  className="bg-purple-700 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-purple-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-[#d62828] text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-[#d62828]/80 transition disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ minWidth: "150px" }}
                 >
                   {isUpdating ? (

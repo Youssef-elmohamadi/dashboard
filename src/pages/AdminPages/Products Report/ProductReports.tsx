@@ -4,9 +4,12 @@ import { GroupIcon, BoxIconLine } from "../../../icons";
 import FilterRangeDate from "../../../components/admin/reports/FilterRangeDate";
 import TopSelligProducts from "../../../components/admin/productReports/TopSellingProducts";
 import { useTranslation } from "react-i18next";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // Removed PageMeta import
-import SEO from "../../../components/common/SEO/seo"; // Ensured SEO component is imported
+import SEO from "../../../components/common/SEO/seo";
 import { useProductData } from "../../../hooks/Api/Admin/useProductsReports/useProductReport";
+import PageStatusHandler, {
+  PageStatus,
+} from "../../../components/common/PageStatusHandler/PageStatusHandler";
+import { AxiosError } from "axios";
 
 const ProductReports = () => {
   const [totalProductSell, setTotalProductSell] = useState([]);
@@ -23,13 +26,15 @@ const ProductReports = () => {
     end_date: "",
   });
 
-  const [generalError, setGeneralError] = useState("");
-  const [unauthorized, setUnauthorized] = useState("");
+  const { t } = useTranslation(["ProductsReports", "Meta"]);
 
-  const { data, isLoading, isError, error } = useProductData(searchValues);
-  const productsReportsData = data;
-
-  const { t } = useTranslation(["ProductsReports", "Meta"]); // استخدام الـ namespaces هنا
+  const {
+    data: productsReportsData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useProductData(searchValues);
 
   useEffect(() => {
     if (productsReportsData) {
@@ -44,17 +49,6 @@ const ProductReports = () => {
     }
   }, [productsReportsData]);
 
-  useEffect(() => {
-    if (isError && error) {
-      const err = error as any;
-      if (err?.response?.status === 401) {
-        setUnauthorized(t("ProductsReports:unauthorized")); // إضافة namespace
-      } else {
-        setGeneralError(t("ProductsReports:somethingWentWrong")); // إضافة namespace
-      }
-    }
-  }, [isError, error, t]);
-
   const handleFilter = (key: string, value: string | number) => {
     setSearchValues((prev) => ({
       ...prev,
@@ -62,108 +56,34 @@ const ProductReports = () => {
     }));
   };
 
-  if (isLoading) {
-    return (
-      <>
-        <SEO // PageMeta replaced with SEO, and data directly set for loading state
-          title={{
-            ar: "تشطيبة - تقارير المنتجات - جارٍ التحميل",
-            en: "Tashtiba - Product Reports - Loading",
-          }}
-          description={{
-            ar: "جارٍ تحميل تقارير المنتجات الشاملة في تشطيبة. يرجى الانتظار.",
-            en: "Loading comprehensive product reports on Tashtiba. Please wait.",
-          }}
-          keywords={{
-            ar: [
-              "تقارير المنتجات",
-              "إحصائيات المنتجات",
-              "تقارير المخزون",
-              "المنتجات الأكثر مبيعًا",
-              "تشطيبة",
-              "تحليل المنتجات",
-            ],
-            en: [
-              "product reports",
-              "product statistics",
-              "inventory reports",
-              "top selling products",
-              "Tashtiba",
-              "product analytics",
-            ],
-          }}
-        />
-        <p className="text-center mt-5">{t("ProductsReports:loading")}</p>{" "}
-        {/* إضافة namespace */}
-      </>
-    );
-  }
+  const getPageStatus = () => {
+    if (isLoading) return PageStatus.LOADING;
+    if (isError) return PageStatus.ERROR;
+    if (!productsReportsData) return PageStatus.NOT_FOUND;
+    return PageStatus.SUCCESS;
+  };
 
-  if (unauthorized) {
-    return (
-      <>
-        <SEO // PageMeta replaced with SEO, and data directly set for unauthorized state
-          title={{
-            ar: "تشطيبة - تقارير المنتجات - غير مصرح",
-            en: "Tashtiba - Product Reports - Unauthorized",
-          }}
-          description={{
-            ar: "لا يوجد تصريح للوصول إلى تقارير المنتجات في تشطيبة. يرجى تسجيل الدخول بحساب مسؤول.",
-            en: "Unauthorized access to product reports on Tashtiba. Please log in with an administrator account.",
-          }}
-          keywords={{
-            ar: [
-              "تقارير المنتجات",
-              "غير مصرح",
-              "إدارة",
-              "تشطيبة",
-              "تسجيل الدخول",
-            ],
-            en: [
-              "product reports",
-              "unauthorized",
-              "admin",
-              "Tashtiba",
-              "login",
-            ],
-          }}
-        />{" "}
-        <p className="text-center text-red-500 mt-5">{unauthorized}</p>
-      </>
-    );
-  }
+  const getErrorMessage = (): string | undefined => {
+    if (isError) {
+      const status = (error as AxiosError)?.response?.status;
+      if (status === 401) {
+        return t("ProductsReports:unauthorized");
+      }
+      return t("ProductsReports:somethingWentWrong");
+    }
+    return undefined;
+  };
 
-  if (generalError) {
-    return (
-      <>
-        <SEO // PageMeta replaced with SEO, and data directly set for general error state
-          title={{
-            ar: "تشطيبة - تقارير المنتجات - خطأ",
-            en: "Tashtiba - Product Reports - Error",
-          }}
-          description={{
-            ar: "حدث خطأ عام أثناء تحميل تقارير المنتجات في تشطيبة. يرجى المحاولة مرة أخرى.",
-            en: "A general error occurred while loading product reports on Tashtiba. Please try again.",
-          }}
-          keywords={{
-            ar: ["تقارير المنتجات", "خطأ", "مشكلة", "تشطيبة", "فشل التحميل"],
-            en: [
-              "product reports",
-              "error",
-              "issue",
-              "Tashtiba",
-              "loading failed",
-            ],
-          }}
-        />{" "}
-        <p className="text-center text-red-500 mt-5">{generalError}</p>
-      </>
-    );
-  }
+  const handleRetry = () => {
+    refetch();
+  };
+
+  const pageStatus = getPageStatus();
+  const errorMessage = getErrorMessage();
 
   return (
     <>
-      <SEO // PageMeta replaced with SEO, and data directly set for main content
+      <SEO
         title={{
           ar: "تشطيبة - تقارير المنتجات",
           en: "Tashtiba - Product Reports",
@@ -192,48 +112,58 @@ const ProductReports = () => {
             "stock report",
           ],
         }}
-      />{" "}
+        robotsTag="noindex, nofollow"
+      />
       <FilterRangeDate setSearchParam={handleFilter} />
-      <div className="col-span-6 space-y-6 ">
-        <EcommerceMetrics
-          parentClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6"
-          metrics={[
-            {
-              label: t("ProductsReports:allProducts"), // إضافة namespace
-              value: numbersData.allProduct,
-              percentage: 11.01,
-              icon: GroupIcon,
-            },
-            {
-              label: t("ProductsReports:activeProducts"), // إضافة namespace
-              value: numbersData.activeProduct,
-              percentage: -9.05,
-              icon: BoxIconLine,
-            },
-            {
-              label: t("ProductsReports:inactiveProducts"), // إضافة namespace
-              value: numbersData.inactiveProduct,
-              percentage: -9.05,
-              icon: BoxIconLine,
-            },
-            {
-              label: t("ProductsReports:outOfStockProducts"), // إضافة namespace
-              value: numbersData.outOfStockProduct,
-              percentage: -9.05,
-              icon: BoxIconLine,
-            },
-            {
-              label: t("ProductsReports:lowStockProducts"), // إضافة namespace
-              value: numbersData.lowStockProduct,
-              percentage: -9.05,
-              icon: BoxIconLine,
-            },
-          ]}
-        />
-      </div>
-      <div className="col-span-12 xl:col-span-7 mt-3">
-        <TopSelligProducts products={totalProductSell} />
-      </div>
+
+      <PageStatusHandler
+        status={pageStatus}
+        loadingText={t("ProductsReports:loading")}
+        errorMessage={errorMessage}
+        notFoundText={t("ProductsReports:noData")}
+        onRetry={handleRetry}
+      >
+        <div className="col-span-6 space-y-6">
+          <EcommerceMetrics
+            parentClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6"
+            metrics={[
+              {
+                label: t("ProductsReports:allProducts"),
+                value: numbersData.allProduct,
+                percentage: 11.01,
+                icon: GroupIcon,
+              },
+              {
+                label: t("ProductsReports:activeProducts"),
+                value: numbersData.activeProduct,
+                percentage: -9.05,
+                icon: BoxIconLine,
+              },
+              {
+                label: t("ProductsReports:inactiveProducts"),
+                value: numbersData.inactiveProduct,
+                percentage: -9.05,
+                icon: BoxIconLine,
+              },
+              {
+                label: t("ProductsReports:outOfStockProducts"),
+                value: numbersData.outOfStockProduct,
+                percentage: -9.05,
+                icon: BoxIconLine,
+              },
+              {
+                label: t("ProductsReports:lowStockProducts"),
+                value: numbersData.lowStockProduct,
+                percentage: -9.05,
+                icon: BoxIconLine,
+              },
+            ]}
+          />
+        </div>
+        <div className="col-span-12 xl:col-span-7 mt-3">
+          <TopSelligProducts products={totalProductSell} />
+        </div>
+      </PageStatusHandler>
     </>
   );
 };

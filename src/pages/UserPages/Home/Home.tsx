@@ -7,11 +7,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import React, { useEffect } from "react";
 import i18n from "../../../i18n";
+
 const HomeProducts = React.lazy(
   () => import("../../../components/EndUser/Home/HomeProducts")
-);
-const VendorsCarousel = React.lazy(
-  () => import("../../../components/EndUser/Home/VendorsBar")
 );
 const LatestProducts = React.lazy(
   () => import("../../../components/EndUser/Home/HomeLatest")
@@ -37,49 +35,54 @@ const Home = () => {
     setLang(lang);
     setDir(lang === "ar" ? "rtl" : "ltr");
   }, [lang]);
+
   return (
     <section>
       <SEO
         title={{
-          ar: "تشطيبة - تسوق إلكتروني للأزياء والإلكترونيات والمزيد",
-          en: "Tashtiba - Online Shopping for Fashion, Electronics & More",
+          ar: "تشطيبة | تسوّق مواد التشطيب أونلاين - سيراميك، سباكة، دهانات والمزيد",
+          en: "Tashtiba | Buy Finishing & Construction Materials Online in Egypt",
         }}
         description={{
-          ar: "اكتشف منتجات مذهلة على تشطيبة - تسوق إلكترونيات، أزياء، أثاث ومنتجات منزلية بسهولة وأمان من أفضل البائعين في مصر.",
-          en: "Shop amazing products at Tashtiba — your online destination for electronics, fashion, furniture, and home goods. Safe and easy shopping across Egypt.",
+          ar: "اكتشف أفضل منتجات التشطيب أونلاين في مصر من سيراميك، سباكة، دهانات، أدوات كهرباء وغيرها. تشطيبة توفر كل ما تحتاجه لتشطيب منزلك من مكان واحد وبأسعار تنافسية.",
+          en: "Discover the best finishing materials online in Egypt including ceramic tiles, plumbing, paints, electrical tools, and more. Tashtiba offers everything you need to finish your home — all in one place.",
         }}
         keywords={{
           ar: [
             "تشطيبة",
-            "الكترونيات",
-            "ملابس",
-            "أزياء",
-            "أثاث",
-            "مطبخ",
-            "عناية شخصية",
-            "موبايلات",
-            "أحذية",
-            "شنط",
-            "سوق مصر",
-            "توصيل سريع",
+            "مواد تشطيب",
+            "تشطيب منازل",
+            "سيراميك",
+            "سباكة",
+            "دهانات",
+            "أدوات كهرباء",
+            "بلاط",
+            "مواد بناء",
+            "تشطيب شقق",
+            "خدمات تشطيب",
+            "تشطيبات مصر",
           ],
           en: [
             "tashtiba",
-            "electronics",
-            "fashion",
-            "furniture",
-            "home appliances",
-            "mobiles",
-            "kitchen",
-            "bags",
-            "shoes",
-            "online shopping Egypt",
-            "fast delivery",
+            "finishing materials Egypt",
+            "home finishing Egypt",
+            "ceramic tiles",
+            "plumbing Egypt",
+            "paints Egypt",
+            "electrical supplies",
+            "construction tools",
+            "floor tiles Egypt",
+            "building materials",
+            "apartment finishing",
+            "online finishing store Egypt",
           ],
         }}
+        image="https://tashtiba.com/og-image.png"
+        url={`https://tashtiba.com/${lang}`}
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar" },
           { lang: "en", href: "https://tashtiba.com/en" },
+          { lang: "x-default", href: "https://tashtiba.com/en" },
         ]}
       />
 
@@ -95,9 +98,6 @@ const Home = () => {
       <div className="enduser_container">
         <HomeProducts />
         <LatestProducts title={t("latestProducts")} />
-      </div>
-      <div className="enduser_container h-[400px]">
-        <VendorsCarousel />
       </div>
     </section>
   );

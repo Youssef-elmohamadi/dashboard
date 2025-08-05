@@ -53,7 +53,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 onClick={() => handlePageChange(i)}
                 className={`flex items-center justify-center px-4 h-10 leading-tight border ${
                   i === pageIndex
-                    ? "bg-blue-600 text-white font-bold border-blue-600"
+                    ? "bg-[#d62828] text-white font-bold border-[#d62828]"
                     : "inline-flex items-center gap-2  border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 "
                 }`}
               >

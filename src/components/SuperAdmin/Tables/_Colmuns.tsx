@@ -7,13 +7,13 @@ type BaseEntity = {
   created_at?: string;
 };
 
-type Role = { name: string };
 interface ColumnBuilderOptions<T extends BaseEntity> {
   includeName?: boolean;
   includeEmail?: boolean;
   includeTitle?: boolean;
   includePosition?: boolean;
   includeIsActive?: boolean;
+  includeBannerIsActive?: boolean;
   includeRoles?: boolean;
   includeRoleName?: boolean;
   includeFullName?: boolean;
@@ -26,7 +26,6 @@ interface ColumnBuilderOptions<T extends BaseEntity> {
   includeLimit?: boolean;
   includeUsedCount?: boolean;
   includeExpiresAt?: boolean;
-
   includeOrderStatus?: boolean;
   includeVendorName?: boolean;
   includeVendorEmail?: boolean;
@@ -41,6 +40,7 @@ interface ColumnBuilderOptions<T extends BaseEntity> {
   onDelete?: (id: number) => void;
   onEdit?: (id: number) => void;
   customActionsRenderer?: (rowData: T) => React.ReactNode;
+  productsIncludeImagesAndNameCell?: boolean;
 }
 import { useTranslation } from "react-i18next";
 export const buildColumns = <T extends BaseEntity>(
@@ -60,6 +60,18 @@ export const buildColumns = <T extends BaseEntity>(
       id: "name_and_image",
       Cell: ({ row }: any) => (
         <BrandCell name={row.original?.name} image={row.original?.image} />
+      ),
+    });
+  }
+  if (options.productsIncludeImagesAndNameCell) {
+    columns.push({
+      Header: t("table.name"),
+      id: "name_and_image",
+      Cell: ({ row }: any) => (
+        <BrandCell
+          name={row.original?.name}
+          image={row.original?.images[0]?.image}
+        />
       ),
     });
   }
@@ -141,6 +153,17 @@ export const buildColumns = <T extends BaseEntity>(
       Cell: ({ row }: any) => (
         <TableStatus
           status={row.original.active === 1 ? "active" : "inactive"}
+        />
+      ),
+    });
+  }
+  if (options.includeBannerIsActive) {
+    columns.push({
+      Header: t("table.status"),
+      accessor: "active" as keyof T,
+      Cell: ({ row }: any) => (
+        <TableStatus
+          status={row.original.is_active === 1 ? "active" : "inactive"}
         />
       ),
     });

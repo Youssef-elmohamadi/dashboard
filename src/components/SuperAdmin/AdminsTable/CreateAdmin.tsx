@@ -3,15 +3,16 @@ import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
 import Select from "../../common/form/Select";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
-import { FiUserPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useRoles } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
 import { useCreateAdmin } from "../../../hooks/Api/SuperAdmin/useSuperAdminAdmis/useSuperAdminAdmins";
-// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../common/SEO/seo";
 import { AxiosError } from "axios";
+import UserPlusIcon from "../../../icons/UserPlusIcon";
+import useCheckOnline from "../../../hooks/useCheckOnline";
+import { toast } from "react-toastify";
 type Role = {
   name: string;
 };
@@ -63,9 +64,8 @@ export default function CreateAdmin() {
     } else if (!adminData.email) {
       newErrors.email = t("admin.errors.email_required");
     } else if (
-      /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(adminData.email) // الخطأ هنا كان يستخدم newErrors.email بدل adminData.email
+      /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(adminData.email)
     ) {
-      // تم تصحيح هذا السطر: /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(adminData.email)
       newErrors.email = t("admin.errors.email_invalid");
     } else if (!adminData.phone) {
       newErrors.phone = t("admin.errors.phone_required");
@@ -114,6 +114,7 @@ export default function CreateAdmin() {
   console.log(fetchingRoleError);
 
   const { mutateAsync } = useCreateAdmin();
+  const isCurrentlyOnline = useCheckOnline();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({
@@ -127,7 +128,12 @@ export default function CreateAdmin() {
       general: "",
     });
     if (!validate()) return;
+    if (!isCurrentlyOnline) {
+      toast.error(t("admin.errors.no_internet"));
+      return;
+    }
     setLoading(true);
+
     try {
       await mutateAsync(adminData);
       navigate("/super_admin/admins", {
@@ -165,7 +171,7 @@ export default function CreateAdmin() {
   };
   return (
     <div>
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO
         title={{
           ar: "تشطيبة - إنشاء مسؤول جديد (سوبر أدمن)",
           en: "Tashtiba - Create New Admin (Super Admin)",
@@ -194,7 +200,8 @@ export default function CreateAdmin() {
             "super admin",
           ],
         }}
-      />{" "}
+        robotsTag="noindex, nofollow"
+      />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("admin.create_title")}
@@ -351,9 +358,9 @@ export default function CreateAdmin() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 flex gap-4 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+          className="bg-brand-600 hover:bg-brand-500 flex gap-4 text-white px-5 py-2 rounded  disabled:opacity-50"
         >
-          <FiUserPlus size={20} />
+          <UserPlusIcon className="fill-white size-5" />
           {loading ? t("admin.button.submitting") : t("admin.button.submit")}
         </button>
       </form>

@@ -161,7 +161,8 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
   ];
   const currentNavItems =
     userType === "super_admin" ? SuperAdminNavItems : AdminNavItems;
-  const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
+  const { isExpanded, isMobileOpen, isHovered, setIsHovered, setIsMobileOpen } =
+    useSidebar();
   const location = useLocation();
   const { dir, lang } = useDirectionAndLanguage();
 
@@ -208,7 +209,6 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       setOpenSubmenu(null);
     }
   }, [location, isActive]);
-  //////////////////
 
   useEffect(() => {
     if (openSubmenu !== null) {
@@ -286,6 +286,9 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
             (nav.path ? (
               <Link
                 to={nav.path}
+                onClick={() => {
+                  if (isMobileOpen) setIsMobileOpen(false);
+                }}
                 className={`menu-item group ${
                   isActive(nav.path) ? "menu-item-active" : "menu-item-inactive"
                 }`}
@@ -335,6 +338,9 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
                   <li key={subItem.name}>
                     <Link
                       to={subItem.path}
+                      onClick={() => {
+                        if (isMobileOpen) setIsMobileOpen(false);
+                      }}
                       className={`menu-dropdown-item ${
                         isActive(subItem.path)
                           ? "menu-dropdown-item-active"
@@ -401,7 +407,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className={`py-8 flex ${
+        className={`pt-8 flex ${
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
@@ -411,22 +417,20 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
               <>
                 <img
                   className="dark:hidden"
-                  src="/images/logo/light-logo.webp"
+                  src={`/images/logo/${lang}-light-logo.webp`}
                   alt="Logo"
                   width={150}
                   height={40}
                 />
                 <img
                   className="hidden dark:block"
-                  src="/images/logo/dark-logo.webp"
+                  src={`/images/logo/${lang}-dark-logo.webp`}
                   alt="Logo"
-                  width={150}
-                  height={40}
                 />
               </>
             ) : (
               <img
-                src="/images/logo/logo-icon.png"
+                src="/images/favicon.png"
                 alt="Logo"
                 width={32}
                 height={32}
@@ -439,22 +443,20 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
               <>
                 <img
                   className="dark:hidden"
-                  src="/images/logo/light-logo.webp"
+                  src={`/images/logo/${lang}-light-logo.webp`}
                   alt="Logo"
                   width={150}
                   height={40}
                 />
                 <img
                   className="hidden dark:block"
-                  src="/images/logo/dark-logo.webp"
+                  src={`/images/logo/${lang}-dark-logo.webp`}
                   alt="Logo"
-                  width={150}
-                  height={40}
                 />
               </>
             ) : (
               <img
-                src="/images/logo/logo-icon.png"
+                src="/images/favicon.png"
                 alt="Logo"
                 width={32}
                 height={32}

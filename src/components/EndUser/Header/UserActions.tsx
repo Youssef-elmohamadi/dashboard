@@ -1,9 +1,6 @@
 import React, { RefObject, Suspense, lazy } from "react";
-import { NavLink } from "react-router-dom";
-import { MdOutlineCompareArrows } from "react-icons/md";
 import { Separator } from "../../EndUser/Common/Separator"; // Adjust path if necessary
 import { FavoriteProductsIcon } from "./FavoriteProductsIcon"; // Adjust path if necessary
-
 // Lazy Loaded Components
 const LazyUserAccountDropdown = lazy(() => import("./UserAccountDropdown"));
 const LazyNotificationIcon = lazy(() => import("./NotificationIcon"));
@@ -65,11 +62,11 @@ const UserActions: React.FC<UserActionsProps> = ({
           />
         </Suspense>
         <FavoriteProductsIcon favoriteCount={favoriteCount} lang={lang} />
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <NavLink to={`/${lang}/u-compare`} aria-label="Compare Products">
             <MdOutlineCompareArrows className="text-2xl text-secondary" />
           </NavLink>
-        </div>
+        </div> */}
       </div>
     </>
   );

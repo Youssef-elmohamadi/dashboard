@@ -1,14 +1,10 @@
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم التأكد من استيراد SEO
+import SEO from "../../../components/common/SEO/seo"; 
 import AuthLayout from "../../../components/common/Auth/AuthPageLayout";
 import SignInForm from "../../../components/common/Auth/SignInForm";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-
 export default function AdminSignIn() {
   const navigate = useNavigate();
-  const { t } = useTranslation(["auth"]);
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
     if (token) {
@@ -17,7 +13,7 @@ export default function AdminSignIn() {
   }, []);
   return (
     <>
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO
         title={{
           ar: "تشطيبة - تسجيل دخول الأدمن",
           en: "Tashtiba - Admin Sign In",
@@ -44,6 +40,7 @@ export default function AdminSignIn() {
             "e-commerce administration",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <AuthLayout userType="admin">
         <SignInForm userType="admin" />

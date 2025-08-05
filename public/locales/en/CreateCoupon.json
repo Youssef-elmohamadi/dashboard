@@ -45,11 +45,12 @@
         "invalid": "End date must be after start date"
       },
       "general": "Something went wrong, please try again",
-      "global": "You are not authorized to perform this action"
+      "global": "You are not authorized to perform this action",
+      "no_internet": "No internet connection. Please check your connection and try again."
     },
     "button": {
       "submit": "Create Coupon",
-      "submitting": "Creating..."
+      "submitting": "Creating Coupon..."
     },
     "success": "Coupon Created Successfully",
     "failure": "Failed to create coupon"

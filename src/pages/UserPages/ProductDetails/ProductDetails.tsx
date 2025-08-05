@@ -12,11 +12,11 @@ import {
   useAddFavorite,
   useRemoveFavorite,
 } from "../../../hooks/Api/EndUser/useProducts/useFavoriteProducts";
-import SEO from "../../../components/common/SEO/seo"; // Ensure this import is correct
+import SEO from "../../../components/common/SEO/seo";
 import { Product } from "../../../types/Product";
 
 const ProductDetails: React.FC = () => {
-  const { id, lang } = useParams<{ id: string; lang?: string }>(); // Destructure lang here
+  const { id, lang } = useParams<{ id: string; lang?: string }>();
   const numericId = Number(id);
   const { t } = useTranslation(["EndUserProductDetails"]);
   const { openModal } = useModal();
@@ -63,8 +63,8 @@ const ProductDetails: React.FC = () => {
 
   if (isProductLoading) {
     return (
-      <div className="flex justify-center items-center my-5">
-        <Circles height="80" width="80" color="#6B46C1" ariaLabel="loading" />
+      <div className="flex justify-center items-center my-5 h-[535px]">
+        <Circles height="80" width="80" color="#d62828" ariaLabel="loading" />
       </div>
     );
   }
@@ -105,7 +105,7 @@ const ProductDetails: React.FC = () => {
       );
     }
 
-    return [...new Set([...baseKeywords, ...productSpecificKeywords])]; // Use Set to remove duplicates
+    return [...new Set([...baseKeywords, ...productSpecificKeywords])];
   };
 
   const generateDescription = () => {
@@ -139,6 +139,7 @@ const ProductDetails: React.FC = () => {
           ar: generateKeywords(),
           en: generateKeywords(),
         }}
+        image="https://tashtiba.com/og-image.png"
         alternates={[
           {
             lang: "ar",
@@ -151,11 +152,10 @@ const ProductDetails: React.FC = () => {
           {
             lang: "x-default",
             href: `https://tashtiba.com/en/product/${product.id}`,
-          }, 
+          },
         ]}
       />
       <div className="grid lg:grid-cols-2 gap-10">
-        {/* Left: Product Image + Thumbnails */}
         <div>
           <div className="border min-h-[400px] border-gray-200 rounded-2xl overflow-hidden shadow-md">
             {selectedImage && (
@@ -173,7 +173,7 @@ const ProductDetails: React.FC = () => {
                 src={img.image}
                 onClick={() => setSelectedImage(img.image)}
                 className={`w-16 h-16 rounded-lg border border-gray-200 object-cover cursor-pointer transition-transform duration-150 hover:scale-105 ${
-                  selectedImage === img.image ? "ring-2 ring-purple-600" : ""
+                  selectedImage === img.image ? "ring-2 ring-brand-600" : ""
                 }`}
               />
             ))}
@@ -209,18 +209,17 @@ const ProductDetails: React.FC = () => {
                 <span className="line-through text-gray-400">
                   {Number(product.price).toFixed(2)} {t("egp")}
                 </span>
-                <span className="text-purple-600">
+                <span className="text-brand-600">
                   {product.discount_price.toFixed(2)} {t("egp")}
                 </span>
               </>
             ) : (
-              <span className="text-purple-600">
+              <span className="text-[#d62828]">
                 {Number(product.price).toFixed(2)} {t("egp")}
               </span>
             )}
           </div>
 
-          {/* Meta Info */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-600">
             <div>
               <strong>{t("store")}:</strong> {product.vendor?.name || "-"}
@@ -260,13 +259,12 @@ const ProductDetails: React.FC = () => {
               </div>
             )}
 
-          {/* Tags */}
           {Array.isArray(product.tags) && product.tags.length > 0 && (
             <div className="flex gap-2 flex-wrap pt-2">
               {product.tags.map((tag, i) => (
                 <span
                   key={i}
-                  className="bg-purple-100 text-purple-700 px-3 py-1 text-xs rounded-full"
+                  className="bg-purple-100 text-[#d62828] px-3 py-1 text-xs rounded-full"
                 >
                   #{tag.name}
                 </span>
@@ -274,7 +272,6 @@ const ProductDetails: React.FC = () => {
             </div>
           )}
 
-          {/* Quantity & Buttons */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-4">
             <div className="flex items-center gap-2">
               <label
@@ -297,7 +294,7 @@ const ProductDetails: React.FC = () => {
             <div className="flex gap-3 mt-2 sm:mt-0">
               <button
                 onClick={() => openModal("product", product)}
-                className="bg-purple-700 text-white px-5 py-2 rounded-xl hover:bg-purple-800 transition"
+                className="bg-[#d62828] text-white px-5 py-2 rounded-xl hover:bg-[#d62828]/90 transition"
               >
                 {t("addToCart")}
               </button>
@@ -305,8 +302,8 @@ const ProductDetails: React.FC = () => {
                 onClick={handleToggleFavorite}
                 className={`left-2 p-2 text-sm rounded-full z-10 transition flex items-center gap-2 ${
                   is_fav
-                    ? "text-purple-600"
-                    : "text-gray-500 hover:text-purple-600"
+                    ? "text-[#d62828] hover:text-[#d62828]/90"
+                    : "text-gray-500 hover:text-[#d62828]"
                 }`}
               >
                 <MdOutlineFavoriteBorder />
@@ -317,7 +314,7 @@ const ProductDetails: React.FC = () => {
 
           {/* Wishlist & Compare */}
           <div className="flex gap-6 pt-4 text-gray-500 text-sm">
-            <button className="flex items-center gap-1 hover:text-purple-600 transition">
+            <button className="flex items-center gap-1 hover:text-[#d62828] transition">
               <MdCompareArrows />
               {t("addToCompare")}
             </button>

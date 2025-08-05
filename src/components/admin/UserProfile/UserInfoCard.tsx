@@ -10,9 +10,9 @@ import { toast } from "react-toastify";
 import { useAdminUser } from "../../../hooks/Api/Admin/useProfile/useAdminProfile"; // Assuming this hook fetches admin profile data
 import { useSuperAdminProfile } from "../../../hooks/Api/SuperAdmin/useProfile/useSuperAdminProfile"; // Assuming this hook fetches super admin profile data
 
-// Import the dedicated update hooks
 import { useUpdateAdminUser } from "../../../hooks/Api/Admin/useProfile/useAdminProfile"; // Your existing useUpdateAdmin hook
 import { useUpdateSuperAdminProfile } from "../../../hooks/Api/SuperAdmin/useProfile/useSuperAdminProfile"; // The new hook we just created
+import useCheckOnline from "../../../hooks/useCheckOnline";
 
 interface UserData {
   first_name: string;
@@ -59,12 +59,13 @@ export default function UserInfoCard({ userType }: { userType: string }) {
     isLoading: isAdminLoading,
     error: adminError,
   } = useAdminUser(adminId || "");
+  const superAdminTokin = localStorage.getItem("super_admin_token");
 
   const {
     data: superAdminProfileData,
     isLoading: isSuperAdminLoading,
     error: superAdminError,
-  } = useSuperAdminProfile();
+  } = useSuperAdminProfile(!!superAdminTokin);
 
   const userData = userType === "admin" ? adminUserData : superAdminProfileData;
   const isLoading = userType === "admin" ? isAdminLoading : isSuperAdminLoading;
@@ -145,12 +146,15 @@ export default function UserInfoCard({ userType }: { userType: string }) {
     setValidationErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+  const isCurrentOnline = useCheckOnline();
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validate()) return;
-
+    if (!isCurrentOnline()) {
+      toast.error(t("no_internet"));
+      return;
+    }
     const formData = new FormData();
     formData.append("first_name", updateData.first_name);
     console.log(updateData.first_name);
@@ -169,8 +173,6 @@ export default function UserInfoCard({ userType }: { userType: string }) {
     if (imageFile) {
       formData.append("avatar", imageFile);
     }
-    console.log(updateData);
-    console.log(formData);
 
     try {
       if (userType === "admin") {
@@ -211,8 +213,8 @@ export default function UserInfoCard({ userType }: { userType: string }) {
   }
   if (error) {
     return (
-      <div className="text-red-600">
-        {t("userInfoCard.errorFetching")}: {error.message}
+      <div className="text-red-600 text-center">
+        {t("userInfoCard.errorFetch")}
       </div>
     );
   }
@@ -438,7 +440,7 @@ export default function UserInfoCard({ userType }: { userType: string }) {
               </Button>
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 rounded-full bg-primary-500 px-4 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center gap-2 rounded-full bg-brand-500 px-4 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isUpdating}
               >
                 {isUpdating ? t("editInfoCard.saving") : t("editInfoCard.save")}

@@ -4,7 +4,7 @@ import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
@@ -13,8 +13,7 @@ import {
   useDeleteAdmin,
 } from "../../../hooks/Api/SuperAdmin/useSuperAdminAdmis/useSuperAdminAdmins";
 import { AxiosError } from "axios";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo"; 
 
 const Admins = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -61,14 +60,14 @@ const Admins = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: t("adminsPage.createdSuccess"), // تم الإبقاء عليها كما هي حسب التعليمات
+        title: t("adminsPage.createdSuccess"), 
         message: location.state.successCreate,
       });
       window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
-        title: t("adminsPage.updatedSuccess"), // تم الإبقاء عليها كما هي حسب التعليمات
+        title: t("adminsPage.updatedSuccess"), 
         message: location.state.successEdit,
       });
       window.history.replaceState({}, document.title);
@@ -120,7 +119,7 @@ const Admins = () => {
           message={alertData.message}
         />
       )}
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO 
         title={{
           ar: "تشطيبة - إدارة المسؤولين (سوبر أدمن)",
           en: "Tashtiba - Admin Management (Super Admin)",
@@ -147,6 +146,7 @@ const Admins = () => {
             "site management",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb
         pageTitle={t("adminsPage.title")}
@@ -155,9 +155,9 @@ const Admins = () => {
       <div>
         <SearchTable
           fields={[
-            { key: "name", label: "Name", type: "input" }, // تم الإبقاء عليها كما هي حسب التعليمات
-            { key: "email", label: "Email", type: "input" }, // تم الإبقاء عليها كما هي حسب التعليمات
-            { key: "phone", label: "Phone", type: "input" }, // تم الإبقاء عليها كما هي حسب التعليمات
+            { key: "name", label: "Name", type: "input" }, 
+            { key: "email", label: "Email", type: "input" }, 
+            { key: "phone", label: "Phone", type: "input" }, 
           ]}
           setSearchParam={handleSearch}
           searchValues={searchValues}

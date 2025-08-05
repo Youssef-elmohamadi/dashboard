@@ -1,10 +1,10 @@
-import { TfiClose } from "react-icons/tfi";
 import PriceRangeFilter from "../Shop/PriceRangeFilter";
-import { Link } from "react-router-dom";
-import { IoIosArrowDown } from "react-icons/io";
+import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FilterSidebarProps } from "../../../types/Shop";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { CloseIcon } from "../../../icons";
+import ArrowDown from "../../../icons/ArrowDown";
 
 const FilterSidebar: React.FC<FilterSidebarProps> = ({
   isMenuOpen,
@@ -12,7 +12,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   setShowCategories,
   showCategories,
   categories,
-  category_id,
   handlePriceChange,
 }) => {
   const { lang } = useDirectionAndLanguage();
@@ -34,7 +33,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <div className="flex flex-col gap-1 mb-2 ">
           <div className="text-right p-4">
             <button onClick={closeMenu} className="text-right text-red-500">
-              <TfiClose />
+              <CloseIcon />
             </button>
           </div>
         </div>
@@ -45,8 +44,8 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               className="font-bold w-full flex justify-between items-center"
             >
               {t("categories")}
-              <IoIosArrowDown
-                className={`transition-transform duration-300 ${
+              <ArrowDown
+                className={`transition-transform text-lg w-4 duration-300 ${
                   showCategories ? "rotate-180" : ""
                 }`}
               />
@@ -54,29 +53,32 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             {showCategories && (
               <ul className="mt-4 space-y-2">
                 <li>
-                  <Link
-                    className={`text-gray-500 hover:text-purple-600 transition ${
-                      !category_id ? "text-purple-600 font-semibold" : ""
-                    }`}
+                  <NavLink
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-[#d62828] font-semibold hover:text-[#d62828] transition"
+                        : "text-gray-500 hover:text-[#d62828] transition"
+                    }
                     to={`/${lang}/category/`}
                     onClick={closeMenu}
+                    end
                   >
                     {t("allCategories")}
-                  </Link>
+                  </NavLink>
                 </li>
                 {categories?.map((category) => (
                   <li key={category.id}>
-                    <Link
-                      className={`text-gray-500 hover:text-purple-600 transition ${
-                        category.id.toString() === category_id
-                          ? "text-purple-600 font-semibold"
-                          : ""
-                      }`}
+                    <NavLink
+                      className={({ isActive }) =>
+                        isActive
+                          ? "text-[#d62828] font-semibold hover:text-[#d62828] transition"
+                          : "text-gray-500 hover:text-[#d62828] transition"
+                      }
                       to={`/${lang}/category/${category.id}`}
                       onClick={closeMenu}
                     >
                       {category.name}
-                    </Link>
+                    </NavLink>
                   </li>
                 ))}
               </ul>

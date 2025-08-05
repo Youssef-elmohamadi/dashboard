@@ -1,14 +1,13 @@
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import UserInfoCard from "../../../components/admin/UserProfile/UserInfoCard";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم التعليق على استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo"; 
 import { useTranslation } from "react-i18next";
 
 export default function UserProfiles() {
   const { t } = useTranslation(["UserProfile", "Meta"]);
   return (
     <>
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO 
         title={{
           ar: "تشطيبة - الملف الشخصي للمستخدم",
           en: "Tashtiba - User Profile",
@@ -35,6 +34,7 @@ export default function UserProfiles() {
             "user info",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb pageTitle="Profile" userType="admin" />
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
@@ -42,7 +42,6 @@ export default function UserProfiles() {
           {t("UserProfile:userProfile.title")}
         </h3>
         <div className="space-y-6">
-          {/* <UserMetaCard /> */}
           <UserInfoCard userType="admin" />
         </div>
       </div>

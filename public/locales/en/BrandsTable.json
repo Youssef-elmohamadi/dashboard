@@ -4,8 +4,10 @@
     "addNew": "Add New Brand",
     "mainTitle": "Tashtiba | Brands",
     "all": "All Brands",
-    "createdSuccess": "Created Successfully",
-    "updatedSuccess": "Updated Successfully",
+    "createdSuccessTitle": "Created Successfully",
+    "createdSuccessMessage": "Brand Created Successfully",
+    "updatedSuccessTitle": "Updated Successfully",
+    "updatedSuccessMessage": "Brand Updated Successfully",
     "delete": {
       "confirmTitle": "Delete Brand?",
       "confirmText": "This action cannot be undone!",
@@ -17,7 +19,7 @@
       "errorText": "Could not delete the Brand.",
       "lastButton": "OK"
     },
-        "changeStatus": {
+    "changeStatus": {
       "title": "Change Status",
       "inputPlaceholder": "Select Status",
       "errorSelect": "Please select a status",

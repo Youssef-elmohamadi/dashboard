@@ -18,7 +18,8 @@
       "successTitle": "Order Cancelled!",
       "successText": "Order has been Cancelled.",
       "errorTitle": "Error",
-      "errorText": "Could not Cancel The Order."
+      "errorText": "Could not Cancel The Order.",
+      "lastButton": "Ok Close"
     },
     "ship": {
       "title": "Enter Shipping Details",

@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react"; // استيراد Suspense و lazy
-import { FaRegCircleUser } from "react-icons/fa6";
+import ProfileIcon from "../../../icons/ProfileIcon";
 
 interface UserAccountDropdownProps {
   user: { first_name?: string; avatar?: string } | undefined;
@@ -34,7 +34,7 @@ const UserAccountDropdown: React.FC<UserAccountDropdownProps> = ({
   if (isError) {
     return (
       <div className="flex items-center gap-2 text-red-500">
-        <FaRegCircleUser className="text-2xl" />
+        <ProfileIcon className="w-6" />
         <span>Error loading profile</span>
       </div>
     );

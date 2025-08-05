@@ -4,7 +4,8 @@
     "title": "المدراء",
     "all": "كل المدراء",
     "addNew": "إضافة مدير جديد",
-    "createdSuccess": "تم الانشاء",
+    "createdSuccessTitle": "تم الانشاء",
+    "createdSuccessMessage": "تم انشاء المدير بنجاح",
     "updatedSuccess": "تم التحديث",
     "delete": {
       "confirmTitle": "حذف المدير؟",

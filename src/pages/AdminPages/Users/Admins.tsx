@@ -15,9 +15,7 @@ import {
 import { AxiosError } from "axios";
 import { ID, TableAlert } from "../../../types/Common";
 import { AdminFilters } from "../../../types/Admins";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم التعليق على استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
-
+import SEO from "../../../components/common/SEO/seo"; 
 const Admins = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
@@ -61,7 +59,7 @@ const Admins = () => {
         title: t("AdminsTable:adminsPage.createdSuccessTitle"),
         message: t("AdminsTable:adminsPage.createdSuccessMessage", {
           message: location.state.successCreate,
-        }), // تم التعديل
+        }), 
       });
       window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
@@ -121,7 +119,7 @@ const Admins = () => {
           message={alertData.message}
         />
       )}
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO 
         title={{
           ar: "تشطيبة - إدارة المسؤولين",
           en: "Tashtiba - Admin Management",
@@ -150,6 +148,7 @@ const Admins = () => {
             "permissions",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb
         pageTitle={t("AdminsTable:adminsPage.title")}

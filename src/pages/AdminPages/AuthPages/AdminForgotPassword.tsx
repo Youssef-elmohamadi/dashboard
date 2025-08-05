@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import AuthLayout from "../../../components/common/Auth/AuthPageLayout";
 import ResetPasswordSteps from "../../../components/common/Auth/ResetPassword";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
 import SEO from "../../../components/common/SEO/seo"; // تم التأكد من استيراد SEO
 
 import { useNavigate } from "react-router-dom";
@@ -15,7 +14,7 @@ const AdminForgotPassword = () => {
   }, []);
   return (
     <div>
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO
         title={{
           ar: "تشطيبة - استعادة كلمة مرور الأدمن",
           en: "Tashtiba - Admin Forgot Password",
@@ -40,6 +39,7 @@ const AdminForgotPassword = () => {
             "admin login help",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <AuthLayout userType="admin">
         <ResetPasswordSteps type="admin" />

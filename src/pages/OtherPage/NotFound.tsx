@@ -7,7 +7,7 @@ export default function NotFound() {
   const { t } = useTranslation("NotFoundPage");
   return (
     <>
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO 
         title={{
           ar: "تشطيبة - الصفحة غير موجودة (404)",
           en: "Tashtiba - Page Not Found (404)",

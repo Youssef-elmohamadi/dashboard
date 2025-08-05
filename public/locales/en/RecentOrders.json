@@ -14,9 +14,13 @@
     "price": "Price",
     "na": "N/A",
     "unknown": "Unknown",
-
     "egp": "EGP",
     "noData": "No recent orders available",
+    "paymentMethod": "Payment Method",
+    "location": {
+      "fullName": "Full Name",
+      "phone": "Phone Number"
+    },
     "statuses": {
       "delivered": "Delivered",
       "shipped": "Shipped",

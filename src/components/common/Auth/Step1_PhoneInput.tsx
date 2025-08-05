@@ -40,7 +40,7 @@ const Step1_PhoneInput: React.FC<Step1Props> = ({
       )}
       <button
         onClick={onNext}
-        className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+        className="w-full mt-4 bg-brand-500 hover:bg-brand-600 text-white py-2 rounded-lg transition"
       >
         {t('forgotPasswordPage.submit')}
       </button>

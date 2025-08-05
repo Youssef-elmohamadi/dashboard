@@ -5,9 +5,10 @@ import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
 import Select from "../../common/form/Select";
 import { useCreateCoupon } from "../../../hooks/Api/SuperAdmin/useCoupons/useCoupons";
-// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo";
 import { ClientErrors, CouponInput, ServerError } from "../../../types/Coupons";
+import useCheckOnline from "../../../hooks/useCheckOnline";
+import { toast } from "react-toastify";
 export default function CreateCoupon() {
   const { t } = useTranslation(["CreateCoupon", "Meta"]);
   const navigate = useNavigate();
@@ -104,7 +105,7 @@ export default function CreateCoupon() {
   };
 
   const { mutateAsync } = useCreateCoupon();
-
+const isCurrentlyOnLine = useCheckOnline();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({
@@ -120,7 +121,10 @@ export default function CreateCoupon() {
       general: "",
       global: "",
     });
-
+    if(!isCurrentlyOnLine()){
+      toast.error(t("coupon.errors.no_internet"));
+      return;
+    }
     if (!validate()) return;
     setLoading(true);
     try {
@@ -161,7 +165,7 @@ export default function CreateCoupon() {
 
   return (
     <div>
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO
         title={{
           ar: "تشطيبة - إنشاء كوبون جديد (سوبر أدمن)",
           en: "Tashtiba - Create New Coupon (Super Admin)",
@@ -190,6 +194,7 @@ export default function CreateCoupon() {
             "Tashtiba",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <div className="p-4 border-b border-gray-200 dark:border-gray-600">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">

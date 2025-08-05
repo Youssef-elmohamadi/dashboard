@@ -45,8 +45,8 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
               background: getTrackBackground({
                 values,
                 colors: isRTL
-                  ? ["#e5e7eb", "#8b5cf6", "#e5e7eb"].reverse()
-                  : ["#e5e7eb", "#8b5cf6", "#e5e7eb"],
+                  ? ["#e5e7eb", "#d62828", "#e5e7eb"].reverse()
+                  : ["#e5e7eb", "#d62828", "#e5e7eb"],
                 min: MIN,
                 max: MAX,
                 rtl: isRTL,
@@ -59,7 +59,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
         renderThumb={({ props }) => (
           <div
             {...props}
-            className="h-4 w-4 rounded-full border-2 border-purple-600 bg-white flex items-center justify-center"
+            className="h-4 w-4 rounded-full border-2 border-[#d62828] bg-white flex items-center justify-center"
           />
         )}
       />

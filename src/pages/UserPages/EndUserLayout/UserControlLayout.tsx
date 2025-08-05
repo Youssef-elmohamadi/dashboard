@@ -20,7 +20,9 @@ function UserControlLayoutComponent() {
 
   const getNavLinkClassName = ({ isActive }: { isActive: boolean }) =>
     `p-2 px-3 rounded-3xl flex items-center group gap-2 transition-all duration-300 pl-2 ${
-      isActive ? "bg-[#8826bd35] pl-4" : "hover:bg-[#8826bd35] hover:pl-4"
+      isActive
+        ? "bg-red-200 pl-4 text-[#d62828]"
+        : "hover:bg-red-200 hover:pl-4 text-black"
     }`;
 
   return (
@@ -40,24 +42,24 @@ function UserControlLayoutComponent() {
           </div>
           <nav className="space-y-2 mt-6">
             <NavLink to={`/${lang}/u-profile`} className={getNavLinkClassName}>
-              <RiProfileFill className="text-lg text-gray-500 transition-all duration-300" />
+              <RiProfileFill className="text-lg transition-all duration-300" />
               {t("profile_management")}
             </NavLink>
 
             <NavLink to={`/${lang}/u-orders`} className={getNavLinkClassName}>
-              <TiDocumentText className="text-lg text-gray-500 transition-all duration-300" />
+              <TiDocumentText className="text-lg transition-all duration-300" />
               {t("orders_history")}
             </NavLink>
 
             <NavLink to={`/${lang}/u-favorite`} className={getNavLinkClassName}>
-              <MdFavorite className="text-lg text-gray-500 transition duration-400" />
+              <MdFavorite className="text-lg transition duration-400" />
               {t("favorite_products")}
             </NavLink>
             <NavLink
               to={`/${lang}/u-notification`}
               className={getNavLinkClassName}
             >
-              <IoMdNotifications className="text-lg text-gray-500 transition duration-400" />
+              <IoMdNotifications className="text-lg transition duration-400" />
               {t("notifications")}
             </NavLink>
 

@@ -3,20 +3,21 @@ import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
 import Select from "../../common/form/Select";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
-import { FiUserPlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useCreateAdmin } from "../../../hooks/Api/Admin/useVendorAdmins/useVendorAdmins";
 import { useRoles } from "../../../hooks/Api/Admin/useRoles/useRoles";
-// import PageMeta from "../../common/SEO/PageMeta"; // تم التعليق على استيراد PageMeta
-import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../common/SEO/seo";
 import {
   ClientErrors,
   CreateAdminInput,
   ServerErrors,
 } from "../../../types/Admins";
 import { AxiosError } from "axios";
+import UserPlusIcon from "../../../icons/UserPlusIcon";
+import { toast } from "react-toastify";
+import useCheckOnline from "../../../hooks/useCheckOnline";
 
 export default function CreateAdmin() {
   const [showPassword, setShowPassword] = useState(false);
@@ -101,7 +102,12 @@ export default function CreateAdmin() {
     }));
   };
 
-  const { data, isError: isRoleError, error: roleError } = useRoles();
+  const {
+    data,
+    isLoading: isLoadingRoles,
+    isError: isRoleError,
+    error: roleError,
+  } = useRoles();
   const options = data?.data.data;
   useEffect(() => {
     if (isRoleError && roleError instanceof AxiosError) {
@@ -114,6 +120,8 @@ export default function CreateAdmin() {
     }
   }, [isRoleError, roleError, t, options]);
   const { mutateAsync } = useCreateAdmin();
+  const isCurrentlyOnline = useCheckOnline();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({
@@ -128,6 +136,10 @@ export default function CreateAdmin() {
     });
     if (!validate()) return;
 
+    if (!isCurrentlyOnline()) {
+      toast.error(t("CreateAdmin:admin.errors.no_internet"));
+      return;
+    }
     setLoading(true);
 
     try {
@@ -175,7 +187,7 @@ export default function CreateAdmin() {
 
   return (
     <div>
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO
         title={{
           ar: "تشطيبة - إنشاء مسؤول جديد",
           en: "Tashtiba - Create New Admin",
@@ -202,6 +214,7 @@ export default function CreateAdmin() {
             "permissions",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <div className="p-4 border-b dark:border-gray-600 border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -273,6 +286,7 @@ export default function CreateAdmin() {
             onChange={handleSelectChange}
             placeholder={t("CreateAdmin:admin.placeholder.select_role")}
             className="dark:bg-dark-900"
+            disabled={isRoleError || isLoadingRoles}
           />
           {errors.role?.[0] && (
             <p className="text-red-500 text-sm mt-1">{errors.role[0]}</p>
@@ -359,9 +373,9 @@ export default function CreateAdmin() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 flex gap-4 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+          className="bg-brand-500 hover:bg-brand-600 flex gap-4 text-white px-5 py-2 rounded  disabled:opacity-50"
         >
-          <FiUserPlus size={20} />
+          <UserPlusIcon className="text-xl text-white" />
           {loading
             ? t("CreateAdmin:admin.button.submitting")
             : t("CreateAdmin:admin.button.submit")}

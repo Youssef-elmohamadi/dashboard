@@ -1,20 +1,18 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import {
-  MdMenuBook,
-  MdGroups,
-  MdGavel,
-  MdVpnKey,
-  MdShoppingBag,
-  MdCopyright,
-} from "react-icons/md";
 import { useParams } from "react-router-dom";
 import SEO from "../../../components/common/SEO/seo"; // Assuming you have this SEO component
+import BookIcon from "../../../icons/BookIcon";
+import Group from "../../../icons/GroupIcon";
+import LawIcon from "../../../icons/LawIcon";
+import KeyIcon from "../../../icons/KeyIcon";
+import ShoppingBagIcon from "../../../icons/ShoppingBagIcon";
+import CopyrightIcon from "../../../icons/CopyrightIcon";
 
 const CreativeTermsPage: React.FC = () => {
   const { t } = useTranslation("Terms");
-  const brandColor = "#542475";
+  const brandColor = "#d62828";
   const { lang } = useParams();
   const cardVariants = {
     offscreen: { y: 50, opacity: 0 },
@@ -28,12 +26,12 @@ const CreativeTermsPage: React.FC = () => {
   const sections = [
     {
       title: t("terms.intro.title"),
-      icon: <MdMenuBook className="h-5 w-5" style={{ color: brandColor }} />,
+      icon: <BookIcon className="h-5 w-5" style={{ color: brandColor }} />,
       content: <p>{t("terms.intro.content")}</p>,
     },
     {
       title: t("terms.definitions.title"),
-      icon: <MdGroups className="h-5 w-5" style={{ color: brandColor }} />,
+      icon: <Group className="h-5 w-5" style={{ color: brandColor }} />,
       content: (
         <div className="space-y-3">
           <ul className="list-disc list-inside space-y-2">
@@ -55,22 +53,24 @@ const CreativeTermsPage: React.FC = () => {
     },
     {
       title: t("terms.usage.title"),
-      icon: <MdGavel className="h-5 w-5" style={{ color: brandColor }} />,
+      icon: <LawIcon className="h-5 w-5" style={{ color: brandColor }} />,
       content: <p>{t("terms.usage.content")}</p>,
     },
     {
       title: t("terms.accounts.title"),
-      icon: <MdVpnKey className="h-5 w-5" style={{ color: brandColor }} />,
+      icon: <KeyIcon className="h-5 w-5" style={{ color: brandColor }} />,
       content: <p>{t("terms.accounts.content")}</p>,
     },
     {
       title: t("terms.products.title"),
-      icon: <MdShoppingBag className="h-5 w-5" style={{ color: brandColor }} />,
+      icon: (
+        <ShoppingBagIcon className="h-5 w-5" style={{ color: brandColor }} />
+      ),
       content: <p>{t("terms.products.content")}</p>,
     },
     {
       title: t("terms.copyright.title"),
-      icon: <MdCopyright className="h-5 w-5" style={{ color: brandColor }} />,
+      icon: <CopyrightIcon className="h-5 w-5" style={{ color: brandColor }} />,
       content: <p>{t("terms.copyright.content")}</p>,
     },
   ];
@@ -79,42 +79,45 @@ const CreativeTermsPage: React.FC = () => {
     <div className="min-h-screen">
       <SEO
         title={{
-          ar: `تشطيبة - الشروط والأحكام`,
-          en: `Tashtiba - Terms and Conditions`,
+          ar: "تشطيبة - الشروط والأحكام القانونية",
+          en: "Tashtiba - Legal Terms and Conditions",
         }}
         description={{
-          ar: `اطّلع على الشروط والأحكام القانونية لاستخدام منصة تشطيبة. تتضمن هذه الصفحة تعريفات، قواعد الاستخدام، سياسات الحسابات، تفاصيل المنتجات وحقوق الملكية الفكرية في مصر.`,
-          en: `Review the full Terms and Conditions for using the Tashtiba platform. This page covers definitions, usage rules, account policies, product details, and intellectual property rights in Egypt.`,
+          ar: "تعرّف على الشروط والأحكام الخاصة باستخدام منصة تشطيبة بما يشمل التعريفات، سياسات الاستخدام، الحسابات، المنتجات، والملكية الفكرية داخل مصر.",
+          en: "Read the legal terms and conditions of using Tashtiba's platform, including definitions, usage policies, account rules, products, and intellectual property in Egypt.",
         }}
         keywords={{
           ar: [
             "تشطيبة",
-            "شروط الخدمة",
-            "أحكام الاستخدام",
-            "سياسات المنصة",
-            "اتفاقية المستخدم",
-            "حقوق الملكية",
-            "حسابات المستخدمين",
-            "منتجات",
+            "الشروط والأحكام",
+            "استخدام المنصة",
+            "سياسات الحسابات",
+            "حقوق الملكية الفكرية",
+            "قوانين تشطيبة",
+            "المنتجات",
+            "استخدام الخدمة",
             "مصر",
-            "قانوني",
+            "شروط الاستخدام",
           ],
           en: [
             "tashtiba",
-            "terms of service",
             "terms and conditions",
-            "usage policy",
+            "terms of service",
             "user agreement",
+            "usage policy",
+            "account policies",
             "intellectual property",
-            "user accounts",
-            "product policy",
-            "Egypt",
-            "legal",
+            "platform rules",
+            "product terms",
+            "Egypt legal",
           ],
         }}
+        url={`https://tashtiba.com/${lang}/terms`}
+        image="https://tashtiba.com/og-image.png"
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/terms" },
           { lang: "en", href: "https://tashtiba.com/en/terms" },
+          { lang: "x-default", href: "https://tashtiba.com/en/terms" },
         ]}
       />
 
@@ -134,7 +137,7 @@ const CreativeTermsPage: React.FC = () => {
           <div
             className={`absolute ${
               lang === "ar" ? "right-9" : "left-9"
-            } top-2 h-full w-0.5 bg-purple-200 hidden md:block`}
+            } top-2 h-full w-0.5 bg-red-200 hidden md:block`}
           ></div>
 
           {sections.map((section, index) => (
@@ -158,7 +161,7 @@ const CreativeTermsPage: React.FC = () => {
                     {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <div className="h-8 w-8 flex items-center justify-center rounded-full bg-purple-100">
+                <div className="h-8 w-8 flex items-center justify-center rounded-full bg-red-100">
                   {section.icon}
                 </div>
               </div>

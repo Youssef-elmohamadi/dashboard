@@ -1,6 +1,5 @@
-import React, { Suspense, lazy, useRef } from "react"; // استيراد Suspense و lazy
-import { MdNotifications } from "react-icons/md";
-
+import React, { Suspense, lazy } from "react"; // استيراد Suspense و lazy
+import NotificationsIcon from "../../../icons/NotificationIcon";
 interface NotificationIconProps {
   openNotification: boolean;
   toggleNotification: (event: React.MouseEvent) => void;
@@ -23,7 +22,7 @@ const NotificationIcon: React.FC<NotificationIconProps> = ({
         onClick={toggleNotification}
         className="flex items-center gap-2 cursor-pointer"
       >
-        <MdNotifications className="text-2xl text-secondary" />
+        <NotificationsIcon />
       </div>
 
       {openNotification && (

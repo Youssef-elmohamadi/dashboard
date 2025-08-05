@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
-import { FaStar } from "react-icons/fa";
-import { CiSearch } from "react-icons/ci";
 import { useGeneralSearch } from "../../../hooks/Api/useGeneralSearch";
 import { Product } from "../../../types/Product";
 import { Category } from "../../../types/Categories";
+import SearchIcon from "../../../icons/SearchIcon";
+import StarIcon from "../../../icons/StarIcon";
 
 interface SearchResponseData {
   products: Product[];
@@ -104,7 +104,7 @@ const SearchResultsDropdown: React.FC<SearchDropdownProps> = ({
             dir === "ltr" ? "right-4" : "left-4"
           } text-gray-500`}
         >
-          <CiSearch className="text-2xl" />
+          <SearchIcon />
         </div>
       </div>
 
@@ -177,7 +177,7 @@ const SearchResultsDropdown: React.FC<SearchDropdownProps> = ({
                           <div className="flex items-center text-sm text-gray-600">
                             <div className="flex text-yellow-400 mr-1">
                               {Array.from({ length: 5 }, (_, i) => (
-                                <FaStar
+                                <StarIcon
                                   key={i}
                                   className={
                                     i < Math.floor(product.rate || 0)

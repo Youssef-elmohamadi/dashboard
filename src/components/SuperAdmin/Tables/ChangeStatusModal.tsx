@@ -10,11 +10,12 @@ type Props = {
     title: string;
     inputPlaceholder: string;
     errorSelect: string;
-    success: string; // يمكن استخدام {{status}} بداخل النص
+    success: string;
     noChangeMessage: string;
     errorResponse: string;
     confirmButtonText: string;
     cancelButtonText: string;
+    documentNotApproved?: string;
   };
 };
 
@@ -65,7 +66,11 @@ export const openChangeStatusModal = async ({
         Swal.fire({
           icon: "error",
           title: Texts.errorResponse,
-          text: error?.response?.data?.message || error?.message || "",
+          text:
+            error?.response?.data?.message ===
+            "There Are An Document Need to Approved Firstly"
+              ? Texts.documentNotApproved
+              : error?.response?.data?.message || error?.message || "",
           confirmButtonText: Texts.confirmButtonText,
           customClass: { popup: "custom-popup" },
         });
@@ -83,7 +88,11 @@ export const openChangeStatusModal = async ({
     Swal.fire({
       icon: "error",
       title: Texts.errorResponse,
-      text: error?.response?.data?.message || error?.message || "",
+      text:
+        error?.response?.data?.message ===
+        "There Are An Document Need to Approved Firstly"
+          ? Texts.documentNotApproved
+          : error?.response?.data?.message || error?.message || "",
       confirmButtonText: Texts.confirmButtonText,
       customClass: { popup: "custom-popup" },
     });

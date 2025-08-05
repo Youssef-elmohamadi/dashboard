@@ -77,7 +77,7 @@ const Step3_NewPassword: React.FC<Step3Props> = ({
       </div>
       <button
         onClick={onResetPassword}
-        className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+        className="w-full mt-4 text-white py-2 rounded-lg bg-brand-500 hover:bg-brand-600 transition"
       >
         {t('forgotPasswordPage.resetPasswordBtn')}
       </button>

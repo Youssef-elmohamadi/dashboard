@@ -1,14 +1,15 @@
-import { BiLogOut } from "react-icons/bi";
-import { MdCompareArrows, MdDelete, MdFavorite } from "react-icons/md";
-import { RiProfileFill } from "react-icons/ri";
-import { TfiClose } from "react-icons/tfi";
-import { TiDocumentText } from "react-icons/ti";
 import { NavLink, useNavigate } from "react-router-dom";
 import { handleLogout } from "../../common/Auth/Logout";
 import { handleDeleteAccount } from "../Auth/DeleteAccount";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useTranslation } from "react-i18next";
 import { useProfile } from "../../../hooks/Api/EndUser/useProfile/useProfile";
+import { CloseIcon } from "../../../icons";
+import LogoutIcon from "../../../icons/LogoutIcon";
+import DeleteIcon from "../../../icons/DeleteIcon";
+import HeartIcon from "../../../icons/HeartIcon";
+import DocumentIcon from "../../../icons/DocumentIcon";
+import ProfileManagementIcon from "../../../icons/ProfileMangementIcon";
 
 interface MenuSidebarProps {
   isMenuOpen: boolean;
@@ -49,7 +50,7 @@ const MenuSidebar = ({ isMenuOpen, setIsMenuOpen }: MenuSidebarProps) => {
         {/* Close Button */}
         <div className="flex justify-end p-4">
           <button onClick={closeMenu} className="text-red-500 text-xl">
-            <TfiClose />
+            <CloseIcon />
           </button>
         </div>
 
@@ -71,22 +72,17 @@ const MenuSidebar = ({ isMenuOpen, setIsMenuOpen }: MenuSidebarProps) => {
           {[
             {
               to: `/${lang}/u-profile`,
-              icon: <RiProfileFill className="text-lg" />,
+              icon: <ProfileManagementIcon className="w-4" />,
               label: t("profile_management"),
             },
             {
               to: `/${lang}/u-orders`,
-              icon: <TiDocumentText className="text-lg" />,
+              icon: <DocumentIcon className="w-4" />,
               label: t("orders_history"),
             },
             {
-              to: `/${lang}/u-compare`,
-              icon: <MdCompareArrows className="text-lg" />,
-              label: t("compare_product"),
-            },
-            {
               to: `/${lang}/u-favorite`,
-              icon: <MdFavorite className="text-lg" />,
+              icon: <HeartIcon className="w-4" />,
               label: t("favorite_products"),
             },
           ].map(({ to, icon, label }, idx) => (
@@ -96,8 +92,8 @@ const MenuSidebar = ({ isMenuOpen, setIsMenuOpen }: MenuSidebarProps) => {
               className={({ isActive }) =>
                 `flex items-center gap-3 p-2 rounded transition-all duration-200 ${
                   isActive
-                    ? "bg-purple-50 text-purple-700 font-semibold"
-                    : "hover:bg-gray-100 text-gray-700"
+                    ? "bg-purple-50 end-user-text-base font-semibold"
+                    : "hover:bg-red-100 text-gray-700"
                 }`
               }
             >
@@ -109,20 +105,20 @@ const MenuSidebar = ({ isMenuOpen, setIsMenuOpen }: MenuSidebarProps) => {
           {/* Delete Account */}
           <button
             onClick={handleDeleteAccount}
-            className="flex items-center gap-3 p-2 text-error-600 hover:bg-gray-100 rounded w-full"
+            className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded w-full"
           >
-            <MdDelete className="text-lg text-error-500" />
+            <DeleteIcon className="w-6 text-[#d62828]" />
             <span className="text-sm">{t("delete_account")}</span>
           </button>
 
           {/* Logout */}
           <button
             onClick={() => {
-              handleLogout("end_user", navigate);
+              handleLogout("end_user", navigate, lang);
             }}
-            className="flex items-center gap-3 p-2 text-red-600 hover:bg-red-100 rounded w-full"
+            className="flex items-center gap-3 p-2 hover:bg-red-100 rounded w-full"
           >
-            <BiLogOut className="text-lg text-error-500" />
+            <LogoutIcon className="w-6 text-[#d62828] text-error-500" />
             <span className="text-sm">{t("logout")}</span>
           </button>
         </nav>

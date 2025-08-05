@@ -1,8 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { FaRegCircleUser } from "react-icons/fa6";
 import { Separator } from "../../EndUser/Common/Separator"; // Adjust path if necessary
 import { TFunction } from "i18next";
+import ProfileIcon from "../../../icons/ProfileIcon";
 
 interface GuestActionsProps {
   lang: string;
@@ -13,7 +13,7 @@ const GuestActions: React.FC<GuestActionsProps> = ({ lang, t }) => {
   return (
     <>
       <div className="flex items-center gap-2">
-        <FaRegCircleUser className="text-2xl mt-1 text-secondary cursor-pointer" />
+        <ProfileIcon className="w-8 mt-1 text-secondary cursor-pointer" />
         <Separator />
         <NavLink to={`/${lang}/signin`} className="text-secondary text-sm">
           {t("login")}

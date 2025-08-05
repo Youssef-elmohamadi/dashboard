@@ -1,14 +1,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import {
-  HiOutlineCalendarDays,
-  HiOutlineExclamationTriangle,
-  HiOutlineChatBubbleLeftRight,
-  HiOutlineArrowPath,
-} from "react-icons/hi2";
 import { useParams } from "react-router-dom";
 import SEO from "../../../components/common/SEO/seo"; // Assuming you have this SEO component
+import CalenderIcon from "../../../icons/CalenderIcon";
+
+import PencilIcon from "../../../icons/PencilIcon";
+import MessageIcon from "../../../icons/MessageIcon";
+import ReturnIcon from "../../../icons/ReturnIcon";
 
 interface Section {
   title: string;
@@ -18,7 +17,7 @@ interface Section {
 
 const ReturnPolicyPage: React.FC = () => {
   const { t } = useTranslation("ReturnPolicy");
-  const brandColor = "#542475";
+  const brandColor = "#d62828";
   const { lang } = useParams();
   const cardVariants = {
     offscreen: { y: 50, opacity: 0 },
@@ -36,12 +35,7 @@ const ReturnPolicyPage: React.FC = () => {
   const sections: Section[] = [
     {
       title: t("return.sections.conditions.title"),
-      icon: (
-        <HiOutlineCalendarDays
-          className="h-5 w-5"
-          style={{ color: brandColor }}
-        />
-      ),
+      icon: <CalenderIcon className="h-5 w-5" style={{ color: brandColor }} />,
       content: (
         <ul className="list-disc list-inside space-y-2">
           <li>{t("return.sections.conditions.point1")}</li>
@@ -51,12 +45,7 @@ const ReturnPolicyPage: React.FC = () => {
     },
     {
       title: t("return.sections.exceptions.title"),
-      icon: (
-        <HiOutlineExclamationTriangle
-          className="h-5 w-5"
-          style={{ color: brandColor }}
-        />
-      ),
+      icon: <PencilIcon className="h-5 w-5" style={{ color: brandColor }} />,
       content: (
         <ul className="list-disc list-inside space-y-2">
           <li>{t("return.sections.exceptions.point1")}</li>
@@ -66,12 +55,7 @@ const ReturnPolicyPage: React.FC = () => {
     },
     {
       title: t("return.sections.process.title"),
-      icon: (
-        <HiOutlineChatBubbleLeftRight
-          className="h-5 w-5"
-          style={{ color: brandColor }}
-        />
-      ),
+      icon: <MessageIcon className="h-5 w-5" style={{ color: brandColor }} />,
       content: (
         <ul className="list-disc list-inside space-y-2">
           <li>{t("return.sections.process.point1")}</li>
@@ -81,9 +65,7 @@ const ReturnPolicyPage: React.FC = () => {
     },
     {
       title: t("return.sections.exchange.title"),
-      icon: (
-        <HiOutlineArrowPath className="h-5 w-5" style={{ color: brandColor }} />
-      ),
+      icon: <ReturnIcon className="h-5 w-5" style={{ color: brandColor }} />,
       content: <p>{t("return.sections.exchange.description")}</p>,
     },
   ];
@@ -128,7 +110,10 @@ const ReturnPolicyPage: React.FC = () => {
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/return-policy" },
           { lang: "en", href: "https://tashtiba.com/en/return-policy" },
+          { lang: "x-default", href: "https://tashtiba.com/en/return-policy" },
         ]}
+        url={`https://tashtiba.com/${lang}/return-policy`}
+        image="https://tashtiba.com/og-image.png"
       />
 
       <div className="max-w-4xl mx-auto py-20 px-4 sm:px-6 lg:px-8">
@@ -146,7 +131,7 @@ const ReturnPolicyPage: React.FC = () => {
           <div
             className={`absolute ${
               lang === "ar" ? "right-9" : "left-9"
-            } top-2 h-full w-0.5 bg-purple-200 hidden md:block`}
+            } top-2 h-full w-0.5 bg-red-200 hidden md:block`}
           ></div>
 
           {sections.map((section, index) => (
@@ -170,7 +155,7 @@ const ReturnPolicyPage: React.FC = () => {
                     {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <div className="h-8 w-8 flex items-center justify-center rounded-full bg-purple-100">
+                <div className="h-8 w-8 flex items-center justify-center rounded-full bg-red-100">
                   {section.icon}
                 </div>
               </div>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Input from "../../common/input/InputField";
 import Label from "../../common/form/Label";
 import Radio from "../../common/input/Radio";
-import { SlWallet } from "react-icons/sl";
 import Checkbox from "../../common/input/Checkbox";
 import { useSelector, useDispatch } from "react-redux";
 import TextArea from "../../common/input/TextArea";
@@ -16,6 +15,7 @@ import { RootState } from "../Redux/Store";
 import { Product } from "../../../types/Product";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useCheckout } from "../../../hooks/Api/EndUser/Checkout/useCheckout";
+import WalletIcon from "../../../icons/WalletIcon";
 
 const CheckoutForm: React.FC = () => {
   const { t } = useTranslation(["EndUserCheckout"]);
@@ -157,7 +157,7 @@ const CheckoutForm: React.FC = () => {
     navigate(`/${lang}/`);
   };
 
-  const {mutateAsync:  checkout} = useCheckout();
+  const { mutateAsync: checkout } = useCheckout();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -218,7 +218,7 @@ const CheckoutForm: React.FC = () => {
             <Input
               type="text"
               name={name}
-              className="dark:!bg-transparent dark:placeholder:!text-gray-400 !placeholder:text-gray-400 text-gray-800 dark:!border-gray-200 dark:!text-gray-800"
+              className="dark:!bg-transparent dark:placeholder:!text-gray-400 !placeholder:text-gray-400 text-gray-800 dark:!border-gray-200 dark:!text-gray-800 focus:ring-red-500/20"
               placeholder={t(`checkout.${name}`)}
               value={checkoutForm.location[name]}
               onChange={handleChangeLocation}
@@ -243,7 +243,7 @@ const CheckoutForm: React.FC = () => {
           placeholder={t("checkout.landmark")}
           value={checkoutForm.location.landmark}
           onChange={handleChangeLocation}
-          className="dark:!bg-transparent dark:placeholder:!text-gray-400 dark:!border-gray-200 dark:!text-gray-800"
+          className="dark:!bg-transparent dark:placeholder:!text-gray-400 dark:!border-gray-200 dark:!text-gray-800 focus:ring-red-500/20"
         />
         {clientSideErrors.location.landmark && (
           <p className="text-red-500 text-sm mt-1">
@@ -270,7 +270,7 @@ const CheckoutForm: React.FC = () => {
               },
             }))
           }
-          className="dark:!bg-transparent dark:!border-gray-200 dark:!text-gray-800"
+          className="dark:!bg-transparent dark:!border-gray-200 dark:!text-gray-800 focus:ring-red-500/20"
         />
         {clientSideErrors.location.notes && (
           <p className="text-red-500 text-sm mt-1">
@@ -326,7 +326,7 @@ const CheckoutForm: React.FC = () => {
           className="dark:!bg-transparent dark:text-gray-900 dark:!border-gray-300 dark:checked:!bg-brand-500"
         />
         <div className="flex justify-center my-4">
-          <SlWallet className="text-6xl text-purple-700" />
+          <WalletIcon className="text-9xl text-[#d62828]" />
         </div>
         <p className="text-center text-gray-500">
           {t("checkout.redirect_payment")}
@@ -347,7 +347,7 @@ const CheckoutForm: React.FC = () => {
 
       <button
         type="submit"
-        className="w-full mt-6 bg-purple-700 hover:bg-purple-800 text-white py-3 rounded-xl font-medium shadow-sm"
+        className="w-full mt-6 bg-[#d62828] hover:bg-[#d62828] text-white py-3 rounded-xl font-medium shadow-sm"
       >
         {t("checkout.pay_now")}
       </button>

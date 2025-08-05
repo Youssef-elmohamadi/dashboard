@@ -8,9 +8,6 @@ import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import React from "react";
 
-// Install Swiper modules
-// Swiper.use([Autoplay]); // No longer needed this way if using Swiper 9+ and importing directly
-
 const VendorsCarousel = () => {
   const { t } = useTranslation(["EndUserHome"]);
   const { lang } = useDirectionAndLanguage();
@@ -64,14 +61,8 @@ const VendorsCarousel = () => {
         <div className="flex items-center justify-between mb-8">
           <div className="flex flex-col">
             <h2 className="text-lg md:text-xl font-semibold text-gray-800">
-              {t("bestVendors", "Our Top-Rated Vendors")}
+              {t("bestVendors")}
             </h2>
-            {/* <p className="text-base text-gray-600 dark:text-gray-300">
-              {t(
-                "vendorsCarousel.subtitle",
-                "Discover quality products from our trusted partners."
-              )}
-            </p> */}
           </div>
         </div>
 

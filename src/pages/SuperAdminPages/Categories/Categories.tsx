@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo";
+
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
@@ -16,6 +16,7 @@ import { AxiosError } from "axios";
 import { SearchValues } from "../../../types/Categories";
 import { TableAlert } from "../../../types/Common";
 import { useLocation } from "react-router-dom";
+import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
 const Categories = () => {
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState(false);
@@ -108,7 +109,7 @@ const Categories = () => {
           message={alertData.message}
         />
       )}
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO
         title={{
           ar: "تشطيبة - إدارة الفئات (سوبر أدمن)",
           en: "Tashtiba - Category Management (Super Admin)",
@@ -135,6 +136,7 @@ const Categories = () => {
             "site management",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb
         pageTitle={t("categoriesPage.title")}
@@ -142,7 +144,7 @@ const Categories = () => {
       />
       <div>
         <SearchTable
-          fields={[{ key: "name", label: "Name", type: "input" }]} // تم الإبقاء عليها كما هي
+          fields={[{ key: "name", label: "Name", type: "input" }]}
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />

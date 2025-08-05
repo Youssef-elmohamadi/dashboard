@@ -47,8 +47,13 @@
       "type": "Type is required.",
       "status": "Status is required.",
       "general": "Something went wrong, please try again.",
-      "global": "You are not authorized to perform this action."
+      "global": "You are not authorized to perform this action.",
+      "no_internet": "No internet connection. Please check your connection and try again."
     },
-    "success": "Coupon updated successfully."
+    "success": "Coupon updated successfully.",
+    "button": {
+      "submit": "Update Coupon",
+      "submitting": "Updating Coupon..."
+    }
   }
 }

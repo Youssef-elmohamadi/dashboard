@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import SuperAdminLayout from "../../pages/SuperAdminPages/Layout/SuperAdminLayout";
 import ProtectedSuperAdminRoute from "./ProtectedSuperAdminRoute";
 import { lazy, Suspense } from "react";
+import "../../index.css";
 const SuperAdminSignIn = lazy(
   () => import("../../pages/SuperAdminPages/AuthPages/SuperAdminSignin")
 );
@@ -25,7 +26,7 @@ const SuperAdminRoutes = () => {
         >
           <Route index element={<Home userType="super_admin" />} />
           <Route
-            path="*" // Matches /super_admin/* other than index
+            path="*" 
             element={
               <Suspense fallback={null}>
                 <LazyPages />

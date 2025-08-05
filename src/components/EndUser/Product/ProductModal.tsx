@@ -76,7 +76,7 @@ const ProductModal = () => {
                   onClick={() => setSelectedImage(img)}
                   className={`w-16 h-14 object-cover border-2 cursor-pointer rounded ${
                     selectedImage === img
-                      ? "border-purple-500"
+                      ? "border-[#d62828]"
                       : "border-gray-300"
                   }`}
                 />
@@ -94,7 +94,7 @@ const ProductModal = () => {
             </div>
 
             <div className="flex gap-3 items-center">
-              <span className="text-lg font-bold text-purple-700">
+              <span className="text-lg font-bold end-user-text-base">
                 {discounted && (
                   <span className="line-through text-sm text-gray-500 mr-2">
                     {modalProps.price} {t("egp")}
@@ -145,7 +145,7 @@ const ProductModal = () => {
 
             <button
               onClick={() => handleAddToCart(modalProps)}
-              className="bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800 transition"
+              className="end-user-bg-base text-white px-4 py-2 rounded hover:bg-red-800 transition"
             >
               {t("addToCart")}
             </button>

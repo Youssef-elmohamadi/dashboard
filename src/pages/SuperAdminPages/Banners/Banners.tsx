@@ -16,8 +16,7 @@ import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCate
 import { AxiosError } from "axios";
 import { SearchValues } from "../../../types/Banners";
 import { TableAlert } from "../../../types/Common";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo";
 
 const Banners = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -35,6 +34,7 @@ const Banners = () => {
     pageIndex,
     searchValues
   );
+console.log(data);
 
   const pageSize = data?.data?.per_page ?? 15;
   useEffect(() => {
@@ -105,7 +105,7 @@ const Banners = () => {
   const columns = buildColumns({
     includeTitle: true,
     includeDateOfCreation: true,
-    includeIsActive: true,
+    includeBannerIsActive: true,
     includePosition: true,
     includeActions: true,
     categories: categories,
@@ -120,7 +120,7 @@ const Banners = () => {
           message={alertData.message}
         />
       )}
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO 
         title={{
           ar: "تشطيبة - إدارة البانرات (سوبر أدمن)",
           en: "Tashtiba - Banner Management (Super Admin)",
@@ -147,6 +147,7 @@ const Banners = () => {
             "website design",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb
         pageTitle={t("bannersPage.title")}
@@ -154,7 +155,7 @@ const Banners = () => {
       />
       <div>
         <SearchTable
-          fields={[{ key: "name", label: "Name", type: "input" }]} // تم الإبقاء عليها كما هي حسب التعليمات
+          fields={[{ key: "name", label: "Name", type: "input" }]} 
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />

@@ -3,6 +3,7 @@ import EndUserLayout from "../../pages/UserPages/EndUserLayout/Layout";
 import Home from "../../pages/UserPages/Home/Home";
 import EndUserWrapper from "./StoreProvider";
 import { lazy, Suspense } from "react";
+import "./index.css";
 const UserForgotPassword = lazy(
   () => import("../../pages/UserPages/AuthPages/UserForgotPassword")
 );

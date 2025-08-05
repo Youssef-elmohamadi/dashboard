@@ -96,7 +96,7 @@ const BasicTable = <T extends { id: number }>({
           </div>
         )}
         {!isLoading && data.length === 0 && !globalError && (
-          <div className="p-4 text-center text-gray-500">{t("noData")}</div>
+          <div className="p-4 text-center text-gray-500 dark:text-gray-200">{t("noData")}</div>
         )}
         {!isLoading && globalError && (
           <div className="p-4 text-center text-red-500 font-semibold">

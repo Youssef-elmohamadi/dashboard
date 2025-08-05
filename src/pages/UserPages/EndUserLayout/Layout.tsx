@@ -9,23 +9,17 @@ import AboutTashtiba from "../../../components/EndUser/Layout/AboutSection";
 export default function EndUserLayout() {
   const [hidden, setHidden] = useState(false);
   const lastScrollRef = useRef(0);
-
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
       const lastScroll = lastScrollRef.current;
-
-      
       if (currentScroll <= 10 && hidden) {
         setHidden(false);
       } else if (currentScroll > lastScroll && currentScroll > 100 && !hidden) {
         setHidden(true);
       }
-
-      
       lastScrollRef.current = currentScroll;
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [hidden]); 

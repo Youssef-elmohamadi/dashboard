@@ -52,7 +52,6 @@ const UserForgotPassword = () => {
           ],
         }}
         alternates={[
-          // Assuming your forgot password page URL structure is like /ar/forgot-password
           {
             lang: "ar",
             href: "https://tashtiba.com/ar/forgot-password",
@@ -64,8 +63,9 @@ const UserForgotPassword = () => {
           {
             lang: "x-default",
             href: "https://tashtiba.com/en/forgot-password",
-          }, // Default to English
+          },
         ]}
+        robotsTag="noindex, nofollow"
       />
       <div>
         <AuthLayout userType="end_user">

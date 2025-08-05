@@ -37,8 +37,10 @@
     "viewMore": "View More",
     "delete": "Delete",
     "usa": "USA",
+    "eg": "Egypt",
     "france": "France",
     "usa_customers": "{{count}} Customers",
+    "eg_customers": "{{count}} Customers",
     "france_customers": "{{count}} Customers"
   },
   "metrics": {

@@ -28,5 +28,6 @@
   },
   "errors": {
     "general": "Something went wrong"
-  }
+  },
+  "no_internet": "No internet connection. Please check your connection and try again."
 }

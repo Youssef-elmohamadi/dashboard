@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import ArrowDown from "../../../icons/ArrowDown";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Separator } from "../Common/Separator";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
@@ -79,16 +79,14 @@ const TopBar = () => {
 
   return (
     <div className="z-10 relative px-6 py-2 mx-auto flex items-center justify-between bg-white">
-      {/* Language & Currency */}
       <div className="flex items-center justify-between lg:justify-start flex-[3]">
-        {/* Language */}
         <div ref={langRef} className="relative flex items-center">
           <div
-            className="flex items-center gap-2 cursor-pointer"
+            className="flex items-center cursor-pointer"
             onClick={() => setShowLangs(!showLangs)}
           >
             <span className="p-1 text-sm text-secondary">{language}</span>
-            <MdOutlineKeyboardArrowDown />
+            <ArrowDown className="w-3 mt-1" />
           </div>
           <div
             className={`absolute mt-2 min-w-[8rem] top-4 rounded-lg border border-gray-200 shadow-lg bg-white transition-all duration-200 ease-in-out ${
@@ -114,16 +112,16 @@ const TopBar = () => {
           </div>
         </div>
 
-        <Separator className="hidden lg:block" />
+        <Separator className="hidden lg:block " />
 
         {/* Currency */}
         <div ref={currencyRef} className="relative flex items-center ">
           <div
-            className="flex items-center gap-2 cursor-pointer"
+            className="flex items-center cursor-pointer"
             onClick={() => setShowCurrencies(!showCurrencies)}
           >
             <span className="p-1 text-sm text-secondary">{currency}</span>
-            <MdOutlineKeyboardArrowDown />
+            <ArrowDown className="w-3 mt-1" />
           </div>
           <div
             className={`absolute mt-2 min-w-[8rem] top-4 rounded-lg border border-gray-200 shadow-lg bg-white transition-all duration-200 ease-in-out ${
@@ -152,7 +150,7 @@ const TopBar = () => {
 
       {/* Seller Links */}
       <div className="items-center flex-[2] hidden lg:flex">
-        <Link to="/admin/signup">
+        {/* <Link to="/admin/signup">
           <div className="p-2 text-sm text-secondary hover:text-black transition duration-300 cursor-pointer">
             {t("be_a_seller")}
           </div>
@@ -162,12 +160,12 @@ const TopBar = () => {
           <div className="p-2 text-sm text-secondary hover:text-black transition duration-300 cursor-pointer">
             {t("login_as_seller")}
           </div>
-        </Link>
+        </Link> */}
       </div>
 
       {/* Contact */}
       <div className="items-center flex-[2] justify-end hidden lg:flex">
-        <Link to="/">
+        <Link to="/https://wa.me/201557408095">
           <div className="p-2 text-sm text-secondary hover:text-black transition duration-300 cursor-pointer">
             {t("contact_number")}
           </div>

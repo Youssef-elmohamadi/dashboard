@@ -5,7 +5,6 @@ import {
   removeItem,
   updateQuantity,
 } from "../../../components/EndUser/Redux/cartSlice/CartSlice";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom"; // Import useParams
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
@@ -14,6 +13,7 @@ import type { RootState } from "../../../components/EndUser/Redux/Store";
 import SEO from "../../../components/common/SEO/seo"; // Import your custom SEO component
 import { Product } from "../../../types/Product";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import DeleteIcon from "../../../icons/DeleteIcon";
 
 interface CouponFormData {
   code: string;
@@ -128,6 +128,7 @@ const Cart: React.FC = () => {
           { lang: "ar", href: "https://tashtiba.com/ar/cart" }, // Adjust the path if your actual cart URL is different
           { lang: "en", href: "https://tashtiba.com/en/cart" }, // Adjust the path if your actual cart URL is different
         ]}
+        robotsTag="noindex, nofollow"
       />
 
       {/* Order Summary */}
@@ -180,7 +181,7 @@ const Cart: React.FC = () => {
           />
           <button
             type="submit"
-            className="bg-purple-600 text-white px-4 py-2 rounded"
+            className="bg-[#d62828] text-white px-4 py-2 rounded"
           >
             {t("apply")}
           </button>
@@ -198,7 +199,7 @@ const Cart: React.FC = () => {
 
         <button
           onClick={handleCheckoutButton}
-          className="w-full bg-purple-700 text-white py-2 mt-4 rounded font-semibold"
+          className="w-full bg-[#d62828] text-white py-2 mt-4 rounded font-semibold"
         >
           {t("proceed_to_payment", { count: totalQuantity })}
         </button>
@@ -270,7 +271,7 @@ const Cart: React.FC = () => {
                       dispatch(removeItem(item.id));
                     }}
                   >
-                    <RiDeleteBin6Line className="text-error-500 text-2xl" />
+                    <DeleteIcon className="text-error-500 text-xl" />
                   </div>
                 </div>
               </li>

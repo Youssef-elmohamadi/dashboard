@@ -2,7 +2,6 @@ import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 import "./alert.css";
 import { AxiosError } from "axios";
-import { ID } from "../../../types/Common";
 
 interface AlertMessages {
   confirmTitle?: string;
@@ -43,8 +42,8 @@ export const alertDelete = async (
     text: confirmText,
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
+    confirmButtonColor: "#f62828",
+    cancelButtonColor: "#e8e8e8",
     confirmButtonText,
     cancelButtonText,
     customClass: { popup: "custom-popup" },

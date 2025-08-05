@@ -1,13 +1,13 @@
 import React from "react"; // تأكد من استيراد React إذا لم يكن موجودًا
 import { useTranslation } from "react-i18next";
-import { GrLogout } from "react-icons/gr";
-import { MdFavorite } from "react-icons/md";
-import { RiProfileFill } from "react-icons/ri";
-import { TiDocumentText } from "react-icons/ti";
 import { NavLink } from "react-router-dom";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { HeaderListDropDownProps } from "../../../types/Header";
-import { IoNotifications } from "react-icons/io5";
+import ProfileManagementIcon from "../../../icons/ProfileMangementIcon";
+import DocumentIcon from "../../../icons/DocumentIcon";
+import HeartIcon from "../../../icons/HeartIcon";
+import NotificationsIcon from "../../../icons/NotificationIcon";
+import LogoutIcon from "../../../icons/LogoutIcon";
 
 interface NavItem {
   to: (lang: string) => string;
@@ -23,15 +23,15 @@ const HeaderListDropDown = ({ dir, handleLogout }: HeaderListDropDownProps) => {
   const navItems: NavItem[] = [
     {
       to: (currentLang) => `/${currentLang}/u-profile`,
-      icon: RiProfileFill,
+      icon: ProfileManagementIcon,
       textKey: "profile_management",
-      iconColorClass: "text-gray-500",
+      iconColorClass: "text-[#d62828]",
     },
     {
       to: (currentLang) => `/${currentLang}/u-orders`,
-      icon: TiDocumentText,
+      icon: DocumentIcon,
       textKey: "orders_history",
-      iconColorClass: "text-secondary",
+      iconColorClass: "text-[#d62828]",
     },
     // {
     //   to: (currentLang) => `/${currentLang}/u-compare`,
@@ -41,15 +41,15 @@ const HeaderListDropDown = ({ dir, handleLogout }: HeaderListDropDownProps) => {
     // },
     {
       to: (currentLang) => `/${currentLang}/u-favorite`,
-      icon: MdFavorite,
+      icon: HeartIcon,
       textKey: "favorite_products",
-      iconColorClass: "text-gray-500",
+      iconColorClass: "text-[#d62828]",
     },
     {
       to: (currentLang) => `/${currentLang}/u-notification`,
-      icon: IoNotifications,
+      icon: NotificationsIcon,
       textKey: "notifications",
-      iconColorClass: "text-secondary",
+      iconColorClass: "text-[#d62828]",
     },
   ];
 
@@ -59,7 +59,7 @@ const HeaderListDropDown = ({ dir, handleLogout }: HeaderListDropDownProps) => {
     const activeClasses = `bg-[#8826bd35] text-black ${
       currentDir === "ltr" ? "pl-4" : "pr-4"
     }`;
-    const hoverClasses = `hover:bg-[#8826bd35] ${
+    const hoverClasses = `hover:bg-red-200 ${
       currentDir === "ltr" ? "hover:pl-4" : "hover:pr-4"
     }`;
 
@@ -79,17 +79,17 @@ const HeaderListDropDown = ({ dir, handleLogout }: HeaderListDropDownProps) => {
               getNavLinkClasses(isActive, dir as "ltr" | "rtl")
             }
           >
-            <item.icon className={`text-lg ${item.iconColorClass}`} />
+            <item.icon className={`w-6 ${item.iconColorClass}`} />
             {t(item.textKey)}
           </NavLink>
         ))}
         <li
           onClick={handleLogout}
-          className={`flex items-center gap-3 px-4 py-2 transition-all duration-400 rounded hover:bg-red-300 cursor-pointer pl-2 pr-2 ${
+          className={`flex items-center gap-3 px-4 py-2 transition-all duration-400 rounded hover:bg-red-200 cursor-pointer pl-2 pr-2 ${
             dir === "ltr" ? "hover:pl-4" : "hover:pr-4"
           } w-full`}
         >
-          <GrLogout className="text-xl" />
+          <LogoutIcon className="w-6 text-[#d62828]" />
           {t("logout")}
         </li>
       </ul>

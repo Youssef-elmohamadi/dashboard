@@ -36,7 +36,7 @@ export type Product = {
   category_id?: string;
   brand_id?: string;
   price: number | string;
-  discount_price?: number | null;
+  discount_price?: number | string | null;
   stock_quantity?: number | string;
   status?: string;
   rate?: number | null;

@@ -16,7 +16,7 @@ const NavBar = React.memo(() => {
   const { data: categories } = useCategories();
 
   return (
-    <nav className="bg-primary w-full min-h-14 md:block hidden">
+    <nav className="end-user-bg-secondary w-full min-h-14 md:block hidden">
       <div className="flex enduser_container w-full justify-center lg:justify-baseline items-center relative">
         <CategoriesDropdown dir={dir} />
 

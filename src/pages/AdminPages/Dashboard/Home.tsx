@@ -15,8 +15,7 @@ import {
   MonthlySales,
   NumbersData,
 } from "../../../types/DashboardHome";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم التعليق على استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo";
 
 import StatisticsChart from "../../../components/common/Home/StatisticsChart";
 import RecentOrders from "../../../components/common/Home/RecentOrders";
@@ -24,7 +23,6 @@ import DemographicCard from "../../../components/common/Home/DemographicCard";
 import MonthlySalesChart from "../../../components/common/Home/MonthlySalesChart";
 
 export default function Home({ userType }: HomeProps) {
-  // استخدام useTranslation مع الـ namespace "Home"
   const { t } = useTranslation(["Home"]);
   const [unauthorized, setUnauthorized] = useState(false);
   const [globalError, setGlobalError] = useState(false);
@@ -128,13 +126,13 @@ export default function Home({ userType }: HomeProps) {
           },
           {
             label: t("vendors"),
-            value: numbersData.vendorsCount, // تم إبقاء القيمة الأصلية هنا
+            value: numbersData.vendorsCount, 
             percentage: 3.1,
             icon: BoxIconLine,
           },
           {
             label: t("products"),
-            value: numbersData.productsCount, // تم إبقاء القيمة الأصلية هنا
+            value: numbersData.productsCount, 
             percentage: 7.2,
             icon: BoxIconLine,
           },
@@ -143,7 +141,6 @@ export default function Home({ userType }: HomeProps) {
   if (loading) {
     return (
       <>
-        {/* تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة */}
         <SEO
           title={{
             ar: "تشطيبة - لوحة التحكم",
@@ -179,6 +176,7 @@ export default function Home({ userType }: HomeProps) {
               "e-commerce admin",
             ],
           }}
+          robotsTag="noindex, nofollow"
         />
         <DashboardSkeleton />
       </>
@@ -187,7 +185,7 @@ export default function Home({ userType }: HomeProps) {
 
   return (
     <>
-      {/* تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة */}
+
       <SEO
         title={{
           ar: "تشطيبة - لوحة التحكم",
@@ -223,11 +221,12 @@ export default function Home({ userType }: HomeProps) {
             "e-commerce admin",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
 
       {!loading && globalError && (
         <div className="p-4 text-center text-red-500 font-semibold">
-          {/* تم إضافة SEO component هنا مع بيانات مخصصة للخطأ */}
+          
           <SEO
             title={{
               ar: "تشطيبة - خطأ",
@@ -241,6 +240,7 @@ export default function Home({ userType }: HomeProps) {
               ar: ["خطأ", "مشكلة", "تشطيبة", "لوحة تحكم", "فشل التحميل"],
               en: ["error", "issue", "Tashtiba", "dashboard", "loading failed"],
             }}
+            robotsTag="noindex, nofollow"
           />
           {t("unExpectedError")}
         </div>
@@ -262,6 +262,7 @@ export default function Home({ userType }: HomeProps) {
               ar: ["لوحة تحكم", "تشطيبة", "غير مصرح", "إدارة", "تسجيل الدخول"],
               en: ["dashboard", "Tashtiba", "unauthorized", "admin", "login"],
             }}
+            robotsTag="noindex, nofollow"
           />
           {t("unauthorized")}
         </div>

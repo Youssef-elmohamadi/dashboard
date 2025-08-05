@@ -100,13 +100,15 @@ const BasicTable = <T extends { id: number }>({
             {t("unAuthorized")}
           </div>
         )}
+        {!isLoading && data.length === 0 && !globalError && (
+          <div className="p-4 text-center text-gray-500 dark:text-gray-200">
+            {t("noData")}
+          </div>
+        )}
         {!isLoading && globalError && (
           <div className="p-4 text-center text-red-500 font-semibold">
             {t("unExpectedError")}
           </div>
-        )}
-        {!isLoading && data.length === 0 && (
-          <div className="p-4 text-center text-gray-500">{t("")}</div>
         )}
       </div>
 

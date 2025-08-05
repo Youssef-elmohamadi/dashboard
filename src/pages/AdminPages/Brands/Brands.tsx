@@ -15,7 +15,6 @@ import Alert from "../../../components/ui/alert/Alert";
 import { AxiosError } from "axios";
 import { SearchValues } from "../../../types/Brands";
 import { ID, TableAlert } from "../../../types/Common";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // This was already commented out, good.
 import SEO from "../../../components/common/SEO/seo";
 
 const Brands = () => {
@@ -26,7 +25,7 @@ const Brands = () => {
     name: "",
   });
   const location = useLocation();
-  const { t } = useTranslation(["BrandsTable"]); // Using namespaces here
+  const { t } = useTranslation(["BrandsTable"]);
   const { data, isLoading, isError, refetch, error } = useAllBrandsPaginate(
     pageIndex,
     searchValues
@@ -57,7 +56,7 @@ const Brands = () => {
         title: t("BrandsTable:brandsPage.createdSuccessTitle"), // Added namespace
         message: t("BrandsTable:brandsPage.createdSuccessMessage", {
           message: location.state.successCreate,
-        }), // Added namespace
+        }), 
       });
       window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
@@ -66,7 +65,7 @@ const Brands = () => {
         title: t("BrandsTable:brandsPage.updatedSuccessTitle"), // Added namespace
         message: t("BrandsTable:brandsPage.updatedSuccessMessage", {
           message: location.state.successEdit,
-        }), // Added namespace
+        }), 
       });
       window.history.replaceState({}, document.title);
     }
@@ -75,7 +74,7 @@ const Brands = () => {
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [location.state, t]); // Added t to dependencies
+  }, [location.state, t]); 
 
   const handleSearch = (key: string, value: string) => {
     setSearchValues((prev) => ({
@@ -103,7 +102,6 @@ const Brands = () => {
   const columns = buildColumns({
     includeImageAndNameCell: true,
     includeStatus: true,
-    includeCommissionRate: true,
     includeUpdatedAt: true,
     includeCreatedAt: true,
     includeActions: true,
@@ -118,7 +116,6 @@ const Brands = () => {
           message={alertData.message}
         />
       )}
-      {/* --- CORRECTED SEO CONTENT FOR BRANDS PAGE --- */}
       <SEO
         title={{
           ar: "تشطيبة - إدارة الماركات",
@@ -152,8 +149,8 @@ const Brands = () => {
           { lang: "en", href: "https://tashtiba.com/en/admin/brands" }, // Updated href to be specific for brands page
           // { lang: "x-default", href: "https://tashtiba.com/en" }, // Removed this as it was a generic homepage example
         ]}
+        robotsTag="noindex, nofollow"
       />
-      {/* --- END OF CORRECTED SEO CONTENT --- */}
       <PageBreadcrumb
         pageTitle={t("BrandsTable:brandsPage.title")}
         userType="admin"

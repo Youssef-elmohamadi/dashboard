@@ -17,11 +17,7 @@
 .swal2-cancel {
   @apply bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded ml-2;
 }
-.dark .swal2-select {
-  background-color: #1f2937; /* Tailwind's gray-800 */
-  color: #f9fafb; /* Tailwind's gray-100 */
-  border: 1px solid #374151; /* Tailwind's gray-700 */
-}
+
 
 /* تنسيق option داخل select في الوضع الداكن */
 .dark .swal2-select option {

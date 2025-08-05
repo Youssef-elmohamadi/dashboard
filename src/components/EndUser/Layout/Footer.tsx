@@ -1,19 +1,4 @@
 import { useState, useMemo } from "react";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaYoutube,
-  FaLinkedin,
-  FaTwitter,
-  FaMapMarkerAlt,
-  FaPhone,
-  FaEnvelope,
-  FaSignOutAlt,
-  FaBoxOpen,
-  FaHeart,
-  FaStore,
-  FaRocket,
-} from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import FooterSection from "./FooterLinks";
 import { handleLogout } from "../../common/Auth/Logout";
@@ -22,6 +7,21 @@ import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import LazyImage from "../../common/LazyImage";
 import { Category } from "../../../types/Categories";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import {
+  FacebookIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  TwitterIcon,
+  YouTubeIcon,
+} from "../../../icons/SocialmediaIcon";
+import MapIcon from "../../../icons/MapIcon";
+import CallIcon from "../../../icons/CallIcon";
+import MessageIcon from "../../../icons/MessageIcon";
+import RocketIcon from "../../../icons/RocketIcon";
+import LogoutIcon from "../../../icons/LogoutIcon";
+import StoreIcon from "../../../icons/StoreIcon";
+import HeartIcon from "../../../icons/HeartIcon";
+import { Order } from "../../../icons";
 
 export default function Footer() {
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
@@ -33,12 +33,12 @@ export default function Footer() {
   const { data: categories } = useCategories();
   const { lang } = useDirectionAndLanguage();
   const socialIcons = useMemo(
-    () => [FaLinkedin, FaYoutube, FaInstagram, FaTwitter, FaFacebook],
+    () => [LinkedInIcon, YouTubeIcon, InstagramIcon, TwitterIcon, FacebookIcon],
     []
   );
 
   const iconClass =
-    "text-gray-400 hover:text-purple-400 transition duration-300 transform hover:scale-125";
+    "text-gray-400 hover:text-red-400 transition duration-300 transform hover:scale-125";
 
   return (
     <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white px-6 py-14 shadow-inner">
@@ -47,7 +47,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-gray-700 pb-8">
           <div>
             <LazyImage
-              src="/images/logo/dark-logo.webp"
+              src={`/images/logo/${lang}-dark-logo.webp`}
               alt="Company Logo"
               className="h-[76px] w-[200px] mb-3 drop-shadow-lg"
             />
@@ -56,11 +56,8 @@ export default function Footer() {
             </p>
           </div>
         </div>
-
-        {/* Newsletter & Socials */}
         <div className="flex flex-col lg:flex-row justify-between gap-10">
-          {/* Newsletter */}
-          <div className="bg-white/5 backdrop-blur-md rounded-xl p-6 shadow-lg border border-white/10 w-full lg:w-1/2 transition hover:shadow-purple-800/30">
+          <div className="bg-white/5 backdrop-blur-md rounded-xl p-6 shadow-lg border border-white/10 w-full lg:w-1/2 transition hover:shadow-red-800/30">
             <h3 className="text-lg font-semibold mb-2">
               {t("footer.newsletter_title")}
             </h3>
@@ -71,15 +68,14 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder={t("footer.newsletter_placeholder")}
-                className="px-4 py-2 rounded-lg bg-white text-black text-sm w-full sm:w-64 focus:outline-purple-500"
+                className="px-4 py-2 rounded-lg bg-white text-black text-sm w-full sm:w-64 focus:outline-red-500"
                 aria-label="Email"
               />
-              <button className="bg-purple-600 hover:bg-purple-700 px-6 py-2 text-white rounded-lg shadow-md transition hover:scale-105 duration-300">
+              <button className="bg-red-600 hover:bg-red-700 px-6 py-2 text-white rounded-lg shadow-md transition hover:scale-105 duration-300">
                 {t("footer.newsletter_button")}
               </button>
             </div>
           </div>
-
           {/* Socials & App Download */}
           <div className="flex flex-col justify-between gap-6">
             <div>
@@ -87,13 +83,45 @@ export default function Footer() {
                 {t("footer.follow_us")}
               </p>
               <div className="flex gap-4 text-2xl">
-                {socialIcons.map((Icon, idx) => (
-                  <Icon key={idx} className={iconClass} />
-                ))}
+                <a
+                  href="https://www.linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <LinkedInIcon className={iconClass} />
+                </a>
+                <a
+                  href="https://www.youtube.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <YouTubeIcon className={iconClass} />
+                </a>
+                <a
+                  href="https://www.instagram.com/tashtiba.eg/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <InstagramIcon className={iconClass} />
+                </a>
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <TwitterIcon className={iconClass} />
+                </a>
+                <a
+                  href="https://www.facebook.com/share/1aKRVrf8rZ/?mibextid=wwXIfr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FacebookIcon className={iconClass} />
+                </a>
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <p className="mb-2 font-medium text-sm">
                 {t("footer.download_app")}
               </p>
@@ -121,10 +149,9 @@ export default function Footer() {
                   </Link>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
-
         {/* Footer Sections */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 border-t border-gray-700 pt-10">
           {/* Quick Links */}
@@ -137,8 +164,8 @@ export default function Footer() {
               {categories?.slice(0, 4).map((category: Category) => (
                 <li key={category.id}>
                   <Link
-                    to={`${lang}/category/${category.id}`}
-                    className="block py-1 hover:text-purple-400 text-sm transition-all duration-200"
+                    to={`/${lang}/category/${category.id}`}
+                    className="block py-1 hover:text-red-400 text-sm transition-all duration-200"
                   >
                     {category.name}
                   </Link>
@@ -153,18 +180,28 @@ export default function Footer() {
             isOpen={contactOpen}
             setIsOpen={setContactOpen}
           >
-            <ul className="text-sm space-y-1">
+            <ul className="text-sm space-y-2 text-gray-300">
               <li className="flex items-center gap-2">
-                <FaMapMarkerAlt className="text-purple-400" />
-                {t("footer.location")}
+                <MapIcon className="text-red-400 w-4" />
+                <span>{t("footer.location")}</span>
               </li>
               <li className="flex items-center gap-2">
-                <FaPhone className="text-purple-400" />
-                {t("footer.phone")}
+                <CallIcon className="text-red-400 w-4" />
+                <a
+                  href="tel:01557408095"
+                  className="hover:text-red-400 transition"
+                >
+                  01557408095
+                </a>
               </li>
               <li className="flex items-center gap-2">
-                <FaEnvelope className="text-purple-400" />
-                {t("footer.email")}
+                <MessageIcon className="text-red-400 w-4" />
+                <a
+                  href="mailto:tashtiba.eg@gmail.com"
+                  className="hover:text-red-400 transition"
+                >
+                  tashtiba.eg@gmail.com
+                </a>
               </li>
             </ul>
           </FooterSection>
@@ -177,25 +214,25 @@ export default function Footer() {
           >
             <ul className="text-sm space-y-1">
               <li className="flex items-center gap-2">
-                <FaBoxOpen className="text-purple-400" />
-                <Link to="/order-history" className="hover:text-purple-400">
+                <Order className="text-red-400 text-lg" />
+                <Link to="/order-history" className="hover:text-red-400">
                   {t("footer.order_history")}
                 </Link>
               </li>
               <li className="flex items-center gap-2">
-                <FaHeart className="text-purple-400" />
-                <Link to="/u-favorite" className="hover:text-purple-400">
+                <HeartIcon className="text-red-400 w-4" />
+                <Link to="/u-favorite" className="hover:text-red-400">
                   {t("footer.favorite_list")}
                 </Link>
               </li>
               <li className="flex items-center gap-2">
-                <FaStore className="text-purple-400" />
-                <Link to="/admin" className="hover:text-purple-400">
+                <StoreIcon className="text-red-400 text-base" />
+                <Link to="/admin" className="hover:text-red-400 ">
                   {t("footer.be_seller")}
                 </Link>
               </li>
               <li className="flex items-center gap-2">
-                <FaSignOutAlt className="text-purple-400" />
+                <LogoutIcon className="text-red-400 w-4" />
                 <button
                   onClick={() => {
                     handleLogout("end_user", navigate, lang);
@@ -219,9 +256,9 @@ export default function Footer() {
               <li>
                 <Link
                   to="/admin"
-                  className="text-purple-500 flex items-center gap-2 hover:underline"
+                  className="text-red-500 flex items-center gap-2 hover:underline"
                 >
-                  <FaRocket className="text-purple-400" />
+                  <RocketIcon className="text-red-400 text-lg" />
                   {t("footer.join_seller_portal")}
                 </Link>
               </li>

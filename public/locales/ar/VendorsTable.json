@@ -58,7 +58,8 @@
       "noChangeMessage": "لم يتم إجراء أي تغيير",
       "errorResponse": "تعذر تحديث الحالة",
       "confirmButtonText": "تأكيد",
-      "cancelButtonText": "إلغاء"
+      "cancelButtonText": "إلغاء",
+      "documentNotApproved": "لا يمكن تغيير الحالة للبائعين قبل تغيير حالة المستندات"
     },
     "table": {
       "loadingText": "جاري تحميل بيانات البائعون"

@@ -34,6 +34,7 @@
     "price": "Price",
     "quantity": "Quantity",
     "created_at": "Created At",
-    "updated_at": "Last Updated"
+    "updated_at": "Last Updated",
+    "subtotal": "Subtotal"
   }
 }

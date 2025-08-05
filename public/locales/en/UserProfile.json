@@ -11,7 +11,10 @@
     "phone": "Phone",
     "update": "Edit",
     "loading": "Loading user details...",
-    "errorFetch": "Failed to fetch user details."
+    "errorFetch": "Failed to fetch user details.",
+    "noData": "No user details available.",
+    "general_error": "Something went wrong. Please try again later.",
+    "global_error": "You are not authorized to perform this action."
   },
   "validation": {
     "first_name_required": "First name is required.",
@@ -29,8 +32,10 @@
     "avatar": "Avatar",
     "password": "Password",
     "save": "Save Changes",
+    "saving": "Saving changes...",
     "close": "Close",
     "successUpdate": "Profile updated successfully.",
     "errorUpdate": "Failed to update profile."
-  }
+  },
+  "no_internet": "No internet connection. Please check your connection and try again."
 }

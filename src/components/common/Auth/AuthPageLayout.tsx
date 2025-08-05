@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use } from "react";
 import GridShape from "./GridShape";
 import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
@@ -50,14 +50,9 @@ export default function AuthLayout({
           <div className="lg:hidden flex flex-col justify-center lg:flex-row lg:items-center mt-8">
             <Link to={linkTo} className="flex justify-center mb-4">
               <img
-                className="h-[76px] w-[200px] mb-3 drop-shadow-lg dark:hidden"
-                src="/images/logo/light-logo.webp"
-                alt="Tashtiba logo "
-              />
-              <img
-                className="h-[76px] w-[200px] mb-3 drop-shadow-lg hidden dark:block"
-                src="/images/logo/dark-logo.webp"
-                alt="Tashtiba logo "
+                className="h-[76px] w-[200px] mb-3 drop-shadow-lg"
+                src={`/images/logo/${lang}-light-logo.webp`}
+                alt="Tashtiba logo"
               />
             </Link>
             <p className="text-center text-gray-400 dark:text-white/60">
@@ -75,7 +70,7 @@ export default function AuthLayout({
               <Link to={linkTo} className="block mb-4">
                 <img
                   className="h-[76px] w-[200px] mb-3 drop-shadow-lg"
-                  src="/images/logo/dark-logo.webp"
+                  src={`/images/logo/${lang}-dark-logo.webp`}
                   alt="Tashtiba logo"
                 />
               </Link>
@@ -87,13 +82,15 @@ export default function AuthLayout({
           </div>
         </div>
       </div>
-      <div
-        className={`fixed z-50 hidden bottom-6 sm:block ${
-          isRTL ? "left-6" : "right-6"
-        }`}
-      >
-        <ThemeTogglerTwo />
-      </div>
+      {userType !== "end_user" && (
+        <div
+          className={`fixed z-50 bottom-6 sm:block ${
+            isRTL ? "left-6" : "right-6"
+          }`}
+        >
+          <ThemeTogglerTwo />
+        </div>
+      )}
     </div>
   );
 }

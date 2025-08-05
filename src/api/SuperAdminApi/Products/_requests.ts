@@ -1,4 +1,3 @@
-import axiosForm from "../../axiosInstanceFormData";
 import SuperAdminAxiosInstanceJson from "../../superAdminAxiosInstanceJson";
 export const getProductsWithPaginate = async (params: {
   page?: number;

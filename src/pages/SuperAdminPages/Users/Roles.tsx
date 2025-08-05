@@ -4,10 +4,9 @@ import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; 
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
-import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal"; // هذا الاستيراد غير مستخدم في هذه الصفحة، لذا سيبقى كما هو
 import { useTranslation } from "react-i18next";
 import {
   useDeleteRole,
@@ -15,8 +14,7 @@ import {
 } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
 import { AxiosError } from "axios";
 import { SearchValues } from "../../../types/Roles";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo"; 
 
 const Roles = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -113,7 +111,7 @@ const Roles = () => {
           message={alertData.message}
         />
       )}
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO 
         title={{
           ar: "تشطيبة - إدارة الصلاحيات (سوبر أدمن)",
           en: "Tashtiba - Role Management (Super Admin)",
@@ -140,6 +138,7 @@ const Roles = () => {
             "site management",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb pageTitle={t("rolesPage.title")} userType="super_admin" />
       <div>

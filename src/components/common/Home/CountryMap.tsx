@@ -1,11 +1,7 @@
 // react plugin for creating vector maps
 import { VectorMap } from "@react-jvectormap/core";
 import { worldMill } from "@react-jvectormap/world";
-import { CountryMapProps } from "../../types/DashboardHome";
-
-// Define the component props
-
-
+import { CountryMapProps } from "../../../types/DashboardHome";
 const CountryMap: React.FC<CountryMapProps> = ({ mapColor }) => {
   return (
     <VectorMap
@@ -13,42 +9,42 @@ const CountryMap: React.FC<CountryMapProps> = ({ mapColor }) => {
       backgroundColor="transparent"
       markerStyle={{
         initial: {
-          fill: "#465FFF",
-          r: 4, // Custom radius for markers
-        } as any, // Type assertion to bypass strict CSS property checks
+          fill: "#d62828",
+          r: 4,
+        } as any,
       }}
       markersSelectable={true}
       markers={[
         {
-          latLng: [37.2580397, -104.657039],
-          name: "United States",
+          latLng: [26.8206, 30.8025], 
+          name: "Egypt",
           style: {
-            fill: "#465FFF",
+            fill: "#d62828",
             borderWidth: 1,
             borderColor: "white",
             stroke: "#383f47",
           },
         },
-        {
-          latLng: [20.7504374, 73.7276105],
-          name: "India",
-          style: { fill: "#465FFF", borderWidth: 1, borderColor: "white" },
-        },
-        {
-          latLng: [53.613, -11.6368],
-          name: "United Kingdom",
-          style: { fill: "#465FFF", borderWidth: 1, borderColor: "white" },
-        },
-        {
-          latLng: [-25.0304388, 115.2092761],
-          name: "Sweden",
-          style: {
-            fill: "#465FFF",
-            borderWidth: 1,
-            borderColor: "white",
-            strokeOpacity: 0,
-          },
-        },
+        // {
+        //   latLng: [20.7504374, 73.7276105],
+        //   name: "India",
+        //   style: { fill: "#d62828", borderWidth: 1, borderColor: "white" },
+        // },
+        // {
+        //   latLng: [53.613, -11.6368],
+        //   name: "United Kingdom",
+        //   style: { fill: "#d62828", borderWidth: 1, borderColor: "white" },
+        // },
+        // {
+        //   latLng: [-25.0304388, 115.2092761],
+        //   name: "Sweden",
+        //   style: {
+        //     fill: "#d62828",
+        //     borderWidth: 1,
+        //     borderColor: "white",
+        //     strokeOpacity: 0,
+        //   },
+        // },
       ]}
       zoomOnScroll={false}
       zoomMax={12}
@@ -67,11 +63,11 @@ const CountryMap: React.FC<CountryMapProps> = ({ mapColor }) => {
         hover: {
           fillOpacity: 0.7,
           cursor: "pointer",
-          fill: "#465fff",
+          fill: "#d62828",
           stroke: "none",
         },
         selected: {
-          fill: "#465FFF",
+          fill: "#d62828",
         },
         selectedHover: {},
       }}

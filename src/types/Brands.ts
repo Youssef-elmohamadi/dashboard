@@ -15,6 +15,7 @@ export type BrandFilters = {
 export type BrandClientSideErrors = {
   name: string;
   status: string;
+  image: string;
 };
 
 export type BrandApiError = {

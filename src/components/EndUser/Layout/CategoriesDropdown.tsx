@@ -1,8 +1,8 @@
-import React, { useState, useRef, Suspense, lazy } from "react"; // استيراد Suspense و lazy
-import { IoIosArrowDown } from "react-icons/io";
+import React, { useState, useRef, Suspense, lazy } from "react"; 
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import useClickOutside from "../context/useClickOutside";
+import ArrowDown from "../../../icons/ArrowDown";
 
 const LazyCategoriesDropdownContent = lazy(
   () => import("./CategoriesDropdownContent")
@@ -16,7 +16,7 @@ const CategoriesDropdown: React.FC<CategoriesDropdownProps> = ({ dir }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation(["EndUserNavBar"]);
-  const { lang } = useDirectionAndLanguage(); // Keep lang here as it's passed to LazyCategoriesDropdownContent
+  const { lang } = useDirectionAndLanguage(); 
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -38,8 +38,8 @@ const CategoriesDropdown: React.FC<CategoriesDropdownProps> = ({ dir }) => {
         className="flex items-center gap-2 text-white font-semibold py-4"
       >
         {t("navbar.categories")}
-        <IoIosArrowDown
-          className={`transition-transform duration-300 ${
+        <ArrowDown
+          className={`w-4 transition-transform duration-300 ${
             isDropdownOpen ? "rotate-180" : ""
           }`}
         />

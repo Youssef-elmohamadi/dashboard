@@ -16,8 +16,9 @@ import {
   ServerErrors,
 } from "../../../types/Categories";
 import { AxiosError } from "axios";
-// import PageMeta from "../../common/SEO/PageMeta"; // Removed PageMeta import
-import SEO from "../../common/SEO/seo"; // Ensured SEO component is imported
+import SEO from "../../common/SEO/seo";
+import useCheckOnline from "../../../hooks/useCheckOnline";
+import { toast } from "react-toastify";
 
 export default function CreateCategory() {
   const { t } = useTranslation(["CreateCategory", "Meta"]);
@@ -27,8 +28,8 @@ export default function CreateCategory() {
     commission_rate: "",
     parent_id: "",
     image: null as File | null,
-    status: "active", // or a default value like "active" if required
-    appears_in_website: false, // or true, depending on your default
+    status: "active",
+    appears_in_website: false,
   });
 
   const [errorFetchingCategories, setErrorFetchingCategories] = useState("");
@@ -108,7 +109,7 @@ export default function CreateCategory() {
   };
 
   const { mutateAsync: createCategory } = useCreateCategory();
-
+  const isCurrentlyOnline = useCheckOnline();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({
@@ -122,8 +123,11 @@ export default function CreateCategory() {
       global: "",
       general: "",
     });
+    if (!isCurrentlyOnline()) {
+      toast.error(t("category.errors.no_internet"));
+      return;
+    }
     if (!validate()) return;
-
     const formData = new FormData();
     formData.append("name", categoryData.name);
     formData.append("description", categoryData.description);
@@ -172,7 +176,7 @@ export default function CreateCategory() {
 
   return (
     <div>
-      <SEO // PageMeta replaced with SEO, and data directly set
+      <SEO
         title={{
           ar: "تشطيبة - إنشاء فئة جديدة (سوبر أدمن)",
           en: "Tashtiba - Create New Category (Super Admin)",
@@ -201,6 +205,7 @@ export default function CreateCategory() {
             "Tashtiba",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <div className="p-4 border-b border-gray-200 dark:border-gray-600">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">

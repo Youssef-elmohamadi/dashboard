@@ -16,8 +16,8 @@ const LandingSection = () => {
   const buttonClass =
     "px-6 py-3 rounded-full shadow-md transition duration-300 text-sm md:text-base";
 
-  const primaryBtn = "bg-[#8e2de2] hover:bg-[#7a1ccf] text-white";
-  const secondaryBtn = "bg-white text-[#8e2de2] hover:bg-gray-100";
+  const primaryBtn = "end-user-bg-base hover:bg-[#7a1ccf] text-white";
+  const secondaryBtn = "bg-white end-user-text-base hover:bg-gray-100";
 
   const loggedInButtons = [
     {
@@ -58,23 +58,23 @@ const LandingSection = () => {
   };
 
   return (
-    <section className="relative h-[550px] flex items-center justify-center text-white bg-black overflow-hidden">
+    <section className="relative h-[560px] flex items-center justify-center text-white bg-black overflow-hidden">
       <div className="absolute inset-0">
         <img
-          src="/images/landing.webp"
+          src="/images/landing/desktop-landing.webp"
           srcSet="
-      /images/landing-mobile.webp 600w,
-      /images/landing.webp 1200w
+      /images/landing/mobile-landing.webp 400w,
+      /images/landing/desktop-landing.webp 1200w
     "
           sizes="(max-width: 768px) 100vw, 100vw"
-          width={1920}
-          height={1080}
+          width={1620}
+          height={560}
           alt={backgroundAlt}
           className="w-full h-full object-cover"
           fetchPriority="high"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-purple-800/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#11111199] to-[#111111]" />
       </div>
 
       <motion.div
@@ -83,12 +83,21 @@ const LandingSection = () => {
         transition={{ duration: 1 }}
         className="relative text-center px-6 max-w-2xl"
       >
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-snug">
-          {t("landingSection.welcome.title")}
-          <span className="text-[#8e2de2]">
+        <div className="flex flex-col md:flex-row justify-center items-center mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-snug">
+            {t("landingSection.welcome.title")}
+            {/* <span className="text-[#8e2de2]">
             {t("landingSection.welcome.subTitle")}
+            </span> */}
+          </h1>
+          <span className="">
+            <img
+              src={`/images/logo/${lang}-dark-logo.webp`}
+              alt={t("landingSection.welcome.title")}
+              className={`${lang === "en" ? "w-40 md:w-50 h-8  md:h-10 ml-2 mb-3" : "w-40 md:w-50 h-8  md:h-10 mr-2"}`}
+            />
           </span>
-        </h1>
+        </div>
         <p className="text-lg md:text-xl text-gray-200 mb-8">
           {t("landingSection.welcome.description")}
         </p>

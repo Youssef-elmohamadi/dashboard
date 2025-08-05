@@ -1,7 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap")
 layer(base);
 @import "tailwindcss";
-/* @import "tw-animate-css"; */
 
 @custom-variant dark (&:is(.dark *));
 
@@ -41,18 +40,18 @@ layer(base);
   --color-white: #ffffff;
   --color-black: #101828;
 
-  --color-brand-25: #f2f7ff;
-  --color-brand-50: #ecf3ff;
-  --color-brand-100: #dde9ff;
-  --color-brand-200: #c2d6ff;
-  --color-brand-300: #9cb9ff;
-  --color-brand-400: #7592ff;
-  --color-brand-500: #465fff;
-  --color-brand-600: #3641f5;
-  --color-brand-700: #2a31d8;
-  --color-brand-800: #252dae;
-  --color-brand-900: #262e89;
-  --color-brand-950: #161950;
+  --color-brand-25: #fdf2f2;
+  --color-brand-50: #fde8e8;
+  --color-brand-100: #fbd5d5;
+  --color-brand-200: #f8b4b4;
+  --color-brand-300: #f98080;
+  --color-brand-400: #f05252;
+  --color-brand-500: #d62828; /* اللون الأساسي */
+  --color-brand-600: #b91c1c;
+  --color-brand-700: #991b1b;
+  --color-brand-800: #7f1d1d;
+  --color-brand-900: #661010;
+  --color-brand-950: #3f0707;
 
   --color-blue-light-25: #f5fbff;
   --color-blue-light-50: #f0f9ff;
@@ -164,6 +163,7 @@ layer(base);
   --z-index-99999: 99999;
   --z-index-999999: 999999;
 }
+
 @layer base {
   *,
   ::after,
@@ -341,88 +341,10 @@ layer(base);
   @apply opacity-100;
 }
 
-.enduser_container {
-  width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-@media (max-width: 575.98px) {
-  .enduser_container {
-    max-width: 100%;
-  }
-}
-
-@media (min-width: 576px) {
-  .enduser_container {
-    max-width: 540px;
-  }
-}
-
-@media (min-width: 768px) {
-  .enduser_container {
-    max-width: 720px;
-  }
-}
-
-@media (min-width: 992px) {
-  .enduser_container {
-    max-width: 960px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .enduser_container {
-    max-width: 1140px;
-  }
-}
-
-@media (min-width: 1400px) {
-  .enduser_container {
-    max-width: 1320px;
-  }
-}
-
-.scroll-bar-hide {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.scroll-bar-hide::-webkit-scrollbar {
-  display: none;
-}
 .custom-toast-container {
   z-index: 99999999 !important;
   position: fixed !important;
   top: 1rem;
   left: 50%;
   transform: translateX(-50%);
-}
-.bg-success {
-  background-color: #85b567;
-}
-.bg-warning {
-  background-color: #f3af3d;
-}
-.bg-primary {
-  background-color: #8826bd;
-}
-.bg-gray-dark {
-  background-color: #8d8d8d;
-}
-
-/* Text Colors */
-.text-success {
-  color: #85b567;
-}
-.text-secondary {
-  color: #919199;
-}
-
-.text-primary {
-  color: #8826bd;
-}
-.text-soft-light {
-  color: #dfdfe6;
 }

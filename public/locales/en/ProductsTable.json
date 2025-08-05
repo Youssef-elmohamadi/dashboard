@@ -4,9 +4,11 @@
     "addNew": "Add New Product",
     "all": "All Products",
     "mainTitle": "Tashtiba | Manage Products",
-    "createdSuccess": "Created Successfully",
-    "updatedSuccess": "Updated Successfully",
-    
+    "createdSuccessTitle": "Created Successfully",
+    "createdSuccessMessage": "Product Created Successfully",
+    "updatedSuccessTitle": "Updated Successfully",
+    "updatedSuccessMessage": "Product Updated Successfully",
+
     "delete": {
       "confirmTitle": "Delete Product?",
       "confirmText": "This action cannot be undone!",

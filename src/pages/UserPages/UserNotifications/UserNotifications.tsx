@@ -25,8 +25,8 @@ const UserNotifications: React.FC = () => {
   const { lang } = useParams();
   const { t } = useTranslation("EndUserNotifications");
 
-  const primaryColor = "#9810fa";
-  const secondaryColor = "#542475";
+  const primaryColor = "#d62828";
+  const secondaryColor = "#d62828";
 
   useEffect(() => {
     const token = localStorage.getItem("end_user_token");
@@ -154,6 +154,7 @@ const UserNotifications: React.FC = () => {
             href: "https://tashtiba.com/en/notifications",
           },
         ]}
+        robotsTag="noindex, nofollow"
       />
 
       <div className="bg-white rounded-2xl overflow-hidden">
@@ -162,10 +163,10 @@ const UserNotifications: React.FC = () => {
             className="text-3xl font-bold flex items-center gap-3"
             style={{ color: secondaryColor }}
           >
-            <HiOutlineBellAlert className="h-8 w-8" />
+            <HiOutlineBellAlert className="md:h-8 md:w-8 w-6 h-6" />
             {t("pageTitle", { defaultValue: "إشعاراتي" })}
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-black">
             {t("pageSubtitle", {
               defaultValue:
                 "هنا يمكنك مراجعة جميع التنبيهات والتحديثات الهامة.",

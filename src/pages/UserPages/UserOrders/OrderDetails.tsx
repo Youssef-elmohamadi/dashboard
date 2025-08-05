@@ -8,12 +8,10 @@ import { useTranslation } from "react-i18next";
 import { useGetOrderById } from "../../../hooks/Api/EndUser/useOrders/useOrders";
 import { AxiosError } from "axios";
 import { Order } from "../../../types/Orders";
-import SEO from "../../../components/common/SEO/seo"; // Import your custom SEO component
-import { HiOutlineShoppingCart } from "react-icons/hi2"; // Icons for order details
-import { Circles } from "react-loader-spinner"; // For loaders
+import SEO from "../../../components/common/SEO/seo"; 
+import { HiOutlineShoppingCart } from "react-icons/hi2";
+import { Circles } from "react-loader-spinner"; 
 import { useReviewProduct } from "../../../hooks/Api/EndUser/useProducts/useProducts";
-
-// Helper function to get status color
 const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
     case "pending":
@@ -31,14 +29,14 @@ const getStatusColor = (status: string) => {
 
 const OrderDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { lang } = useParams(); // Get language from params for alternates
+  const { lang } = useParams();
   const { t } = useTranslation(["EndUserOrderHistory"]);
   const [globalError, setGlobalError] = useState(false);
   const navigate = useNavigate();
 
-  // Brand colors from your other components
-  const primaryColor = "#9810fa"; // Lighter purple for accents/active states
-  const secondaryColor = "#542475"; // Deeper purple for text/main elements
+
+  const primaryColor = "#d02828";
+  const secondaryColor = "#d62828"; 
 
   useEffect(() => {
     const token = localStorage.getItem("end_user_token");
@@ -60,7 +58,7 @@ const OrderDetailsPage: React.FC = () => {
       }
     }
   }, [isError, error]);
- const {mutateAsync: reviewProduct} = useReviewProduct();
+  const { mutateAsync: reviewProduct } = useReviewProduct();
   const handleRateProduct = async (productId: number) => {
     const result = await showReviewPopup(
       productId,
@@ -85,7 +83,6 @@ const OrderDetailsPage: React.FC = () => {
     }
   };
 
-  // SEO title depends on whether order data is loaded
   const seoTitle = order
     ? lang === "ar"
       ? `تشطيبة - تفاصيل الطلب رقم ${order.id}`
@@ -147,6 +144,7 @@ const OrderDetailsPage: React.FC = () => {
             href: `https://tashtiba.com/en/orders/${id}`,
           },
         ]}
+        robotsTag="noindex, nofollow"
       />
 
       <div className="bg-white rounded-2xl overflow-hidden">

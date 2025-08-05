@@ -22,7 +22,8 @@
       "parent": "Parent category is invalid",
       "global": "You are not authorized to perform this action.",
       "general": "Something went wrong. Please try again later.",
-      "fetching_categories": "Failed to fetch categories. Please try again later."
+      "fetching_categories": "Failed to fetch categories. Please try again later.",
+      "no_internet": "No internet connection. Please check your connection and try again."
     },
     "success": "Category Created Successfully"
   }

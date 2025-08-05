@@ -2,7 +2,7 @@ import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; // مكان الملف
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
 import { useTranslation } from "react-i18next";
@@ -16,8 +16,7 @@ import { AxiosError } from "axios";
 import { SearchValues } from "../../../types/Product";
 import { Category } from "../../../types/Categories";
 import { Brand } from "../../../types/Brands";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo";
 
 const Products = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -99,13 +98,13 @@ const Products = () => {
 
   const columns = buildColumns({
     includeDateOfCreation: true,
-    includeImagesAndNameCell: true,
+    productsIncludeImagesAndNameCell: true,
     includeStatus: true,
     includeActions: true,
   });
   return (
     <>
-      <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
+      <SEO
         title={{
           ar: "تشطيبة - إدارة المنتجات (سوبر أدمن)",
           en: "Tashtiba - Product Management (Super Admin)",
@@ -132,6 +131,7 @@ const Products = () => {
             "inventory",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb
         pageTitle={t("productsPage.title")}
@@ -140,10 +140,10 @@ const Products = () => {
       <div>
         <SearchTable
           fields={[
-            { key: "name", label: "Name", type: "input" }, // تم الإبقاء عليها كما هي حسب التعليمات
+            { key: "name", label: "Name", type: "input" },
             {
               key: "category_id",
-              label: "Category", // تم الإبقاء عليها كما هي حسب التعليمات
+              label: "Category",
               type: "select",
               options: categories?.map((category: Category) => ({
                 label: category.name,
@@ -152,7 +152,7 @@ const Products = () => {
             },
             {
               key: "brand_id",
-              label: "Brand", // تم الإبقاء عليها كما هي حسب التعليمات
+              label: "Brand",
               type: "select",
               options: brands?.map((brand: Brand) => ({
                 label: brand.name,
@@ -161,7 +161,7 @@ const Products = () => {
             },
             {
               key: "status",
-              label: "Status", // تم الإبقاء عليها كما هي حسب التعليمات
+              label: "Status",
               type: "select",
               options: [
                 { label: t("productsPage.status.active"), value: "active" },

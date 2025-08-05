@@ -8,10 +8,14 @@ import {
   useUpdateVendor,
   useVendorData,
 } from "../../../hooks/Api/Admin/useVendor/useVendor";
-import PageMeta from "../../../components/common/SEO/PageMeta";
 import VendorEditSkeleton from "../../../components/admin/vendorSettings/VendorSettingsSkeleton";
 import { Document, Vendor } from "../../../types/Vendor";
 import { AxiosError } from "axios";
+import useCheckOnline from "../../../hooks/useCheckOnline";
+import PageStatusHandler, {
+  PageStatus,
+} from "../../../components/common/PageStatusHandler/PageStatusHandler";
+import PageMeta from "../../../components/common/SEO/PageMeta";
 
 const VendorEditPage: React.FC = () => {
   const documentTypeMap: Record<number, string> = {
@@ -19,8 +23,6 @@ const VendorEditPage: React.FC = () => {
     2: "validation.tax_record",
   };
 
-  const [unauthorized, setUnauthorized] = useState<string>("");
-  const [generalError, setGeneralError] = useState<string>("");
   const initialVendorData: Vendor = {
     id: 0,
     name: "",
@@ -33,16 +35,33 @@ const VendorEditPage: React.FC = () => {
     updated_at: "",
     documents: [],
   };
-  const { t } = useTranslation(["UpdateVendor"]);
+
+  const { t } = useTranslation(["UpdateVendor", "Meta"]);
   const [vendor, setVendor] = useState<Vendor>(initialVendorData);
   const [updatedDocs, setUpdatedDocs] = useState<Record<number, File | null>>(
     {}
   );
-
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string[]>
   >({});
   const [clientErrors, setClientErrors] = useState<Record<string, string>>({});
+
+  const {
+    data: vendorResponse,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useVendorData();
+  const vendorData = vendorResponse?.data.data;
+  const { mutateAsync: updateVendor } = useUpdateVendor();
+  const isCurrentOnline = useCheckOnline();
+
+  useEffect(() => {
+    if (vendorData) {
+      setVendor(vendorData);
+    }
+  }, [vendorData]);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -63,27 +82,14 @@ const VendorEditPage: React.FC = () => {
     setUpdatedDocs((prev) => ({ ...prev, [docId]: file }));
   };
 
-  const { data, isLoading, isError, error } = useVendorData();
-  const vendorData = data?.data.data;
-  useEffect(() => {
-    if (vendorData) {
-      setVendor(vendorData);
-    }
-  }, [vendorData]);
-  useEffect(() => {
-    if (isError && error) {
-      const err = error as any;
-      if (err?.response?.status === 401) {
-        setUnauthorized(t("unauthorized"));
-      } else {
-        setGeneralError(t("somethingWentWrong"));
-      }
-    }
-  }, [isError, error, t]);
-  const { mutateAsync: updateVendor } = useUpdateVendor();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
+
+    if (!isCurrentOnline()) {
+      toast.error(t("vendor.no_internet"));
+      return;
+    }
 
     const formData = new FormData();
     formData.append("vendorInfo[email]", vendor.email);
@@ -103,14 +109,15 @@ const VendorEditPage: React.FC = () => {
         index++;
       }
     });
+
     try {
       await updateVendor(formData);
       toast.success(t("vendor.successUpdate"));
       setValidationErrors({});
     } catch (error) {
       console.error(error);
-
       toast.error(t("vendor.errorUpdate"));
+
       const axiosError = error as AxiosError<any>;
       const rawErrors = axiosError?.response?.data?.errors;
       if (Array.isArray(rawErrors)) {
@@ -128,214 +135,224 @@ const VendorEditPage: React.FC = () => {
     }
   };
 
-  if (isLoading) {
-    return (
-      <>
-        <PageMeta
-          title={t("Meta:vendorSettings.title")}
-          description={t("Meta:vendorSettings.description")}
-        />
-        <VendorEditSkeleton />
-      </>
-    );
-  }
+  const getPageStatus = () => {
+    if (isLoading) return PageStatus.LOADING;
+    if (isError) return PageStatus.ERROR;
+    if (!vendorData) return PageStatus.NOT_FOUND;
+    return PageStatus.SUCCESS;
+  };
 
-  if (unauthorized) {
-    return (
-      <>
-      <PageMeta
-        title={t("Meta:vendorSettings.title")}
-        description={t("Meta:vendorSettings.description")}
-      />
-        <p className="text-center text-red-500 mt-5">{unauthorized}</p>
-      </>
-    );
-  }
+  const getErrorMessage = (): string | undefined => {
+    if (isError) {
+      const status = (error as AxiosError)?.response?.status;
+      if (status === 401) {
+        return t("unauthorized");
+      }
+      return t("somethingWentWrong");
+    }
+    return undefined;
+  };
 
-  if (generalError) {
-    return (
-      <>
-      <PageMeta
-        title={t("Meta:vendorSettings.title")}
-        description={t("Meta:vendorSettings.description")}
-      />
-        <p className="text-center text-red-500 mt-5">{generalError}</p>
-      </>
-    );
-  }
+  const handleRetry = () => {
+    refetch();
+  };
+
+  const pageStatus = getPageStatus();
+  const errorMessage = getErrorMessage();
 
   return (
-    <div>
-      {/* <PageMeta
+    <>
+      <PageMeta
         title={t("Meta:vendorSettings.title")}
         description={t("Meta:vendorSettings.description")}
-      /> */}
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md space-y-8"
+      />
+
+      <PageStatusHandler
+        status={pageStatus}
+        LoadingComponent={VendorEditSkeleton}
+        errorMessage={errorMessage}
+        onRetry={handleRetry}
       >
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
-            {t("vendor.edit_title")}
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md space-y-8"
+          >
             <div>
-              <Label>{t("vendor.name")}</Label>
-              <Input
-                type="text"
-                value={vendor?.name}
-                onChange={(e) => handleVendorChange("name", e.target.value)}
-              />
-              {clientErrors.name && (
-                <p className="text-red-600 text-sm mt-1">{clientErrors.name}</p>
-              )}
-              {validationErrors.name && (
-                <p className="text-red-600 text-sm mt-1">
-                  {validationErrors.name[0]}
-                </p>
-              )}
-            </div>
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+                {t("vendor.edit_title")}
+              </h2>
 
-            <div>
-              <Label>{t("vendor.email")}</Label>
-              <Input
-                type="email"
-                value={vendor?.email}
-                onChange={(e) => handleVendorChange("email", e.target.value)}
-              />
-              {clientErrors.email && (
-                <p className="text-red-600 text-sm mt-1">
-                  {clientErrors.email}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <Label>{t("vendor.phone")}</Label>
-              <Input
-                type="text"
-                value={vendor?.phone}
-                onChange={(e) => handleVendorChange("phone", e.target.value)}
-              />
-              {clientErrors.phone && (
-                <p className="text-red-600 text-sm mt-1">
-                  {clientErrors.phone}
-                </p>
-              )}
-              {validationErrors.phone && (
-                <p className="text-red-600 text-sm mt-1">
-                  {validationErrors.phone[0]}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <Label>{t("vendor.description")}</Label>
-              <TextArea
-                value={vendor?.description || ""}
-                onChange={(value) => handleVendorChange("description", value)}
-              />
-              {clientErrors.description && (
-                <p className="text-red-600 text-sm mt-1">
-                  {clientErrors.description}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <hr className="border-gray-300 dark:border-gray-700" />
-
-        <div>
-          <h3 className="text-xl font-semibold mb-4 dark:text-white">
-            {t("vendor.documents_title")}
-          </h3>
-          <div className="grid gap-6">
-            {vendor?.documents?.map((doc: Document) => (
-              <div
-                key={doc.id}
-                className="border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200"
-              >
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="flex-1">
-                    <p className="text-lg font-medium dark:text-white mb-1">
-                      {t(
-                        documentTypeMap[doc.document_type] ||
-                          `vendor.document_${doc.document_type}`
-                      )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label>{t("vendor.name")}</Label>
+                  <Input
+                    type="text"
+                    value={vendor?.name}
+                    onChange={(e) => handleVendorChange("name", e.target.value)}
+                  />
+                  {clientErrors.name && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {clientErrors.name}
                     </p>
-                    <p
-                      className={`text-sm font-medium ${
-                        doc.status === "approved"
-                          ? "text-green-600"
-                          : doc.status === "pending"
-                          ? "text-yellow-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {t(`vendor.status_${doc.status}`)}
+                  )}
+                  {validationErrors.name && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {validationErrors.name[0]}
                     </p>
+                  )}
+                </div>
 
-                    {doc.status !== "approved" && doc.status !== "pending" && (
-                      <div className="mt-3">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) =>
-                            handleFileChange(
-                              doc.id,
-                              e.target.files ? e.target.files[0] : null
-                            )
-                          }
-                          className="block w-full text-sm text-gray-700 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
-                        />
-                        {updatedDocs[doc.id] && (
-                          <div className="mt-3">
-                            <p className="text-sm text-gray-600 dark:text-gray-300">
-                              {t("vendor.selected_file")}:{" "}
-                              {updatedDocs[doc.id]?.name}
-                            </p>
-                            <img
-                              src={URL.createObjectURL(updatedDocs[doc.id]!)}
-                              alt="preview"
-                              className="mt-2 w-full max-w-xs rounded-lg border border-gray-200 dark:border-gray-600"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    )}
+                <div>
+                  <Label>{t("vendor.email")}</Label>
+                  <Input
+                    type="email"
+                    value={vendor?.email}
+                    onChange={(e) =>
+                      handleVendorChange("email", e.target.value)
+                    }
+                  />
+                  {clientErrors.email && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {clientErrors.email}
+                    </p>
+                  )}
+                </div>
 
-                    {doc.status === "approved" && (
-                      <p className="mt-2 text-sm text-gray-500">
-                        {t("vendor.cannot_edit_approved")}
-                      </p>
-                    )}
-                  </div>
+                <div>
+                  <Label>{t("vendor.phone")}</Label>
+                  <Input
+                    type="text"
+                    value={vendor?.phone}
+                    onChange={(e) =>
+                      handleVendorChange("phone", e.target.value)
+                    }
+                  />
+                  {clientErrors.phone && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {clientErrors.phone}
+                    </p>
+                  )}
+                  {validationErrors.phone && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {validationErrors.phone[0]}
+                    </p>
+                  )}
+                </div>
 
-                  <div className="w-full md:w-64">
-                    <img
-                      src={doc.document_name}
-                      alt="document"
-                      className="rounded-lg border border-gray-200 dark:border-gray-600 object-contain max-h-64 w-full"
-                    />
-                  </div>
+                <div>
+                  <Label>{t("vendor.description")}</Label>
+                  <TextArea
+                    value={vendor?.description || ""}
+                    onChange={(value) =>
+                      handleVendorChange("description", value)
+                    }
+                  />
+                  {clientErrors.description && (
+                    <p className="text-red-600 text-sm mt-1">
+                      {clientErrors.description}
+                    </p>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        <div className="flex justify-end mt-6">
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-          >
-            {t("vendor.save_changes")}
-          </button>
+            <hr className="border-gray-300 dark:border-gray-700" />
+
+            <div>
+              <h3 className="text-xl font-semibold mb-4 dark:text-white">
+                {t("vendor.documents_title")}
+              </h3>
+              <div className="grid gap-6">
+                {vendor?.documents?.map((doc: Document) => (
+                  <div
+                    key={doc.id}
+                    className="border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200"
+                  >
+                    <div className="flex flex-col md:flex-row gap-4">
+                      <div className="flex-1">
+                        <p className="text-lg font-medium dark:text-white mb-1">
+                          {t(
+                            documentTypeMap[doc.document_type] ||
+                              `vendor.document_${doc.document_type}`
+                          )}
+                        </p>
+                        <p
+                          className={`text-sm font-medium ${
+                            doc.status === "approved"
+                              ? "text-green-600"
+                              : doc.status === "pending"
+                              ? "text-yellow-600"
+                              : "text-red-600"
+                          }`}
+                        >
+                          {t(`vendor.status_${doc.status}`)}
+                        </p>
+
+                        {doc.status !== "approved" &&
+                          doc.status !== "pending" && (
+                            <div className="mt-3">
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) =>
+                                  handleFileChange(
+                                    doc.id,
+                                    e.target.files ? e.target.files[0] : null
+                                  )
+                                }
+                                className="block w-full text-sm text-gray-700 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+                              />
+                              {updatedDocs[doc.id] && (
+                                <div className="mt-3">
+                                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                                    {t("vendor.selected_file")}:{" "}
+                                    {updatedDocs[doc.id]?.name}
+                                  </p>
+                                  <img
+                                    src={URL.createObjectURL(
+                                      updatedDocs[doc.id]!
+                                    )}
+                                    alt="preview"
+                                    className="mt-2 w-full max-w-xs rounded-lg border border-gray-200 dark:border-gray-600"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                        {doc.status === "approved" && (
+                          <p className="mt-2 text-sm text-gray-500">
+                            {t("vendor.cannot_edit_approved")}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="w-full md:w-64">
+                        <img
+                          src={doc.document_name}
+                          alt="document"
+                          className="rounded-lg border border-gray-200 dark:border-gray-600 object-contain max-h-64 w-full"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex justify-end mt-6">
+              <button
+                type="submit"
+                className="bg-brand-500 hover:bg-brand-600 text-white px-6 py-3 rounded-lg font-medium transition"
+              >
+                {t("vendor.save_changes")}
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
+      </PageStatusHandler>
+    </>
   );
 };
 

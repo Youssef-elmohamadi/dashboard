@@ -46,7 +46,10 @@
     "general": "Something went wrong. Please try again.",
     "global": "You are not authorized to perform this action.",
     "fetching_categories": "Failed to fetch categories. Please try again later.",
-    "fetching_brands": "Failed to fetch brands. Please try again later."
+    "fetching_brands": "Failed to fetch brands. Please try again later.",
+    "fetching_attributes": "Failed to fetch attributes. Please try again later.",
+    "fetching_tags": "Failed to fetch tags. Please try again later.",
+    "no_internet": "No internet connection. Please check your connection and try again."
   },
   "success_create": "Product Created Successfully",
   "success_update": "Product Updated Successfully",

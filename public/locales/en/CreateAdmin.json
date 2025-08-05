@@ -34,7 +34,8 @@
       "role": "The Role is Required",
       "global": "You don't have permission to perform this action.",
       "general": "Something went wrong.",
-      "fetching_roles": "something went wrong while fetching roles."
+      "fetching_roles": "something went wrong while fetching roles.",
+      "no_internet": "No internet connection. Please check your connection and try again."
     },
     "success_message": "Admin Created Successfully"
   }

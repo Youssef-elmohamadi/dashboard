@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import StarRatings from "react-star-ratings";
-import { MdOutlineStarBorder } from "react-icons/md";
-import { TbStarHalfFilled } from "react-icons/tb";
-import { BsFillStarFill } from "react-icons/bs";
-import { FaHeart } from "react-icons/fa";
 import { useModal } from "../context/ModalContext";
 import { useTranslation } from "react-i18next";
 import {
@@ -14,6 +10,8 @@ import {
 import { Product } from "../../../types/Product";
 import { toast } from "react-toastify";
 import LazyImage from "../../common/LazyImage";
+import StarIcon from "../../../icons/StarIcon";
+import HeartIcon from "../../../icons/HeartIcon";
 
 interface ProductCardProps {
   product: Product;
@@ -30,6 +28,7 @@ const ProductCard = ({
   const { lang } = useParams();
   const { mutateAsync: addToFavorite } = useAddFavorite();
   const { mutateAsync: removeFromFavorite } = useRemoveFavorite();
+  console.log(product);
 
   const handleToggleFavorite = async () => {
     try {
@@ -57,7 +56,7 @@ const ProductCard = ({
       : `Product image for ${product.name} Tashtiba`;
 
   return (
-    <div className="w-full border border-gray-200 rounded p-3 relative">
+    <div className="w-full border border-gray-200 rounded p-3 relative h-[470px]">
       <div className="w-full h-[300px]">
         <LazyImage
           src={product?.images[0]?.image}
@@ -71,42 +70,43 @@ const ProductCard = ({
       <button
         onClick={handleToggleFavorite}
         className={`absolute top-2 left-2 bg-transparent p-2 rounded-full transition ${
-          is_fav ? "text-red-500" : "text-gray-300 hover:text-red-500"
+          is_fav
+            ? "end-user-text-base"
+            : "text-gray-300 hover:end-user-text-base"
         }`}
       >
-        <FaHeart className="text-xl" />
+        <HeartIcon className="w-6" />
       </button>
 
       <Link
         to={`/${lang}/product/${product.id}`}
-        className="text-base my-2 px-1 block font-medium line-clamp-2"
+        className="end-user-text-secondary my-2 px-1 block font-medium line-clamp-2"
       >
         {product.name}
       </Link>
 
       <div className="flex justify-between items-center gap-2 border-t border-gray-200 py-3">
-        <span className="text-primary font-semibold text-sm sm:text-base">
+        <span className="end-user-text-base font-semibold text-sm sm:text-base">
           {product.price} {t("egp")}
         </span>
 
         <div className="flex items-center gap-1">
           <StarRatings
-            rating={product.rating || 0}
+            rating={product.rate || 0}
             starDimension="17px"
             starSpacing="1px"
             starRatedColor="#fbbf24"
             numberOfStars={5}
             name="rating"
-            starEmptyIcon={<MdOutlineStarBorder />}
-            starHalfIcon={<TbStarHalfFilled />}
-            starFullIcon={<BsFillStarFill />}
+            starEmptyIcon={<StarIcon />}
+            starFullIcon={<StarIcon fill="#fbbf24" />}
           />
         </div>
       </div>
 
       <button
         onClick={() => openModal("product", product)}
-        className="w-full bg-primary text-white rounded px-3 py-2 text-sm sm:text-base hover:bg-primary/90 transition"
+        className="w-full end-user-bg-base text-white rounded px-3 py-2 text-sm sm:text-base hover:bg-primary/90 transition"
       >
         {t("addToCart")}
       </button>

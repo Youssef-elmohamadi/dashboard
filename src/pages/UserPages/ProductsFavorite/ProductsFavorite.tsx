@@ -2,18 +2,18 @@ import React, { useEffect } from "react";
 import ProductCard from "../../../components/EndUser/Product/ProductCard";
 import { useAllFavoriteProducts } from "../../../hooks/Api/EndUser/useProducts/useFavoriteProducts";
 import { Circles } from "react-loader-spinner";
-import { useNavigate } from "react-router-dom"; // Import useParams for language
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import SEO from "../../../components/common/SEO/seo"; // Import your custom SEO component
-import { toast } from "react-toastify"; // Import toast for messages
-import { HiOutlineHeart, HiOutlineArrowPath } from "react-icons/hi2"; // Icons for wishlist page
+import SEO from "../../../components/common/SEO/seo";
+import { toast } from "react-toastify";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import HeartIcon from "../../../icons/HeartIcon";
 
 const ProductsFavorite = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("EndUserFavProducts");
-  const primaryColor = "#9810fa"; 
-  const secondaryColor = "#542475"; 
+  const primaryColor = "#d62828";
+  const secondaryColor = "#d62828";
   const { lang } = useDirectionAndLanguage();
   useEffect(() => {
     const token = localStorage.getItem("end_user_token");
@@ -25,7 +25,7 @@ const ProductsFavorite = () => {
       );
       navigate(`/${lang}/signin`, { replace: true });
     }
-  }, [navigate, t]); 
+  }, [navigate, t]);
 
   const { data, isLoading, isFetching, hasNextPage, fetchNextPage, isError } =
     useAllFavoriteProducts();
@@ -73,8 +73,9 @@ const ProductsFavorite = () => {
           {
             lang: "x-default",
             href: "https://tashtiba.com/en/u-favorite",
-          }, // Added x-default
+          },
         ]}
+        robotsTag="noindex, nofollow"
       />
 
       <div className="bg-white rounded-2xl overflow-hidden">
@@ -84,10 +85,10 @@ const ProductsFavorite = () => {
             className="text-3xl font-bold flex items-center gap-3"
             style={{ color: secondaryColor }}
           >
-            <HiOutlineHeart className="h-8 w-8" />
+            <HeartIcon className="md:h-8 md:w-8 w-6 h-6" />
             {t("pageTitle", { defaultValue: "قائمة أمنياتي" })}
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-black">
             {t("pageSubtitle", {
               defaultValue: "هنا تجد جميع المنتجات التي أعجبتك.",
             })}
@@ -140,7 +141,7 @@ const ProductsFavorite = () => {
                   <button
                     onClick={() => fetchNextPage()}
                     disabled={isFetching}
-                    className="bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-800 transition disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
+                    className="bg-[#d62828] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#d62828]/80 transition disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
                   >
                     {isFetching ? (
                       <Circles
@@ -150,11 +151,7 @@ const ProductsFavorite = () => {
                         ariaLabel="loading-more"
                       />
                     ) : (
-                      <>
-                        <HiOutlineArrowPath className="h-5 w-5" />{" "}
-                        {/* Icon for loading more */}
-                        {t("showMore", { defaultValue: "عرض المزيد" })}
-                      </>
+                      <>{t("showMore", { defaultValue: "عرض المزيد" })}</>
                     )}
                   </button>
                 )}
@@ -167,4 +164,4 @@ const ProductsFavorite = () => {
   );
 };
 
-export default React.memo(ProductsFavorite); 
+export default React.memo(ProductsFavorite);

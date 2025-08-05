@@ -3,30 +3,29 @@ import SignInForm from "../../../components/common/Auth/SignInForm";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
-import SEO from "../../../components/common/SEO/seo"; // Import your custom SEO component
+import SEO from "../../../components/common/SEO/seo";
 
 export default function EndUserSignIn() {
   const navigate = useNavigate();
-  const { lang } = useDirectionAndLanguage(); // Assuming this context provides 'lang'
+  const { lang } = useDirectionAndLanguage();
 
   useEffect(() => {
-    // Redirect authenticated users away from the sign-in page
     const token = localStorage.getItem("end_user_token");
     if (token) {
       navigate(`/${lang}/`, { replace: true });
     }
-  }, [navigate, lang]); // Added lang to dependency array
+  }, [navigate, lang]);
 
   return (
     <>
       <SEO
         title={{
-          ar: `تشطيبة - تسجيل الدخول`,
-          en: `Tashtiba - Login`,
+          ar: `تسجيل الدخول - حسابك على تشطيبة | تسوق مواد التشطيب في مصر`,
+          en: `Login - Your Tashtiba Account | Shop Finishing Materials in Egypt`,
         }}
         description={{
-          ar: `سجل الدخول إلى حسابك في تشطيبة للوصول إلى المنتجات المفضلة لديك، تتبع الطلبات، وإدارة ملفك الشخصي في مصر.`,
-          en: `Log in to your Tashtiba account to access your favorite products, track orders, and manage your profile in Egypt.`,
+          ar: `سجّل الدخول إلى حسابك في تشطيبة لتتبع الطلبات، حفظ المنتجات، وإكمال عمليات الشراء بسهولة. تسوق أفضل مواد التشطيب في مصر أونلاين.`,
+          en: `Log in to your Tashtiba account to track your orders, save products, and complete purchases easily. Shop the best finishing materials in Egypt online.`,
         }}
         keywords={{
           ar: [
@@ -38,6 +37,8 @@ export default function EndUserSignIn() {
             "بوابة المستخدم",
             "مصر",
             "التسوق أونلاين",
+            "مواد تشطيب",
+            "شراء أونلاين",
           ],
           en: [
             "tashtiba",
@@ -48,15 +49,18 @@ export default function EndUserSignIn() {
             "my account",
             "Egypt",
             "online shopping",
+            "finishing materials",
+            "buy online",
           ],
         }}
+        url={`https://tashtiba.com/${lang}/signin`}
+        image="https://tashtiba.com/og-image.png"
         alternates={[
-          // Assuming your sign-in page URL structure is like /ar/signin
           { lang: "ar", href: "https://tashtiba.com/ar/signin" },
           { lang: "en", href: "https://tashtiba.com/en/signin" },
-          { lang: "x-default", href: "https://tashtiba.com/en/signin" }, // Default to English
         ]}
       />
+
       <AuthLayout userType="end_user">
         <SignInForm userType="end_user" />
       </AuthLayout>

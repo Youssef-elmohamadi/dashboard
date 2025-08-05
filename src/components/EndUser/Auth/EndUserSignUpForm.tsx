@@ -163,8 +163,8 @@ export default function SignUpForm() {
 
       <form onSubmit={handleSubmit}>
         <div className="space-y-5">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            <div className="sm:col-span-1">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 mb-3">
+            <div className="sm:col-span-1 ">
               <Label>
                 {t("basicInformation.firstName")}
                 <span className="text-error-500">*</span>
@@ -205,7 +205,7 @@ export default function SignUpForm() {
             </div>
           </div>
 
-          <div>
+          <div className="mb-3">
             <Label>
               {t("basicInformation.phone")}
               <span className="text-error-500">*</span>
@@ -230,7 +230,7 @@ export default function SignUpForm() {
             )}
           </div>
 
-          <div>
+          <div className="mb-3">
             <Label>
               {t("basicInformation.email")}
               <span className="text-error-500">*</span>
@@ -255,7 +255,7 @@ export default function SignUpForm() {
             )}
           </div>
 
-          <div>
+          <div className="mb-3">
             <Label>
               {t("password")}
               <span className="text-error-500">*</span>
@@ -288,7 +288,7 @@ export default function SignUpForm() {
             </div>
           </div>
 
-          <div>
+          <div className="mb-3">
             <Label>
               {t("basicInformation.confirmPassword")}
               <span className="text-error-500">*</span>

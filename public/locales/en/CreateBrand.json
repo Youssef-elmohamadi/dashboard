@@ -18,6 +18,9 @@
     "status": "Select brand status.",
     "image": "Brand image is required.",
     "general": "Something went wrong.",
-    "global": "You don't have permission to perform this action."
+    "global": "You don't have permission to perform this action.",
+    "no_internet": "No internet connection. Please check your connection and try again.",
+    "image_valid": "Brand image is not valid. It should be a jpeg, jpg, or png image with a maximum size of 800x400 pixels."
+    
   }
 }

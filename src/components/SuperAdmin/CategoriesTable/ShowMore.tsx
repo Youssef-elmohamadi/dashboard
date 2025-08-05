@@ -5,8 +5,7 @@ import {
   useAllCategories,
 } from "../../../hooks/Api/SuperAdmin/useCategories/useSuperAdminCategpries";
 import { useTranslation } from "react-i18next";
-// import PageMeta from "../../common/SEO/PageMeta"; // تم إزالة استيراد PageMeta
-import SEO from "../../common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../common/SEO/seo";
 import { AxiosError } from "axios";
 import { Category } from "../../../types/Categories";
 
@@ -14,9 +13,6 @@ const CategoryDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["CategoryDetails", "Meta"]);
   const [globalError, setGlobalError] = useState("");
-  //const [category, setCategory] = useState<Category | null>(null);
-  //const [categories, setCategories] = useState<Category[] | null>(null);
-  //const [loading, setLoading] = useState(true);
   const { data, isLoading: loading, error, isError } = useGetCategoryById(id);
 
   const category = data;
@@ -87,7 +83,7 @@ const CategoryDetails: React.FC = () => {
   if (loading) {
     return (
       <>
-        <SEO // PageMeta replaced with SEO, and data directly set for loading state
+        <SEO
           title={{
             ar: "تشطيبة - تفاصيل الفئة - جارٍ التحميل (سوبر أدمن)",
             en: "Tashtiba - Category Details - Loading (Super Admin)",
@@ -112,7 +108,8 @@ const CategoryDetails: React.FC = () => {
               "product classifications",
             ],
           }}
-        />{" "}
+          robotsTag="noindex, nofollow"
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("loading")}
         </div>
@@ -123,7 +120,7 @@ const CategoryDetails: React.FC = () => {
   if (!category && !globalError) {
     return (
       <>
-        <SEO // PageMeta replaced with SEO, and data directly set for not found state
+        <SEO
           title={{
             ar: "تشطيبة - تفاصيل الفئة - غير موجودة (سوبر أدمن)",
             en: "Tashtiba - Category Details - Not Found (Super Admin)",
@@ -148,7 +145,8 @@ const CategoryDetails: React.FC = () => {
               "category management",
             ],
           }}
-        />{" "}
+          robotsTag="noindex, nofollow"
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {t("not_found")}
         </div>
@@ -158,7 +156,7 @@ const CategoryDetails: React.FC = () => {
   if (globalError) {
     return (
       <>
-        <SEO // PageMeta replaced with SEO, and data directly set for global error state
+        <SEO
           title={{
             ar: "تشطيبة - تفاصيل الفئة - خطأ عام (سوبر أدمن)",
             en: "Tashtiba - Category Details - Global Error (Super Admin)",
@@ -183,7 +181,8 @@ const CategoryDetails: React.FC = () => {
               "loading failed",
             ],
           }}
-        />{" "}
+          robotsTag="noindex, nofollow"
+        />
         <div className="p-8 text-center text-gray-500 dark:text-gray-300">
           {globalError}
         </div>
@@ -226,6 +225,7 @@ const CategoryDetails: React.FC = () => {
             "super admin",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
 
       <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">

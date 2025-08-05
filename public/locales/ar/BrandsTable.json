@@ -4,8 +4,10 @@
     "addNew": "إضافة علامة تجارية جديدة",
     "mainTitle": "تشطيبة | العلامات التجارية",
     "all": "كل العلامات التجارية",
-    "createdSuccess": "تم الانشاء",
-    "updatedSuccess": "تم التحديث",
+    "createdSuccessTitle": "تم الانشاء",
+    "createdSuccessMessage": "تم انشاء العلامة التجارية بنجاح",
+    "updatedSuccessTitle": "تم التحديث",
+    "updatedSuccessMessage": "تم تحديث العلامة التجارية بنجاح",
     "delete": {
       "confirmTitle": "حذف العلامة التجارية؟",
       "confirmText": "لا يمكن التراجع عن هذا الإجراء!",

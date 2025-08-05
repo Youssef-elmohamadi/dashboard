@@ -4,8 +4,10 @@
     "mainTitle": "Tashtiba | Roles",
     "addNew": "Add New Role",
     "all": "All Roles",
-    "createdSuccess": "Created Successfully",
-    "updatedSuccess": "Updated Successfully",
+    "createdSuccessTitle": "Created Successfully",
+    "createdSuccessMessage": "Role Created Successfully",
+    "updatedSuccessTitle": "Updated Successfully",
+    "updatedSuccessMessage": "Role Updated Successfully",
     "delete": {
       "confirmTitle": "Delete Role?",
       "confirmText": "This action cannot be undone!",

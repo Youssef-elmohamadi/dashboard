@@ -1,10 +1,4 @@
-import {
-  memo,
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-} from "react";
+import { memo, useEffect, useState, useRef, useCallback } from "react";
 import {
   Outlet,
   useLocation,
@@ -12,8 +6,6 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { IoIosArrowDown } from "react-icons/io";
-import { FaFilter } from "react-icons/fa";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { Category } from "../../../types/Categories";
@@ -21,6 +13,8 @@ import { PriceChangeParams } from "../../../types/Shop";
 import CategoryBreadCrump from "../../../components/EndUser/Shop/CategoryBreadCrump";
 import FilterSidebar from "../../../components/EndUser/Shop/FilterSidebar";
 import Sidebar from "../../../components/EndUser/Shop/Sidebar";
+import FilterIcon from "../../../icons/FilterIcon";
+import ArrowDown from "../../../icons/ArrowDown";
 
 function CategoriesLayout() {
   const [showCategories, setShowCategories] = useState<boolean>(true);
@@ -120,7 +114,7 @@ function CategoriesLayout() {
                 className="flex items-center 2xl:hidden gap-2 px-4 py-2 border border-gray-200 rounded hover:bg-gray-100 transition"
                 onClick={() => setIsFilterOpen((prev) => !prev)}
               >
-                <FaFilter className="text-lg" />
+                <FilterIcon className="text-lg" />
                 <span className="font-semibold">{t("mainContent.filter")}</span>
               </button>
 
@@ -129,12 +123,12 @@ function CategoriesLayout() {
                   onClick={() => setIsMenuOpen((prev) => !prev)}
                   className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded hover:bg-gray-100 transition w-32 justify-between"
                 >
-                  <span className="text-gray-400 text-sm">
+                  <span className="text-black text-sm">
                     {sortOptions.find((opt) => opt.value === selectedSort)
                       ?.label || t("sortByMenu.title")}
                   </span>
-                  <IoIosArrowDown
-                    className={`transform transition-transform duration-300 ${
+                  <ArrowDown
+                    className={`transform transition-transform duration-300 w-4 ${
                       isMenuOpen ? "rotate-180" : ""
                     }`}
                   />
@@ -146,7 +140,7 @@ function CategoriesLayout() {
                       <button
                         key={option.value}
                         onClick={() => handleSortChange(option.value)}
-                        className="block w-full px-4 py-2 hover:bg-purple-600 hover:text-white transition"
+                        className="block w-full px-4 py-2 hover:bg-[#d62828] hover:text-white transition"
                       >
                         {option.label}
                       </button>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-// import PageMeta from "../../../components/common/SEO/PageMeta"; // تم التعليق على استيراد PageMeta
-import SEO from "../../../components/common/SEO/seo"; // تم استيراد SEO component
+import SEO from "../../../components/common/SEO/seo"; 
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/admin/Tables/BasicTableTS";
@@ -59,7 +58,7 @@ const Categories = () => {
 
   return (
     <>
-      <SEO // PageMeta replaced with SEO, and data directly set
+      <SEO 
         title={{
           ar: "تشطيبة - إدارة الفئات",
           en: "Tashtiba - Category Management",
@@ -86,6 +85,7 @@ const Categories = () => {
             "classification",
           ],
         }}
+        robotsTag="noindex, nofollow"
       />
       <PageBreadcrumb
         pageTitle={t("CategoriesTable:categoriesPage.title")}

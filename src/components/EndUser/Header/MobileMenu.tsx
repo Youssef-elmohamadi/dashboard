@@ -1,13 +1,13 @@
 import { useTranslation } from "react-i18next";
-import { FaRegCircleUser } from "react-icons/fa6";
-import { TfiClose } from "react-icons/tfi";
 import { NavLink } from "react-router-dom";
 import { useProfile } from "../../../hooks/Api/EndUser/useProfile/useProfile";
 import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
-import { GrLogout } from "react-icons/gr";
 import { Category } from "../../../types/Categories";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { Circles } from "react-loader-spinner";
+import ProfileIcon from "../../../icons/ProfileIcon";
+import CloseIcon from "../../../icons/CloseIcon";
+import LogoutIcon from "../../../icons/LogoutIcon";
 type Props = {
   dir: string;
   handleLogout: () => void;
@@ -53,7 +53,7 @@ const MobileMenu = ({
         return (
           <div className="flex items-center justify-between border-b border-gray-200 py-3">
             <div className="flex items-center gap-2">
-              <FaRegCircleUser className="text-2xl text-red-500" />
+              <ProfileIcon className="w-6 text-red-500" />
               <span className="text-sm text-red-500">
                 {t("profileLoadError", {
                   defaultValue: "فشل تحميل ملف التعريف.",
@@ -86,7 +86,7 @@ const MobileMenu = ({
       return (
         <div className="flex items-center justify-between border-b border-gray-200 py-3">
           <div className="flex items-center gap-2">
-            <FaRegCircleUser className="text-2xl text-secondary" />
+            <ProfileIcon className="w-6 text-secondary" />
             <NavLink
               to={`/${lang}/signin`}
               className="text-sm text-secondary"
@@ -114,7 +114,7 @@ const MobileMenu = ({
           <Circles
             height="40"
             width="40"
-            color="#542475" // لون ثانوي
+            color="#d62828"
             ariaLabel="loading-categories"
           />
         </div>
@@ -147,8 +147,8 @@ const MobileMenu = ({
             className={({ isActive }) =>
               `px-4 py-3 block rounded transition ${
                 isActive
-                  ? "bg-gray-100 text-purple-700 font-semibold"
-                  : "hover:bg-[#8826bd35]"
+                  ? "bg-gray-100 text-[#d62828] font-semibold"
+                  : "hover:bg-red-200"
               }`
             }
             onClick={closeMenu}
@@ -176,7 +176,7 @@ const MobileMenu = ({
         <div className="flex flex-col gap-1">
           <div className="text-right p-4">
             <button onClick={closeMenu} className="text-red-500 text-xl">
-              <TfiClose />
+              <CloseIcon className="w-6" />
             </button>
           </div>
 
@@ -200,8 +200,8 @@ const MobileMenu = ({
                     className={({ isActive }) =>
                       `px-4 py-3 block rounded transition ${
                         isActive
-                          ? "bg-gray-100 text-purple-700 font-semibold"
-                          : "hover:bg-[#8826bd35]"
+                          ? "bg-gray-100 text-[#d62828] font-semibold"
+                          : "hover:bg-red-200"
                       }`
                     }
                     onClick={closeMenu}
@@ -219,7 +219,7 @@ const MobileMenu = ({
                   }}
                   className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-100 cursor-pointer"
                 >
-                  <GrLogout className="text-xl" />
+                  <LogoutIcon className="w-6" />
                   {t("logout")}
                 </li>
               </ul>
