@@ -121,8 +121,8 @@ const Admins = () => {
       )}
       <SEO 
         title={{
-          ar: "تشطيبة - إدارة المسؤولين",
-          en: "Tashtiba - Admin Management",
+          ar: "إدارة المسؤولين",
+          en: "Admin Management",
         }}
         description={{
           ar: "إدارة حسابات المسؤولين في نظام تشطيبة. عرض، إضافة، تعديل، وحذف المسؤولين.",

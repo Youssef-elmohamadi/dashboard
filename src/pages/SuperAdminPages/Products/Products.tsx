@@ -49,7 +49,6 @@ const Products = () => {
   }, [isError, error]);
 
   const productsData = data?.data ?? [];
-  console.log(productsData);
 
   const totalProducts = data?.total ?? 0;
   const handleSearch = (key: string, value: string | number) => {
@@ -106,8 +105,8 @@ const Products = () => {
     <>
       <SEO
         title={{
-          ar: "تشطيبة - إدارة المنتجات (سوبر أدمن)",
-          en: "Tashtiba - Product Management (Super Admin)",
+          ar: " إدارة المنتجات (سوبر أدمن)",
+          en: "Product Management (Super Admin)",
         }}
         description={{
           ar: "صفحة إدارة المنتجات بواسطة المشرف العام في تشطيبة. عرض، تغيير حالة، والتحكم في المنتجات.",

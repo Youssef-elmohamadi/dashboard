@@ -55,8 +55,8 @@ const OrderDetails: React.FC = () => {
     >
       <SEO
         title={{
-          ar: `تشطيبة - تفاصيل الطلب ${order?.id || ""}`,
-          en: `Tashtiba - Order Details ${order?.id || ""} (Super Admin)`,
+          ar: ` تفاصيل الطلب ${order?.id || ""}`,
+          en: `Order Details ${order?.id || ""} (Super Admin)`,
         }}
         description={{
           ar: `استعرض التفاصيل الكاملة للطلب رقم ${

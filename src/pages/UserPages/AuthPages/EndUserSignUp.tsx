@@ -14,7 +14,7 @@ export default function EndUserSignUp() {
     // Redirect authenticated users away from the sign-up page
     const token = localStorage.getItem("end_user_token");
     if (token) {
-      navigate(`/${lang}/`, { replace: true });
+      navigate(`/${lang}`, { replace: true });
     }
   }, [navigate, lang]); // Added lang to dependency array
 
@@ -60,7 +60,14 @@ export default function EndUserSignUp() {
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/signup" },
           { lang: "en", href: "https://tashtiba.com/en/signup" },
+          { lang: "x-default", href: "https://tashtiba.com/ar/signup" },
         ]}
+        structuredData={{
+          "@type": "WebPage",
+          url: `https://tashtiba.com/${lang}/signup`,
+          inLanguage: lang,
+        }}
+        lang={lang as "ar" | "en"}
       />
 
       <AuthLayout>

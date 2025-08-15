@@ -9,8 +9,8 @@ const VendorSettings = () => {
     <>
       <SEO
         title={{
-          ar: "تشطيبة - إعدادات البائع",
-          en: "Tashtiba - Vendor Settings",
+          ar: " إعدادات البائع",
+          en: "Vendor Settings",
         }}
         description={{
           ar: "صفحة إعدادات البائع في تشطيبة. قم بتحديث بيانات ملفك الشخصي كبائع.",

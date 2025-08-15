@@ -209,8 +209,8 @@ const UpdateRole: React.FC = () => {
     >
       <SEO
         title={{
-          ar: "تشطيبة - تحديث صلاحية",
-          en: "Tashtiba - Update Role",
+          ar: " تحديث صلاحية",
+          en: "Update Role",
         }}
         description={{
           ar: "صفحة تحديث صلاحية (دور) المستخدمين في نظام تشطيبة. تعديل الاسم والصلاحيات المخصصة.",

@@ -226,8 +226,8 @@ const UserProfile = () => {
     <div className="p-4">
       <SEO
         title={{
-          ar: `تشطيبة - ملفي الشخصي`,
-          en: `Tashtiba - My Profile`,
+          ar: `ملفي الشخصي`,
+          en: `My Profile`,
         }}
         description={{
           ar: `قم بتحديث معلومات ملفك الشخصي على تشطيبة. إدارة بيانات الاتصال، تغيير كلمة المرور، وتحديث صورة الملف الشخصي بأمان في مصر.`,
@@ -257,10 +257,11 @@ const UserProfile = () => {
             "my account",
           ],
         }}
+        url={`https://tashtiba.com/${lang}/profile`}
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/profile" },
           { lang: "en", href: "https://tashtiba.com/en/profile" },
-          { lang: "x-default", href: "https://tashtiba.com/en/profile" },
+          { lang: "x-default", href: "https://tashtiba.com/ar/profile" },
         ]}
         robotsTag="noindex, nofollow"
       />

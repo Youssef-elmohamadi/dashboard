@@ -364,8 +364,8 @@ const UpdateProductPage: React.FC = () => {
     >
       <SEO
         title={{
-          ar: "تشطيبة - تحديث المنتج",
-          en: "Tashtiba - Update Product",
+          ar: " تحديث المنتج",
+          en: "Update Product",
         }}
         description={{
           ar: "صفحة تحديث المنتج في متجر تشطيبة. عدّل تفاصيل المنتج، الصور، والسمات.",

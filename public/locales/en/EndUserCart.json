@@ -16,5 +16,7 @@
   "empty_cart": "Your cart is empty",
   "please_login": "Please Login First",
   "empty_cart_toast": "Your Cart is empty",
-  "egp": "EGP"
+  "egp": "EGP",
+  "discountApplied": "Discount Applied",
+  "sale": "Sale"
 }

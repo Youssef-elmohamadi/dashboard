@@ -5,9 +5,7 @@ const LazyToastContainer = lazy(() =>
     default: module.ToastContainer,
   }))
 );
-
 const LazyEndUserRoutes = lazy(() => import("./EndUserRoute/EndUserRoute"));
-// const LazyEndUserRoutes = lazy(() => import("./EndUserRoute/EndUserRoute"));
 const LazyAdminRoutes = lazy(() => import("./AdminRoute/AdminRoute"));
 const LazySuperAdminRoutes = lazy(
   () => import("./SuperAdminRoute/SuperAdminRoutes")
@@ -31,13 +29,10 @@ export default function AppRoutes() {
             <Suspense fallback={null}>
               <LazyEndUserRoutes />
             </Suspense>
-            // <EndUserRoutes />
           }
         />
-
-        {/* Admin Routes */}
         <Route
-          path="/admin/*" // All admin routes will start with /admin
+          path="/admin/*" 
           element={
             <Suspense fallback={null}>
               <LazyAdminRoutes />
@@ -45,17 +40,14 @@ export default function AppRoutes() {
           }
         />
 
-        {/* Super Admin Routes */}
         <Route
-          path="/super_admin/*" // All super admin routes will start with /super_admin
+          path="/super_admin/*" 
           element={
             <Suspense fallback={null}>
               <LazySuperAdminRoutes />
             </Suspense>
           }
         />
-
-        {/* 404 Not Found Route - Catches anything not matched above */}
         <Route
           path="*"
           element={

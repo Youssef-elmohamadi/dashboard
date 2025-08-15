@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
 import Select from "../../common/form/Select";
@@ -49,6 +49,7 @@ export default function CreateAdmin() {
     password: "",
     role: "",
   });
+  const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const { t } = useTranslation(["CreateAdmin", "Meta"]);
   const validate = () => {
@@ -64,6 +65,8 @@ export default function CreateAdmin() {
       newErrors.first_name = t("CreateAdmin:admin.errors.first_name");
     } else if (!adminData.last_name) {
       newErrors.last_name = t("CreateAdmin:admin.errors.last_name");
+    } else if (!adminData.role) {
+      newErrors.role = t("CreateAdmin:admin.errors.role");
     } else if (!adminData.email) {
       newErrors.email = t("CreateAdmin:admin.errors.email_required");
     } else if (
@@ -78,11 +81,24 @@ export default function CreateAdmin() {
       newErrors.password = t("CreateAdmin:admin.errors.password");
     } else if (adminData.password.length < 8) {
       newErrors.password = t("CreateAdmin:admin.errors.length_password");
-    } else if (!adminData.role) {
-      newErrors.role = t("CreateAdmin:admin.errors.role");
     }
+    const isValid = Object.values(newErrors).every((error) => error === "");
     setClientSideErrors(newErrors);
-    return Object.values(newErrors).every((error) => error === "");
+    return { isValid, newErrors };
+  };
+
+  const focusOnError = (errors: Record<string, string | string[]>) => {
+    const errorEntry = Object.entries(errors).find(
+      ([_, value]) =>
+        (typeof value === "string" && value !== "") ||
+        (Array.isArray(value) && value.length > 0)
+    );
+
+    if (errorEntry) {
+      const fieldName = errorEntry[0];
+      const ref = inputRefs?.current[fieldName];
+      ref?.focus();
+    }
   };
   const { dir } = useDirectionAndLanguage();
   const navigate = useNavigate();
@@ -134,10 +150,13 @@ export default function CreateAdmin() {
       global: "",
       general: "",
     });
-    if (!validate()) return;
-
     if (!isCurrentlyOnline()) {
       toast.error(t("CreateAdmin:admin.errors.no_internet"));
+      return;
+    }
+    const { isValid, newErrors } = validate();
+    if (!isValid) {
+      focusOnError(newErrors);
       return;
     }
     setLoading(true);
@@ -180,6 +199,7 @@ export default function CreateAdmin() {
           }));
         }
       }
+      focusOnError(errors);
     } finally {
       setLoading(false);
     }
@@ -189,8 +209,8 @@ export default function CreateAdmin() {
     <div>
       <SEO
         title={{
-          ar: "تشطيبة - إنشاء مسؤول جديد",
-          en: "Tashtiba - Create New Admin",
+          ar: "إنشاء مسؤول جديد",
+          en: "Create New Admin",
         }}
         description={{
           ar: "صفحة إنشاء حساب مسؤول جديد في نظام تشطيبة. املأ البيانات المطلوبة لإنشاء حساب إداري.",
@@ -244,6 +264,11 @@ export default function CreateAdmin() {
               name="first_name"
               placeholder={t("CreateAdmin:admin.placeholder.first_name")}
               onChange={handleChange}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["first_name"] = el;
+                }
+              }}
             />
             {errors.first_name?.[0] && (
               <p className="text-red-500 text-sm mt-1">
@@ -264,6 +289,11 @@ export default function CreateAdmin() {
               name="last_name"
               placeholder={t("CreateAdmin:admin.placeholder.last_name")}
               onChange={handleChange}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["last_name"] = el;
+                }
+              }}
             />
             {errors.last_name?.[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.last_name[0]}</p>
@@ -306,6 +336,11 @@ export default function CreateAdmin() {
             name="email"
             placeholder={t("CreateAdmin:admin.placeholder.email")}
             onChange={handleChange}
+            ref={(el) => {
+              if (inputRefs?.current) {
+                inputRefs.current["email"] = el;
+              }
+            }}
           />
           {errors.email?.[0] && (
             <p className="text-red-500 text-sm mt-1">
@@ -326,6 +361,11 @@ export default function CreateAdmin() {
             name="phone"
             placeholder={t("CreateAdmin:admin.placeholder.phone")}
             onChange={handleChange}
+            ref={(el) => {
+              if (inputRefs?.current) {
+                inputRefs.current["phone"] = el;
+              }
+            }}
           />
           {errors.phone?.[0] && (
             <p className="text-red-500 text-sm mt-1">
@@ -346,6 +386,11 @@ export default function CreateAdmin() {
               name="password"
               placeholder={t("CreateAdmin:admin.placeholder.password")}
               onChange={handleChange}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["password"] = el;
+                }
+              }}
             />
             {errors.password?.[0] && (
               <p className="text-red-500 text-sm mt-1">{errors.password[0]}</p>

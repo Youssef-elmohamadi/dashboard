@@ -63,7 +63,6 @@ const CreateBanner = () => {
   } = useAllCategories();
 
   const categories = allCategories?.original || [];
-  console.log(allCategories);
 
   useEffect(() => {
     if (isErrorFetchingCategories && categoriesError instanceof AxiosError) {
@@ -142,8 +141,6 @@ const CreateBanner = () => {
     }
     setIsSubmitting(true);
     if (!validate()) {
-      console.log(clientSideErrors);
-
       setIsSubmitting(false);
       return;
     }
@@ -200,8 +197,8 @@ const CreateBanner = () => {
     <div>
       <SEO
         title={{
-          ar: "تشطيبة - إنشاء بانر جديد (سوبر أدمن)",
-          en: "Tashtiba - Create New Banner (Super Admin)",
+          ar: " إنشاء بانر جديد (سوبر أدمن)",
+          en: "Create New Banner (Super Admin)",
         }}
         description={{
           ar: "صفحة إنشاء بانر إعلاني جديد بواسطة المشرف العام في تشطيبة. أدخل التفاصيل، نوع الرابط، الموضع، وقم بتحميل الصورة.",

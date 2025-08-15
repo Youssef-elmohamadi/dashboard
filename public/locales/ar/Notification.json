@@ -1,0 +1,9 @@
+{
+  "notification": "الإشعارات",
+  "markAllAsRead": "تمييز الكل كمقروء",
+  "noNotifications": "لا توجد إشعارات حاليًا",
+  "showMore": "عرض المزيد",
+  "mainContent": {
+    "loadingMore": "جاري تحميل المزيد..."
+  }
+}

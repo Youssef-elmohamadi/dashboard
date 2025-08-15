@@ -19,8 +19,8 @@ const ProductsCompare = () => {
     <div className="min-h-screen bg-white p-4">
       <SEO
         title={{
-          ar: `تشطيبة - مقارنة المنتجات`,
-          en: `Tashtiba - Product Comparison`,
+          ar: ` مقارنة المنتجات`,
+          en: `Product Comparison`,
         }}
         description={{
           ar: `قارن بين المنتجات المختلفة في تشطيبة لاتخاذ قرار الشراء الأمثل. شاهد المواصفات والأسعار والمميزات جنبًا إلى جنب للعثور على الأفضل لاحتياجاتك في مصر.`,

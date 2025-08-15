@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { register } from "../../../api/EndUserApi/endUserAuth/_requests";
@@ -9,9 +9,11 @@ import OTPPage from "../../common/Auth/OtpPage";
 import { sendOtp, verifyOtp } from "../../../api/OtpApi/_requests";
 import { toast } from "react-toastify";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+
 export default function SignUpForm() {
   const navigate = useNavigate();
   const { t } = useTranslation("auth");
+  const { lang } = useDirectionAndLanguage();
   const [step, setStep] = useState<1 | 2>(1);
   const [clientErrors, setClientErrors] = useState<{ [key: string]: string }>(
     {}
@@ -21,7 +23,8 @@ export default function SignUpForm() {
   );
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [otpError, setOtpError] = useState("");
-  const { lang } = useDirectionAndLanguage();
+  const [showPassword, setShowPassword] = useState(false);
+
   const [dataForm, setDataForm] = useState({
     first_name: "",
     last_name: "",
@@ -30,8 +33,7 @@ export default function SignUpForm() {
     password: "",
     confirm_password: "",
   });
-
-  const [showPassword, setShowPassword] = useState(false);
+  const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -39,52 +41,60 @@ export default function SignUpForm() {
     setClientErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleSendOtp = async (): Promise<boolean> => {
-    try {
-      await sendOtp({
-        identifier: dataForm.phone,
-        type: "user",
-      });
-      toast.success(t("otp.successSendOtp"));
-      return true;
-    } catch (error) {
-      console.error("Error sending OTP:", error);
-      toast.error(t("otp.failedSendOtp"));
-      return false;
+  // const handleSendOtp = async (): Promise<boolean> => {
+  //   try {
+  //     await sendOtp({ identifier: dataForm.phone, type: "user" });
+  //     toast.success(t("otp.successSendOtp"));
+  //     return true;
+  //   } catch (error) {
+  //     console.error("Error sending OTP:", error);
+  //     toast.error(t("otp.failedSendOtp"));
+  //     return false;
+  //   }
+  // };
+
+  // const handleSubmitOtp = async () => {
+  //   const enteredOtp = otp.join("");
+
+  //   if (enteredOtp.length < 6) {
+  //     setOtpError(t("otp.invalid"));
+  //     return;
+  //   }
+
+  //   try {
+  //     const res = await verifyOtp({
+  //       identifier: dataForm.phone,
+  //       type: "admin",
+  //       otp: enteredOtp,
+  //     });
+
+  //     if (res?.status === 200) {
+  //       toast.success(t("otp.success"));
+  //       navigate(`/${lang}/signin`);
+  //     }
+  //   } catch (err: any) {
+  //     setOtpError(t("otp.invalid"));
+  //   }
+  // };
+
+  const focusOnError = (errors: Record<string, any>) => {
+    const firstErrorField = Object.keys(errors)[0];
+    if (firstErrorField) {
+      const ref = inputRefs?.current[firstErrorField];
+      ref?.focus();
     }
   };
-  const handleSubmitOtp = async () => {
-    const enteredOtp = otp.join("");
 
-    if (enteredOtp.length < 6) {
-      setOtpError(t("otp.invalid"));
-      return;
-    }
-
-    try {
-      const res = await verifyOtp({
-        identifier: dataForm.phone,
-        type: "admin",
-        otp: enteredOtp,
-      });
-
-      if (res?.status === 200) {
-        toast.success(t("otp.success"));
-        navigate(`/${lang}/signin`);
-      }
-    } catch (err: any) {
-      const message = t("otp.invalid");
-      setOtpError(message);
-    }
-  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const errors: { [key: string]: string } = {};
 
     if (!dataForm.first_name) errors.first_name = t("errors.firstNameError");
     if (!dataForm.last_name) errors.last_name = t("errors.lastNameError");
     if (!dataForm.phone) errors.phone = t("errors.phoneError");
+    if (!/^01[0125][0-9]{8}$/.test(dataForm.phone)) {
+      errors.phone = t("errors.phoneFormatError");
+    }
     if (!dataForm.email) errors.email = t("errors.emailError");
     if (!/\S+@\S+\.\S+/.test(dataForm.email))
       errors.email = t("errors.emailFormatError");
@@ -99,59 +109,67 @@ export default function SignUpForm() {
 
     if (Object.keys(errors).length > 0) {
       setClientErrors(errors);
+      focusOnError(errors);
+      return;
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setClientErrors(errors);
       return;
     }
 
     try {
-      const res = await register(dataForm);
-      if (res?.status === 200 || res?.status === 201) {
-        setStep(2);
-        handleSendOtp();
-      }
+      // const res =
+      await register(dataForm);
+      toast.success(t("registerSuccess"));
+      navigate(`/${lang}/signin`);
+      // if (res?.status === 200 || res?.status === 201) {
+      //   setStep(2);
+      //   handleSendOtp();
+      // }
     } catch (error: any) {
       const rawErrors = error?.response?.data.errors;
-
       if (Array.isArray(rawErrors)) {
         const formattedErrors: Record<string, string[]> = {};
-
+        toast.error(t("registerFailed"));
         rawErrors.forEach((err: { code: string; message: string }) => {
           if (!formattedErrors[err.code]) {
             formattedErrors[err.code] = [];
           }
           formattedErrors[err.code].push(err.message);
         });
-
         setServerErrors(formattedErrors);
+        focusOnError(formattedErrors);
       }
     }
   };
 
-  if (step === 2) {
-    return (
-      <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
-        <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
-          <div className="mb-5 sm:mb-8 flex flex-col items-center">
-            <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-              {t("signUpTitle")}
-            </h1>
-          </div>
-          <OTPPage
-            identifier={dataForm.phone}
-            otp={otp}
-            setOtp={setOtp}
-            onSubmit={handleSubmitOtp}
-            onResend={handleSendOtp}
-            title={t("otp.title")}
-            subtitle={t("otp.subtitle")}
-            resendText={t("otp.resendBtn")}
-            continueText={t("otp.continue")}
-            otpError={otpError}
-            setOtpError={setOtpError}
-          />
-        </div>
-      </div>
-    );
-  }
+  // if (step === 2) {
+  //   return (
+  //     <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
+  //       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
+  //         <div className="mb-5 sm:mb-8 flex flex-col items-center">
+  //           <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
+  //             {t("signUpTitle")}
+  //           </h1>
+  //         </div>
+  //         <OTPPage
+  //           identifier={dataForm.phone}
+  //           otp={otp}
+  //           setOtp={setOtp}
+  //           onSubmit={handleSubmitOtp}
+  //           onResend={handleSendOtp}
+  //           title={t("otp.title")}
+  //           subtitle={t("otp.subtitle")}
+  //           resendText={t("otp.resendBtn")}
+  //           continueText={t("otp.continue")}
+  //           otpError={otpError}
+  //           setOtpError={setOtpError}
+  //         />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto py-4">
@@ -163,8 +181,9 @@ export default function SignUpForm() {
 
       <form onSubmit={handleSubmit}>
         <div className="space-y-5">
+          {/* First & Last Name */}
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 mb-3">
-            <div className="sm:col-span-1 ">
+            <div>
               <Label>
                 {t("basicInformation.firstName")}
                 <span className="text-error-500">*</span>
@@ -176,6 +195,11 @@ export default function SignUpForm() {
                 placeholder={t("basicInformation.placeholder.firstName")}
                 value={dataForm.first_name}
                 onChange={handleChange}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["first_name"] = el;
+                  }
+                }}
               />
               {clientErrors.first_name && (
                 <p className="text-error-500 text-xs mt-1">
@@ -183,8 +207,7 @@ export default function SignUpForm() {
                 </p>
               )}
             </div>
-
-            <div className="sm:col-span-1">
+            <div>
               <Label>
                 {t("basicInformation.lastName")}
                 <span className="text-error-500">*</span>
@@ -196,6 +219,11 @@ export default function SignUpForm() {
                 placeholder={t("basicInformation.placeholder.lastName")}
                 value={dataForm.last_name}
                 onChange={handleChange}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["last_name"] = el;
+                  }
+                }}
               />
               {clientErrors.last_name && (
                 <p className="text-error-500 text-xs mt-1">
@@ -205,6 +233,7 @@ export default function SignUpForm() {
             </div>
           </div>
 
+          {/* Phone */}
           <div className="mb-3">
             <Label>
               {t("basicInformation.phone")}
@@ -217,19 +246,25 @@ export default function SignUpForm() {
               placeholder={t("basicInformation.placeholder.phone")}
               value={dataForm.phone}
               onChange={handleChange}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["phone"] = el;
+                }
+              }}
             />
             {clientErrors.phone && (
               <p className="text-error-500 text-xs mt-1">
                 {clientErrors.phone}
               </p>
             )}
-            {serverErrors?.["phone"] && (
+            {serverErrors.phone && (
               <p className="text-error-500 text-xs mt-1">
                 {t("errors.endUserPhoneTaken")}
               </p>
             )}
           </div>
 
+          {/* Email */}
           <div className="mb-3">
             <Label>
               {t("basicInformation.email")}
@@ -242,19 +277,25 @@ export default function SignUpForm() {
               placeholder={t("basicInformation.placeholder.email")}
               value={dataForm.email}
               onChange={handleChange}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["email"] = el;
+                }
+              }}
             />
             {clientErrors.email && (
               <p className="text-error-500 text-xs mt-1">
                 {clientErrors.email}
               </p>
             )}
-            {serverErrors?.["email"] && (
+            {serverErrors.email && (
               <p className="text-error-500 text-xs mt-1">
                 {t("errors.endUserEmailTaken")}
               </p>
             )}
           </div>
 
+          {/* Password */}
           <div className="mb-3">
             <Label>
               {t("password")}
@@ -267,6 +308,11 @@ export default function SignUpForm() {
                 name="password"
                 value={dataForm.password}
                 onChange={handleChange}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["password"] = el;
+                  }
+                }}
               />
               {clientErrors.password && (
                 <p className="text-error-500 text-xs mt-1">
@@ -288,6 +334,7 @@ export default function SignUpForm() {
             </div>
           </div>
 
+          {/* Confirm Password */}
           <div className="mb-3">
             <Label>
               {t("basicInformation.confirmPassword")}
@@ -300,6 +347,11 @@ export default function SignUpForm() {
                 value={dataForm.confirm_password}
                 name="confirm_password"
                 onChange={handleChange}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["confirm_password"] = el;
+                  }
+                }}
               />
               {clientErrors.confirm_password && (
                 <p className="text-error-500 text-xs mt-1">

@@ -54,8 +54,8 @@ const ProductDetails: React.FC = () => {
     >
       <SEO
         title={{
-          ar: `تشطيبة - ${product?.name || "تفاصيل المنتج"} (سوبر أدمن)`,
-          en: `Tashtiba - ${product?.name || "Product Details"} (Super Admin)`,
+          ar: ` ${product?.name || "تفاصيل المنتج"} (سوبر أدمن)`,
+          en: `${product?.name || "Product Details"} (Super Admin)`,
         }}
         description={{
           ar: `استعرض تفاصيل المنتج "${

@@ -181,8 +181,8 @@ const UpdateBrandPage = () => {
     <>
       <SEO
         title={{
-          ar: `تشطيبة - تحديث ماركة ${updateData.name || ""}`,
-          en: `Tashtiba - Update Brand ${updateData.name || ""}`,
+          ar: `تحديث ماركة ${updateData.name || ""}`,
+          en: `Update Brand ${updateData.name || ""}`,
         }}
         description={{
           ar: `صفحة تحديث بيانات الماركة ${

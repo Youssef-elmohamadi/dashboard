@@ -10,6 +10,7 @@ import Input from "../../common/input/InputField";
 import Label from "../../common/form/Label";
 import ImageUploader from "./ImageUploader";
 import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 
 type Props = {
   vendorInfo: VendorInfo;
@@ -18,6 +19,7 @@ type Props = {
   clientErrors: ClientErrors;
   handleChange: HandleChangeFn;
   serverErrors: ServerErrors;
+  inputRefs?: React.MutableRefObject<Record<string, HTMLInputElement | null>>;
 };
 
 const StoreInfoForm = ({
@@ -27,9 +29,29 @@ const StoreInfoForm = ({
   clientErrors,
   handleChange,
   serverErrors,
+  inputRefs,
 }: Props) => {
   const { t } = useTranslation(["auth"]);
+  useEffect(() => {
+    const focusOnError = (errors: Record<string, any>) => {
+      const clientErrorKey = Object.keys(clientErrors)[0];
+      if (clientErrorKey) {
+        const ref = inputRefs?.current[clientErrorKey];
+        ref?.focus();
+        return;
+      }
+      if (Object.keys(serverErrors.errors).length > 0) {
+        const serverErrorKey = Object.keys(serverErrors.errors)[0];
+        const fieldName = serverErrorKey.split(".").pop();
+        if (fieldName) {
+          const ref = inputRefs?.current[fieldName];
+          ref?.focus();
+        }
+      }
+    };
 
+    focusOnError({ ...clientErrors, ...serverErrors.errors });
+  }, [clientErrors, serverErrors, inputRefs]);
   return (
     <div className="space-y-5">
       <div className="mb-5 sm:mb-8">
@@ -49,11 +71,14 @@ const StoreInfoForm = ({
           placeholder={t("storeInformation.placeholder.storeName")}
           value={vendorInfo.name}
           onChange={(e) => handleChange(e, "vendorInfo")}
+          ref={(el) => {
+            if (inputRefs?.current) {
+              inputRefs.current["name"] = el;
+            }
+          }}
         />
-        {clientErrors.storeName && (
-          <p className="text-error-500 text-xs mt-1">
-            {clientErrors.storeName}
-          </p>
+        {clientErrors.name && (
+          <p className="text-error-500 text-xs mt-1">{clientErrors.name}</p>
         )}
       </div>
       <div>
@@ -68,11 +93,14 @@ const StoreInfoForm = ({
           placeholder={t("storeInformation.placeholder.storeEmail")}
           value={vendorInfo.email}
           onChange={(e) => handleChange(e, "vendorInfo")}
+          ref={(el) => {
+            if (inputRefs?.current) {
+              inputRefs.current["email"] = el;
+            }
+          }}
         />
-        {clientErrors.storeEmail && (
-          <p className="text-error-500 text-xs mt-1">
-            {t("errors.storeEmailError")}
-          </p>
+        {clientErrors.email && (
+          <p className="text-error-500 text-xs mt-1">{clientErrors.email}</p>
         )}
         {serverErrors.errors["vendorInfo.email"] && (
           <p className="text-error-500 text-xs mt-1">
@@ -92,11 +120,14 @@ const StoreInfoForm = ({
           placeholder={t("storeInformation.placeholder.phone")}
           value={vendorInfo.phone}
           onChange={(e) => handleChange(e, "vendorInfo")}
+          ref={(el) => {
+            if (inputRefs?.current) {
+              inputRefs.current["phone"] = el;
+            }
+          }}
         />
-        {clientErrors.storePhone && (
-          <p className="text-error-500 text-xs mt-1">
-            {t("errors.storePhoneError")}
-          </p>
+        {clientErrors.phone && (
+          <p className="text-error-500 text-xs mt-1">{clientErrors.phone}</p>
         )}
         {serverErrors.errors["vendorInfo.phone"] && (
           <p className="text-error-500 text-xs mt-1">
@@ -117,7 +148,7 @@ const StoreInfoForm = ({
         />
         {clientErrors.commercialRegisterDocument && (
           <p className="text-error-500 text-xs mt-1">
-            {t("errors.commercialRegisterDocumentError")}
+            {clientErrors.commercialRegisterDocument}
           </p>
         )}
         {serverErrors.errors["documentInfo.0.document_file"] && (
@@ -140,7 +171,7 @@ const StoreInfoForm = ({
         />
         {clientErrors.taxRegisterDocument && (
           <p className="text-error-500 text-xs mt-1">
-            {t("errors.taxRegisterDocumentError")}
+            {clientErrors.taxRegisterDocument}
           </p>
         )}
         {serverErrors.errors["documentInfo.1.document_file"] && (

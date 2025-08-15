@@ -76,8 +76,8 @@ const PrivacyPolicyPage: React.FC = () => {
     <div className="min-h-screen">
       <SEO
         title={{
-          ar: `تشطيبة - سياسة الخصوصية`,
-          en: `Tashtiba - Privacy Policy`,
+          ar: `سياسة الخصوصية`,
+          en: `Privacy Policy`,
         }}
         description={{
           ar: `اطّلع على سياسة الخصوصية لتشطيبة وكيفية جمعنا واستخدامنا وحماية بياناتك الشخصية. نوضح حقوقك فيما يتعلق بمعلوماتك عبر منصتنا في مصر.`,
@@ -114,8 +114,14 @@ const PrivacyPolicyPage: React.FC = () => {
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/privacy-policy" },
           { lang: "en", href: "https://tashtiba.com/en/privacy-policy" },
-          { lang: "x-default", href: "https://tashtiba.com/en/privacy-policy" },
+          { lang: "x-default", href: "https://tashtiba.com/ar/privacy-policy" },
         ]}
+        structuredData={{
+          "@type": "WebPage",
+          url: `https://tashtiba.com/${lang}/privacy-policy`,
+          inLanguage: lang,
+        }}
+        lang={lang as "ar" | "en"}
       />
 
       <div className="max-w-4xl mx-auto py-20 px-4 sm:px-6 lg:px-8">

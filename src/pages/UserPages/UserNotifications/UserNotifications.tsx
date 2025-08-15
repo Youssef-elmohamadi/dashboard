@@ -115,8 +115,8 @@ const UserNotifications: React.FC = () => {
     <div className="p-4">
       <SEO
         title={{
-          ar: `تشطيبة - إشعاراتي`,
-          en: `Tashtiba - My Notifications`,
+          ar: `إشعاراتي`,
+          en: `My Notifications`,
         }}
         description={{
           ar: `شاهد آخر الإشعارات والتحديثات من تشطيبة حول طلباتك، العروض الجديدة، والتنبيهات الهامة. ابقَ على اطلاع دائم بكل جديد.`,
@@ -146,12 +146,13 @@ const UserNotifications: React.FC = () => {
             "my account",
           ],
         }}
+        url={`https://tashtiba.com/${lang}/notifications`}
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/notifications" },
           { lang: "en", href: "https://tashtiba.com/en/notifications" },
           {
             lang: "x-default",
-            href: "https://tashtiba.com/en/notifications",
+            href: "https://tashtiba.com/ar/notifications",
           },
         ]}
         robotsTag="noindex, nofollow"

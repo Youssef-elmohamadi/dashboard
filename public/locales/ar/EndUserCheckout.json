@@ -40,7 +40,9 @@
     "floor_number_required": "رقم الطابق مطلوب",
     "apartment_number_required": "رقم الشقة مطلوب",
     "phone_invalid": "يرجى ادخال رقم هاتف صحيح",
-    "general": "حدث خطاء ما، يرجى المحاولة مرة اخرى."
+    "general": "حدث خطاء ما، يرجى المحاولة مرة اخرى.",
+    "wallet_unavailable": "الدفع بالمحفظة غير متاح حالياً",
+    "coming_soon": "قريباً"
   },
 
   "cartData": {
@@ -50,6 +52,7 @@
     "removeItem": "حذف الصنف",
     "remove": "حذف",
     "total": "المجموع",
-    "currency": "جنيه"
+    "currency": "جنيه",
+    "price_label": "{{price}} جنيه"
   }
 }

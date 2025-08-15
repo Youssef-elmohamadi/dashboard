@@ -140,8 +140,8 @@ export default function CreateBrand() {
     <div className="">
       <SEO
         title={{
-          ar: "تشطيبة - إنشاء ماركة جديدة",
-          en: "Tashtiba - Create New Brand",
+          ar: " إنشاء ماركة جديدة",
+          en: "Create New Brand",
         }}
         description={{
           ar: "صفحة إنشاء ماركة (براند) جديدة للمنتجات في تشطيبة. أدخل اسم الماركة وحالتها، وقم بتحميل الشعار.",

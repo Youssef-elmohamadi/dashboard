@@ -4,5 +4,9 @@
   "thankYou": "نحن نأمل ان تستمتع بشرائك ❤",
   "egp": "جنيه",
   "continueShopping": "العودة للتسوق",
-  "checkout": "المتابعة للدفع"
+  "checkout": "المتابعة للدفع",
+  "quantity": "الكمية",
+  "total": "المجموع",
+  "discountApplied": "تم تطبيق الخصم",
+  "sale": "خصم"
 }

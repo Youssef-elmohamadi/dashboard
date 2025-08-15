@@ -21,8 +21,8 @@ const Orders = () => {
   const navigate = useNavigate();
   const { t } = useTranslation(["EndUserOrderHistory"]);
   const { lang } = useDirectionAndLanguage();
-  const primaryColor = "#d62828"; 
-  const secondaryColor = "#d62828"; 
+  const primaryColor = "#d62828";
+  const secondaryColor = "#d62828";
 
   const { data, isLoading, isError, refetch, error } =
     useAllOrdersPaginate(pageIndex);
@@ -54,7 +54,7 @@ const Orders = () => {
       );
       navigate(`/${lang}/signin`, { replace: true });
     }
-  }, [navigate, t]); 
+  }, [navigate, t]);
 
   const { mutateAsync: cancelOrderMutation } = useCancelOrder();
   const handleCancel = async (id: number) => {
@@ -82,8 +82,8 @@ const Orders = () => {
     <div className="p-4">
       <SEO
         title={{
-          ar: `تشطيبة - طلباتي`,
-          en: `Tashtiba - My Orders`,
+          ar: `طلباتي`,
+          en: `My Orders`,
         }}
         description={{
           ar: `تتبع حالة طلباتك السابقة والحالية على تشطيبة. مراجعة تفاصيل الشراء، تتبع الشحن، وإدارة طلباتك بسهولة في مصر.`,
@@ -113,10 +113,11 @@ const Orders = () => {
             "Egypt",
           ],
         }}
+        url={`https://tashtiba.com/${lang}/orders`}
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/orders" }, // Adjust if your actual orders URL is different
           { lang: "en", href: "https://tashtiba.com/en/orders" }, // Adjust if your actual orders URL is different
-          { lang: "x-default", href: "https://tashtiba.com/en/orders" }, // Consider a default if you have one
+          { lang: "x-default", href: "https://tashtiba.com/ar/orders" }, // Consider a default if you have one
         ]}
         robotsTag="noindex, nofollow"
       />

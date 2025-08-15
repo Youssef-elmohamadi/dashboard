@@ -13,7 +13,7 @@ const UserForgotPassword = () => {
     // Redirect authenticated users away from the password reset page
     const token = localStorage.getItem("end_user_token");
     if (token) {
-      navigate(`/${lang}/`, { replace: true });
+      navigate(`/${lang}`, { replace: true });
     }
   }, [navigate, lang]); // Added lang to dependency array
 
@@ -21,8 +21,8 @@ const UserForgotPassword = () => {
     <>
       <SEO
         title={{
-          ar: `تشطيبة - استعادة كلمة المرور`,
-          en: `Tashtiba - Reset Password`,
+          ar: `استعادة كلمة المرور`,
+          en: `Reset Password`,
         }}
         description={{
           ar: `استعد كلمة مرور حسابك في تشطيبة بسهولة وأمان. أدخل بريدك الإلكتروني لإرسال رابط إعادة تعيين كلمة المرور.`,
@@ -51,6 +51,7 @@ const UserForgotPassword = () => {
             "Egypt",
           ],
         }}
+        url={`https://tashtiba.com/${lang}/forgot-password`}
         alternates={[
           {
             lang: "ar",
@@ -65,6 +66,7 @@ const UserForgotPassword = () => {
             href: "https://tashtiba.com/en/forgot-password",
           },
         ]}
+        lang={lang}
         robotsTag="noindex, nofollow"
       />
       <div>

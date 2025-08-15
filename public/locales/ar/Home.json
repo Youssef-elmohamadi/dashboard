@@ -39,7 +39,9 @@
     "usa": "الولايات المتحدة",
     "france": "فرنسا",
     "usa_customers": "{{count}} عميل",
-    "france_customers": "{{count}} عميل"
+    "france_customers": "{{count}} عميل",
+    "eg": "مصر",
+    "eg_customers": "{{count}} عميل"
   },
   "metrics": {
     "all": "الكل",

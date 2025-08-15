@@ -75,8 +75,10 @@ export interface GetCategoriesApiResponse<T> {
   data: T;
 }
 export type CategoryInputData = {
-  name: string;
-  description: string;
+  name_ar: string;
+  name_en: string;
+  description_ar: string;
+  description_en: string;
   image: File | null | string;
   status: "active" | "inactive";
   parent_id: string | null;
@@ -85,8 +87,10 @@ export type CategoryInputData = {
 };
 
 export type ServerErrors = {
-  name: string[];
-  description: string[];
+  name_ar: string[];
+  name_en: string[];
+  description_ar: string[];
+  description_en: string[];
   image: string[];
   status: string[];
   parent_id: string[];
@@ -97,8 +101,10 @@ export type ServerErrors = {
 };
 
 export type ClientErrors = {
-  name: string;
-  description: string;
+  name_ar: string;
+  name_en: string;
+  description_ar: string;
+  description_en: string;
   image: string;
   status: string;
   parent_id: string;

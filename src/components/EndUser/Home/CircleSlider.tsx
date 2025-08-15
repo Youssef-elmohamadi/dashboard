@@ -1,11 +1,10 @@
-import { FC, memo } from "react";
+import { FC, memo, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "./customSwiper.css";
 import { Link, useParams } from "react-router-dom";
 import { Category } from "../../../types/Categories";
 import LazyImage from "../../common/LazyImage";
 import CircleSkeletonSlider from "./CircleSkeletonSlider";
-import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 interface CategorySliderProps {
   items: Category[];
@@ -14,8 +13,7 @@ interface CategorySliderProps {
 
 const CircleSlider: FC<CategorySliderProps> = ({ items, loading }) => {
   const { lang } = useParams();
-  const { dir } = useDirectionAndLanguage();
-
+  const swiperRef = useRef<any>(null);
   if (loading) {
     return (
       <div className="flex gap-4 overflow-x-auto justify-center my-10 px-4 h-[225px]">
@@ -27,8 +25,13 @@ const CircleSlider: FC<CategorySliderProps> = ({ items, loading }) => {
   return (
     <div className="w-full h-[225px]">
       <Swiper
+        key={lang}
+        dir={lang === "ar" ? "rtl" : "ltr"}
+        onBeforeInit={(swiper) => {
+          swiperRef.current = swiper;
+          swiper.changeLanguageDirection(lang === "ar" ? "rtl" : "ltr");
+        }}
         spaceBetween={20}
-        dir={dir}
         breakpoints={{
           1024: { slidesPerView: 5 },
           768: { slidesPerView: 4 },

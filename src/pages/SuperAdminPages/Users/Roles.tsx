@@ -4,7 +4,7 @@ import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; 
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,7 @@ import {
 } from "../../../hooks/Api/SuperAdmin/useRoles/useSuperAdminRoles";
 import { AxiosError } from "axios";
 import { SearchValues } from "../../../types/Roles";
-import SEO from "../../../components/common/SEO/seo"; 
+import SEO from "../../../components/common/SEO/seo";
 
 const Roles = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -111,10 +111,10 @@ const Roles = () => {
           message={alertData.message}
         />
       )}
-      <SEO 
+      <SEO
         title={{
-          ar: "تشطيبة - إدارة الصلاحيات (سوبر أدمن)",
-          en: "Tashtiba - Role Management (Super Admin)",
+          ar: " إدارة الصلاحيات (سوبر أدمن)",
+          en: "Role Management (Super Admin)",
         }}
         description={{
           ar: "صفحة إدارة صلاحيات المستخدمين بواسطة المشرف العام في تشطيبة. عرض، إضافة، تعديل، وحذف الأدوار والصلاحيات.",

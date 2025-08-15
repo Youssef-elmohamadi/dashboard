@@ -47,7 +47,7 @@ const LandingSection = () => {
   const buttonsToRender = isLoggedIn ? loggedInButtons : guestButtons;
   const backgroundAlt =
     lang === "ar"
-      ? "صورة خلفية رئيسية لموقع تشطيبة - تسوق إلكتروني"
+      ? "صورة خلفية رئيسية لموقع  تسوق إلكتروني"
       : "Tashtiba main background image - Online Shopping";
 
   const handleScrollToAboutSection = () => {
@@ -94,7 +94,11 @@ const LandingSection = () => {
             <img
               src={`/images/logo/${lang}-dark-logo.webp`}
               alt={t("landingSection.welcome.title")}
-              className={`${lang === "en" ? "w-40 md:w-50 h-8  md:h-10 ml-2 mb-3" : "w-40 md:w-50 h-8  md:h-10 mr-2"}`}
+              className={`${
+                lang === "en"
+                  ? "w-40 md:w-50 h-8  md:h-10 ml-2 mb-3"
+                  : "w-40 md:w-50 h-8  md:h-10 mr-2"
+              }`}
             />
           </span>
         </div>

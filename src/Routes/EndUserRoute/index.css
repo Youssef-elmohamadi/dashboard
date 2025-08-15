@@ -167,3 +167,28 @@ layer(base);
 .text-soft-light {
   color: #dfdfe6;
 }
+
+.underline-hover-effect {
+  position: relative;
+  display: inline-block;
+  
+}
+
+.underline-hover-effect::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #f62828; 
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+.underline-hover-effect:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+

@@ -22,8 +22,8 @@ const Checkout = () => {
     <div className="min-h-screen bg-gray-50">
       <SEO
         title={{
-          ar: `تشطيبة - إتمام الشراء`,
-          en: `Tashtiba - Checkout`,
+          ar: `إتمام الشراء`,
+          en: `Checkout`,
         }}
         description={{
           ar: `أكمل عملية الشراء على تشطيبة. أدخل معلومات الشحن والدفع الخاصة بك لإتمام طلبك بسرعة وأمان في مصر.`,

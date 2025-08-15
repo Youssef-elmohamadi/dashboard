@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 const TopBar = () => {
   const { i18n, t } = useTranslation(["EndUserTopBar"]);
-  const { setDir, setLang, dir, lang } = useDirectionAndLanguage();
+  const { setLang, dir, lang } = useDirectionAndLanguage();
 
   const [language, setLanguage] = useState<string>();
   const [languages, setLanguages] = useState<string[]>([]);
@@ -28,28 +28,17 @@ const TopBar = () => {
 
   useEffect(() => {
     setLanguage(i18n.language === "ar" ? t("arabic") : t("english"));
-    setDir(i18n.language === "ar" ? "rtl" : "ltr");
   }, [i18n.language]);
-
-  useEffect(() => {
-    window.localStorage.setItem("i18nextLng", lang);
-    window.localStorage.setItem("dir", dir);
-    document.documentElement.setAttribute("dir", dir);
-  }, [lang, dir]);
 
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleLanguageChange = (newLang: string) => {
     const langCode = newLang === t("arabic") ? "ar" : "en";
-
     const newPath = location.pathname.replace(/^\/(ar|en)/, `/${langCode}`);
-    navigate(newPath);
+    navigate(newPath, { replace: true });
     setLanguage(newLang);
     setLang(langCode);
-    setDir(langCode === "ar" ? "rtl" : "ltr");
-    i18n.changeLanguage(langCode);
-
     setShowLangs(false);
   };
 
@@ -114,7 +103,6 @@ const TopBar = () => {
 
         <Separator className="hidden lg:block " />
 
-        {/* Currency */}
         <div ref={currencyRef} className="relative flex items-center ">
           <div
             className="flex items-center cursor-pointer"
@@ -148,24 +136,10 @@ const TopBar = () => {
         </div>
       </div>
 
-      {/* Seller Links */}
-      <div className="items-center flex-[2] hidden lg:flex">
-        {/* <Link to="/admin/signup">
-          <div className="p-2 text-sm text-secondary hover:text-black transition duration-300 cursor-pointer">
-            {t("be_a_seller")}
-          </div>
-        </Link>
-        <Separator />
-        <Link to="/admin/login">
-          <div className="p-2 text-sm text-secondary hover:text-black transition duration-300 cursor-pointer">
-            {t("login_as_seller")}
-          </div>
-        </Link> */}
-      </div>
+      <div className="items-center flex-[2] hidden lg:flex"></div>
 
-      {/* Contact */}
       <div className="items-center flex-[2] justify-end hidden lg:flex">
-        <Link to="/https://wa.me/201557408095">
+        <Link to="https://wa.me/201557408095">
           <div className="p-2 text-sm text-secondary hover:text-black transition duration-300 cursor-pointer">
             {t("contact_number")}
           </div>

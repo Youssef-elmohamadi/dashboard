@@ -74,8 +74,8 @@ const ReturnPolicyPage: React.FC = () => {
     <div className="min-h-screen">
       <SEO
         title={{
-          ar: `تشطيبة - سياسة الاسترجاع والاستبدال`,
-          en: `Tashtiba - Return & Exchange Policy`,
+          ar: `سياسة الاسترجاع والاستبدال`,
+          en: `Return & Exchange Policy`,
         }}
         description={{
           ar: `تعرّف على سياسة الاسترجاع والاستبدال لمنتجات تشطيبة في مصر. نقدم دليلاً واضحاً لعملية الإرجاع، شروط القبول، والاستثناءات لضمان تجربة تسوق سلسة.`,
@@ -110,10 +110,16 @@ const ReturnPolicyPage: React.FC = () => {
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/return-policy" },
           { lang: "en", href: "https://tashtiba.com/en/return-policy" },
-          { lang: "x-default", href: "https://tashtiba.com/en/return-policy" },
+          { lang: "x-default", href: "https://tashtiba.com/ar/return-policy" },
         ]}
         url={`https://tashtiba.com/${lang}/return-policy`}
         image="https://tashtiba.com/og-image.png"
+        structuredData={{
+          "@type": "WebPage",
+          url: `https://tashtiba.com/${lang}/return-policy`,
+          inLanguage: lang,
+        }}
+        lang={lang as "ar" | "en"}
       />
 
       <div className="max-w-4xl mx-auto py-20 px-4 sm:px-6 lg:px-8">

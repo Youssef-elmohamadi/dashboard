@@ -1,8 +1,10 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 import { getAdminUser } from "../../../api/AdminApi/profileApi/_requests";
-import { handleLogout } from "../../../components/common/Auth/Logout";
+import { handleLogout } from "../../common/Auth/Logout";
 import { useNavigate } from "react-router-dom";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import i18n from "../../../i18n";
+
 interface UserContextType {
   userId: number | null;
   setUserId: (id: number) => void;
@@ -20,32 +22,46 @@ interface UserProviderProps {
 export const AdminProvider = ({ children }: UserProviderProps) => {
   const navigate = useNavigate();
   const { lang } = useDirectionAndLanguage();
-  useEffect(() => {
-    const storedAdminId = localStorage.getItem("admin_id");
-    console.log("Stored Admin ID:", storedAdminId);
 
-    if (storedAdminId) {
-      const fetchData = async (id: number) => {
-        try {
-          await getAdminUser(id);
-        } catch (error: any) {
-          console.error("Failed to get data", error);
-          if (error.response && error.response.status === 401) {
-            handleLogout("admin", navigate, lang);
-          }
-        }
-      };
-      fetchData(Number(storedAdminId));
-    }
-  }, []);
   const [userId, setUserId] = useState<number | null>(null);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const storedAdminId = localStorage.getItem("admin_id");
-    if (storedAdminId) {
-      setUserId(Number(storedAdminId));
+    if (!storedAdminId) {
+      handleLogout("admin", navigate, lang);
+      return;
     }
-  }, []);
+
+    const id = Number(storedAdminId);
+    setUserId(id);
+
+    const fetchDataAndLoadTranslations = async () => {
+      try {
+        await getAdminUser(id);
+
+        const namespaces = [
+          "Status",
+          "AdminsTablesActions",
+          "OrderDetails",
+          "DateFilter",
+          "TopSellingTable",
+        ];
+
+        await i18n.loadNamespaces(namespaces);
+        setIsReady(true);
+      } catch (error: any) {
+        console.error("Failed to get data", error);
+        if (error.response?.status === 401) {
+          handleLogout("admin", navigate, lang);
+        }
+      }
+    };
+
+    fetchDataAndLoadTranslations();
+  }, [lang, navigate]);
+
+  if (!isReady) return null;
 
   return (
     <UserContext.Provider value={{ userId, setUserId }}>

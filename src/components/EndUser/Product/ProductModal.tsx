@@ -10,39 +10,44 @@ import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import { Product } from "../../../types/Product";
 import { Category } from "../../../types/Categories";
 import { ImageObject, Review } from "../../../types/Common";
+import { CloseIcon } from "../../../icons";
 
 const ProductModal = () => {
-  const [selectedImage, setSelectedImage] = useState("");
   const { modalType, openModal, modalProps, closeModal }: any = useModal();
-  const dispatch = useDispatch();
+  const [selectedImage, setSelectedImage] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch();
   const { t } = useTranslation(["EndUserProductModal"]);
   const { data: categories } = useCategories();
+
+  useEffect(() => {
+    if (modalProps?.images && modalProps.images.length > 0) {
+      setSelectedImage(modalProps.images[0]?.image);
+    }
+  }, [modalProps]);
+
+  if (modalType !== "product" || !modalProps) {
+    return null;
+  }
 
   const handleAddToCart = (item: Product) => {
     dispatch(addItem({ item, quantity }));
     openModal("addtocart", { ...item, quantity });
   };
 
-  useEffect(() => {
-    if (modalProps?.images) {
-      setSelectedImage(modalProps.images[0]?.image || null);
-    }
-  }, [modalProps]);
-
-  if (modalType !== "product") return null;
-
   const images = modalProps.images?.map(
     (imageObj: ImageObject) => imageObj.image
   );
-  console.log(modalProps);
 
   const categoryName =
     categories?.find((cat: Category) => cat.id === modalProps?.category_id)
       ?.name || t("unknownCategory");
-  const discounted = modalProps.discount_price;
-  const finalPrice = discounted || modalProps.price;
 
+  const hasDiscount =
+    modalProps.discount_price && modalProps.discount_price < modalProps.price;
+  const finalPrice = hasDiscount ? modalProps.discount_price : modalProps.price;
+  const totalPriceOfItem = (+finalPrice * quantity).toFixed(2);
+  const totalOutOfDiscount = (+modalProps.price * quantity).toFixed(2);
   return (
     <div
       onClick={closeModal}
@@ -53,17 +58,20 @@ const ProductModal = () => {
         className="bg-white p-6 rounded-xl shadow-lg md:w-4/5 lg:w-2/3 w-[calc(100%-30px)] relative max-h-[90vh] overflow-y-auto"
       >
         <button
-          className="absolute z-50 top-3 right-3 bg-gray-500 w-8 h-8 rounded-full text-white text-lg"
+          className="absolute z-50 top-3 right-3 bg-gray-500 w-8 h-8 rounded-full text-white text-lg flex items-center justify-center"
           onClick={closeModal}
         >
-          ✕
+          <CloseIcon className="w-4 h-4" />
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-7">
+          {/* Image Gallery Section */}
           <div>
             <InnerImageZoom
               src={selectedImage}
-              zoomSrc={selectedImage}
+              zoomSrc={
+                selectedImage || "/images/product/placeholder-image.webp"
+              }
               zoomType="hover"
               zoomPreload={false}
               className="rounded w-full max-h-[400px] object-contain"
@@ -79,11 +87,13 @@ const ProductModal = () => {
                       ? "border-[#d62828]"
                       : "border-gray-300"
                   }`}
+                  alt={`${modalProps?.name} - ${t("image")} ${index + 1}`}
                 />
               ))}
             </div>
           </div>
 
+          {/* Product Details Section */}
           <div className="space-y-4">
             <h2 className="text-2xl font-bold">{modalProps?.name}</h2>
             <p className="text-sm text-gray-700">{modalProps?.description}</p>
@@ -93,30 +103,37 @@ const ProductModal = () => {
               <span className="font-semibold">{categoryName}</span>
             </div>
 
-            <div className="flex gap-3 items-center">
-              <span className="text-lg font-bold end-user-text-base">
-                {discounted && (
-                  <span className="line-through text-sm text-gray-500 mr-2">
+            <div className="flex flex-col gap-2">
+              <StarRatings
+                rating={modalProps.rate || 0}
+                starRatedColor="#facc15"
+                numberOfStars={5}
+                starDimension="20px"
+                starSpacing="2px"
+                name="rating"
+              />
+              <div className="flex items-center gap-3">
+                <span className="text-lg font-bold end-user-text-base">
+                  {finalPrice} {t("egp")}
+                </span>
+                {hasDiscount && (
+                  <span className="line-through text-sm text-gray-500">
                     {modalProps.price} {t("egp")}
                   </span>
                 )}
-                {finalPrice} {t("egp")}
-              </span>
-              {discounted && (
-                <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
-                  {t("discountApplied")}
-                </span>
-              )}
+                {hasDiscount && (
+                  <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                    {t("discountApplied")}{" "}
+                    {Math.round(
+                      ((modalProps.price - modalProps.discount_price) /
+                        modalProps.price) *
+                        100
+                    )}
+                    % {t("sale")}
+                  </span>
+                )}
+              </div>
             </div>
-
-            <StarRatings
-              rating={modalProps.rate || 0}
-              starRatedColor="#facc15"
-              numberOfStars={5}
-              starDimension="20px"
-              starSpacing="2px"
-              name="rating"
-            />
 
             <div className="flex gap-4 items-center">
               <span className="text-sm text-gray-600">{t("quantity")}:</span>
@@ -141,6 +158,16 @@ const ProductModal = () => {
               >
                 +
               </button>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-lg font-bold end-user-text-base">
+                {totalPriceOfItem} {t("egp")}
+              </span>
+              {hasDiscount && (
+                <span className="line-through text-sm text-gray-500">
+                  {totalOutOfDiscount} {t("egp")}
+                </span>
+              )}
             </div>
 
             <button

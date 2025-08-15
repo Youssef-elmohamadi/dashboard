@@ -5,7 +5,9 @@ import { useAllCategories } from "../../../hooks/Api/SuperAdmin/useCategories/us
 import { useGetBannerById } from "../../../hooks/Api/SuperAdmin/useBanners/useSuperAdminBanners";
 import { AxiosError } from "axios";
 import SEO from "../../common/SEO/seo";
-import PageStatusHandler, { PageStatus } from "../../common/PageStatusHandler/PageStatusHandler";
+import PageStatusHandler, {
+  PageStatus,
+} from "../../common/PageStatusHandler/PageStatusHandler";
 
 const BannerDetails: React.FC = () => {
   const { id } = useParams();
@@ -64,8 +66,8 @@ const BannerDetails: React.FC = () => {
       <div className="banner-details p-6 max-w-5xl mx-auto space-y-8">
         <SEO
           title={{
-            ar: `تشطيبة - تفاصيل البانر ${banner?.title || ""}`,
-            en: `Tashtiba - Banner Details ${banner?.title || ""} (Super Admin)`,
+            ar: ` تفاصيل البانر ${banner?.title || ""}`,
+            en: `Banner Details ${banner?.title || ""} (Super Admin)`,
           }}
           description={{
             ar: `استعرض التفاصيل الكاملة للبانر "${
@@ -179,10 +181,12 @@ const BannerDetails: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-gray-200">
             <p>
-              <strong>{t("createdAt")}:</strong> {formatDate(banner?.created_at)}
+              <strong>{t("createdAt")}:</strong>{" "}
+              {formatDate(banner?.created_at)}
             </p>
             <p>
-              <strong>{t("updatedAt")}:</strong> {formatDate(banner?.updated_at)}
+              <strong>{t("updatedAt")}:</strong>{" "}
+              {formatDate(banner?.updated_at)}
             </p>
           </div>
         </section>

@@ -37,7 +37,7 @@ const BottomNav = () => {
         {/* Home NavLink */}
         <div className="w-1/5 flex flex-col items-center justify-center">
           <NavLink
-            to={`/${lang}/`}
+            to={`/${lang}`}
             className={({ isActive }) =>
               `flex flex-col items-center justify-center transition-colors duration-300 ${
                 isActive || location.pathname === `/${lang}`

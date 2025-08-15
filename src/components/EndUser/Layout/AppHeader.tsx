@@ -58,8 +58,8 @@ const AppHeader = () => {
   }, [uToken, navigate, lang]);
   const altTexts = {
     logo: {
-      ar: "تشطيبة - السوق الإلكتروني",
-      en: "Tashtiba - Online Marketplace",
+      ar: " السوق الإلكتروني",
+      en: "Online Marketplace",
     },
     avatar: {
       ar: "صورة مستخدم تشطيبة",
@@ -80,8 +80,8 @@ const AppHeader = () => {
         <MobileSearchOverlay
           isMobileSearchOpen={isMobileSearchOpen}
           toggleMobileSearch={toggleMobileSearch}
-          t={t} 
-          dir={dir} 
+          t={t}
+          dir={dir}
         />
 
         {/* Desktop Search Bar */}

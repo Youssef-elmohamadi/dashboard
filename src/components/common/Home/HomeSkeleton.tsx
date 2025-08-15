@@ -4,9 +4,7 @@ import { Skeleton } from "../../ui/skeleton";
 export default function DashboardSkeleton() {
   return (
     <div className="grid grid-cols-12 gap-4 md:gap-6 animate-pulse">
-      {/* Left column */}
       <div className="col-span-12 space-y-6 xl:col-span-7">
-        {/* EcommerceMetrics Skeleton */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
           {[...Array(2)].map((_, i) => (
             <div

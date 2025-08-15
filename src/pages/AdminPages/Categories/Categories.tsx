@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import SEO from "../../../components/common/SEO/seo"; 
+import SEO from "../../../components/common/SEO/seo";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/admin/Tables/BasicTableTS";
@@ -58,10 +58,10 @@ const Categories = () => {
 
   return (
     <>
-      <SEO 
+      <SEO
         title={{
-          ar: "تشطيبة - إدارة الفئات",
-          en: "Tashtiba - Category Management",
+          ar: " إدارة الفئات",
+          en: "Category Management",
         }}
         description={{
           ar: "صفحة إدارة فئات المنتجات في تشطيبة. عرض، إضافة، تعديل، وحذف الفئات.",

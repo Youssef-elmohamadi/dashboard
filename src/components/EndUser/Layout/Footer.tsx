@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import FooterSection from "./FooterLinks";
 import { handleLogout } from "../../common/Auth/Logout";
@@ -10,9 +10,6 @@ import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import {
   FacebookIcon,
   InstagramIcon,
-  LinkedInIcon,
-  TwitterIcon,
-  YouTubeIcon,
 } from "../../../icons/SocialmediaIcon";
 import MapIcon from "../../../icons/MapIcon";
 import CallIcon from "../../../icons/CallIcon";
@@ -22,6 +19,7 @@ import LogoutIcon from "../../../icons/LogoutIcon";
 import StoreIcon from "../../../icons/StoreIcon";
 import HeartIcon from "../../../icons/HeartIcon";
 import { Order } from "../../../icons";
+import TiktokIcon from "../../../icons/TiktokIcon";
 
 export default function Footer() {
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
@@ -32,18 +30,12 @@ export default function Footer() {
   const { t } = useTranslation(["EndUserFooter"]);
   const { data: categories } = useCategories();
   const { lang } = useDirectionAndLanguage();
-  const socialIcons = useMemo(
-    () => [LinkedInIcon, YouTubeIcon, InstagramIcon, TwitterIcon, FacebookIcon],
-    []
-  );
-
   const iconClass =
     "text-gray-400 hover:text-red-400 transition duration-300 transform hover:scale-125";
 
   return (
     <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white px-6 py-14 shadow-inner">
       <div className="max-w-7xl mx-auto space-y-16">
-        {/* Logo & Tagline */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-gray-700 pb-8">
           <div>
             <LazyImage
@@ -76,7 +68,6 @@ export default function Footer() {
               </button>
             </div>
           </div>
-          {/* Socials & App Download */}
           <div className="flex flex-col justify-between gap-6">
             <div>
               <p className="mb-2 font-medium text-sm">
@@ -84,19 +75,19 @@ export default function Footer() {
               </p>
               <div className="flex gap-4 text-2xl">
                 <a
-                  href="https://www.linkedin.com"
+                  href="https://www.tiktok.com"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <LinkedInIcon className={iconClass} />
+                  <TiktokIcon className={iconClass} />
                 </a>
-                <a
+                {/* <a
                   href="https://www.youtube.com"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <YouTubeIcon className={iconClass} />
-                </a>
+                </a> */}
                 <a
                   href="https://www.instagram.com/tashtiba.eg/"
                   target="_blank"
@@ -104,13 +95,13 @@ export default function Footer() {
                 >
                   <InstagramIcon className={iconClass} />
                 </a>
-                <a
+                {/* <a
                   href="https://twitter.com"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <TwitterIcon className={iconClass} />
-                </a>
+                </a> */}
                 <a
                   href="https://www.facebook.com/share/1aKRVrf8rZ/?mibextid=wwXIfr"
                   target="_blank"
@@ -227,7 +218,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <StoreIcon className="text-red-400 text-base" />
-                <Link to="/admin" className="hover:text-red-400 ">
+                <Link to="/admin/signup" className="hover:text-red-400 ">
                   {t("footer.be_seller")}
                 </Link>
               </li>
@@ -255,7 +246,7 @@ export default function Footer() {
             <ul className="text-sm space-y-1">
               <li>
                 <Link
-                  to="/admin"
+                  to="/admin/signup"
                   className="text-red-500 flex items-center gap-2 hover:underline"
                 >
                   <RocketIcon className="text-red-400 text-lg" />
@@ -267,11 +258,11 @@ export default function Footer() {
         </div>
 
         {/* Bottom Strip */}
-        <div className="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+        <div className="border-t border-gray-700 pt-6 flex justify-center items-center text-sm text-gray-400">
           <p
             dangerouslySetInnerHTML={{ __html: t("footer.rights_reserved") }}
           />
-          <div className="flex gap-2 mt-3 md:mt-0">
+          {/* <div className="flex gap-2 mt-3 md:mt-0">
             {["card-01", "card-02", "card-03"].map((card) => (
               <LazyImage
                 key={card}
@@ -280,7 +271,7 @@ export default function Footer() {
                 className="h-[80px] rounded shadow-sm"
               />
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>

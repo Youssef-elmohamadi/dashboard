@@ -16,8 +16,8 @@ const SuperAdminForgotPassword = () => {
     <div>
       <SEO
         title={{
-          ar: "تشطيبة - استعادة كلمة مرور المشرف العام",
-          en: "Tashtiba - Super Admin Forgot Password",
+          ar: " استعادة كلمة مرور المشرف العام",
+          en: "Super Admin Forgot Password",
         }}
         description={{
           ar: "صفحة استعادة كلمة المرور للمشرف العام في نظام تشطيبة. قم بإعادة تعيين كلمة مرور حساب المشرف العام.",

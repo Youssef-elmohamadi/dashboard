@@ -9,8 +9,8 @@ export default function NotFound() {
     <>
       <SEO // تم استبدال PageMeta بـ SEO وتحديد البيانات مباشرة
         title={{
-          ar: "تشطيبة - الصفحة غير موجودة (404)",
-          en: "Tashtiba - Page Not Found (404)",
+          ar: " الصفحة غير موجودة (404)",
+          en: "Page Not Found (404)",
         }}
         description={{
           ar: "عذرًا، الصفحة التي تبحث عنها غير موجودة. يرجى التحقق من الرابط أو العودة إلى الصفحة الرئيسية.",

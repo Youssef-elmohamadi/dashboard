@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import Label from "../form/Label";
@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { login as superAdminLogin } from "../../../api/SuperAdminApi/Auth/_requests";
 import { login as adminLogin } from "../../../api/AdminApi/authApi/_requests";
 import { login as userLogin } from "../../../api/EndUserApi/endUserAuth/_requests";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 type UserType = "super_admin" | "admin" | "end_user";
 interface SignInFormProps {
   userType: UserType;
@@ -24,6 +25,7 @@ export default function SignInForm({ userType }: SignInFormProps) {
     generalError?: string;
   }>({});
 
+  const { lang, dir } = useDirectionAndLanguage();
   const { t } = useTranslation(["auth"]);
   const navigate = useNavigate();
 
@@ -49,7 +51,6 @@ export default function SignInForm({ userType }: SignInFormProps) {
     if (name === "password") setPassword(value);
   };
 
-  // API حسب نوع المستخدم
   const getLoginFunction = () => {
     switch (userType) {
       case "super_admin":
@@ -70,9 +71,9 @@ export default function SignInForm({ userType }: SignInFormProps) {
       case "admin":
         return "/admin";
       case "end_user":
-        return "/";
+        return `/${lang}`;
       default:
-        return "/";
+        return `/${lang}`;
     }
   };
 
@@ -126,10 +127,12 @@ export default function SignInForm({ userType }: SignInFormProps) {
           </div>
           <form onSubmit={handleSubmit}>
             {errors.loginError && (
-              <p className="text-error-500 text-xs mt-1">{errors.loginError}</p>
+              <p className="text-error-500 text-base mt-1">
+                {errors.loginError}
+              </p>
             )}
             {errors.generalError && (
-              <p className="text-error-500 text-xs mt-1">
+              <p className="text-error-500 text-base mt-1">
                 {errors.generalError}
               </p>
             )}
@@ -146,7 +149,9 @@ export default function SignInForm({ userType }: SignInFormProps) {
                   value={email}
                 />
                 {errors.email && (
-                  <p className="text-error-500 text-xs mt-1">{errors.email}</p>
+                  <p className="text-error-500 text-base mt-1">
+                    {errors.email}
+                  </p>
                 )}
               </div>
               <div>
@@ -163,7 +168,9 @@ export default function SignInForm({ userType }: SignInFormProps) {
                   />
                   <span
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                    className={`absolute z-30 -translate-y-1/2 cursor-pointer ${
+                      dir === "rtl" ? "left-4" : "right-4"
+                    } top-1/2`}
                   >
                     {showPassword ? (
                       <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
@@ -174,12 +181,27 @@ export default function SignInForm({ userType }: SignInFormProps) {
                 </div>
               </div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Checkbox checked={isChecked} onChange={setIsChecked} />
-                  <span className="block font-normal text-gray-700 text-theme-sm dark:text-gray-400">
-                    {t("keepSignedIn")}
-                  </span>
-                </div>
+                {userType === "super_admin" ? (
+                  <div className="flex items-center gap-3">
+                    <Checkbox checked={isChecked} onChange={setIsChecked} />
+                    <span className="block font-normal text-gray-700 text-theme-sm dark:text-gray-400">
+                      {t("keepSignedIn")}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="text-theme-sm text-gray-700 dark:text-gray-400">
+                    <Link
+                      to={
+                        userType === "end_user"
+                          ? `/${lang}/signup`
+                          : `/${userType}/signup`
+                      }
+                      className="text-brand-500 hover:text-brand-600 dark:text-brand-400 font-medium"
+                    >
+                      {t("signUpTitle")}
+                    </Link>
+                  </div>
+                )}
                 <Link
                   to={`/${userType}/reset-password`}
                   className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"

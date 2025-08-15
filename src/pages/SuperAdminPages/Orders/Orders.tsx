@@ -33,7 +33,6 @@ const Orders = () => {
     pageIndex,
     searchValues
   );
-  console.log(data);
 
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
@@ -87,10 +86,10 @@ const Orders = () => {
   });
   return (
     <>
-      <SEO 
+      <SEO
         title={{
-          ar: "تشطيبة - إدارة الطلبات (سوبر أدمن)",
-          en: "Tashtiba - Order Management (Super Admin)",
+          ar: " إدارة الطلبات (سوبر أدمن)",
+          en: "Order Management (Super Admin)",
         }}
         description={{
           ar: "صفحة إدارة طلبات العملاء بواسطة المشرف العام في تشطيبة. عرض، تتبع، وإلغاء الطلبات.",
@@ -142,7 +141,7 @@ const Orders = () => {
             },
             {
               key: "shipping_status",
-              label: "Shipping Status", 
+              label: "Shipping Status",
               type: "select",
               options: [
                 { label: t("ordersPage.statuses.pending"), value: "pending" },
@@ -153,8 +152,8 @@ const Orders = () => {
                 },
               ],
             },
-            { key: "from_date", label: "From", type: "date" }, 
-            { key: "to_date", label: "To", type: "date" }, 
+            { key: "from_date", label: "From", type: "date" },
+            { key: "to_date", label: "To", type: "date" },
           ]}
           setSearchParam={handleSearch}
           searchValues={searchValues}

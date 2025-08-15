@@ -144,10 +144,10 @@ export default function CreateRole() {
 
   return (
     <div className=" p-6">
-      <SEO 
+      <SEO
         title={{
-          ar: "تشطيبة - إنشاء صلاحية جديدة (سوبر أدمن)",
-          en: "Tashtiba - Create New Role (Super Admin)",
+          ar: " إنشاء صلاحية جديدة (سوبر أدمن)",
+          en: "Create New Role (Super Admin)",
         }}
         description={{
           ar: "صفحة إنشاء صلاحية (دور) جديد للمستخدمين بواسطة المشرف العام في تشطيبة. حدد الاسم والصلاحيات المخصصة.",

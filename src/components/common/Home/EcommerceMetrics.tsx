@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { ArrowDownIcon, ArrowUpIcon } from "../../../icons";
+// import { ArrowDownIcon, ArrowUpIcon } from "../../../icons";
 import Badge from "../../ui/badge/Badge";
 import { FC } from "react";
 import { EcommerceMetricsProps } from "../../../types/DashboardHome";
@@ -14,9 +14,9 @@ const EcommerceMetrics: FC<EcommerceMetricsProps> = ({
   return (
     <div className={parentClassName}>
       {metrics?.map((metric, index) => {
-        const isPositive = metric.percentage!! >= 0;
-        const ArrowIcon = isPositive ? ArrowUpIcon : ArrowDownIcon;
-        const badgeColor = isPositive ? "success" : "error";
+        // const isPositive = metric.percentage!! >= 0;
+        // const ArrowIcon = isPositive ? ArrowUpIcon : ArrowDownIcon;
+        // const badgeColor = isPositive ? "success" : "error";
 
         return (
           <div

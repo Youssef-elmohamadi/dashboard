@@ -17,8 +17,9 @@
     }
   },
   "AboutSection": {
-    "heading": "Our mission? To turn your vision into reality.",
-    "description": "At Tashtiba, we don't just sell products; we offer integrated solutions that make your home finishing journey a smooth and enjoyable experience. From the foundations to the final touches, we're your partner every step of the way.",
+    "heading": "Everything You Need to Finish Your Dream Home – All in One Place!",
+    "description": "Welcome to Tashtiba, your first destination for high-quality and affordable home finishing and furnishing solutions. We offer a complete range of products including doors (wood and metal), lighting (indoor and outdoor), home furniture (modern and classic), decorations, faucets and sanitary ware, plumbing installation and finishing, as well as electrical tools, tiles, ceramics, and other essential building materials.\n\nAt Tashtiba, we ensure the latest designs and premium quality materials, with fast delivery across all governorates of Egypt and expert support to help you choose the right products for your needs. Whether you’re starting from scratch or renovating your home, you’ll find everything you need in one place.",
+    "alt": "Tashtiba | Modern and Elegant Living Room",
     "features": {
       "quality": {
         "title": "Unparalleled quality",
@@ -26,7 +27,7 @@
       },
       "price": {
         "title": "Affordable prices",
-        "description": "We offer competitive prices that don't compromise on quality or style quality."
+        "description": "We offer competitive prices that don't compromise on quality or style."
       },
       "delivery": {
         "title": "Fast and reliable delivery",

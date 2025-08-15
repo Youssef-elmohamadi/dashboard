@@ -1,18 +1,24 @@
 import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { removeItem } from "../Redux/cartSlice/CartSlice";
+import {
+  deleteItem,
+  clearCart,
+  removeItem,
+} from "../Redux/cartSlice/CartSlice";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import useClickOutside from "../context/useClickOutside";
 import CartIcon from "../../../icons/CartIcon";
 import DeleteIcon from "../../../icons/DeleteIcon";
 
+// تحديث الـ interface لتشمل سعر الخصم
 interface CartItem {
-  id: string;
+  id: string | number;
   name: string;
   quantity: number;
   price: number;
+  discount_price?: number;
   images: { image: string }[];
 }
 
@@ -28,7 +34,6 @@ const CartPopup: React.FC<CartPopupProps> = ({
   lang,
 }) => {
   const items: CartItem[] = useSelector((state: any) => state.cart.items);
-
   const totalPrice: number = useSelector((state: any) => state.cart.totalPrice);
   const totalQuantity: number = useSelector(
     (state: any) => state.cart.totalQuantity
@@ -93,7 +98,8 @@ const CartPopup: React.FC<CartPopupProps> = ({
                   </div>
                   <div className="text-sm font-medium">
                     {t("navbar.priceWithCurrency", {
-                      price: item.price * item.quantity,
+                      price:
+                        (item.discount_price || item.price) * item.quantity,
                     })}
                   </div>
                   <button
@@ -115,6 +121,15 @@ const CartPopup: React.FC<CartPopupProps> = ({
           </ul>
           {items.length > 0 && (
             <>
+              <button
+                onClick={() => {
+                  dispatch(clearCart());
+                }}
+                className="mt-4 w-full inline-block px-2 text-center text-red-600 bg-red-50 py-2 rounded hover:bg-red-100 transition font-semibold text-sm"
+              >
+                {t("navbar.clearCart")}
+              </button>
+
               <div className="mt-4 flex justify-between font-semibold">
                 <span>{t("navbar.total")}:</span>
                 <span>

@@ -45,6 +45,7 @@ export type BasicInfoFormProps = {
   serverErrors: ServerErrors;
   handleChange: HandleChangeFn;
   clientErrors: ClientErrors;
+  inputRefs?: React.MutableRefObject<Record<string, HTMLInputElement | null>>;
 };
 
 export type BreadCrumpProps = {

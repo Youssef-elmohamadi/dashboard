@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BasicInfoForm from "./BasicInfoForm";
 import BreadCrump from "./BreadCrump";
@@ -29,6 +29,8 @@ export default function SignUpForm() {
     errors: {},
   });
 
+  const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+
   const [dataForm, setDataForm] = useState<FormDataType>({
     adminInfo: {
       first_name: "",
@@ -54,21 +56,6 @@ export default function SignUpForm() {
       },
     ],
   });
-
-  const handleSendOtp = async (): Promise<boolean> => {
-    try {
-      await sendOtp({
-        identifier: dataForm.vendorInfo.phone,
-        type: "admin",
-      });
-      toast.success(t("otp.successSendOtp"));
-      return true;
-    } catch (error) {
-      console.error("Error sending OTP:", error);
-      toast.error(t("otp.failedSendOtp"));
-      return false;
-    }
-  };
 
   const formData = convertToFormData(dataForm);
 
@@ -105,71 +92,40 @@ export default function SignUpForm() {
 
   const handleNextStep = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    let isValid = true;
-
+    setClientErrors({});
+    let validationResult;
     if (step === 1) {
-      isValid = validateAdminForm(setClientErrors, dataForm, t);
+      validationResult = validateAdminForm(dataForm, t);
     } else if (step === 2) {
-      isValid = validateVendorForm(setClientErrors, dataForm, t);
+      validationResult = validateVendorForm(dataForm, t);
     }
 
-    if (isValid) {
+    if (validationResult?.isValid) {
       setStep(step + 1);
-    }
-  };
-
-  const handleSubmitOtp = async () => {
-    const enteredOtp = otp.join("");
-
-    if (enteredOtp.length < 6) {
-      setOtpError(t("otp.invalid"));
-      return;
-    }
-
-    try {
-      const res = await verifyOtp({
-        identifier: dataForm.vendorInfo.phone,
-        type: "admin",
-        otp: enteredOtp,
-      });
-
-      if (res?.status === 200) {
-        toast.success(t("otp.success"));
-        navigate("/admin/signin");
-      }
-    } catch (err: any) {
-      const message = t("otp.invalid");
-      setOtpError(message);
+    } else {
+      setClientErrors(validationResult!!.errors);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({ general: "", global: "", errors: {} });
-    const isValid = validateVendorForm(setClientErrors, dataForm, t);
-    if (!isValid) return;
+    setClientErrors({});
+
+    const validationResult = validateVendorForm(dataForm, t);
+    if (!validationResult.isValid) {
+      setClientErrors(validationResult.errors);
+      return;
+    }
 
     try {
-      if (!isRegistered) {
-        setIsRegistering(true);
-        const res = await register(formData);
-
-        if (res?.status === 200 || res?.status === 201) {
-          setIsRegistered(true);
-          toast.success(t("auth:registerSuccess"));
-        } else {
-          return;
-        }
-      }
-
-      setIsSendingOtp(true);
-      const otpSent = await handleSendOtp();
-      if (otpSent) {
-        setStep(3);
-      }
+      setIsRegistering(true);
+      await register(formData);
+      toast.success(t("auth:registerSuccess"));
+      navigate("/admin/signin");
     } catch (error: any) {
       const rawErrors = error?.response?.data.errors;
-
+      toast.error(t("auth:registerFailed"));
       if (Array.isArray(rawErrors)) {
         const formattedErrors: Record<string, string[]> = {};
         rawErrors.forEach((err: { code: string; message: string }) => {
@@ -206,7 +162,6 @@ export default function SignUpForm() {
       setIsSendingOtp(false);
     }
   };
-  console.log(errors);
 
   return (
     <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto pb-5">
@@ -215,12 +170,10 @@ export default function SignUpForm() {
           {t("signUpTitle")}
         </h1>
       </div>
-
       <BreadCrump step={step} setStep={setStep} />
-
       <form onSubmit={handleSubmit}>
         {errors.general && (
-          <div className="text-red-600 bg-red-200 p-4 mt-0.5 rounded-md mb-4">
+          <div className="text-red-600 text-center bg-red-100 p-4 my-1 rounded mb-4">
             {errors.general}
           </div>
         )}
@@ -230,9 +183,9 @@ export default function SignUpForm() {
             handleChange={handleAdminChange}
             clientErrors={clientErrors}
             serverErrors={errors}
+            inputRefs={inputRefs}
           />
         )}
-
         {step === 2 && (
           <StoreInfoForm
             documentInfo={dataForm.documentInfo}
@@ -241,25 +194,9 @@ export default function SignUpForm() {
             handleChange={handleVendorChange}
             clientErrors={clientErrors}
             serverErrors={errors}
+            inputRefs={inputRefs}
           />
         )}
-
-        {step === 3 && (
-          <OTPPage
-            identifier={dataForm.vendorInfo.phone}
-            otp={otp}
-            setOtp={setOtp}
-            onSubmit={handleSubmitOtp}
-            onResend={handleSendOtp}
-            title={t("otp.title")}
-            subtitle={t("otp.subtitle")}
-            resendText={t("otp.resendBtn")}
-            continueText={t("otp.continue")}
-            otpError={otpError}
-            setOtpError={setOtpError}
-          />
-        )}
-
         <div className="mt-5">
           {step < 2 && (
             <button
@@ -291,10 +228,9 @@ export default function SignUpForm() {
           )}
         </div>
       </form>
-
       <div className="mt-5">
         <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-          {t("alreadyHaveAccount")}{" "}
+          {t("alreadyHaveAccount")}
           <Link
             to="/admin/signin"
             className="text-brand-500 hover:text-brand-600 dark:text-brand-400"

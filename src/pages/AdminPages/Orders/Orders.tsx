@@ -59,15 +59,15 @@ const Orders = () => {
   const { mutateAsync: cancelOrder } = useCancelOrder();
   const handleCancel = async (id: ID) => {
     await alertDelete(id, cancelOrder, refetch, {
-      confirmTitle: t("OrdersTable:ordersPage.cancel.confirmTitle"), 
-      confirmText: t("OrdersTable:ordersPage.cancel.confirmText"), 
-      confirmButtonText: t("OrdersTable:ordersPage.cancel.confirmButtonText"), 
-      cancelButtonText: t("OrdersTable:ordersPage.cancel.cancelButtonText"), 
-      successTitle: t("OrdersTable:ordersPage.cancel.successTitle"), 
-      successText: t("OrdersTable:ordersPage.cancel.successText"), 
-      errorTitle: t("OrdersTable:ordersPage.cancel.errorTitle"), 
-      errorText: t("OrdersTable:ordersPage.cancel.errorText"), 
-      lastButton: t("OrdersTable:ordersPage.cancel.lastButton"), 
+      confirmTitle: t("OrdersTable:ordersPage.cancel.confirmTitle"),
+      confirmText: t("OrdersTable:ordersPage.cancel.confirmText"),
+      confirmButtonText: t("OrdersTable:ordersPage.cancel.confirmButtonText"),
+      cancelButtonText: t("OrdersTable:ordersPage.cancel.cancelButtonText"),
+      successTitle: t("OrdersTable:ordersPage.cancel.successTitle"),
+      successText: t("OrdersTable:ordersPage.cancel.successText"),
+      errorTitle: t("OrdersTable:ordersPage.cancel.errorTitle"),
+      errorText: t("OrdersTable:ordersPage.cancel.errorText"),
+      lastButton: t("OrdersTable:ordersPage.cancel.lastButton"),
     });
   };
 
@@ -84,8 +84,8 @@ const Orders = () => {
     <>
       <SEO // PageMeta replaced with SEO, and data directly set
         title={{
-          ar: "تشطيبة - إدارة الطلبات",
-          en: "Tashtiba - Order Management",
+          ar: " إدارة الطلبات",
+          en: "Order Management",
         }}
         description={{
           ar: "صفحة إدارة طلبات العملاء في تشطيبة. عرض، تتبع، وإلغاء الطلبات.",
@@ -132,28 +132,28 @@ const Orders = () => {
                 {
                   label: t("OrdersTable:ordersPage.statuses.pending"),
                   value: "pending",
-                }, 
+                },
                 {
                   label: t("OrdersTable:ordersPage.statuses.paid"),
                   value: "paid",
-                }, 
+                },
                 {
                   label: t("OrdersTable:ordersPage.statuses.shipped"),
                   value: "shipped",
-                }, 
+                },
                 {
-                  label: t("OrdersTable:ordersPage.statuses.delivered"), 
+                  label: t("OrdersTable:ordersPage.statuses.delivered"),
                   value: "delivered",
                 },
                 {
-                  label: t("OrdersTable:ordersPage.statuses.canceled"), 
+                  label: t("OrdersTable:ordersPage.statuses.canceled"),
                   value: "cancelled",
                 },
               ],
             },
             {
               key: "shipping_status",
-              label: "Shipping Status", 
+              label: "Shipping Status",
               type: "select",
               options: [
                 {
@@ -163,19 +163,19 @@ const Orders = () => {
                 {
                   label: t("OrdersTable:ordersPage.statuses.shipped"),
                   value: "shipped",
-                }, 
+                },
                 {
-                  label: t("OrdersTable:ordersPage.statuses.delivered"), 
+                  label: t("OrdersTable:ordersPage.statuses.delivered"),
                   value: "delivered",
                 },
               ],
             },
             {
               key: "from_date",
-              label: "From", 
+              label: "From",
               type: "date",
-            }, 
-            { key: "to_date", label: "To", type: "date" }, 
+            },
+            { key: "to_date", label: "To", type: "date" },
           ]}
           setSearchParam={handleSearch}
           searchValues={searchValues}

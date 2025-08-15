@@ -12,7 +12,7 @@ const CategoryBreadCrump = ({ currentPage }: CategoryBreadCrumpProps) => {
         <li className="inline-flex items-center">
           <Link
             className="flex items-center text-sm text-gray-500 hover:text-[#d62828] focus:outline-hidden  focus:text-[#d62828]"
-            to={`/${lang}/`}
+            to={`/${lang}`}
           >
             {t("breadcrumbCategory.home")}
           </Link>

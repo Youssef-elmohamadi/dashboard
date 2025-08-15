@@ -8,9 +8,9 @@ import { useTranslation } from "react-i18next";
 import { useGetOrderById } from "../../../hooks/Api/EndUser/useOrders/useOrders";
 import { AxiosError } from "axios";
 import { Order } from "../../../types/Orders";
-import SEO from "../../../components/common/SEO/seo"; 
+import SEO from "../../../components/common/SEO/seo";
 import { HiOutlineShoppingCart } from "react-icons/hi2";
-import { Circles } from "react-loader-spinner"; 
+import { Circles } from "react-loader-spinner";
 import { useReviewProduct } from "../../../hooks/Api/EndUser/useProducts/useProducts";
 const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
@@ -34,9 +34,8 @@ const OrderDetailsPage: React.FC = () => {
   const [globalError, setGlobalError] = useState(false);
   const navigate = useNavigate();
 
-
   const primaryColor = "#d02828";
-  const secondaryColor = "#d62828"; 
+  const secondaryColor = "#d62828";
 
   useEffect(() => {
     const token = localStorage.getItem("end_user_token");
@@ -85,11 +84,11 @@ const OrderDetailsPage: React.FC = () => {
 
   const seoTitle = order
     ? lang === "ar"
-      ? `تشطيبة - تفاصيل الطلب رقم ${order.id}`
-      : `Tashtiba - Order Details #${order.id}`
+      ? `تفاصيل الطلب رقم ${order.id}`
+      : `Order Details #${order.id}`
     : lang === "ar"
-    ? `تشطيبة - تفاصيل الطلب`
-    : `Tashtiba - Order Details`;
+    ? ` تفاصيل الطلب`
+    : `Order Details`;
 
   const seoDescription = order
     ? lang === "ar"
@@ -136,12 +135,13 @@ const OrderDetailsPage: React.FC = () => {
             "Egypt",
           ],
         }}
+        url={`https://tashtiba.com/${lang}/orders/${id}`}
         alternates={[
           { lang: "ar", href: `https://tashtiba.com/ar/orders/${id}` },
           { lang: "en", href: `https://tashtiba.com/en/orders/${id}` },
           {
             lang: "x-default",
-            href: `https://tashtiba.com/en/orders/${id}`,
+            href: `https://tashtiba.com/ar/orders/${id}`,
           },
         ]}
         robotsTag="noindex, nofollow"

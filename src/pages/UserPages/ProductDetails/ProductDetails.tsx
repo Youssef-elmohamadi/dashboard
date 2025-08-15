@@ -128,8 +128,8 @@ const ProductDetails: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-10">
       <SEO
         title={{
-          ar: `تشطيبة - ${product.name} | سعر ومواصفات`,
-          en: `Tashtiba - ${product.name} | Price & Specs`,
+          ar: ` ${product.name} | سعر ومواصفات`,
+          en: `${product.name} | Price & Specs`,
         }}
         description={{
           ar: generateDescription(),
@@ -139,6 +139,7 @@ const ProductDetails: React.FC = () => {
           ar: generateKeywords(),
           en: generateKeywords(),
         }}
+        url={`https://tashtiba.com/${lang}/product/${product.id}`}
         image="https://tashtiba.com/og-image.png"
         alternates={[
           {
@@ -151,9 +152,15 @@ const ProductDetails: React.FC = () => {
           },
           {
             lang: "x-default",
-            href: `https://tashtiba.com/en/product/${product.id}`,
+            href: `https://tashtiba.com/ar/product/${product.id}`,
           },
         ]}
+        structuredData={{
+          "@type": "WebPage",
+          url: `https://tashtiba.com/${lang}/product/${product.id}`,
+          inLanguage: lang,
+        }}
+        lang={lang as "ar" | "en"}
       />
       <div className="grid lg:grid-cols-2 gap-10">
         <div>

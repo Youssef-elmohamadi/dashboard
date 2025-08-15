@@ -4,7 +4,7 @@ import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { alertDelete } from "../../../components/SuperAdmin/Tables/Alert";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; 
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 import { useTranslation } from "react-i18next";
@@ -47,7 +47,6 @@ const Coupons = () => {
       }
     }
   }, [isError, error]);
-  console.log(data);
 
   const couponsData = data?.data ?? [];
   const totalCoupons = data?.total ?? 0;
@@ -119,10 +118,10 @@ const Coupons = () => {
           message={alertData.message}
         />
       )}
-      <SEO 
+      <SEO
         title={{
-          ar: "تشطيبة - إدارة الكوبونات (سوبر أدمن)",
-          en: "Tashtiba - Coupon Management (Super Admin)",
+          ar: " إدارة الكوبونات (سوبر أدمن)",
+          en: "Coupon Management (Super Admin)",
         }}
         description={{
           ar: "صفحة إدارة الكوبونات بواسطة المشرف العام في تشطيبة. عرض، إضافة، تعديل، وحذف الكوبونات.",
@@ -155,11 +154,11 @@ const Coupons = () => {
       <div>
         <SearchTable
           fields={[
-            { key: "code", label: "Code", type: "input" }, 
+            { key: "code", label: "Code", type: "input" },
 
             {
               key: "status",
-              label: "Status", 
+              label: "Status",
               type: "select",
               options: [
                 { label: t("couponsPage.status.active"), value: "1" },
@@ -168,15 +167,15 @@ const Coupons = () => {
             },
             {
               key: "type",
-              label: "Type", 
+              label: "Type",
               type: "select",
               options: [
                 { label: t("couponsPage.types.fixed"), value: "fixed" },
                 { label: t("couponsPage.types.percent"), value: "percent" },
               ],
             },
-            { key: "from_date", label: "From", type: "date" }, 
-            { key: "to_date", label: "To", type: "date" }, 
+            { key: "from_date", label: "From", type: "date" },
+            { key: "to_date", label: "To", type: "date" },
           ]}
           setSearchParam={handleSearch}
           searchValues={searchValues}

@@ -47,8 +47,8 @@ const CategoryDetails: React.FC = () => {
       <>
         <SEO // PageMeta replaced with SEO, and data directly set for missing ID
           title={{
-            ar: "تشطيبة - تفاصيل الفئة - معرف مفقود (سوبر أدمن)",
-            en: "Tashtiba - Category Details - ID Missing (Super Admin)",
+            ar: " تفاصيل الفئة - معرف مفقود (سوبر أدمن)",
+            en: "Category Details - ID Missing (Super Admin)",
           }}
           description={{
             ar: "صفحة تفاصيل الفئة تتطلب معرف فئة صالح. يرجى التأكد من توفير المعرف.",
@@ -85,8 +85,8 @@ const CategoryDetails: React.FC = () => {
       <>
         <SEO
           title={{
-            ar: "تشطيبة - تفاصيل الفئة - جارٍ التحميل (سوبر أدمن)",
-            en: "Tashtiba - Category Details - Loading (Super Admin)",
+            ar: " تفاصيل الفئة - جارٍ التحميل (سوبر أدمن)",
+            en: "Category Details - Loading (Super Admin)",
           }}
           description={{
             ar: "جارٍ تحميل تفاصيل الفئة بواسطة المشرف العام في تشطيبة. يرجى الانتظار.",
@@ -122,8 +122,8 @@ const CategoryDetails: React.FC = () => {
       <>
         <SEO
           title={{
-            ar: "تشطيبة - تفاصيل الفئة - غير موجودة (سوبر أدمن)",
-            en: "Tashtiba - Category Details - Not Found (Super Admin)",
+            ar: " تفاصيل الفئة - غير موجودة (سوبر أدمن)",
+            en: "Category Details - Not Found (Super Admin)",
           }}
           description={{
             ar: "الفئة المطلوبة غير موجودة في نظام تشطيبة. يرجى التحقق من المعرف.",
@@ -158,8 +158,8 @@ const CategoryDetails: React.FC = () => {
       <>
         <SEO
           title={{
-            ar: "تشطيبة - تفاصيل الفئة - خطأ عام (سوبر أدمن)",
-            en: "Tashtiba - Category Details - Global Error (Super Admin)",
+            ar: " تفاصيل الفئة - خطأ عام (سوبر أدمن)",
+            en: "Category Details - Global Error (Super Admin)",
           }}
           description={{
             ar: "حدث خطأ عام أثناء تحميل تفاصيل الفئة بواسطة المشرف العام في تشطيبة. يرجى المحاولة لاحقًا.",
@@ -194,8 +194,8 @@ const CategoryDetails: React.FC = () => {
     <div className="category-details p-6 max-w-5xl mx-auto space-y-8">
       <SEO
         title={{
-          ar: `تشطيبة - تفاصيل الفئة ${category?.name || ""}`,
-          en: `Tashtiba - Category Details ${category?.name || ""}`,
+          ar: ` تفاصيل الفئة ${category?.name || ""}`,
+          en: `Category Details ${category?.name || ""}`,
         }}
         description={{
           ar: `استعرض التفاصيل الكاملة للفئة "${

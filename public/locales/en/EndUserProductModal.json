@@ -1,13 +1,13 @@
 {
-    "unknownCategory": "Unknown Category",
-    "category": "Category",
-    "egp": "EGP",
-    "price": "Price",
-    "discountApplied": "Discount Applied",
-    "quantity": "Quantity",
-    "total": "Total",
-    "addToCart": "Add to Cart",
-    "reviews": "Reviews",
-    "noReviews": "No reviews yet"
-    
+  "unknownCategory": "Unknown Category",
+  "category": "Category",
+  "egp": "EGP",
+  "price": "Price",
+  "discountApplied": "Discount Applied",
+  "quantity": "Quantity",
+  "total": "Total",
+  "addToCart": "Add to Cart",
+  "reviews": "Reviews",
+  "noReviews": "No reviews yet",
+  "sale": "Sale"
 }

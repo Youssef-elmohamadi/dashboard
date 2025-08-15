@@ -15,8 +15,8 @@ export default function AdminSignUp() {
     <>
       <SEO 
         title={{
-          ar: "تشطيبة - تسجيل أدمن جديد",
-          en: "Tashtiba - Admin Sign Up",
+          ar: "تسجيل أدمن جديد",
+          en: "Admin Sign Up",
         }}
         description={{
           ar: "سجل كأدمن جديد لمتجر تشطيبة. أنشئ حسابًا لإدارة متجرك والوصول إلى لوحة التحكم.",

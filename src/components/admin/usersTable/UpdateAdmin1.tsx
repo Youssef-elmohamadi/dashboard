@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
@@ -31,6 +31,7 @@ const UpdateAdmin = () => {
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateAdmin", "Meta"]);
   const { dir } = useDirectionAndLanguage();
+  const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -154,9 +155,27 @@ const UpdateAdmin = () => {
     if (updateData.password && updateData.password.length < 8)
       newErrors.password = t("UpdateAdmin:admin.errors.length_password");
 
+    const isValid = Object.values(newErrors).every((error) => error === "");
     setClientSideErrors(newErrors);
 
-    return Object.values(newErrors).every((error) => error === "");
+    return {
+      isValid,
+      newErrors,
+    };
+  };
+
+  const focusOnError = (errors: Record<string, string | string[]>) => {
+    const errorEntry = Object.entries(errors).find(
+      ([_, value]) =>
+        (typeof value === "string" && value !== "") ||
+        (Array.isArray(value) && value.length > 0)
+    );
+
+    if (errorEntry) {
+      const fieldName = errorEntry[0];
+      const ref = inputRefs?.current[fieldName];
+      ref?.focus();
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -190,14 +209,17 @@ const UpdateAdmin = () => {
       general: "",
     });
 
-    if (!validate()) return;
-    setLoading(true);
     if (!isCurrentlyOnline()) {
       toast.error(t("UpdateAdmin:admin.errors.no_internet"));
       setLoading(false);
       return;
     }
-    console.log(isCurrentlyOnline());
+    const { isValid, newErrors } = validate();
+    if (!isValid) {
+      focusOnError(newErrors);
+      return;
+    }
+    setLoading(true);
 
     try {
       if (id) {
@@ -233,6 +255,7 @@ const UpdateAdmin = () => {
           general: t("UpdateAdmin:admin.errors.general"),
         }));
       }
+      focusOnError(errors);
     } finally {
       setLoading(false);
     }
@@ -252,8 +275,8 @@ const UpdateAdmin = () => {
     >
       <SEO
         title={{
-          ar: "تشطيبة - تحديث مسؤول",
-          en: "Tashtiba - Update Admin",
+          ar: "تحديث مسؤول",
+          en: "Update Admin",
         }}
         description={{
           ar: "صفحة تحديث بيانات حساب المسؤول في نظام تشطيبة. قم بتعديل المعلومات وصلاحيات الحساب.",
@@ -277,7 +300,7 @@ const UpdateAdmin = () => {
             "permissions",
           ],
         }}
-         robotsTag="noindex, nofollow"
+        robotsTag="noindex, nofollow"
       />
       <div>
         <div className="p-4 border-b border-gray-200 dark:border-gray-600">
@@ -307,6 +330,11 @@ const UpdateAdmin = () => {
                 value={updateData.first_name}
                 placeholder={t("UpdateAdmin:admin.placeholder.first_name")}
                 onChange={handleChange}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["first_name"] = el;
+                  }
+                }}
               />
               {(errors.first_name?.[0] || clientSideErrors.first_name) && (
                 <p className="text-red-500 text-sm mt-1">
@@ -326,6 +354,11 @@ const UpdateAdmin = () => {
                 value={updateData.last_name}
                 placeholder={t("UpdateAdmin:admin.placeholder.last_name")}
                 onChange={handleChange}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["last_name"] = el;
+                  }
+                }}
               />
               {(errors.last_name?.[0] || clientSideErrors.last_name) && (
                 <p className="text-red-500 text-sm mt-1">
@@ -367,6 +400,11 @@ const UpdateAdmin = () => {
               value={updateData.email}
               placeholder={t("UpdateAdmin:admin.placeholder.email")}
               onChange={handleChange}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["email"] = el;
+                }
+              }}
             />
             {errors.email && errors.email[0] && (
               <p className="text-red-500 text-sm mt-1">
@@ -389,6 +427,11 @@ const UpdateAdmin = () => {
               value={updateData.phone}
               placeholder={t("UpdateAdmin:admin.placeholder.phone")}
               onChange={handleChange}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["phone"] = el;
+                }
+              }}
             />
             {errors.phone?.[0] && (
               <p className="text-red-500 text-sm mt-1">
@@ -412,6 +455,11 @@ const UpdateAdmin = () => {
                 value={updateData.password}
                 placeholder={t("UpdateAdmin:admin.placeholder.password")}
                 onChange={handleChange}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["password"] = el;
+                  }
+                }}
               />
               <button
                 type="button"

@@ -8,6 +8,7 @@
     "total": "الإجمالي",
     "goToShoppingCart": "اذهب إلى سلة الشراء",
     "items": "{{count}} عنصر",
-    "priceWithCurrency": "{{price}} جنيه"
+    "priceWithCurrency": "{{price}} جنيه",
+    "clearCart": "حذف السلة"
   }
 }

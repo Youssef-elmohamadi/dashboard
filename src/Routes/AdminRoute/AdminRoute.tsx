@@ -1,10 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import AdminLayout from "../../pages/AdminPages/layout/AdminLayout";
-import Home from "../../pages/AdminPages/Dashboard/Home";
 import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import { lazy, Suspense } from "react";
 import LazyPages from "./LazyPages";
+import DashboardSkeleton from "../../components/common/Home/HomeSkeleton";
+
 import "../../index.css";
+const Home = lazy(() => import("../../pages/AdminPages/Dashboard/Home"));
 const AdminSignIn = lazy(
   () => import("../../pages/AdminPages/AuthPages/AdminSignIn")
 );
@@ -27,9 +29,16 @@ const AdminRoutes = () => {
             </ProtectedAdminRoute>
           }
         >
-          <Route index element={<Home userType="admin" />} />
           <Route
-            path="*" // Matches /admin/* other than index
+            index
+            element={
+              <Suspense fallback={<DashboardSkeleton />}>
+                <Home userType="admin" />
+              </Suspense>
+            }
+          />
+          <Route
+            path="*" 
             element={
               <Suspense fallback={null}>
                 <LazyPages />

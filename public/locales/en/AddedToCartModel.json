@@ -4,5 +4,9 @@
   "thankYou": "We hope you enjoy your purchase ❤",
   "egp": "EGP",
   "continueShopping": "Back to Shopping",
-  "checkout": "Continue to Checkout"
+  "checkout": "Continue to Checkout",
+  "quantity": "Quantity",
+  "total": "Total",
+  "discountApplied": "Discount Applied",
+  "sale": "Sale"
 }

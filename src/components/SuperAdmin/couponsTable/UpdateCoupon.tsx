@@ -216,8 +216,8 @@ const UpdateCoupon = () => {
     >
       <SEO
         title={{
-          ar: `تشطيبة - تحديث كوبون ${coupon?.code || ""}`,
-          en: `Tashtiba - Update Coupon ${coupon?.code || ""} (Super Admin)`,
+          ar: ` تحديث كوبون ${coupon?.code || ""}`,
+          en: `Update Coupon ${coupon?.code || ""} (Super Admin)`,
         }}
         description={{
           ar: `صفحة تحديث الكوبون "${

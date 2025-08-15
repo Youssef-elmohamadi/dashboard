@@ -1,7 +1,8 @@
 import { lazy, Suspense } from "react"; // استورد lazy و Suspense هنا
 import { Route, Routes } from "react-router-dom";
+import LoadingPageEndUser from "../../components/ui/LoadingPageEndUser";
 
-// استخدم React.lazy لكل مكون
+
 const ProductDetails = lazy(
   () => import("../../pages/UserPages/ProductDetails/ProductDetails")
 );
@@ -50,8 +51,7 @@ const AllProducts = lazy(
 
 export default function LazyPages() {
   return (
-    // يجب أن تكون Suspense موجودة هنا لتغطية جميع المكونات التي يتم تحميلها ببطء
-    <Suspense fallback={null}>
+    <Suspense fallback={<LoadingPageEndUser />}>
       <Routes>
         <Route path="product/:id" element={<ProductDetails />} />
         <Route path="cart" element={<Cart />} />

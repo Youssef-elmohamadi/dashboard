@@ -246,8 +246,8 @@ const UpdateBanner = () => {
     >
       <SEO
         title={{
-          ar: `تشطيبة - تحديث بانر ${banner?.title || ""}`,
-          en: `Tashtiba - Update Banner ${banner?.title || ""} (Super Admin)`,
+          ar: ` تحديث بانر ${banner?.title || ""}`,
+          en: `Update Banner ${banner?.title || ""} (Super Admin)`,
         }}
         description={{
           ar: `صفحة تحديث البانر "${

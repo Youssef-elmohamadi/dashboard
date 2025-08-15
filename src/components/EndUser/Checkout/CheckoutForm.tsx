@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Input from "../../common/input/InputField";
 import Label from "../../common/form/Label";
 import Radio from "../../common/input/Radio";
@@ -21,6 +21,7 @@ const CheckoutForm: React.FC = () => {
   const { t } = useTranslation(["EndUserCheckout"]);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const [clientSideErrors, setClientSideErrors] = useState<ClientErrors>({
     payment_method: "",
@@ -113,7 +114,22 @@ const CheckoutForm: React.FC = () => {
       payment_method: fieldErrors.payment_method?.[0] || "",
     }));
 
-    return Object.keys(fieldErrors).length === 0;
+    const isValid = Object.keys(fieldErrors).length === 0;
+    return { isValid, fieldErrors };
+  };
+
+  const focusOnError = (errors: Record<string, string | string[]>) => {
+    const errorEntry = Object.entries(errors).find(
+      ([_, value]) =>
+        (typeof value === "string" && value !== "") ||
+        (Array.isArray(value) && value.length > 0)
+    );
+
+    if (errorEntry) {
+      const fieldName = errorEntry[0];
+      const ref = inputRefs?.current[fieldName];
+      ref?.focus();
+    }
   };
 
   useEffect(() => {
@@ -154,7 +170,7 @@ const CheckoutForm: React.FC = () => {
   const afterSuccess = () => {
     localStorage.removeItem("state");
     dispatch(clearCart());
-    navigate(`/${lang}/`);
+    navigate(`/${lang}`);
   };
 
   const { mutateAsync: checkout } = useCheckout();
@@ -162,8 +178,10 @@ const CheckoutForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitted(true);
-    if (!validate()) {
+    const { isValid, fieldErrors } = validate();
+    if (!isValid) {
       toast.error(t("checkout.toast_validation"));
+      focusOnError(fieldErrors);
       return;
     }
 
@@ -184,6 +202,7 @@ const CheckoutForm: React.FC = () => {
         });
 
         setErrors(formattedErrors);
+        focusOnError(errors);
       } else {
         setErrors({ general: [t("checkout.general")] });
       }
@@ -222,6 +241,7 @@ const CheckoutForm: React.FC = () => {
               placeholder={t(`checkout.${name}`)}
               value={checkoutForm.location[name]}
               onChange={handleChangeLocation}
+              ref={(ref) => (inputRefs.current[name] = ref)}
             />
             {clientSideErrors.location[name] && (
               <p className="text-red-500 text-sm mt-1">
@@ -244,6 +264,7 @@ const CheckoutForm: React.FC = () => {
           value={checkoutForm.location.landmark}
           onChange={handleChangeLocation}
           className="dark:!bg-transparent dark:placeholder:!text-gray-400 dark:!border-gray-200 dark:!text-gray-800 focus:ring-red-500/20"
+          ref={(ref) => (inputRefs.current.landmark = ref)}
         />
         {clientSideErrors.location.landmark && (
           <p className="text-red-500 text-sm mt-1">
@@ -315,7 +336,7 @@ const CheckoutForm: React.FC = () => {
         <p className="text-sm text-red-500 mb-2">{errors.payment_method[0]}</p>
       )}
 
-      <div className="border border-gray-200 p-4 rounded-xl mb-4">
+      {/* <div className="border border-gray-200 p-4 rounded-xl mb-4">
         <Radio
           name="payment_method"
           id="wallet"
@@ -330,6 +351,25 @@ const CheckoutForm: React.FC = () => {
         </div>
         <p className="text-center text-gray-500">
           {t("checkout.redirect_payment")}
+        </p>
+      </div> */}
+
+      <div className="border border-gray-200 p-4 rounded-xl mb-4 opacity-50 pointer-events-none">
+        <Radio
+          name="payment_method"
+          id="wallet"
+          value="wallet"
+          label={`${t("checkout.pay_wallet")} (${t("checkout.coming_soon")})`}
+          onChange={() => {}} // فارغة لأنه Disabled
+          checked={false} // لا يمكن اختياره الآن
+          disabled
+          className="dark:!bg-transparent dark:text-gray-900 dark:!border-gray-300"
+        />
+        <div className="flex justify-center my-4">
+          <WalletIcon className="text-9xl text-[#d62828]" />
+        </div>
+        <p className="text-center text-gray-500">
+          {t("checkout.wallet_unavailable")} {/* ترجمة جديدة */}
         </p>
       </div>
 

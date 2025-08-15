@@ -26,18 +26,23 @@ const AllProducts = () => {
     max: max,
   });
   const { lang } = useParams();
-  console.log(lang);
+
+  console.log(products);
+  const productKeywords = products
+    .slice(0, 8)
+    .map((p) => p.name)
+    .join(", ");
 
   return (
     <div className="min-h-[300px] flex flex-col items-center">
       <SEO
         title={{
-          ar: "تشطيبة - كل منتجات التشطيب",
-          en: "Tashtiba - All Finishing Materials",
+          ar: "كل منتجات التشطيب - سيراميك، دهانات، أدوات صحية وأكثر",
+          en: "All Finishing Products - Ceramic, Paints, Sanitary Ware & More",
         }}
         description={{
-          ar: "تصفح جميع مواد التشطيب المتوفرة في تشطيبة مثل السيراميك، البورسلين، الأدوات الصحية، الدهانات، الأبواب، المطابخ والمزيد بأفضل الأسعار.",
-          en: "Browse all finishing materials available on Tashtiba including ceramic, porcelain, sanitary ware, paints, doors, kitchens and more at the best prices.",
+          ar: "تصفح مجموعة ضخمة من منتجات التشطيب بأفضل الأسعار في مصر. سيراميك، بورسلين، دهانات، أبواب، أدوات صحية والمزيد. اطلب الآن من تشطيبة.",
+          en: "Browse a huge range of finishing products at the best prices in Egypt. Ceramic, porcelain, paints, doors, sanitary ware & more. Shop now at Tashtiba.",
         }}
         keywords={{
           ar: [
@@ -51,6 +56,7 @@ const AllProducts = () => {
             "أبواب",
             "مطابخ",
             "بلاط الأرضيات",
+            ...productKeywords.split(", ").slice(0, 5),
           ],
           en: [
             "finishing materials",
@@ -63,15 +69,22 @@ const AllProducts = () => {
             "kitchens",
             "floor tiles",
             "apartment finishing",
+            ...productKeywords.split(", ").slice(0, 5),
           ],
         }}
+        url={`https://tashtiba.com/${lang}/category`}
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/category" },
           { lang: "en", href: "https://tashtiba.com/en/category" },
-          { lang: "x-default", href: "https://tashtiba.com/en/category" },
+          { lang: "x-default", href: "https://tashtiba.com/ar/category" },
         ]}
-        url={`https://tashtiba.com/${lang}/category`}
         image="https://tashtiba.com/og-image.png"
+        structuredData={{
+          "@type": "WebPage",
+          url: `https://tashtiba.com/${lang}/category`,
+          inLanguage: lang,
+        }}
+        lang={lang as "ar" | "en"}
       />
 
       {isError ? (

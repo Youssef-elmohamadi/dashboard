@@ -15,8 +15,8 @@ export default function AdminSignIn() {
     <>
       <SEO
         title={{
-          ar: "تشطيبة - تسجيل دخول الأدمن",
-          en: "Tashtiba - Admin Sign In",
+          ar: "تسجيل دخول الأدمن",
+          en: "Admin Sign In",
         }}
         description={{
           ar: "صفحة تسجيل الدخول لحساب الأدمن في نظام تشطيبة. قم بالوصول إلى لوحة تحكم المتجر وإدارته.",

@@ -42,16 +42,18 @@ const Shop = () => {
     max,
   });
 
+  console.log(categoryName);
+
   return (
     <div className="flex flex-col items-center min-h-[540px]">
       <SEO
         title={{
-          ar: `تشطيبة - ${categoryName}`,
-          en: `Tashtiba - ${categoryName}`,
+          ar: `${categoryName} | تسوق أفضل منتجات التشطيب من تشطيبة`,
+          en: `${categoryName} | Shop Top Finishing Products at Tashtiba`,
         }}
         description={{
-          ar: `اكتشف أفضل منتجات ${categoryName} في تشطيبة بأسعار منافسة وجودة عالية.`,
-          en: `Discover top ${categoryName} finishing products on Tashtiba at great prices and premium quality.`,
+          ar: `استعرض مجموعة متنوعة من منتجات ${categoryName} بجودة ممتازة وأسعار تنافسية على موقع تشطيبة. اطلب الآن واستمتع بخدمة توصيل سريعة داخل مصر.`,
+          en: `Browse a wide range of ${categoryName} products with premium quality and competitive prices on Tashtiba. Order now and enjoy fast delivery across Egypt.`,
         }}
         keywords={{
           ar: [
@@ -92,9 +94,15 @@ const Shop = () => {
           },
           {
             lang: "x-default",
-            href: `https://tashtiba.com/en/category/${category_id}`,
+            href: `https://tashtiba.com/ar/category/${category_id}`,
           },
         ]}
+        structuredData={{
+          "@type": "WebPage",
+          url: `https://tashtiba.com/${lang}/category/${category_id}`,
+          inLanguage: lang,
+        }}
+        lang={lang as "ar" | "en"}
       />
 
       {isError ? (

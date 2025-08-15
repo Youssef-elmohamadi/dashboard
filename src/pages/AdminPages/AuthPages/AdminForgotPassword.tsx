@@ -16,8 +16,8 @@ const AdminForgotPassword = () => {
     <div>
       <SEO
         title={{
-          ar: "تشطيبة - استعادة كلمة مرور الأدمن",
-          en: "Tashtiba - Admin Forgot Password",
+          ar: "استعادة كلمة مرور الأدمن",
+          en: "Admin Forgot Password",
         }}
         description={{
           ar: "صفحة استعادة كلمة المرور لحساب الأدمن في نظام تشطيبة. قم بإعادة تعيين كلمة مرور حسابك.",

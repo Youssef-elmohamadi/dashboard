@@ -43,7 +43,6 @@ export default function CreateRole() {
     error: permissionError,
     isError: isPermissionError,
   } = useGetAllPermissions();
-  console.log(data);
 
   const permissions = data;
 
@@ -159,8 +158,8 @@ export default function CreateRole() {
     <div className=" p-6">
       <SEO
         title={{
-          ar: "تشطيبة - إنشاء صلاحية جديدة",
-          en: "Tashtiba - Create New Role",
+          ar: " إنشاء صلاحية جديدة",
+          en: "Create New Role",
         }}
         description={{
           ar: "صفحة إنشاء صلاحية (دور) جديد للمستخدمين في نظام تشطيبة. حدد الاسم والصلاحيات المخصصة.",

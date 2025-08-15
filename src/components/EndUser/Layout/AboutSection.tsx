@@ -13,7 +13,7 @@ import PrivacyIcon from "../../../icons/PrivacyIcon";
 
 const TashtibaAboutPage: React.FC = () => {
   const { lang } = useParams();
-  const { t } = useTranslation(["EndUserHome"]);
+  const { t } = useTranslation("EndUserHome");
   const brandColor: string = "#d62828";
 
   const features: Feature[] = [
@@ -63,7 +63,7 @@ const TashtibaAboutPage: React.FC = () => {
         <div className="lg:grid lg:grid-cols-12 lg:gap-16 lg:items-center">
           <div className="lg:col-span-7">
             <h2
-              className="text-3xl font-extrabold text-gray-900 sm:text-4xl"
+              className="text-2xl font-extrabold text-gray-900 sm:text-3xl"
               style={{ color: brandColor }}
             >
               {t("AboutSection.heading")}

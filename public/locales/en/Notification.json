@@ -1,0 +1,9 @@
+{
+  "notification": "Notifications",
+  "markAllAsRead": "Mark All as Read",
+  "noNotifications": "You're all caught up!",
+  "showMore": "Show More",
+  "mainContent": {
+    "loadingMore": "Loading more..."
+  }
+}

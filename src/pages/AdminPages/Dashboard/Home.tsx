@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import EcommerceMetrics from "../../../components/common/Home/EcommerceMetrics";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { GroupIcon } from "../../../icons";
 import { BoxIconLine } from "../../../icons";
 import { useTranslation } from "react-i18next";
@@ -17,10 +16,21 @@ import {
 } from "../../../types/DashboardHome";
 import SEO from "../../../components/common/SEO/seo";
 
-import StatisticsChart from "../../../components/common/Home/StatisticsChart";
-import RecentOrders from "../../../components/common/Home/RecentOrders";
-import DemographicCard from "../../../components/common/Home/DemographicCard";
-import MonthlySalesChart from "../../../components/common/Home/MonthlySalesChart";
+const EcommerceMetrics = lazy(
+  () => import("../../../components/common/Home/EcommerceMetrics")
+);
+const MonthlySalesChart = lazy(
+  () => import("../../../components/common/Home/MonthlySalesChart")
+);
+const DemographicCard = lazy(
+  () => import("../../../components/common/Home/DemographicCard")
+);
+const StatisticsChart = lazy(
+  () => import("../../../components/common/Home/StatisticsChart")
+);
+const RecentOrders = lazy(
+  () => import("../../../components/common/Home/RecentOrders")
+);
 
 export default function Home({ userType }: HomeProps) {
   const { t } = useTranslation(["Home"]);
@@ -54,8 +64,6 @@ export default function Home({ userType }: HomeProps) {
       const status = error.response?.status;
       if (status === 403 || status === 401) {
         setUnauthorized(true);
-      } else if (status === 500) {
-        setGlobalError(true);
       } else {
         setGlobalError(true);
       }
@@ -126,13 +134,13 @@ export default function Home({ userType }: HomeProps) {
           },
           {
             label: t("vendors"),
-            value: numbersData.vendorsCount, 
+            value: numbersData.vendorsCount,
             percentage: 3.1,
             icon: BoxIconLine,
           },
           {
             label: t("products"),
-            value: numbersData.productsCount, 
+            value: numbersData.productsCount,
             percentage: 7.2,
             icon: BoxIconLine,
           },
@@ -143,8 +151,8 @@ export default function Home({ userType }: HomeProps) {
       <>
         <SEO
           title={{
-            ar: "تشطيبة - لوحة التحكم",
-            en: "Tashtiba - Dashboard",
+            ar: "لوحة التحكم",
+            en: "Dashboard",
           }}
           description={{
             ar: "لوحة التحكم الرئيسية لـ تشطيبة لعرض ملخص شامل للمتجر، بما في ذلك إحصائيات العملاء، الطلبات، البائعين، والمنتجات.",
@@ -185,11 +193,10 @@ export default function Home({ userType }: HomeProps) {
 
   return (
     <>
-
       <SEO
         title={{
-          ar: "تشطيبة - لوحة التحكم",
-          en: "Tashtiba - Dashboard",
+          ar: " لوحة التحكم",
+          en: "Dashboard",
         }}
         description={{
           ar: "لوحة التحكم الرئيسية لـ تشطيبة لعرض ملخص شامل للمتجر، بما في ذلك إحصائيات العملاء، الطلبات، البائعين، والمنتجات.",
@@ -226,11 +233,10 @@ export default function Home({ userType }: HomeProps) {
 
       {!loading && globalError && (
         <div className="p-4 text-center text-red-500 font-semibold">
-          
           <SEO
             title={{
-              ar: "تشطيبة - خطأ",
-              en: "Tashtiba - Error",
+              ar: " خطأ",
+              en: "Error",
             }}
             description={{
               ar: "حدث خطأ غير متوقع أثناء تحميل لوحة تحكم تشطيبة. يرجى المحاولة مرة أخرى.",
@@ -248,11 +254,10 @@ export default function Home({ userType }: HomeProps) {
 
       {!loading && unauthorized && (
         <div className="p-4 text-center text-red-500 font-semibold">
-          {/* تم إضافة SEO component هنا مع بيانات مخصصة لغير المصرح به */}
           <SEO
             title={{
-              ar: "تشطيبة - لوحة التحكم - غير مصرح",
-              en: "Tashtiba - Dashboard - Unauthorized",
+              ar: " لوحة التحكم - غير مصرح",
+              en: "Dashboard - Unauthorized",
             }}
             description={{
               ar: "لا يوجد تصريح للوصول إلى لوحة تحكم تشطيبة. يرجى تسجيل الدخول بحساب مسؤول.",
@@ -268,27 +273,29 @@ export default function Home({ userType }: HomeProps) {
         </div>
       )}
 
-      <div className="grid grid-cols-12 gap-4 md:gap-6">
-        <div className="col-span-12 space-y-6 xl:col-span-7">
-          <EcommerceMetrics
-            parentClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6"
-            metrics={metrics}
-          />
-          <MonthlySalesChart ordersData={monthlySalesData} />
-        </div>
+      <Suspense fallback={<DashboardSkeleton />}>
+        <div className="grid grid-cols-12 gap-4 md:gap-6">
+          <div className="col-span-12 space-y-6 xl:col-span-7">
+            <EcommerceMetrics
+              parentClassName="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6"
+              metrics={metrics}
+            />
+            <MonthlySalesChart ordersData={monthlySalesData} />
+          </div>
 
-        <div className="col-span-12 xl:col-span-5">
-          <DemographicCard />
-        </div>
+          <div className="col-span-12 xl:col-span-5">
+            <DemographicCard customer_count={numbersData.customersCount} />
+          </div>
 
-        <div className="col-span-12">
-          <StatisticsChart ordersData={monthlySalesData} />
-        </div>
+          <div className="col-span-12">
+            <StatisticsChart ordersData={monthlySalesData} />
+          </div>
 
-        <div className="col-span-12">
-          <RecentOrders orders={recentOrders} userType={userType} />
+          <div className="col-span-12">
+            <RecentOrders orders={recentOrders} userType={userType} />
+          </div>
         </div>
-      </div>
+      </Suspense>
     </>
   );
 }

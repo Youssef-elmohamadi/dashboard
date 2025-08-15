@@ -157,8 +157,6 @@ export default function UserInfoCard({ userType }: { userType: string }) {
     }
     const formData = new FormData();
     formData.append("first_name", updateData.first_name);
-    console.log(updateData.first_name);
-    console.log(formData.get("first_name"));
 
     formData.append("last_name", updateData.last_name);
     formData.append("email", updateData.email);
@@ -180,15 +178,9 @@ export default function UserInfoCard({ userType }: { userType: string }) {
           toast.error("Admin ID is missing for update.");
           return;
         }
-        console.log(formData.get("first_name"));
-        console.log(formData.get("last_name"));
-        console.log(formData.get("email"));
-        console.log(formData.get("phone"));
-        console.log(formData.get("role"));
         await updateAdminMutate({ id: adminId, adminData: formData });
         toast.success(t("editInfoCard.successUpdate"));
       } else if (userType === "super_admin") {
-        console.log("submit");
         await updateSuperAdminMutate(formData);
         toast.success(t("editInfoCard.successUpdate"));
       }

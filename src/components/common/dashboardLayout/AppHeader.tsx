@@ -90,28 +90,38 @@ const AppHeader: React.FC<AppHeaderProps> = ({ userType }) => {
           {userType === "admin" ? (
             <Link to="/admin" className="lg:hidden">
               <img
-                className="dark:hidden h-12"
+                className="dark:hidden "
                 src={`/images/logo/${lang}-light-logo.webp`}
                 alt="Logo"
+                width={150}
+                height={84}
               />
-              <img
-                className="hidden dark:block h-12"
-                src={`/images/logo/${lang}-dark-logo.webp`}
-                alt="Logo"
-              />
+              <div className="items-center h-[84px] hidden dark:flex">
+                <img
+                  className="hidden dark:block "
+                  src={`/images/logo/${lang}-dark-logo.webp`}
+                  alt="Logo"
+                  width={150}
+                />
+              </div>
             </Link>
           ) : (
             <Link to="/super_admin" className="lg:hidden">
               <img
-                className="dark:hidden h-12"
+                className="dark:hidden "
                 src={`/images/logo/${lang}-light-logo.webp`}
                 alt="Logo"
+                width={150}
+                height={84}
               />
-              <img
-                className="hidden dark:block h-12"
-                src={`/images/logo/${lang}-dark-logo.webp`}
-                alt="Logo"
-              />
+              <div className="items-center h-[84px] hidden dark:flex">
+                <img
+                  className="hidden dark:block "
+                  src={`/images/logo/${lang}-dark-logo.webp`}
+                  alt="Logo"
+                  width={150}
+                />
+              </div>
             </Link>
           )}
 

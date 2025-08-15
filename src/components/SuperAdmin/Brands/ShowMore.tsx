@@ -58,8 +58,8 @@ const BrandDetails: React.FC = () => {
     >
       <SEO
         title={{
-          ar: `تشطيبة - تفاصيل الماركة ${brand?.name || ""}`,
-          en: `Tashtiba - Brand Details ${brand?.name || ""}`,
+          ar: ` تفاصيل الماركة ${brand?.name || ""}`,
+          en: `Brand Details ${brand?.name || ""}`,
         }}
         description={{
           ar: `استعرض التفاصيل الكاملة للماركة "${

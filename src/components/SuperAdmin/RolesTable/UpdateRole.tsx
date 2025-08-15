@@ -201,8 +201,8 @@ const UpdateRole: React.FC = () => {
       <div className="p-6">
         <SEO
           title={{
-            ar: `تشطيبة - تحديث صلاحية ${role?.name || ""}`,
-            en: `Tashtiba - Update Role ${role?.name || ""} (Super Admin)`,
+            ar: ` تحديث صلاحية ${role?.name || ""}`,
+            en: `Update Role ${role?.name || ""} (Super Admin)`,
           }}
           description={{
             ar: `صفحة تحديث الصلاحية "${

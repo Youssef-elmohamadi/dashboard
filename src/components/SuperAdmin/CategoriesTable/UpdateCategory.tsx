@@ -240,8 +240,8 @@ export default function UpdateCategory() {
       <div>
         <SEO
           title={{
-            ar: `تشطيبة - تحديث فئة ${Category?.name || ""}`,
-            en: `Tashtiba - Update Category ${Category?.name || ""}`,
+            ar: ` تحديث فئة ${Category?.name || ""}`,
+            en: `Update Category ${Category?.name || ""}`,
           }}
           description={{
             ar: `صفحة تحديث الفئة "${

@@ -40,7 +40,9 @@
     "apartment_number_required": "Apartment number is required",
     "phone_invalid": "Please enter a valid phone number",
     "general": "Something went wrong, please try again.",
-    "pay_now": "Pay Now"  
+    "pay_now": "Pay Now",
+    "wallet_unavailable": "Wallet payment is currently unavailable",
+    "coming_soon": "Coming soon"
   },
   "cartData": {
     "summary": "Cart Summary",
@@ -49,6 +51,7 @@
     "removeItem": "Remove {{name}} from cart",
     "remove": "Remove item",
     "total": "Total",
-    "currency": "EGP"
+    "currency": "EGP",
+    "price_label": "{{price}} EGP"
   }
 }

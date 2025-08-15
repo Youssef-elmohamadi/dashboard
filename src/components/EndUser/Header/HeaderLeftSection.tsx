@@ -26,10 +26,10 @@ const HeaderLeftSection: React.FC<HeaderLeftSectionProps> = ({
           </button>
         </div>
         <div className="flex items-center gap-2 cursor-pointer flex-[1]">
-          <NavLink to={`/${lang}/`}>
+          <NavLink to={`/${lang}`}>
             <img
               src={`/images/logo/${lang}-light-logo.webp`}
-              className="w-[150px] hover:opacity-90 transition duration-300 h-[46px]"
+              className="w-[120px] hover:opacity-90 transition duration-300 h-[46px]"
               alt={lang === "ar" ? altTexts.logo.ar : altTexts.logo.en}
             />
           </NavLink>

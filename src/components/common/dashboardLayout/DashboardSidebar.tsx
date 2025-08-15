@@ -416,21 +416,24 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
             {isExpanded || isHovered || isMobileOpen ? (
               <>
                 <img
-                  className="dark:hidden"
+                  className="dark:hidden "
                   src={`/images/logo/${lang}-light-logo.webp`}
                   alt="Logo"
                   width={150}
-                  height={40}
+                  height={84}
                 />
-                <img
-                  className="hidden dark:block"
-                  src={`/images/logo/${lang}-dark-logo.webp`}
-                  alt="Logo"
-                />
+                <div className="items-center h-[84px] hidden dark:flex">
+                  <img
+                    className="hidden dark:block "
+                    src={`/images/logo/${lang}-dark-logo.webp`}
+                    alt="Logo"
+                    width={150}
+                  />
+                </div>
               </>
             ) : (
               <img
-                src="/images/favicon.png"
+                src="favicon.png"
                 alt="Logo"
                 width={32}
                 height={32}
@@ -442,17 +445,20 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
             {isExpanded || isHovered || isMobileOpen ? (
               <>
                 <img
-                  className="dark:hidden"
+                  className="dark:hidden "
                   src={`/images/logo/${lang}-light-logo.webp`}
                   alt="Logo"
                   width={150}
-                  height={40}
+                  height={84}
                 />
-                <img
-                  className="hidden dark:block"
-                  src={`/images/logo/${lang}-dark-logo.webp`}
-                  alt="Logo"
-                />
+                <div className="items-center h-[84px] hidden dark:flex">
+                  <img
+                    className="hidden dark:block "
+                    src={`/images/logo/${lang}-dark-logo.webp`}
+                    alt="Logo"
+                    width={150}
+                  />
+                </div>
               </>
             ) : (
               <img

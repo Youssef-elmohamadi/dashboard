@@ -105,7 +105,7 @@ export default function CreateCoupon() {
   };
 
   const { mutateAsync } = useCreateCoupon();
-const isCurrentlyOnLine = useCheckOnline();
+  const isCurrentlyOnLine = useCheckOnline();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({
@@ -121,7 +121,7 @@ const isCurrentlyOnLine = useCheckOnline();
       general: "",
       global: "",
     });
-    if(!isCurrentlyOnLine()){
+    if (!isCurrentlyOnLine()) {
       toast.error(t("coupon.errors.no_internet"));
       return;
     }
@@ -167,8 +167,8 @@ const isCurrentlyOnLine = useCheckOnline();
     <div>
       <SEO
         title={{
-          ar: "تشطيبة - إنشاء كوبون جديد (سوبر أدمن)",
-          en: "Tashtiba - Create New Coupon (Super Admin)",
+          ar: " إنشاء كوبون جديد (سوبر أدمن)",
+          en: "Create New Coupon (Super Admin)",
         }}
         description={{
           ar: "صفحة إنشاء كوبون خصم جديد بواسطة المشرف العام في تشطيبة. أدخل تفاصيل الكوبون، نوعه، قيمته، حد الاستخدام، وتاريخ الصلاحية.",

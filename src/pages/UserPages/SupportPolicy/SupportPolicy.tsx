@@ -47,14 +47,17 @@ const SupportPolicyPage: React.FC = () => {
                 href="mailto:support@tashtiba.com"
                 className="font-semibold text-[#d62828] hover:underline"
               >
-                support@tashtiba.com
+                tashtiba.eg@gmail.com
               </a>
             </li>
             <li>
               {t("support.channels.phone")}{" "}
-              <span className="text-gray-500">
-                {t("support.channels.phoneNote")}
-              </span>
+              <a
+                href="https://wa.me/201557408095"
+                className="font-semibold text-[#d62828] hover:underline"
+              >
+                01557408095
+              </a>
             </li>
           </ul>
         </div>
@@ -81,8 +84,8 @@ const SupportPolicyPage: React.FC = () => {
     <div className="min-h-screen">
       <SEO
         title={{
-          ar: "تشطيبة - سياسة الدعم",
-          en: "Tashtiba - Support Policy",
+          ar: "سياسة الدعم",
+          en: "Support Policy",
         }}
         description={{
           ar: "اطلع على سياسة الدعم في تشطيبة لتعرف كيفية تقديم المساعدة قبل وبعد الشراء، وكيفية التواصل مع فريق الدعم الفني لدينا.",
@@ -115,8 +118,14 @@ const SupportPolicyPage: React.FC = () => {
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/support-policy" },
           { lang: "en", href: "https://tashtiba.com/en/support-policy" },
-          { lang: "x-default", href: "https://tashtiba.com/en/support-policy" },
+          { lang: "x-default", href: "https://tashtiba.com/ar/support-policy" },
         ]}
+        structuredData={{
+          "@type": "WebPage",
+          url: `https://tashtiba.com/${lang}/support-policy`,
+          inLanguage: lang,
+        }}
+        lang={lang as "ar" | "en"}
       />
 
       <div className="max-w-4xl mx-auto py-20 px-4 sm:px-6 lg:px-8">

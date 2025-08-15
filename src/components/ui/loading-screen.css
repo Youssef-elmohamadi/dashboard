@@ -1,0 +1,12 @@
+@keyframes loading-fill {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-loading-fill {
+  animation: loading-fill 2s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+}

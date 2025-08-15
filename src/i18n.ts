@@ -3,14 +3,14 @@ import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import HttpApi from "i18next-http-backend";
 
-
 i18n
   .use(initReactI18next)
   .use(LanguageDetector)
   .use(HttpApi)
   .init({
-    supportedLngs: ["en", "ar"],
+    supportedLngs: ["ar", "en"],
     preload: ["en", "ar"],
+    lng: "ar",
     detection: {
       order: ["path", "localStorage", "htmlTag", "cookie", "subdomain"],
       caches: ["localStorage", "cookie"],
@@ -18,16 +18,7 @@ i18n
     backend: {
       loadPath: "/locales/{{lng}}/{{ns}}.json",
     },
-
-    ns: [
-      "Status",
-      "AdminsTablesActions", //problem
-      "OrderDetails", //problem
-      "DateFilter", //problem
-      "TopSellingTable", //problem
-    ],
-
-    defaultNS: "Signup",
+    ns: ["LoadingPage"],
     interpolation: {
       escapeValue: false,
     },

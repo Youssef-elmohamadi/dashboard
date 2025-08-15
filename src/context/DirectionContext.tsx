@@ -1,59 +1,57 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { applyLanguageSettings } from "../lib/setLanguage";
 
-type DirectionAndLanguageContext = {
-  dir: "rtl" | "ltr";
+interface DirectionContextProps {
   lang: "en" | "ar";
-  setDir: (dir: "ltr" | "rtl") => void;
   setLang: (lang: "en" | "ar") => void;
-};
+  dir: "ltr" | "rtl";
+}
 
-const DirectionAndLanguageContext = createContext<DirectionAndLanguageContext>({
-  dir: "ltr",
+const DirectionContext = createContext<DirectionContextProps>({
   lang: "en",
-  setDir: () => {},
   setLang: () => {},
+  dir: "ltr",
 });
 
-export const useDirectionAndLanguage = () =>
-  useContext(DirectionAndLanguageContext);
-const isValidLang = (l: string | null): l is "en" | "ar" =>
-  ["en", "ar"].includes(l ?? "");
-const getInitialLangFromPath = (): "en" | "ar" => {
-  const pathLang = location?.pathname.split("/")[1];
-  return isValidLang(pathLang) ? pathLang : "en";
-};
-const getDirFromLang = (lang: "en" | "ar"): "ltr" | "rtl" =>
-  lang === "ar" ? "rtl" : "ltr";
-
-const DirectionAndLanguageProvider = ({
+export const DirectionProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const initialLang = getInitialLangFromPath();
-  const [lang, _setLang] = useState<"en" | "ar">(initialLang);
-  const [dir, _setDir] = useState<"ltr" | "rtl">(getDirFromLang(initialLang));
-  useEffect(() => {
-    document.documentElement.dir = dir;
-    document.documentElement.lang = lang;
-    localStorage.setItem("dir", dir);
-    localStorage.setItem("i18nextLng", lang);
-  }, [dir, lang]);
-  const setLang = (newLang: "en" | "ar") => {
-    _setLang(newLang);
-    _setDir(getDirFromLang(newLang));
-  };
-  const setDir = (newDir: "ltr" | "rtl") => {
-    _setDir(newDir);
+  const getInitialLang = (): "en" | "ar" => {
+    const pathLang = window.location.pathname.split("/")[1];
+    if (pathLang === "ar" || pathLang === "en") return pathLang;
+
+    const storedLang = localStorage.getItem("i18nextLng") as "en" | "ar" | null;
+    if (storedLang === "ar" || storedLang === "en") return storedLang;
+
+    return window.navigator.language.slice(0, 2) === "ar" ? "ar" : "en";
   };
 
+  const initialLang = getInitialLang();
+
+  const [lang, setLangState] = useState<"en" | "ar">(initialLang);
+  const [dir, setDir] = useState<"ltr" | "rtl">(initialLang === "ar" ? "rtl" : "ltr");
+
+  const setLang = (newLang: "en" | "ar") => {
+    setLangState(newLang);
+    const newDir = newLang === "ar" ? "rtl" : "ltr";
+    setDir(newDir);
+    applyLanguageSettings(newLang);
+    localStorage.setItem("i18nextLng", newLang);
+  };
+
+  useEffect(() => {
+    applyLanguageSettings(lang);
+    document.documentElement.setAttribute("dir", dir); // ضبط اتجاه الصفحة
+  }, [lang, dir]);
+
   return (
-    <DirectionAndLanguageContext.Provider
-      value={{ dir, lang, setDir, setLang }}
-    >
+    <DirectionContext.Provider value={{ lang, setLang, dir }}>
       {children}
-    </DirectionAndLanguageContext.Provider>
+    </DirectionContext.Provider>
   );
 };
 
-export default DirectionAndLanguageProvider;
+export const useDirectionAndLanguage = () => useContext(DirectionContext);
+export default DirectionProvider;

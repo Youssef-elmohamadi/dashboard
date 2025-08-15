@@ -36,8 +36,8 @@ const ProductsFavorite = () => {
     <div className="p-4">
       <SEO
         title={{
-          ar: `تشطيبة - قائمة أمنياتي`,
-          en: `Tashtiba - My Wishlist`,
+          ar: `قائمة أمنياتي`,
+          en: `My Wishlist`,
         }}
         description={{
           ar: `اكتشف المنتجات المفضلة لديك في قائمة أمنيات تشطيبة. احفظ المنتجات التي أعجبتك لتجدها بسهولة في أي وقت وتتخذ قرار الشراء لاحقًا.`,
@@ -67,12 +67,13 @@ const ProductsFavorite = () => {
             "deals",
           ],
         }}
+        url={`https://tashtiba.com/${lang}/u-favorite`}
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/u-favorite" },
           { lang: "en", href: "https://tashtiba.com/en/u-favorite" },
           {
             lang: "x-default",
-            href: "https://tashtiba.com/en/u-favorite",
+            href: "https://tashtiba.com/ar/u-favorite",
           },
         ]}
         robotsTag="noindex, nofollow"

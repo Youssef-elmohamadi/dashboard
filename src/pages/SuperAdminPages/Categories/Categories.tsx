@@ -111,8 +111,8 @@ const Categories = () => {
       )}
       <SEO
         title={{
-          ar: "تشطيبة - إدارة الفئات (سوبر أدمن)",
-          en: "Tashtiba - Category Management (Super Admin)",
+          ar: " إدارة الفئات (سوبر أدمن)",
+          en: "Category Management (Super Admin)",
         }}
         description={{
           ar: "صفحة إدارة فئات المنتجات بواسطة المشرف العام في تشطيبة. عرض، إضافة، تعديل، وحذف الفئات.",

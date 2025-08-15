@@ -63,7 +63,6 @@ export default function CreateCategory() {
     error: categoriesError,
   } = useAllCategories();
   const categories = data?.original || [];
-  console.log(data);
 
   useEffect(() => {
     if (isCategoriesError && categoriesError instanceof AxiosError) {
@@ -178,8 +177,8 @@ export default function CreateCategory() {
     <div>
       <SEO
         title={{
-          ar: "تشطيبة - إنشاء فئة جديدة (سوبر أدمن)",
-          en: "Tashtiba - Create New Category (Super Admin)",
+          ar: " إنشاء فئة جديدة (سوبر أدمن)",
+          en: "Create New Category (Super Admin)",
         }}
         description={{
           ar: "صفحة إنشاء فئة منتجات جديدة بواسطة المشرف العام في تشطيبة. أدخل تفاصيل الفئة واللجنة، وقم بتحميل الصورة.",

@@ -1,35 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EyeCloseIcon, EyeIcon } from "../../../icons";
 import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
 import { useTranslation } from "react-i18next";
 import { BasicInfoFormProps } from "../../../types/Auth";
+
 function BasicInfoForm({
   adminInfo,
   handleChange,
   clientErrors,
   serverErrors,
+  inputRefs,
 }: BasicInfoFormProps) {
   const [showPassword, setShowPassword] = useState(false);
-
   const { t } = useTranslation(["auth"]);
-  console.log(serverErrors.errors["adminInfo.phone"]);
+  useEffect(() => {
+    const focusOnError = (errors: Record<string, any>) => {
+      const clientErrorKey = Object.keys(clientErrors)[0];
+      if (clientErrorKey) {
+        const ref = inputRefs?.current[clientErrorKey];
+        ref?.focus();
+        return;
+      } 
+      if (Object.keys(serverErrors.errors).length > 0) {
+        const serverErrorKey = Object.keys(serverErrors.errors)[0]; 
+        const fieldName = serverErrorKey.split(".").pop();
+        if (fieldName) {
+          const ref = inputRefs?.current[fieldName];
+          ref?.focus();
+        }
+      }
+    };
+
+    focusOnError({ ...clientErrors, ...serverErrors.errors });
+  }, [clientErrors, serverErrors, inputRefs]);
 
   return (
-    <div className="">
-      <div className="mb-5 sm:mb-8">
+    <div>
+      <div className="mb-6">
         <h1 className="mb-2 font-semibold text-sm text-gray-800 dark:text-white/90 sm:text-title-md">
           {t("basicInformation.stepOneHeading")}
         </h1>
       </div>
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        {/* <!-- First Name --> */}
-        <div className="sm:col-span-1">
+
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 mb-5">
+        <div>
           <Label>
             {t("basicInformation.firstName")}
             <span className="text-error-500">*</span>
           </Label>
-
           <Input
             type="text"
             id="first_name"
@@ -37,15 +56,20 @@ function BasicInfoForm({
             placeholder={t("basicInformation.placeholder.firstName")}
             value={adminInfo.first_name}
             onChange={(e) => handleChange(e, "adminInfo")}
+            ref={(el) => {
+              if (inputRefs?.current) {
+                inputRefs.current["first_name"] = el;
+              }
+            }}
           />
-          {clientErrors.firstName && (
+          {clientErrors.first_name && (
             <p className="text-error-500 text-xs mt-1">
-              {clientErrors.firstName}
+              {clientErrors.first_name}
             </p>
           )}
         </div>
-        {/* <!-- Last Name --> */}
-        <div className="sm:col-span-1">
+
+        <div>
           <Label>
             {t("basicInformation.lastName")}
             <span className="text-error-500">*</span>
@@ -57,15 +81,21 @@ function BasicInfoForm({
             placeholder={t("basicInformation.placeholder.lastName")}
             value={adminInfo.last_name}
             onChange={(e) => handleChange(e, "adminInfo")}
+            ref={(el) => {
+              if (inputRefs?.current) {
+                inputRefs.current["last_name"] = el;
+              }
+            }}
           />
-          {clientErrors.lastName && (
+          {clientErrors.last_name && (
             <p className="text-error-500 text-xs mt-1">
-              {clientErrors.lastName}
+              {clientErrors.last_name}
             </p>
           )}
         </div>
       </div>
-      <div className="">
+
+      <div className="mb-5">
         <Label>
           {t("basicInformation.phone")}
           <span className="text-error-500">*</span>
@@ -77,11 +107,15 @@ function BasicInfoForm({
           placeholder={t("basicInformation.placeholder.phone")}
           value={adminInfo.phone}
           onChange={(e) => handleChange(e, "adminInfo")}
+          ref={(el) => {
+            if (inputRefs?.current) {
+              inputRefs.current["phone"] = el;
+            }
+          }}
         />
-        {clientErrors.phoneAdmin && (
-          <p className="text-error-500 text-xs mt-1">
-            {clientErrors.phoneAdmin}
-          </p>
+
+        {clientErrors.phone && (
+          <p className="text-error-500 text-xs mt-1">{clientErrors.phone}</p>
         )}
         {serverErrors.errors["adminInfo.phone"] && (
           <p className="text-error-500 text-xs mt-1">
@@ -89,8 +123,8 @@ function BasicInfoForm({
           </p>
         )}
       </div>
-      {/* <!-- Email --> */}
-      <div>
+
+      <div className="mb-5">
         <Label>
           {t("basicInformation.email")}
           <span className="text-error-500">*</span>
@@ -102,11 +136,14 @@ function BasicInfoForm({
           placeholder={t("basicInformation.placeholder.email")}
           value={adminInfo.email}
           onChange={(e) => handleChange(e, "adminInfo")}
+          ref={(el) => {
+            if (inputRefs?.current) {
+              inputRefs.current["email"] = el;
+            }
+          }}
         />
-        {clientErrors.emailAdmin && (
-          <p className="text-error-500 text-xs mt-1">
-            {clientErrors.emailAdmin}
-          </p>
+        {clientErrors.email && (
+          <p className="text-error-500 text-xs mt-1">{clientErrors.email}</p>
         )}
         {serverErrors.errors["adminInfo.email"] && (
           <p className="text-error-500 text-xs mt-1">
@@ -114,7 +151,8 @@ function BasicInfoForm({
           </p>
         )}
       </div>
-      <div>
+
+      <div className="mb-5">
         <Label>
           {t("basicInformation.password")}
           <span className="text-error-500">*</span>
@@ -126,6 +164,11 @@ function BasicInfoForm({
             name="password"
             value={adminInfo.password}
             onChange={(e) => handleChange(e, "adminInfo")}
+            ref={(el) => {
+              if (inputRefs?.current) {
+                inputRefs.current["password"] = el;
+              }
+            }}
           />
           <span
             onClick={() => setShowPassword(!showPassword)}
@@ -139,12 +182,10 @@ function BasicInfoForm({
               <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
             )}
           </span>
-          {clientErrors.password && (
-            <p className="text-error-500 text-xs mt-1">
-              {clientErrors.password}
-            </p>
-          )}
         </div>
+        {clientErrors.password && (
+          <p className="text-error-500 text-xs mt-1">{clientErrors.password}</p>
+        )}
       </div>
 
       <div>
@@ -159,6 +200,11 @@ function BasicInfoForm({
             value={adminInfo.confirm_password}
             name="confirm_password"
             onChange={(e) => handleChange(e, "adminInfo")}
+            ref={(el) => {
+              if (inputRefs?.current) {
+                inputRefs.current["confirm_password"] = el;
+              }
+            }}
           />
           <span
             onClick={() => setShowPassword(!showPassword)}
@@ -182,56 +228,5 @@ function BasicInfoForm({
     </div>
   );
 }
-export default BasicInfoForm;
 
-{
-  /* <!-- Password --> */
-}
-{
-  /* <div>
-            <Label>
-              Password<span className="text-error-500">*</span>
-            </Label>
-            <div className="relative">
-              <Input
-                placeholder="Enter your password"
-                type={showPassword ? "text" : "password"}
-              />
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-              >
-                {showPassword ? (
-                  <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                ) : (
-                  <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                )}
-              </span>
-            </div>
-          </div> */
-}
-{
-  /* <!-- Checkbox --> */
-}
-{
-  /* <div className="flex items-center gap-3">
-            <Checkbox
-              className="w-5 h-5"
-              checked={isChecked}
-              onChange={setIsChecked}
-            />
-            <p className="inline-block font-normal text-gray-500 dark:text-gray-400">
-              By creating an account means you agree to the{" "}
-              <span className="text-gray-800 dark:text-white/90">
-                Terms and Conditions,
-              </span>{" "}
-              and our{" "}
-              <span className="text-gray-800 dark:text-white">
-                Privacy Policy
-              </span>
-            </p>
-          </div> */
-}
-{
-  /* <!-- Button --> */
-}
+export default BasicInfoForm;

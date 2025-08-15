@@ -53,29 +53,28 @@ const VendorSettings = lazy(
 
 export default function LazyPages() {
   return (
-    // غلف الـ Routes بالكامل بـ Suspense
     <Suspense fallback={null}>
       <Routes>
-        <Route path="profile" element={<UserProfiles />} />
         <Route path="admins" element={<Admins />} />
         <Route path="admins/create" element={<CreateAdmin />} />
         <Route path="admins/update/:id" element={<UpdateAdmin1 />} />
         <Route path="roles" element={<Roles />} />
         <Route path="roles/create" element={<CreateRole />} />
         <Route path="roles/update/:id" element={<UpdateRole />} />
-        <Route path="categories" element={<Categories />} />
-        <Route path="brands" element={<Brands />} />
-        <Route path="brands/create" element={<CreateBrand />} />
-        <Route path="brands/update/:id" element={<UpdateBrand />} />
         <Route path="products" element={<Products />} />
         <Route path="products/create" element={<CreateProducts />} />
         <Route path="products/update/:id" element={<UpdateProduct />} />
         <Route path="products/details/:id" element={<ProductDetails />} />
+        <Route path="categories" element={<Categories />} />
         <Route path="orders" element={<Orders />} />
         <Route path="orders/details/:id" element={<OrderDetails />} />
+        <Route path="brands" element={<Brands />} />
+        <Route path="brands/create" element={<CreateBrand />} />
+        <Route path="brands/update/:id" element={<UpdateBrand />} />
         <Route path="orders_report" element={<OrdersReports />} />
         <Route path="products_report" element={<ProductReports />} />
         <Route path="settings" element={<VendorSettings />} />
+        <Route path="profile" element={<UserProfiles />} />
       </Routes>
     </Suspense>
   );

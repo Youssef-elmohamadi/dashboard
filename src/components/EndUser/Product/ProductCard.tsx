@@ -28,7 +28,6 @@ const ProductCard = ({
   const { lang } = useParams();
   const { mutateAsync: addToFavorite } = useAddFavorite();
   const { mutateAsync: removeFromFavorite } = useRemoveFavorite();
-  console.log(product);
 
   const handleToggleFavorite = async () => {
     try {
@@ -55,8 +54,11 @@ const ProductCard = ({
       ? `صورة منتج ${product.name} تشطيبة`
       : `Product image for ${product.name} Tashtiba`;
 
+  const hasDiscount =
+    product.discount_price && product.discount_price < product.price;
+
   return (
-    <div className="w-full border border-gray-200 rounded p-3 relative h-[470px]">
+    <div className="w-full border border-gray-200 rounded p-3 relative h-[490px]">
       <div className="w-full h-[300px]">
         <LazyImage
           src={product?.images[0]?.image}
@@ -78,6 +80,15 @@ const ProductCard = ({
         <HeartIcon className="w-6" />
       </button>
 
+      {hasDiscount && (
+        <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 p-2 rounded-full">
+          {Math.round(
+            ((product.price - product.discount_price) / product.price) * 100
+          )}
+          % {t("sale")}
+        </span>
+      )}
+
       <Link
         to={`/${lang}/product/${product.id}`}
         className="end-user-text-secondary my-2 px-1 block font-medium line-clamp-2"
@@ -85,10 +96,21 @@ const ProductCard = ({
         {product.name}
       </Link>
 
-      <div className="flex justify-between items-center gap-2 border-t border-gray-200 py-3">
-        <span className="end-user-text-base font-semibold text-sm sm:text-base">
-          {product.price} {t("egp")}
-        </span>
+      <div className="flex flex-col justify-between items-start gap-2 border-t border-gray-200 py-3">
+        {hasDiscount ? (
+          <div className="flex items-center gap-2">
+            <span className="end-user-text-base font-semibold text-base sm:text-lg">
+              {product.discount_price} {t("egp")}
+            </span>
+            <span className="text-gray-900 line-through font-medium text-xs sm:text-sm">
+              {product.price} {t("egp")}
+            </span>
+          </div>
+        ) : (
+          <span className="end-user-text-base font-semibold text-base sm:text-lg">
+            {product.price} {t("egp")}
+          </span>
+        )}
 
         <div className="flex items-center gap-1">
           <StarRatings

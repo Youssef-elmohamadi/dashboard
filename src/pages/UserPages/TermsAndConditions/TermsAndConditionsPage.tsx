@@ -79,8 +79,8 @@ const CreativeTermsPage: React.FC = () => {
     <div className="min-h-screen">
       <SEO
         title={{
-          ar: "تشطيبة - الشروط والأحكام القانونية",
-          en: "Tashtiba - Legal Terms and Conditions",
+          ar: "الشروط والأحكام القانونية",
+          en: "Legal Terms and Conditions",
         }}
         description={{
           ar: "تعرّف على الشروط والأحكام الخاصة باستخدام منصة تشطيبة بما يشمل التعريفات، سياسات الاستخدام، الحسابات، المنتجات، والملكية الفكرية داخل مصر.",
@@ -117,8 +117,14 @@ const CreativeTermsPage: React.FC = () => {
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar/terms" },
           { lang: "en", href: "https://tashtiba.com/en/terms" },
-          { lang: "x-default", href: "https://tashtiba.com/en/terms" },
+          { lang: "x-default", href: "https://tashtiba.com/ar/terms" },
         ]}
+        structuredData={{
+          "@type": "WebPage",
+          url: `https://tashtiba.com/${lang}/terms`,
+          inLanguage: lang,
+        }}
+        lang={lang as "ar" | "en"}
       />
 
       <div className="max-w-4xl mx-auto py-20 px-4 sm:px-6 lg:px-8">

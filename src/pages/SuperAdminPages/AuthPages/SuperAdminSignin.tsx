@@ -15,10 +15,10 @@ export default function SuperAdminSignIn() {
   }, []);
   return (
     <>
-      <SEO 
+      <SEO
         title={{
-          ar: "تشطيبة - تسجيل دخول المشرف العام",
-          en: "Tashtiba - Super Admin Sign In",
+          ar: " تسجيل دخول المشرف العام",
+          en: "Super Admin Sign In",
         }}
         description={{
           ar: "صفحة تسجيل الدخول للمشرف العام في نظام تشطيبة. قم بالوصول إلى لوحة تحكم المشرف العام.",

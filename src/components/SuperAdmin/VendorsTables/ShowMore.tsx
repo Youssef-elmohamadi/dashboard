@@ -118,8 +118,8 @@ const VendorDetails: React.FC = () => {
         />
         <SEO
           title={{
-            ar: `تشطيبة - تفاصيل البائع ${vendor?.name || ""}`,
-            en: `Tashtiba - Vendor Details ${vendor?.name || ""}`,
+            ar: ` تفاصيل البائع ${vendor?.name || ""}`,
+            en: `Vendor Details ${vendor?.name || ""}`,
           }}
           description={{
             ar: `استعرض التفاصيل الكاملة للبائع ${

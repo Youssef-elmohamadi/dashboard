@@ -98,8 +98,8 @@ const Vendors = () => {
     <>
       <SEO
         title={{
-          ar: "تشطيبة - إدارة البائعين",
-          en: "Tashtiba - Vendor Management",
+          ar: " إدارة البائعين",
+          en: "Vendor Management",
         }}
         description={{
           ar: "صفحة إدارة البائعين في تشطيبة. عرض، تغيير حالة، والتحكم في حسابات البائعين.",

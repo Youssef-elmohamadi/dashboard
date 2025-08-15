@@ -116,8 +116,8 @@ const Roles = () => {
       )}
       <SEO
         title={{
-          ar: "تشطيبة - إدارة الصلاحيات",
-          en: "Tashtiba - Role Management",
+          ar: "إدارة الصلاحيات",
+          en: "Role Management",
         }}
         description={{
           ar: "إدارة صلاحيات المستخدمين في نظام تشطيبة. عرض، إضافة، تعديل، وحذف الأدوار والصلاحيات.",

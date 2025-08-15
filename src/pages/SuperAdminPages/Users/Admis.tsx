@@ -13,7 +13,7 @@ import {
   useDeleteAdmin,
 } from "../../../hooks/Api/SuperAdmin/useSuperAdminAdmis/useSuperAdminAdmins";
 import { AxiosError } from "axios";
-import SEO from "../../../components/common/SEO/seo"; 
+import SEO from "../../../components/common/SEO/seo";
 
 const Admins = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -60,14 +60,14 @@ const Admins = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: t("adminsPage.createdSuccess"), 
+        title: t("adminsPage.createdSuccess"),
         message: location.state.successCreate,
       });
       window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
-        title: t("adminsPage.updatedSuccess"), 
+        title: t("adminsPage.updatedSuccess"),
         message: location.state.successEdit,
       });
       window.history.replaceState({}, document.title);
@@ -119,10 +119,10 @@ const Admins = () => {
           message={alertData.message}
         />
       )}
-      <SEO 
+      <SEO
         title={{
-          ar: "تشطيبة - إدارة المسؤولين (سوبر أدمن)",
-          en: "Tashtiba - Admin Management (Super Admin)",
+          ar: " إدارة المسؤولين (سوبر أدمن)",
+          en: "Admin Management (Super Admin)",
         }}
         description={{
           ar: "صفحة إدارة حسابات المسؤولين بواسطة المشرف العام في تشطيبة. عرض، إضافة، تعديل، وحذف المسؤولين.",
@@ -155,9 +155,9 @@ const Admins = () => {
       <div>
         <SearchTable
           fields={[
-            { key: "name", label: "Name", type: "input" }, 
-            { key: "email", label: "Email", type: "input" }, 
-            { key: "phone", label: "Phone", type: "input" }, 
+            { key: "name", label: "Name", type: "input" },
+            { key: "email", label: "Email", type: "input" },
+            { key: "phone", label: "Phone", type: "input" },
           ]}
           setSearchParam={handleSearch}
           searchValues={searchValues}

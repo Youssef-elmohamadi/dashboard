@@ -1,4 +1,4 @@
-import SEO from "../../../components/common/SEO/seo"; 
+import SEO from "../../../components/common/SEO/seo";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import UserInfoCard from "../../../components/admin/UserProfile/UserInfoCard";
 import { useTranslation } from "react-i18next";
@@ -6,10 +6,10 @@ export default function UserProfiles() {
   const { t } = useTranslation(["UserProfile", "Meta"]);
   return (
     <>
-      <SEO 
+      <SEO
         title={{
-          ar: "تشطيبة - الملف الشخصي للمشرف العام",
-          en: "Tashtiba - Super Admin Profile",
+          ar: " الملف الشخصي للمشرف العام",
+          en: "Super Admin Profile",
         }}
         description={{
           ar: "صفحة الملف الشخصي للمشرف العام في تشطيبة. استعرض وحدث بياناتك الشخصية وإعدادات الحساب كمسؤول أعلى.",

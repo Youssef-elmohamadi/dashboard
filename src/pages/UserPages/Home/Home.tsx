@@ -22,7 +22,7 @@ const Home = () => {
   const { t } = useTranslation(["EndUserHome"]);
   const { data: categories, isLoading } = useCategories();
   const { lang } = useParams();
-  const { setLang, setDir } = useDirectionAndLanguage();
+  const { setLang } = useDirectionAndLanguage();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,19 +33,18 @@ const Home = () => {
 
     i18n.changeLanguage(lang);
     setLang(lang);
-    setDir(lang === "ar" ? "rtl" : "ltr");
   }, [lang]);
 
   return (
     <section>
       <SEO
         title={{
-          ar: "تشطيبة | تسوّق مواد التشطيب أونلاين - سيراميك، سباكة، دهانات والمزيد",
-          en: "Tashtiba | Buy Finishing & Construction Materials Online in Egypt",
+          ar: "تسوّق مواد التشطيب أونلاين - سيراميك، سباكة، دهانات والمزيد",
+          en: "Buy Finishing & Construction Materials Online in Egypt",
         }}
         description={{
-          ar: "اكتشف أفضل منتجات التشطيب أونلاين في مصر من سيراميك، سباكة، دهانات، أدوات كهرباء وغيرها. تشطيبة توفر كل ما تحتاجه لتشطيب منزلك من مكان واحد وبأسعار تنافسية.",
-          en: "Discover the best finishing materials online in Egypt including ceramic tiles, plumbing, paints, electrical tools, and more. Tashtiba offers everything you need to finish your home — all in one place.",
+          ar: "تسوق كل ما تحتاجه لتشطيب وتجهيز منزلك من موقع تشطيبة: أبواب، إضاءات، أثاث منزلي، ديكورات، خلاطات، تأسيس سباكة، تشطيب سباكة، وأدوات كهرباء وبلاط وسيراميك. أسعار منافسة، شحن سريع، وخدمة موثوقة في جميع أنحاء مصر.",
+          en: "Shop everything you need to finish and furnish your home at Tashtiba: doors, lighting, home furniture, decorations, faucets, plumbing installation, plumbing finishing, plus electrical tools, tiles, and ceramics. Competitive prices, fast delivery, and reliable service across Egypt.",
         }}
         keywords={{
           ar: [
@@ -57,24 +56,36 @@ const Home = () => {
             "دهانات",
             "أدوات كهرباء",
             "بلاط",
+            "اضاءة",
             "مواد بناء",
             "تشطيب شقق",
             "خدمات تشطيب",
             "تشطيبات مصر",
+            " تشطيبات",
+            " تجهيز المنزل",
+            " مواد بناء",
+            " أدوات صحية",
+            " إكسسوارات منزلية",
+            "مستلزمات ديكورات",
           ],
           en: [
             "tashtiba",
-            "finishing materials Egypt",
             "home finishing Egypt",
             "ceramic tiles",
             "plumbing Egypt",
             "paints Egypt",
+            "finishing materials Egypt",
             "electrical supplies",
             "construction tools",
             "floor tiles Egypt",
             "building materials",
             "apartment finishing",
             "online finishing store Egypt",
+            "home finishing",
+            "home renovation",
+            "sanitary ware",
+            "home accessories",
+            "decor supplies",
           ],
         }}
         image="https://tashtiba.com/og-image.png"
@@ -82,8 +93,14 @@ const Home = () => {
         alternates={[
           { lang: "ar", href: "https://tashtiba.com/ar" },
           { lang: "en", href: "https://tashtiba.com/en" },
-          { lang: "x-default", href: "https://tashtiba.com/en" },
+          { lang: "x-default", href: "https://tashtiba.com/ar" },
         ]}
+        structuredData={{
+          "@type": "CollectionPage",
+          url: `https://tashtiba.com/${lang}`,
+          inLanguage: lang,
+        }}
+        lang={lang as "ar" | "en"}
       />
 
       <LandingSection />

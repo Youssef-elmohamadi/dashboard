@@ -3,7 +3,7 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import BasicTable from "../../../components/SuperAdmin/Tables/BasicTableTS";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns"; 
+import { buildColumns } from "../../../components/SuperAdmin/Tables/_Colmuns";
 import Alert from "../../../components/ui/alert/Alert";
 import SearchTable from "../../../components/SuperAdmin/Tables/SearchTable";
 import { openChangeStatusModal } from "../../../components/SuperAdmin/Tables/ChangeStatusModal";
@@ -14,7 +14,7 @@ import {
 } from "../../../hooks/Api/SuperAdmin/useBrands/useSuperAdminBrandsManage";
 import { AxiosError } from "axios";
 import { TableAlert } from "../../../types/Common";
-import SEO from "../../../components/common/SEO/seo"; 
+import SEO from "../../../components/common/SEO/seo";
 
 const Brands = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -60,14 +60,14 @@ const Brands = () => {
     if (location.state?.successCreate) {
       setAlertData({
         variant: "success",
-        title: "Admin Created Successfully", 
+        title: "Admin Created Successfully",
         message: location.state.successCreate,
       });
       window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
       setAlertData({
         variant: "success",
-        title: "Admin Updated Successfully", 
+        title: "Admin Updated Successfully",
         message: location.state.successEdit,
       });
       window.history.replaceState({}, document.title);
@@ -126,10 +126,10 @@ const Brands = () => {
           message={alertData.message}
         />
       )}
-      <SEO 
+      <SEO
         title={{
-          ar: "تشطيبة - إدارة الماركات (سوبر أدمن)",
-          en: "Tashtiba - Brand Management (Super Admin)",
+          ar: " إدارة الماركات (سوبر أدمن)",
+          en: "Brand Management (Super Admin)",
         }}
         description={{
           ar: "صفحة إدارة الماركات بواسطة المشرف العام في تشطيبة. عرض، تغيير حالة، والتحكم في حسابات الماركات.",

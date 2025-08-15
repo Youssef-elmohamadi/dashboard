@@ -111,7 +111,6 @@ export default function CreateAdmin() {
       }
     }
   }, [isRoleError, roleError, t]);
-  console.log(fetchingRoleError);
 
   const { mutateAsync } = useCreateAdmin();
   const isCurrentlyOnline = useCheckOnline();
@@ -173,8 +172,8 @@ export default function CreateAdmin() {
     <div>
       <SEO
         title={{
-          ar: "تشطيبة - إنشاء مسؤول جديد (سوبر أدمن)",
-          en: "Tashtiba - Create New Admin (Super Admin)",
+          ar: " إنشاء مسؤول جديد (سوبر أدمن)",
+          en: "Create New Admin (Super Admin)",
         }}
         description={{
           ar: "صفحة إنشاء حساب مسؤول جديد بواسطة المشرف العام في نظام تشطيبة. املأ البيانات المطلوبة لإنشاء حساب إداري.",

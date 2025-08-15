@@ -56,7 +56,7 @@ const Brands = () => {
         title: t("BrandsTable:brandsPage.createdSuccessTitle"), // Added namespace
         message: t("BrandsTable:brandsPage.createdSuccessMessage", {
           message: location.state.successCreate,
-        }), 
+        }),
       });
       window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
@@ -65,7 +65,7 @@ const Brands = () => {
         title: t("BrandsTable:brandsPage.updatedSuccessTitle"), // Added namespace
         message: t("BrandsTable:brandsPage.updatedSuccessMessage", {
           message: location.state.successEdit,
-        }), 
+        }),
       });
       window.history.replaceState({}, document.title);
     }
@@ -74,7 +74,7 @@ const Brands = () => {
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [location.state, t]); 
+  }, [location.state, t]);
 
   const handleSearch = (key: string, value: string) => {
     setSearchValues((prev) => ({
@@ -118,8 +118,8 @@ const Brands = () => {
       )}
       <SEO
         title={{
-          ar: "تشطيبة - إدارة الماركات",
-          en: "Tashtiba - Brand Management",
+          ar: " إدارة الماركات",
+          en: "Brand Management",
         }}
         description={{
           ar: "صفحة إدارة الماركات والبراندات في تشطيبة. عرض، إضافة، تعديل، وحذف الماركات.",
@@ -155,20 +155,17 @@ const Brands = () => {
         pageTitle={t("BrandsTable:brandsPage.title")}
         userType="admin"
       />{" "}
-      
       <div>
         <SearchTable
-          fields={[
-            { key: "name", label: "Name", type: "input" },
-          ]} 
+          fields={[{ key: "name", label: "Name", type: "input" }]}
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />
       </div>
       <div className="space-y-6">
         <ComponentCard
-          title={t("BrandsTable:brandsPage.all")} 
-          headerAction={t("BrandsTable:brandsPage.addNew")} 
+          title={t("BrandsTable:brandsPage.all")}
+          headerAction={t("BrandsTable:brandsPage.addNew")}
           href="/admin/brands/create"
         >
           <BasicTable
@@ -183,7 +180,7 @@ const Brands = () => {
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
             globalError={globalError}
-            loadingText={t("BrandsTable:brandsPage.table.loadingText")} 
+            loadingText={t("BrandsTable:brandsPage.table.loadingText")}
           />
         </ComponentCard>
       </div>

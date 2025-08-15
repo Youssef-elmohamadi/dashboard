@@ -34,7 +34,6 @@ const Banners = () => {
     pageIndex,
     searchValues
   );
-console.log(data);
 
   const pageSize = data?.data?.per_page ?? 15;
   useEffect(() => {
@@ -120,10 +119,10 @@ console.log(data);
           message={alertData.message}
         />
       )}
-      <SEO 
+      <SEO
         title={{
-          ar: "تشطيبة - إدارة البانرات (سوبر أدمن)",
-          en: "Tashtiba - Banner Management (Super Admin)",
+          ar: " إدارة البانرات (سوبر أدمن)",
+          en: "Banner Management (Super Admin)",
         }}
         description={{
           ar: "صفحة إدارة البانرات الإعلانية بواسطة المشرف العام في تشطيبة. عرض، إضافة، تعديل، وحذف البانرات.",
@@ -155,7 +154,7 @@ console.log(data);
       />
       <div>
         <SearchTable
-          fields={[{ key: "name", label: "Name", type: "input" }]} 
+          fields={[{ key: "name", label: "Name", type: "input" }]}
           setSearchParam={handleSearch}
           searchValues={searchValues}
         />

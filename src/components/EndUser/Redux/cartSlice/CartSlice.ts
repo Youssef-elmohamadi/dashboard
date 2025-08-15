@@ -1,47 +1,72 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CartItem, CartState } from "../../../../types/Redux";
+
 const storedCart = localStorage.getItem("cart");
-const initialState = storedCart
+const initialState: CartState = storedCart
   ? JSON.parse(storedCart)
   : { items: [], totalQuantity: 0, totalPrice: 0, discount: 0 };
 
-
-
 const saveToLocalStorage = (state: CartState): void => {
   localStorage.setItem("cart", JSON.stringify(state));
+};
+const calculateTotals = (items: CartItem[]) => {
+  const totalQuantity = items.reduce((total, item) => total + item.quantity, 0);
+  const totalPrice = items.reduce(
+    (total, item) =>
+      total + (item.discount_price || item.price) * item.quantity,
+    0
+  );
+  return { totalQuantity, totalPrice };
 };
 
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addItem: (state, action) => {
+    addItem: (
+      state,
+      action: PayloadAction<{ item: CartItem; quantity: number }>
+    ) => {
       const { item, quantity } = action.payload;
-      const existingItem: CartItem | undefined = state.items.find((i: CartItem) => i.id === item.id);
+      const existingItem = state.items.find((i) => i.id === item.id);
 
-      if (!existingItem) {
-        state.items.push({ ...item, quantity });
-      } else {
+      if (existingItem) {
         existingItem.quantity += quantity;
+      } else {
+        state.items.push({ ...item, quantity });
       }
 
-      state.totalQuantity += quantity;
-      state.totalPrice += item.price * quantity;
+      const { totalQuantity, totalPrice } = calculateTotals(state.items);
+      state.totalQuantity = totalQuantity;
+      state.totalPrice = totalPrice;
       saveToLocalStorage(state);
     },
 
-    removeItem: (state, action) => {
+    removeItem: (state, action: PayloadAction<string | number>) => {
       const id = action.payload;
-      const existingItem: CartItem | undefined = state.items.find((item: CartItem) => item.id === id);
-      if (existingItem) {
-        state.totalPrice -= existingItem.price;
-        existingItem.quantity--;
-        state.totalQuantity--;
+      const existingItem = state.items.find((item) => item.id === id);
 
+      if (existingItem) {
+        existingItem.quantity--;
         if (existingItem.quantity === 0) {
-            state.items = state.items.filter((item: CartItem) => item.id !== id);
+          state.items = state.items.filter((item) => item.id !== id);
         }
       }
+
+      const { totalQuantity, totalPrice } = calculateTotals(state.items);
+      state.totalQuantity = totalQuantity;
+      state.totalPrice = totalPrice;
+      saveToLocalStorage(state);
+    },
+
+    deleteItem: (state, action: PayloadAction<string | number>) => {
+      const id = action.payload;
+      state.items = state.items.filter((item) => item.id !== id);
+
+      // إعادة حساب الإجمالي بعد حذف العنصر بالكامل
+      const { totalQuantity, totalPrice } = calculateTotals(state.items);
+      state.totalQuantity = totalQuantity;
+      state.totalPrice = totalPrice;
       saveToLocalStorage(state);
     },
 
@@ -53,33 +78,36 @@ const cartSlice = createSlice({
       saveToLocalStorage(state);
     },
 
-    updateQuantity: (state, action) => {
+    updateQuantity: (
+      state,
+      action: PayloadAction<{ id: string | number; quantity: number }>
+    ) => {
       const { id, quantity } = action.payload;
-      const existingItem: CartItem | undefined = state.items.find((item: CartItem) => item.id === id);
+      const existingItem = state.items.find((item) => item.id === id);
 
       if (existingItem) {
         existingItem.quantity = quantity;
-        state.totalQuantity = state.items.reduce(
-          (total: number, item: CartItem) => total + item.quantity,
-          0
-        );
-
-        state.totalPrice = state.items.reduce(
-          (total: number, item: CartItem) => total + item.price * item.quantity,
-          0
-        );
       }
+
+      const { totalQuantity, totalPrice } = calculateTotals(state.items);
+      state.totalQuantity = totalQuantity;
+      state.totalPrice = totalPrice;
       saveToLocalStorage(state);
     },
 
-    applyDiscount: (state, action) => {
-      const discount = parseFloat(action.payload); // مثلاً 100 جنيه خصم
-      state.discount = discount;
+    applyDiscount: (state, action: PayloadAction<number>) => {
+      state.discount = action.payload;
       saveToLocalStorage(state);
     },
   },
 });
 
-export const { addItem, removeItem, clearCart, updateQuantity, applyDiscount } =
-  cartSlice.actions;
+export const {
+  addItem,
+  removeItem,
+  deleteItem,
+  clearCart,
+  updateQuantity,
+  applyDiscount,
+} = cartSlice.actions;
 export default cartSlice.reducer;

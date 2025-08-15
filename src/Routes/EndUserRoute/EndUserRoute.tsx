@@ -1,14 +1,17 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import EndUserLayout from "../../pages/UserPages/EndUserLayout/Layout";
 import Home from "../../pages/UserPages/Home/Home";
 import EndUserWrapper from "./StoreProvider";
 import { lazy, Suspense } from "react";
+const EndUserLayout = lazy(
+  () => import("../../pages/UserPages/EndUserLayout/Layout")
+);
 import "./index.css";
 const UserForgotPassword = lazy(
   () => import("../../pages/UserPages/AuthPages/UserForgotPassword")
 );
 import LazyPages from "./LazyPages";
 import ScrollToTop from "../../components/common/ScrollToTop";
+import LoadingPage from "../../components/ui/loading-screen";
 const EndUserSignIn = lazy(
   () => import("../../pages/UserPages/AuthPages/EndUserSignin")
 );
@@ -23,10 +26,16 @@ const EndUserRoutes = () => {
     <>
       <Routes>
         <Route element={<EndUserWrapper />}>
-          {/* Redirect root path to /en */}
-          <Route path="/" element={<Navigate to="/en" replace />} />
+          <Route path="/" element={<Navigate to="/ar" replace />} />
 
-          <Route path="/:lang" element={<EndUserLayout />}>
+          <Route
+            path="/:lang"
+            element={
+              <Suspense fallback={<LoadingPage />}>
+                <EndUserLayout />
+              </Suspense>
+            }
+          >
             <Route index element={<Home />} />
             <Route
               path="*"

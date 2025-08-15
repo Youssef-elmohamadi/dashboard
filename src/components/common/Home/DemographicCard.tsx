@@ -5,7 +5,7 @@ import { DropdownItem } from "../../ui/dropdown/DropdownItem";
 import { MoreDotIcon } from "../../../icons";
 import CountryMap from "./CountryMap";
 
-export default function DemographicCard() {
+export default function DemographicCard({ customer_count }: any) {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation(["Home"]);
 
@@ -73,17 +73,17 @@ export default function DemographicCard() {
                 {t("demographic.eg")}
               </p>
               <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                {t("demographic.eg_customers", { count: 2379 })}
+                {t("demographic.eg_customers", { count: customer_count })}
               </span>
             </div>
           </div>
 
           <div className="flex w-full max-w-[140px] items-center gap-3">
             <div className="relative block h-2 w-full max-w-[100px] rounded-sm bg-gray-200 dark:bg-gray-800">
-              <div className="absolute left-0 top-0 flex h-full w-[79%] items-center justify-center rounded-sm bg-brand-500 text-xs font-medium text-white"></div>
+              <div className="absolute left-0 top-0 flex h-full w-[95%] items-center justify-center rounded-sm bg-brand-500 text-xs font-medium text-white"></div>
             </div>
             <p className="font-medium text-gray-800 text-theme-sm dark:text-white/90">
-              79%
+              95%
             </p>
           </div>
         </div>

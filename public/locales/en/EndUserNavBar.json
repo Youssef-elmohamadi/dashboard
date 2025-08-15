@@ -8,6 +8,7 @@
     "total": "Total",
     "goToShoppingCart": "Go To Shopping Cart",
     "items": "{{count}} Items",
-    "priceWithCurrency": "{{price}} EGP"
+    "priceWithCurrency": "{{price}} EGP",
+    "clearCart": "Clear Cart"
   }
 }

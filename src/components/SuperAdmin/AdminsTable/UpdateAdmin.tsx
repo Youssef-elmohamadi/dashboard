@@ -245,10 +245,8 @@ const UpdateAdmin = () => {
         <div className="p-4 border-b border-gray-200 dark:border-gray-600">
           <SEO
             title={{
-              ar: `تشطيبة - تحديث مسؤول ${admin?.first_name || ""}`,
-              en: `Tashtiba - Update Admin ${
-                admin?.first_name || ""
-              } (Super Admin)`,
+              ar: ` تحديث مسؤول ${admin?.first_name || ""}`,
+              en: `Update Admin ${admin?.first_name || ""} (Super Admin)`,
             }}
             description={{
               ar: `صفحة تحديث بيانات المسؤول "${

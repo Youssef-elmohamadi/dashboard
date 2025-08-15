@@ -1,10 +1,11 @@
 import { formatDistanceToNow } from "date-fns";
 import { useState } from "react";
 import { Dropdown } from "../../ui/dropdown/Dropdown";
-import { DropdownItem } from "../..//ui/dropdown/DropdownItem";
+import { DropdownItem } from "../../ui/dropdown/DropdownItem";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { useTranslation } from "react-i18next";
 import { useNotifications } from "../../../hooks/useDashboardNotification";
+
 export default function NotificationDropdown({
   userType,
 }: {
@@ -12,7 +13,7 @@ export default function NotificationDropdown({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const { dir, lang } = useDirectionAndLanguage();
-  const { t } = useTranslation();
+  const { t } = useTranslation("Notification");
 
   const toggleDropdown = () => setIsOpen(!isOpen);
   const closeDropdown = () => setIsOpen(false);
@@ -27,7 +28,6 @@ export default function NotificationDropdown({
     markAllAsRead,
     markAsRead,
   } = useNotifications(userType);
-  console.log(data);
 
   const notificationData = data?.pages.flatMap((page) => page?.data) || [];
   const is_unread = notificationData.some((n) => n?.is_read === 0);
@@ -84,7 +84,7 @@ export default function NotificationDropdown({
       >
         <div className="flex items-center justify-between pb-3 mb-3 border-b border-gray-100 dark:border-gray-700">
           <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-            Notification
+            {t("notification", "الإشعارات")}
           </h5>
           <div className="flex items-center gap-2">
             {notificationData.length > 0 && (
@@ -92,7 +92,7 @@ export default function NotificationDropdown({
                 onClick={handleMarkAllAsRead}
                 className="text-sm text-blue-500 hover:underline"
               >
-                Mark All as Read
+                {t("markAllAsRead", "تمييز الكل كمقروء")}
               </button>
             )}
             <button
@@ -116,74 +116,82 @@ export default function NotificationDropdown({
             </button>
           </div>
         </div>
+
         <ul className="flex flex-col h-auto overflow-y-auto custom-scrollbar">
-          {notificationData.map((notification) => {
-            if (!notification)
-              return <p key={Math.random()}>No Notification</p>;
-            return (
-              <li className="relative" key={notification.id}>
-                <div
-                  className={`absolute top-0.5 ${
-                    dir === "rtl" ? "left-0" : "right-0"
-                  }`}
-                >
-                  <button
-                    onClick={() => handleDeleteNotification(notification.id)}
-                    className="text-gray-500 transition dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+          {notificationData.length === 0 ? (
+            <li className="text-center py-6 text-gray-500 dark:text-gray-400">
+              {t("noNotifications", "لا توجد إشعارات حاليًا")}
+            </li>
+          ) : (
+            notificationData.map((notification) => {
+              if (!notification)
+                return <p key={Math.random()}>No Notification</p>;
+              return (
+                <li className="relative" key={notification.id}>
+                  <div
+                    className={`absolute top-0.5 ${
+                      dir === "rtl" ? "left-0" : "right-0"
+                    }`}
                   >
-                    <svg
-                      className="fill-current"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <button
+                      onClick={() => handleDeleteNotification(notification.id)}
+                      className="text-gray-500 transition dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                     >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M6.21967 7.28131C5.92678 6.98841 5.92678 6.51354 6.21967 6.22065C6.51256 5.92775 6.98744 5.92775 7.28033 6.22065L11.999 10.9393L16.7176 6.22078C17.0105 5.92789 17.4854 5.92788 17.7782 6.22078C18.0711 6.51367 18.0711 6.98855 17.7782 7.28144L13.0597 12L17.7782 16.7186C18.0711 17.0115 18.0711 17.4863 17.7782 17.7792C17.4854 18.0721 17.0105 18.0721 16.7176 17.7792L11.999 13.0607L7.28033 17.7794C6.98744 18.0722 6.51256 18.0722 6.21967 17.7794C5.92678 17.4865 5.92678 17.0116 6.21967 16.7187L10.9384 12L6.21967 7.28131Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <DropdownItem
-                  tag="a"
-                  to={
-                    notification?.type === "order"
-                      ? `/admin/orders/details/${notification.data_id}`
-                      : "/admin/Settings"
-                  }
-                  onItemClick={() => handleItemClick(notification.id)}
-                  className={`flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5 ${
-                    dir === "rtl" ? "text-right" : "text-left"
-                  }`}
-                >
-                  <span className="block">
-                    <span className="mb-1.5 block text-theme-sm text-gray-500 dark:text-gray-400">
-                      <span className="font-medium text-gray-800 dark:text-white/90">
-                        {notification[`title_${lang}`]}
+                      <svg
+                        className="fill-current"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M6.21967 7.28131C5.92678 6.98841 5.92678 6.51354 6.21967 6.22065C6.51256 5.92775 6.98744 5.92775 7.28033 6.22065L11.999 10.9393L16.7176 6.22078C17.0105 5.92789 17.4854 5.92788 17.7782 6.22078C18.0711 6.51367 18.0711 6.98855 17.7782 7.28144L13.0597 12L17.7782 16.7186C18.0711 17.0115 18.0711 17.4863 17.7782 17.7792C17.4854 18.0721 17.0105 18.0721 16.7176 17.7792L11.999 13.0607L7.28033 17.7794C6.98744 18.0722 6.51256 18.0722 6.21967 17.7794C5.92678 17.4865 5.92678 17.0116 6.21967 16.7187L10.9384 12L6.21967 7.28131Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <DropdownItem
+                    tag="a"
+                    to={
+                      notification?.type === "order"
+                        ? `/admin/orders/details/${notification.data_id}`
+                        : "/admin/Settings"
+                    }
+                    onItemClick={() => handleItemClick(notification.id)}
+                    className={`flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5 ${
+                      dir === "rtl" ? "text-right" : "text-left"
+                    }`}
+                  >
+                    <span className="block">
+                      <span className="mb-1.5 block text-theme-sm text-gray-500 dark:text-gray-400">
+                        <span className="font-medium text-gray-800 dark:text-white/90">
+                          {notification[`title_${lang}`]}
+                        </span>
+                        <div className="font-medium text-gray-800 dark:text-white/90">
+                          {notification[`message_${lang}`]}
+                        </div>
                       </span>
-                      <div className="font-medium text-gray-800 dark:text-white/90">
-                        {notification[`message_${lang}`]}
-                      </div>
-                    </span>
-                    <span className="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-                      <span>{notification.type}</span>
-                      <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                      <span>
-                        {formatDistanceToNow(
-                          new Date(`${notification.created_at}`),
-                          { addSuffix: true }
-                        )}
+                      <span className="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
+                        <span>{notification.type}</span>
+                        <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
+                        <span>
+                          {formatDistanceToNow(
+                            new Date(`${notification.created_at}`),
+                            { addSuffix: true }
+                          )}
+                        </span>
                       </span>
                     </span>
-                  </span>
-                </DropdownItem>
-              </li>
-            );
-          })}
+                  </DropdownItem>
+                </li>
+              );
+            })
+          )}
         </ul>
+
         {hasNextPage && (
           <button
             onClick={() => fetchNextPage()}

@@ -56,10 +56,8 @@ const CouponDetails: React.FC = () => {
     >
       <SEO
         title={{
-          ar: `تشطيبة - تفاصيل الكوبون ${couponData?.code || ""}`,
-          en: `Tashtiba - Coupon Details ${
-            couponData?.code || ""
-          } (Super Admin)`,
+          ar: ` تفاصيل الكوبون ${couponData?.code || ""}`,
+          en: `Coupon Details ${couponData?.code || ""} (Super Admin)`,
         }}
         description={{
           ar: `استعرض التفاصيل الكاملة للكوبون "${

@@ -9,8 +9,8 @@ export default function UserProfiles() {
     <>
       <SEO 
         title={{
-          ar: "تشطيبة - الملف الشخصي للمستخدم",
-          en: "Tashtiba - User Profile",
+          ar: "الملف الشخصي للمستخدم",
+          en: "User Profile",
         }}
         description={{
           ar: "صفحة الملف الشخصي للمستخدم في تشطيبة، استعرض وحدث بياناتك الشخصية وإعدادات الحساب.",

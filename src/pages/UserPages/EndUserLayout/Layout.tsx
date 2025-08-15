@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import AppHeader from "../../../components/EndUser/Layout/AppHeader";
 import NavBar from "../../../components/EndUser/Layout/NavBar";
 import AppTopBar from "../../../components/EndUser/Layout/AppTopBar";
 import Footer from "../../../components/EndUser/Layout/Footer";
 import AboutTashtiba from "../../../components/EndUser/Layout/AboutSection";
+import { applyLanguageSettings } from "../../../lib/setLanguage";
 
 export default function EndUserLayout() {
   const [hidden, setHidden] = useState(false);
@@ -22,11 +23,16 @@ export default function EndUserLayout() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [hidden]); 
+  }, [hidden]);
+  const { lang } = useParams();
+  useEffect(() => {
+    if (lang === "en" || lang === "ar") {
+      applyLanguageSettings(lang);
+    }
+  }, [lang]);
 
   return (
     <div className="bg-white! text-black dark:bg-white!  dark:text-black min-h-screen">
-      
       <div
         className={`sticky z-[50] !bg-white shadow-md transition-all duration-400 ease-in-out ${
           hidden ? "top-0" : "top-12"

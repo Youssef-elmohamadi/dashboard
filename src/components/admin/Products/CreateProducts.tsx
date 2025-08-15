@@ -257,8 +257,8 @@ export default function CreateProducts() {
     <div className="">
       <SEO
         title={{
-          ar: "تشطيبة - إضافة منتج جديد",
-          en: "Tashtiba - Add New Product",
+          ar: " إضافة منتج جديد",
+          en: "Add New Product",
         }}
         description={{
           ar: "صفحة إضافة منتج جديد إلى متجر تشطيبة. أدخل تفاصيل المنتج، الصور، والسمات.",

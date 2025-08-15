@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import SEO from "../../../components/common/SEO/seo"; 
+import SEO from "../../../components/common/SEO/seo";
 import PageBreadcrumb from "../../../components/common/PageBreadCrumb";
 import ComponentCard from "../../../components/common/ComponentCard";
 import { buildColumns } from "../../../components/admin/Tables/_Colmuns";
@@ -40,7 +40,6 @@ const Products = () => {
     refetch,
     error,
   } = useAllProducts(pageIndex, searchValues);
-  console.log("Products data:", products);
 
   const pageSize = products?.per_page ?? 15;
   useEffect(() => {
@@ -65,7 +64,7 @@ const Products = () => {
         title: t("ProductsTable:productsPage.createdSuccessTitle"), // إضافة namespace
         message: t("ProductsTable:productsPage.createdSuccessMessage", {
           message: location.state.successCreate,
-        }), 
+        }),
       });
       window.history.replaceState({}, document.title);
     } else if (location.state?.successEdit) {
@@ -102,17 +101,17 @@ const Products = () => {
   const { mutateAsync: deleteProductMutate } = useDeleteProduct();
   const handleDelete = async (id: ID) => {
     await alertDelete(id, deleteProductMutate, refetch, {
-      confirmTitle: t("ProductsTable:productsPage.delete.confirmTitle"), 
-      confirmText: t("ProductsTable:productsPage.delete.confirmText"), 
+      confirmTitle: t("ProductsTable:productsPage.delete.confirmTitle"),
+      confirmText: t("ProductsTable:productsPage.delete.confirmText"),
       confirmButtonText: t(
         "ProductsTable:productsPage.delete.confirmButtonText"
-      ), 
-      cancelButtonText: t("ProductsTable:productsPage.delete.cancelButtonText"), 
-      successTitle: t("ProductsTable:productsPage.delete.successTitle"), 
-      successText: t("ProductsTable:productsPage.delete.successText"), 
-      errorTitle: t("ProductsTable:productsPage.delete.errorTitle"), 
-      errorText: t("ProductsTable:productsPage.delete.errorText"), 
-      lastButton: t("ProductsTable:productsPage.delete.lastButton"), 
+      ),
+      cancelButtonText: t("ProductsTable:productsPage.delete.cancelButtonText"),
+      successTitle: t("ProductsTable:productsPage.delete.successTitle"),
+      successText: t("ProductsTable:productsPage.delete.successText"),
+      errorTitle: t("ProductsTable:productsPage.delete.errorTitle"),
+      errorText: t("ProductsTable:productsPage.delete.errorText"),
+      lastButton: t("ProductsTable:productsPage.delete.lastButton"),
     });
   };
 
@@ -129,8 +128,8 @@ const Products = () => {
       {/* Replaced PageMeta with SEO and updated content */}
       <SEO
         title={{
-          ar: "تشطيبة - إدارة المنتجات",
-          en: "Tashtiba - Product Management",
+          ar: " إدارة المنتجات",
+          en: "Product Management",
         }}
         description={{
           ar: "صفحة إدارة المنتجات في تشطيبة. عرض، إضافة، تعديل، وحذف المنتجات.",
@@ -173,35 +172,35 @@ const Products = () => {
             { key: "name", label: "Name", type: "input" },
             {
               key: "category_id",
-              label: "Category", 
+              label: "Category",
               type: "select",
               options: categories?.map((category: Category) => ({
-                label: category.name, 
+                label: category.name,
                 value: category.id,
               })),
             },
             {
               key: "brand_id",
-              label: "Brand", 
+              label: "Brand",
               type: "select",
               options: brands?.map((brand: Brand) => ({
-                label: brand.name, 
+                label: brand.name,
                 value: String(brand.id),
               })),
             },
             {
               key: "status",
-              label: "Status", 
+              label: "Status",
               type: "select",
               options: [
                 {
                   label: t("ProductsTable:productsPage.status.active"),
                   value: "active",
-                }, 
+                },
                 {
                   label: t("ProductsTable:productsPage.status.inactive"),
                   value: "inactive",
-                }, 
+                },
               ],
             },
           ]}
@@ -211,8 +210,8 @@ const Products = () => {
       </div>
       <div className="space-y-6">
         <ComponentCard
-          title={t("ProductsTable:productsPage.all")} 
-          headerAction={t("ProductsTable:productsPage.addNew")} 
+          title={t("ProductsTable:productsPage.all")}
+          headerAction={t("ProductsTable:productsPage.addNew")}
           href="/admin/products/create"
         >
           <BasicTable
@@ -228,7 +227,7 @@ const Products = () => {
             onPageChange={setPageIndex}
             unauthorized={unauthorized}
             globalError={globalError}
-            loadingText={t("ProductsTable:productsPage.table.loadingText")} 
+            loadingText={t("ProductsTable:productsPage.table.loadingText")}
           />
         </ComponentCard>
       </div>

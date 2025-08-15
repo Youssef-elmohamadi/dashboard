@@ -5,12 +5,12 @@ import {
   removeItem,
   updateQuantity,
 } from "../../../components/EndUser/Redux/cartSlice/CartSlice";
-import { Link, useNavigate } from "react-router-dom"; // Import useParams
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { useApplyCoupon } from "../../../hooks/Api/EndUser/useCopouns/useCopouns";
 import type { RootState } from "../../../components/EndUser/Redux/Store";
-import SEO from "../../../components/common/SEO/seo"; // Import your custom SEO component
+import SEO from "../../../components/common/SEO/seo";
 import { Product } from "../../../types/Product";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import DeleteIcon from "../../../icons/DeleteIcon";
@@ -28,10 +28,8 @@ interface CouponStatus {
 const Cart: React.FC = () => {
   const { t } = useTranslation(["EndUserCart"]);
   const dispatch = useDispatch();
-  const items = useSelector(
-    (state: RootState) => state.cart.items
-  ) as Product[];
-  const totalPrice = useSelector((state: RootState) => state.cart.totalPrice);
+  const items = useSelector((state: RootState) => state.cart.items);
+  const subtotal = useSelector((state: RootState) => state.cart.totalPrice);
   const totalQuantity = useSelector(
     (state: RootState) => state.cart.totalQuantity
   );
@@ -40,7 +38,7 @@ const Cart: React.FC = () => {
   const { lang } = useDirectionAndLanguage();
   const [cuponData, setCuponData] = useState<CouponFormData>({
     code: "",
-    order_total: totalPrice,
+    order_total: subtotal,
   });
 
   const [couponStatus, setCouponStatus] = useState<CouponStatus | null>(null);
@@ -73,8 +71,6 @@ const Cart: React.FC = () => {
     e.preventDefault();
     try {
       const res = await applyCouponMutate(cuponData);
-      console.log("Coupon applied successfully:", res);
-
       dispatch(applyDiscount(res.discount));
       setCouponStatus({ success: true, message: res.message });
     } catch (error: any) {
@@ -85,14 +81,14 @@ const Cart: React.FC = () => {
     }
   };
 
-  const finalPrice = totalPrice - discount;
+  const finalTotal = subtotal - discount;
 
   return (
     <div className="container mx-auto p-4 py-6 flex flex-col lg:flex-row gap-6">
       <SEO
         title={{
-          ar: `تشطيبة - سلة التسوق`,
-          en: `Tashtiba - Shopping Cart`,
+          ar: `سلة التسوق`,
+          en: `Shopping Cart`,
         }}
         description={{
           ar: `راجع سلة التسوق الخاصة بك في تشطيبة. قم بتعديل الكميات، تطبيق الكوبونات، والمتابعة لإتمام طلبك.`,
@@ -124,9 +120,11 @@ const Cart: React.FC = () => {
             "order",
           ],
         }}
+        url={`https://tashtiba.com/${lang}/cart`}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.com/ar/cart" }, // Adjust the path if your actual cart URL is different
-          { lang: "en", href: "https://tashtiba.com/en/cart" }, // Adjust the path if your actual cart URL is different
+          { lang: "ar", href: "https://tashtiba.com/ar/cart" },
+          { lang: "en", href: "https://tashtiba.com/en/cart" },
+          { lang: "x-default", href: "https://tashtiba.com/ar/cart" },
         ]}
         robotsTag="noindex, nofollow"
       />
@@ -136,30 +134,35 @@ const Cart: React.FC = () => {
         <h2 className="text-lg font-semibold border-b border-gray-200 pb-2 mb-4">
           {t("order_summary")}
         </h2>
-        <div className="flex justify-between mb-2">
-          <span>{t("items_total")}</span>
-          {discount > 0 ? (
-            <div className="flex flex-col items-end text-sm">
-              <span className="line-through text-gray-400">
-                {totalPrice.toFixed(2)} {t("egp")}
-              </span>
-              <span className="text-green-600 font-semibold">
-                {finalPrice.toFixed(2)} {t("egp")}
-              </span>
-            </div>
-          ) : (
+
+        {/* Subtotal */}
+        <div className="flex justify-between mb-2 text-gray-700">
+          <span>{t("total")}</span>
+          <span>
+            {subtotal.toFixed(2)} {t("egp")}
+          </span>
+        </div>
+
+        {/* Discount (Conditionally rendered) */}
+        {discount > 0 && (
+          <div className="flex justify-between mb-2 text-green-600 font-bold">
+            <span>{t("discount")}</span>
             <span>
-              {totalPrice.toFixed(2)} {t("egp")}
+              -{discount.toFixed(2)} {t("egp")}
             </span>
-          )}
+          </div>
+        )}
+
+        {/* Tax */}
+        <div className="flex justify-between mb-2 text-gray-700">
+          <span>{t("tax")}</span> <span>0.00 {t("egp")}</span>
         </div>
-        <div className="flex justify-between mb-2">
-          <span>{t("tax")}</span> <span>00 {t("egp")}</span>
-        </div>
+
+        {/* Total Price */}
         <div className="flex justify-between text-lg font-bold border-t border-gray-200 pt-2 mt-2">
           <span>{t("total")}</span>
           <span>
-            {finalPrice ? finalPrice.toFixed(2) : totalPrice} {t("egp")}
+            {finalTotal.toFixed(2)} {t("egp")}
           </span>
         </div>
 
@@ -226,17 +229,49 @@ const Cart: React.FC = () => {
                         {item.name}
                       </h3>
                     </Link>
-                    <div className="text-xs text-gray-500">
-                      {t("tax_label", {
+                    <div className="text-sm text-gray-500">
+                      {/* {t("tax_label", {
                         amount: item.tax?.toFixed(2) || "0.00",
-                      })}
+                      })} */}
+                      {item?.description}
                     </div>
-                    <div className="text-sm font-bold text-gray-800">
-                      {t("price_label", {
-                        price: (
-                          Number(item.price) * Number(item.quantity)
-                        ).toFixed(2),
-                      })}
+                    {/* عرض السعر مع الخصم (إن وجد) */}
+                    <div className="text-sm flex gap-1.5 font-bold text-gray-800">
+                      {item.discount_price ? (
+                        <>
+                          <span className="line-through text-gray-400 mr-2">
+                            {t("price_label", {
+                              price: (
+                                item.price * Number(item.quantity)
+                              ).toFixed(2),
+                            })}
+                          </span>
+                          <span className="end-user-text-base">
+                            {t("price_label", {
+                              price: (
+                                item.discount_price * Number(item.quantity)
+                              ).toFixed(2),
+                            })}
+                          </span>
+                          <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                            {t("discountApplied")}{" "}
+                            {Math.round(
+                              ((item.price - item.discount_price) /
+                                item.price) *
+                                100
+                            )}
+                            % {t("sale")}
+                          </span>
+                        </>
+                      ) : (
+                        <span>
+                          {t("price_label", {
+                            price: (
+                              Number(item.price) * Number(item.quantity)
+                            ).toFixed(2),
+                          })}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

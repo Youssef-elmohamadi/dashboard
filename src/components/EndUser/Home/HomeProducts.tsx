@@ -22,7 +22,6 @@ const HomeProducts: React.FC = () => {
   const { data: productCategories, isLoading: isProductsLoading } =
     useProductForEveryCategory();
   const { data: homeData, isLoading: isHomeLoading } = useHomeData();
-  console.log(productCategories);
 
   const isLoading = isHomeLoading || isProductsLoading;
 
