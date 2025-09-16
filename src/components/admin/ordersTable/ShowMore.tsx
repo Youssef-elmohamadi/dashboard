@@ -7,9 +7,11 @@ import SEO from "../../common/SEO/seo";
 import PageStatusHandler, {
   PageStatus,
 } from "../../common/PageStatusHandler/PageStatusHandler";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const OrderDetails: React.FC = () => {
   const { t } = useTranslation(["OrderDetails", "Meta"]);
+  const { lang } = useDirectionAndLanguage();
   const { id } = useParams();
   const {
     data: order,
@@ -179,11 +181,11 @@ const OrderDetails: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700 dark:text-white">
                     <p>
                       <strong>{t("OrderDetails:fields.product_name")}:</strong>{" "}
-                      {item?.product.name}
+                      {item?.product[`name_${lang}`]}
                     </p>
                     <p>
                       <strong>{t("OrderDetails:fields.description")}:</strong>{" "}
-                      {item?.product.description}
+                      {item?.product[`description_${lang}`]}
                     </p>
                     <p>
                       <strong>{t("OrderDetails:fields.price")}:</strong>{" "}

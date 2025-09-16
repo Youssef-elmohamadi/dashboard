@@ -22,8 +22,11 @@ export type CategoryFilters = {
 
 export type Category = {
   id: number;
-  name: string;
-  description: string;
+  name_ar: string;
+  name_en: string;
+  icon: string;
+  description_ar: string;
+  description_en: string;
   image: string;
   status: "active" | "inactive";
   created_at: string;
@@ -77,6 +80,7 @@ export interface GetCategoriesApiResponse<T> {
 export type CategoryInputData = {
   name_ar: string;
   name_en: string;
+  icon: string;
   description_ar: string;
   description_en: string;
   image: File | null | string;
@@ -89,6 +93,7 @@ export type CategoryInputData = {
 export type ServerErrors = {
   name_ar: string[];
   name_en: string[];
+  icon: string[];
   description_ar: string[];
   description_en: string[];
   image: string[];

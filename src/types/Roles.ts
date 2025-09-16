@@ -3,7 +3,8 @@ export type FilterRole = {
 };
 export type Permission = {
   id: number;
-  name: string;
+  name_en: string;
+  name_ar: string;
 };
 export type CreateRoleInput = {
   name: string;

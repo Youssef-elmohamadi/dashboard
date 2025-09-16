@@ -8,6 +8,7 @@ import { useProductsByCategory } from "../../../hooks/Api/EndUser/useProducts/us
 import { Circles } from "react-loader-spinner";
 import ProductCard from "../../../components/EndUser/Product/ProductCard";
 import { useTranslation } from "react-i18next";
+import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 
 const Shop = () => {
   const { category_id, lang } = useParams();
@@ -18,15 +19,18 @@ const Shop = () => {
   const max = searchParams.get("max") || "";
 
   const { t } = useTranslation(["EndUserShop"]);
-  const { data } = useAllCategories();
-  const categories = data?.original;
+  const { data } = useCategories();
+  const categories = data;
 
   useEffect(() => {
     const category = categories?.find(
       (cat: Category) => cat.id.toString() === category_id
     );
-    setCategoryName(category?.name ?? "");
-  }, [category_id, categories]);
+    if (category) {
+      setCategoryName((category as any)[`name_${lang}`]);
+    }
+  }, [category_id, categories, lang]);
+
 
   const {
     products,
@@ -42,7 +46,6 @@ const Shop = () => {
     max,
   });
 
-  console.log(categoryName);
 
   return (
     <div className="flex flex-col items-center min-h-[540px]">
@@ -114,7 +117,7 @@ const Shop = () => {
         </p>
       ) : isLoading ? (
         <div className="flex flex-col items-center justify-center py-10">
-          <LazyImage
+          {/* <LazyImage
             src="/images/product/placeholder-image.webp"
             alt={
               lang === "ar"
@@ -122,7 +125,7 @@ const Shop = () => {
                 : `Loading ${categoryName} products`
             }
             className="w-20 h-20 mb-4 animate-pulse"
-          />
+          /> */}
           <Circles height="80" width="80" color="#d62828" ariaLabel="loading" />
         </div>
       ) : products.length === 0 ? (

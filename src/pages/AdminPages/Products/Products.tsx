@@ -20,6 +20,8 @@ import { ID, TableAlert } from "../../../types/Common";
 import { SearchValues } from "../../../types/Product";
 import { Brand } from "../../../types/Brands";
 import { Category } from "../../../types/Categories";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 
 const Products = () => {
   const [pageIndex, setPageIndex] = useState(0);
@@ -32,7 +34,8 @@ const Products = () => {
     name: "",
   });
   const location = useLocation();
-  const { t } = useTranslation(["ProductsTable", "Meta"]); // استخدام الـ namespaces هنا
+  const { t } = useTranslation(["ProductsTable", "Meta"]);
+  const { lang } = useDirectionAndLanguage();
   const {
     data: products,
     isLoading,
@@ -92,8 +95,8 @@ const Products = () => {
     setPageIndex(0);
   };
 
-  const { data: allCategories } = useAllCategories();
-  const categories = allCategories?.original;
+  const { data: allCategories } = useCategories();
+  const categories = allCategories;
 
   const { data: allBrands } = useAllBrands();
   const brands = allBrands?.data;
@@ -175,7 +178,7 @@ const Products = () => {
               label: "Category",
               type: "select",
               options: categories?.map((category: Category) => ({
-                label: category.name,
+                label: category[`name_${lang}`],
                 value: category.id,
               })),
             },
@@ -184,7 +187,7 @@ const Products = () => {
               label: "Brand",
               type: "select",
               options: brands?.map((brand: Brand) => ({
-                label: brand.name,
+                label: brand[`name_${lang}`],
                 value: String(brand.id),
               })),
             },

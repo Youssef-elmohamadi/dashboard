@@ -125,7 +125,7 @@ export default function NotificationDropdown({
           ) : (
             notificationData.map((notification) => {
               if (!notification)
-                return <p key={Math.random()}>No Notification</p>;
+                return <p key={Math.random()}>{t("noNotification", "لا توجد إشعارات")}</p>;
               return (
                 <li className="relative" key={notification.id}>
                   <div
@@ -178,9 +178,13 @@ export default function NotificationDropdown({
                         <span>{notification.type}</span>
                         <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
                         <span>
-                          {formatDistanceToNow(
-                            new Date(`${notification.created_at}`),
-                            { addSuffix: true }
+                          {notification?.created_at && (
+                            <span className="text-gray-500 dark:text-gray-400">
+                              {formatDistanceToNow(
+                                new Date(`${notification?.created_at}`),
+                                { addSuffix: true }
+                              )}
+                            </span>
                           )}
                         </span>
                       </span>

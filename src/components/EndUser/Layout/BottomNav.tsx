@@ -40,11 +40,10 @@ const BottomNav = () => {
             to={`/${lang}`}
             className={({ isActive }) =>
               `flex flex-col items-center justify-center transition-colors duration-300 ${
-                isActive || location.pathname === `/${lang}`
-                  ? "text-[#d62828] font-bold"
-                  : "text-gray-700"
+                isActive ? "text-[#d62828] font-bold" : "text-black"
               }`
             }
+            end
           >
             <HomeIcon size={24} />
             <span className="text-xs mt-1 transition-colors duration-300">
@@ -59,11 +58,11 @@ const BottomNav = () => {
             to={`/${lang}/category`}
             className={({ isActive }) =>
               `flex flex-col items-center justify-center transition-colors duration-300 ${
-                isActive ? "text-[#d62828] font-bold" : "text-gray-700"
+                isActive ? "text-[#d62828] font-bold" : "text-black"
               }`
             }
           >
-            <ShopIcon className="w-7" />
+            <ShopIcon width={40} height={25} />
             <span className="text-xs mt-1 transition-colors duration-300">
               {t("shop")}
             </span>
@@ -77,7 +76,7 @@ const BottomNav = () => {
               to={`/${lang}/cart`}
               className={({ isActive }) =>
                 `flex flex-col items-center justify-center transition-colors duration-300 ${
-                  isActive ? "text-[#d62828] font-bold" : "text-gray-700"
+                  isActive ? "text-[#d62828] font-bold" : "text-black"
                 }`
               }
             >
@@ -101,7 +100,7 @@ const BottomNav = () => {
               to={`/${lang}/u-notification`}
               className={({ isActive }) =>
                 `flex flex-col items-center justify-center transition-colors duration-300 ${
-                  isActive ? "text-[#d62828] font-bold" : "text-gray-700"
+                  isActive ? "text-[#d62828] font-bold" : "text-black"
                 }`
               }
             >
@@ -119,7 +118,7 @@ const BottomNav = () => {
             to={isLoggedIn ? `/${lang}/u-profile` : `/${lang}/signin`}
             className={({ isActive }) =>
               `flex flex-col items-center justify-center transition-colors duration-300 ${
-                isActive ? "text-[#d62828] font-bold" : "text-gray-700"
+                isActive ? "text-[#d62828] font-bold" : "text-black"
               }`
             }
           >

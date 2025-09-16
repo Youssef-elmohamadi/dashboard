@@ -5,7 +5,7 @@
     "sections": {
       "conditions": {
         "title": "Return Conditions",
-        "point1": "You can return the product within 7 days from the date of receipt.",
+        "point1": "You can return the product within 14 days from the date of receipt.",
         "point2": "The product must be in its original condition, unused, and in its original packaging."
       },
       "exceptions": {

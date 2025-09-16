@@ -20,6 +20,7 @@
     "cash": "Cash on Delivery",
     "redirectMessage": "After clicking Pay Now, you’ll be redirected to the secure payment page.",
     "payNow": "Pay Now",
+    "order_now": "Order Now",
     "notes_placeholder": "Notes",
     "payment_security": "All transactions are secure and encrypted.",
     "newsletter": "Subscribe to newsletter",
@@ -51,6 +52,7 @@
     "removeItem": "Remove {{name}} from cart",
     "remove": "Remove item",
     "total": "Total",
+    "discount": "Discount",
     "currency": "EGP",
     "price_label": "{{price}} EGP"
   }

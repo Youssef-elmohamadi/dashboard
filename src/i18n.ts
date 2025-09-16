@@ -18,7 +18,7 @@ i18n
     backend: {
       loadPath: "/locales/{{lng}}/{{ns}}.json",
     },
-    ns: ["LoadingPage"],
+    ns: ["LoadingPage", "EndUserProductCard"],
     interpolation: {
       escapeValue: false,
     },

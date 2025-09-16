@@ -1,7 +1,6 @@
-import { ID } from "./Common";
-
 export type BrandFormErrors = {
-  name: string[];
+  name_ar: string[];
+  name_en: string[];
   status: string[];
   image: string[];
   global: string;
@@ -13,7 +12,8 @@ export type BrandFilters = {
 };
 
 export type BrandClientSideErrors = {
-  name: string;
+  name_ar: string;
+  name_en: string;
   status: string;
   image: string;
 };
@@ -30,7 +30,8 @@ export type UpdateBrandParams = {
 
 export interface Brand {
   id: number;
-  name: string;
+  name_ar: string;
+  name_en: string;
   image: string;
   status: "active" | "inactive";
   created_at: string;
@@ -42,7 +43,8 @@ export interface SearchValues {
 }
 
 export interface MutateBrand {
-  name: string;
+  name_ar: string;
+  name_en: string;
   image: string | null | File;
   status: string;
 }

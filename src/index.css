@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap")
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&display=swap")
 layer(base);
 @import "tailwindcss";
 
@@ -6,7 +6,7 @@ layer(base);
 
 @theme {
   --font-*: initial;
-  --font-outfit: Outfit, sans-serif;
+  --font-outfit: Cairo, sans-serif;
 
   --breakpoint-*: initial;
   --breakpoint-2xsm: 375px;
@@ -46,7 +46,7 @@ layer(base);
   --color-brand-200: #f8b4b4;
   --color-brand-300: #f98080;
   --color-brand-400: #f05252;
-  --color-brand-500: #d62828; /* اللون الأساسي */
+  --color-brand-500: #d62828;
   --color-brand-600: #b91c1c;
   --color-brand-700: #991b1b;
   --color-brand-800: #7f1d1d;
@@ -348,3 +348,4 @@ layer(base);
   left: 50%;
   transform: translateX(-50%);
 }
+

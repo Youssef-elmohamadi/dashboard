@@ -11,7 +11,7 @@ interface UserAccountDropdownProps {
   altTexts: { avatar: { ar: string; en: string } };
 }
 
-const LazyHeaderListDropDown = lazy(() => import("./HeaderListDropDown")); // تأكد من المسار الصحيح
+const LazyHeaderListDropDown = lazy(() => import("./HeaderListDropDown"));
 
 const UserAccountDropdown: React.FC<UserAccountDropdownProps> = ({
   user,
@@ -47,7 +47,14 @@ const UserAccountDropdown: React.FC<UserAccountDropdownProps> = ({
         <div className="h-8 w-8">
           <img
             className="w-full h-full rounded-full"
-            src={user?.avatar || "/images/default-avatar.webp"}
+            src={
+              !user?.avatar ||
+              user?.avatar.trim() === "" ||
+              user?.avatar ===
+                "https://tashtiba.com/storage/app/public/content/user/profile/"
+                ? "/images/default-avatar.webp"
+                : user.avatar
+            }
             alt={lang === "ar" ? altTexts.avatar.ar : altTexts.avatar.en}
             width={32}
             height={32}

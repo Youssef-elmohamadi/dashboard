@@ -31,8 +31,6 @@ export const SuperAdminProvider = ({ children }: SuperAdminProviderProps) => {
       try {
         await getSuperAdminProfile();
         setIsAuthenticated(true);
-
-        // ✅ تحميل ملفات الترجمة المطلوبة
         const namespaces = [
           "Status",
           "AdminsTablesActions",
@@ -43,7 +41,7 @@ export const SuperAdminProvider = ({ children }: SuperAdminProviderProps) => {
 
         await i18n.loadNamespaces(namespaces);
 
-        setIsReady(true); // ✅ التحقق + الترجمة تمت
+        setIsReady(true); 
       } catch (error: any) {
         console.error("Failed to fetch super admin profile", error);
         if (error.response?.status === 401) {

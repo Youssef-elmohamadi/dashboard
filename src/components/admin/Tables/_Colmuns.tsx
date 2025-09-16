@@ -42,10 +42,12 @@ interface ColumnBuilderOptions<T extends BaseEntity> {
   customActionsRenderer?: (rowData: T) => React.ReactNode;
 }
 import { useTranslation } from "react-i18next";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 export const buildColumns = <T extends BaseEntity>(
   options: ColumnBuilderOptions<T>
 ): any[] => {
   const { t } = useTranslation(["ColmunsAdmin"]);
+  const { lang } = useDirectionAndLanguage();
   const columns: any[] = [
     {
       Header: t("table.id"),
@@ -59,7 +61,7 @@ export const buildColumns = <T extends BaseEntity>(
       id: "name_and_image",
       Cell: ({ row }: any) => (
         <BrandCell
-          name={row.original?.name}
+          name={row.original?.[`name_${lang}`]}
           image={row.original?.images[0]?.image}
         />
       ),
@@ -71,7 +73,7 @@ export const buildColumns = <T extends BaseEntity>(
       id: "name_and_image",
       Cell: ({ row }: any) => (
         <BrandCell
-          name={row.original.name}
+          name={row.original?.[`name_${lang}`]}
           image={row.original?.image || null}
         />
       ),

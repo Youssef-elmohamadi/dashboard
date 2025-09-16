@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
 import Checkbox from "../../common/input/Checkbox";
 import FileInput from "../../common/input/FileInput";
-import { FiDelete } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import Select from "../../common/form/Select";
 import TextArea from "../../common/input/TextArea";
-import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { useAllBrands } from "../../../hooks/Api/Admin/useBrands/useBrands";
 import {
   useGetProductById,
@@ -18,24 +16,38 @@ import SEO from "../../../components/common/SEO/seo";
 import { AxiosError } from "axios";
 import { Category } from "../../../types/Categories";
 import { Brand } from "../../../types/Brands";
-import { Attribute, image, Product, ServerError } from "../../../types/Product";
+import {
+  Attribute,
+  image,
+  Product,
+  ServerError,
+  TagInput,
+} from "../../../types/Product";
 import useCheckOnline from "../../../hooks/useCheckOnline";
 import { toast } from "react-toastify";
 import PageStatusHandler, {
   PageStatus,
 } from "../../common/PageStatusHandler/PageStatusHandler";
-
+import DeleteIcon from "../../../icons/DeleteIcon";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 const UpdateProductPage: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateProduct", "Meta"]);
+  const { lang } = useDirectionAndLanguage();
   const [productData, setProductData] = useState<Product>({
     id: 0,
-    name: "",
+    name_ar: "",
+    name_en: "",
+    description_ar: "",
+    description_en: "",
     description: "",
     price: "",
     discount_price: "",
     stock_quantity: "",
+    unit_ar: "",
+    unit_en: "",
     category_id: "",
     brand_id: "",
     is_featured: false,
@@ -46,19 +58,26 @@ const UpdateProductPage: React.FC = () => {
     tags: [],
     review: [],
   });
+  const inputRefs = useRef<
+    Record<string, HTMLInputElement | HTMLTextAreaElement | null>
+  >({});
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [existingImages, setExistingImages] = useState<image[]>([]);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<TagInput[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const [errors, setErrors] = useState<ServerError>({
-    name: [],
-    description: [],
+    name_ar: [],
+    name_en: [],
+    description_ar: [],
+    description_en: [],
     price: [],
     discount_price: [],
     stock_quantity: [],
+    unit_ar: [],
+    unit_en: [],
     category_id: [],
     brand_id: [],
     status: [],
@@ -72,11 +91,15 @@ const UpdateProductPage: React.FC = () => {
   const [clientSideErrors, setClientSideErrors] = useState<
     Record<string, string>
   >({
-    name: "",
-    description: "",
+    name_ar: "",
+    name_en: "",
+    description_ar: "",
+    description_en: "",
     price: "",
     discount_price: "",
     stock_quantity: "",
+    unit_ar: "",
+    unit_en: "",
     category_id: "",
     brand_id: "",
     status: "",
@@ -97,12 +120,17 @@ const UpdateProductPage: React.FC = () => {
     setExistingImages(product.images ?? []);
     setAttributes(
       product.attributes?.map((attr: any) => ({
-        attribute_name: attr.attribute_name,
-        attribute_value: attr.attribute_value,
+        attribute_name_ar: attr.attribute_name_ar,
+        attribute_name_en: attr.attribute_name_en,
+        attribute_value_ar: attr.attribute_value_ar,
+        attribute_value_en: attr.attribute_value_en,
       }))
     );
     setTags(
-      product.tags.map((tag: any) => (typeof tag === "string" ? tag : tag.name))
+      product.tags.map((tag: any) => ({
+        name_ar: tag.name_ar || "",
+        name_en: tag.name_en || "",
+      }))
     );
   }, [product]);
 
@@ -114,7 +142,7 @@ const UpdateProductPage: React.FC = () => {
     data: allCategories,
     error: categoryError,
     isError: isCategoryError,
-  } = useAllCategories();
+  } = useCategories();
   useEffect(() => {
     if (isCategoryError && categoryError instanceof AxiosError) {
       const status = categoryError?.response?.status;
@@ -130,7 +158,7 @@ const UpdateProductPage: React.FC = () => {
       }
     }
   }, [isCategoryError, categoryError, t]);
-  const categories = allCategories?.original;
+  const categories = allCategories;
   const {
     data: allBrands,
     error: brandError,
@@ -174,17 +202,21 @@ const UpdateProductPage: React.FC = () => {
 
   const handleAttributeChange = (
     index: number,
-    field: "attribute_name" | "attribute_value",
+    field: keyof Attribute,
     value: string
   ) => {
-    const updated = [...attributes];
-    updated[index][field] = value;
+    const updated = [...attributes] as Attribute[];
+    (updated[index] as any)[field] = value;
     setAttributes(updated);
   };
 
-  const handleTagChange = (index: number, value: string) => {
+  const handleTagChange = (
+    index: number,
+    field: "name_ar" | "name_en",
+    value: string
+  ) => {
     const updated = [...tags];
-    updated[index] = value;
+    updated[index][field] = value;
     setTags(updated);
   };
 
@@ -193,7 +225,6 @@ const UpdateProductPage: React.FC = () => {
     updated.splice(index, 1);
     setAttributes(updated);
   };
-
   const removeTag = (index: number) => {
     const updated = [...tags];
     updated.splice(index, 1);
@@ -204,14 +235,17 @@ const UpdateProductPage: React.FC = () => {
     setAttributes([
       ...attributes,
       {
-        attribute_name: "",
-        attribute_value: "",
+        attribute_name_ar: "",
+        attribute_name_en: "",
+        attribute_value_ar: "",
+        attribute_value_en: "",
       },
     ]);
-  const addTag = () => setTags([...tags, ""]);
+  const addTag = () => setTags([...tags, { name_ar: "", name_en: "" }]);
   const validate = () => {
     const newErrors = {
-      name: "",
+      name_ar: "",
+      name_en: "",
       description: "",
       price: "",
       discount_price: "",
@@ -222,7 +256,10 @@ const UpdateProductPage: React.FC = () => {
       images: "",
       is_featured: "",
     };
-    if (!productData.name) newErrors.name = t("UpdateProduct:validation.name");
+    if (!productData.name_ar)
+      newErrors.name_ar = t("UpdateProduct:validation.name");
+    if (!productData.name_en)
+      newErrors.name_en = t("UpdateProduct:validation.name");
     if (!productData.price)
       newErrors.price = t("UpdateProduct:validation.price");
     if (!productData.stock_quantity)
@@ -241,16 +278,20 @@ const UpdateProductPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    if (!validate()) {
-      setLoading(false);
-      return;
-    }
+    // if (!validate()) {
+    //   setLoading(false);
+    //   return;
+    // }
     setErrors({
-      name: [],
-      description: [],
+      name_ar: [],
+      name_en: [],
+      description_ar: [],
+      description_en: [],
       price: [],
       discount_price: [],
       stock_quantity: [],
+      unit_ar: [],
+      unit_en: [],
       category_id: [],
       brand_id: [],
       status: [],
@@ -274,9 +315,11 @@ const UpdateProductPage: React.FC = () => {
         key !== "is_featured" &&
         key !== "slug" &&
         key !== "images" &&
+        key !== "tags" &&
+        key !== "attributes" &&
+        key !== "status" &&
         value !== null &&
-        value !== undefined &&
-        key !== "tags"
+        value !== undefined
       ) {
         formData.append(key, value.toString());
       }
@@ -287,13 +330,15 @@ const UpdateProductPage: React.FC = () => {
       images.forEach((image) => formData.append("images[]", image));
     }
     attributes.forEach((attr, i) => {
-      formData.append(`attributes[${i}][name]`, attr.attribute_name);
-      formData.append(`attributes[${i}][value]`, attr.attribute_value);
+      formData.append(`attributes[${i}][name_ar]`, attr.attribute_name_ar);
+      formData.append(`attributes[${i}][value_ar]`, attr.attribute_value_ar);
+      formData.append(`attributes[${i}][name_en]`, attr.attribute_name_en);
+      formData.append(`attributes[${i}][value_en]`, attr.attribute_value_en);
     });
-    tags.forEach((tag) => {
-      formData.append("tags[]", tag);
+    tags.forEach((tag, i) => {
+      formData.append(`tags[${i}][name_ar]`, tag.name_ar);
+      formData.append(`tags[${i}][name_en]`, tag.name_en);
     });
-
     try {
       await mutateAsync({ id: +id!, productData: formData });
       navigate("/admin/products", {
@@ -407,22 +452,75 @@ const UpdateProductPage: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-6 mt-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <Label htmlFor="name">{t("UpdateProduct:form.name")}</Label>
+            <Label htmlFor="name_ar">{t("UpdateProduct:form.name_ar")}</Label>
             <Input
-              name="name"
-              placeholder={t("UpdateProduct:placeholders.name")}
-              value={productData.name}
+              name="name_ar"
+              value={productData.name_ar}
+              placeholder={t("UpdateProduct:placeholders.name_ar")}
               onChange={handleChange}
+              id="name_ar"
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["name_ar"] = el;
+                }
+              }}
             />
-            {errors.name && errors.name[0] && (
-              <p className="text-red-500 text-sm mt-1">{errors.name[0]}</p>
-            )}
-            {clientSideErrors.name && (
+            {clientSideErrors.name_ar && (
               <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.name}
+                {clientSideErrors.name_ar}
               </p>
             )}
+            {errors.name_ar && errors.name_ar[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.name_ar[0]}</p>
+            )}
           </div>
+          <div>
+            <Label htmlFor="name_en">{t("UpdateProduct:form.name_en")}</Label>
+            <Input
+              name="name_en"
+              value={productData.name_en}
+              placeholder={t("UpdateProduct:placeholders.name_en")}
+              onChange={handleChange}
+              id="name_en"
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["name_en"] = el;
+                }
+              }}
+            />
+            {clientSideErrors.name_en && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.name_en}
+              </p>
+            )}
+            {errors.name_en && errors.name_en[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.name_en[0]}</p>
+            )}
+          </div>
+
+          {/* <div>
+            <Label htmlFor="status">{t("UpdateProduct:form.status")}</Label>
+            <Select
+            options={[
+              {
+                value: "active",
+                label: t("UpdateProduct:form.status_active"),
+                },
+                {
+                  value: "inactive",
+                  label: t("UpdateProduct:form.status_inactive"),
+                },
+              ]}
+              onChange={(value) => handleSelectChange(value, "status")}
+              value={productData.status}
+              placeholder={t("UpdateProduct:form.select_status")}
+            />
+            {errors.status && errors.status[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.status[0]}</p>
+            )}
+            </div> */}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
             <Label htmlFor="price">{t("UpdateProduct:form.price")}</Label>
             <Input
@@ -442,7 +540,7 @@ const UpdateProductPage: React.FC = () => {
           </div>
           <div>
             <Label htmlFor="discount_price">
-              {t("CreateProduct:form.discount_price")}
+              {t("UpdateProduct:form.discount_price")}
             </Label>
             <Input
               type="text"
@@ -461,6 +559,8 @@ const UpdateProductPage: React.FC = () => {
               <p className="text-red-500 text-sm mt-1">{errors.price[0]}</p>
             )}
           </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
           <div>
             <Label htmlFor="stock_quantity">
               {t("UpdateProduct:form.stock_quantity")}
@@ -470,6 +570,12 @@ const UpdateProductPage: React.FC = () => {
               placeholder={t("UpdateProduct:placeholders.stock_quantity")}
               value={productData.stock_quantity}
               onChange={handleChange}
+              id="stock_quantity"
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["stock_quantity"] = el;
+                }
+              }}
             />
             {errors.stock_quantity && errors.stock_quantity[0] && (
               <p className="text-red-500 text-sm mt-1">
@@ -483,13 +589,85 @@ const UpdateProductPage: React.FC = () => {
             )}
           </div>
           <div>
+            <Label htmlFor="unit_en">{t("CreateProduct:form.unit_en")}</Label>
+            <Input
+              name="unit_en"
+              value={productData.unit_en}
+              placeholder={t("CreateProduct:placeholders.unit_en")}
+              onChange={handleChange}
+              id="unit_en"
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["unit_en"] = el;
+                }
+              }}
+            />
+            {clientSideErrors.unit_en && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.unit_en}
+              </p>
+            )}
+            {errors.unit_en && errors.unit_en[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.unit_en[0]}</p>
+            )}
+          </div>
+          <div>
+            <Label htmlFor="unit_ar">{t("CreateProduct:form.unit_ar")}</Label>
+            <Input
+              name="unit_ar"
+              value={productData.unit_ar}
+              placeholder={t("CreateProduct:placeholders.unit_ar")}
+              onChange={handleChange}
+              id="unit_ar"
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["unit_ar"] = el;
+                }
+              }}
+            />
+            {clientSideErrors.unit_ar && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.unit_ar}
+              </p>
+            )}
+            {errors.unit_ar && errors.unit_ar[0] && (
+              <p className="text-red-500 text-sm mt-1">{errors.unit_ar[0]}</p>
+            )}
+          </div>
+
+          <div className="flex items-center space-x-3 mt-1">
+            <Checkbox
+              checked={Boolean(productData.is_featured)}
+              onChange={(checked) =>
+                setProductData((prev) => ({
+                  ...prev,
+                  is_featured: checked,
+                }))
+              }
+              id="is_featured"
+              label={t("UpdateProduct:form.is_featured")}
+            />
+            {errors.is_featured && errors.is_featured[0] && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.is_featured[0]}
+              </p>
+            )}
+            {clientSideErrors.is_featured && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.is_featured}
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="grid col-span-1 md:grid-cols-2 gap-5">
+          <div>
             <Label htmlFor="category_id">
               {t("UpdateProduct:form.category")}
             </Label>
             <Select
               options={categories?.map((category: Category) => ({
                 value: category.id,
-                label: category.name,
+                label: category[`name_${lang}`],
               }))}
               onChange={(value) => handleSelectChange(value, "category_id")}
               value={productData?.category_id}
@@ -516,7 +694,7 @@ const UpdateProductPage: React.FC = () => {
             <Select
               options={brands?.map((brand: Brand) => ({
                 value: String(brand.id),
-                label: brand.name,
+                label: brand[`name_${lang}`],
               }))}
               onChange={(value) => handleSelectChange(value, "brand_id")}
               value={productData.brand_id}
@@ -534,67 +712,51 @@ const UpdateProductPage: React.FC = () => {
               <p className="text-red-500 text-sm mt-1">{fetchingBrandsError}</p>
             )}
           </div>
-          {/* <div>
-            <Label htmlFor="status">{t("UpdateProduct:form.status")}</Label>
-            <Select
-              options={[
-                {
-                  value: "active",
-                  label: t("UpdateProduct:form.status_active"),
-                },
-                {
-                  value: "inactive",
-                  label: t("UpdateProduct:form.status_inactive"),
-                },
-              ]}
-              onChange={(value) => handleSelectChange(value, "status")}
-              value={productData.status}
-              placeholder={t("UpdateProduct:form.select_status")}
-            />
-            {errors.status && errors.status[0] && (
-              <p className="text-red-500 text-sm mt-1">{errors.status[0]}</p>
-            )}
-          </div> */}
-          <div className="flex items-center space-x-3 mt-1">
-            <Checkbox
-              checked={Boolean(productData.is_featured)}
-              onChange={(checked) =>
-                setProductData((prev) => ({ ...prev, is_featured: checked }))
+        </div>
+        <div className="grid col-span-1 md:grid-cols-2 gap-5">
+          <div>
+            <Label htmlFor="description_ar">
+              {t("UpdateProduct:form.description_ar")}
+            </Label>
+            <TextArea
+              name="description_ar"
+              placeholder={t("UpdateProduct:placeholders.description_ar")}
+              value={productData.description_ar}
+              onChange={(value) =>
+                setProductData((prev) => ({ ...prev, description_ar: value }))
               }
-              id="is_featured"
-              label={t("UpdateProduct:form.is_featured")}
             />
-            {errors.is_featured && errors.is_featured[0] && (
+            {errors.description_ar && errors.description_ar[0] && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.is_featured[0]}
+                {errors.description_ar[0]}
               </p>
             )}
-            {clientSideErrors.is_featured && (
+            {clientSideErrors.description_ar && (
               <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.is_featured}
+                {clientSideErrors.description_ar}
               </p>
             )}
           </div>
           <div>
-            <Label htmlFor="description">
-              {t("UpdateProduct:form.description")}
+            <Label htmlFor="description_en">
+              {t("UpdateProduct:form.description_en")}
             </Label>
             <TextArea
-              name="description"
-              placeholder={t("UpdateProduct:placeholders.description")}
-              value={productData.description}
+              name="description_en"
+              placeholder={t("UpdateProduct:placeholders.description_en")}
+              value={productData.description_en}
               onChange={(value) =>
-                setProductData((prev) => ({ ...prev, description: value }))
+                setProductData((prev) => ({ ...prev, description_en: value }))
               }
             />
-            {errors.description && errors.description[0] && (
+            {errors.description_en && errors.description_en[0] && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.description[0]}
+                {errors.description_en[0]}
               </p>
             )}
-            {clientSideErrors.description && (
+            {clientSideErrors.description_en && (
               <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.description}
+                {clientSideErrors.description_en}
               </p>
             )}
           </div>
@@ -653,28 +815,71 @@ const UpdateProductPage: React.FC = () => {
         </div>
         <div>
           <Label>{t("UpdateProduct:form.attributes")}</Label>
-          {attributes.map((attr, i) => (
-            <div key={i} className="flex gap-2 mb-2 items-center">
-              <Input
-                placeholder={t("UpdateProduct:placeholders.attribute_label")}
-                value={attr.attribute_name}
-                onChange={(e) =>
-                  handleAttributeChange(i, "attribute_name", e.target.value)
-                }
-              />
-              <Input
-                placeholder={t("UpdateProduct:placeholders.attribute_value")}
-                value={attr.attribute_value}
-                onChange={(e) =>
-                  handleAttributeChange(i, "attribute_value", e.target.value)
-                }
-              />
+          {attributes.map((attr, index) => (
+            <div key={index} className="flex flex-col gap-2 mb-2">
+              <div className="flex gap-2">
+                <Input
+                  placeholder={t(
+                    "UpdateProduct:placeholders.attribute_label_ar"
+                  )}
+                  value={attr.attribute_name_ar}
+                  onChange={(e) =>
+                    handleAttributeChange(
+                      index,
+                      "attribute_name_ar",
+                      e.target.value
+                    )
+                  }
+                />
+                <Input
+                  placeholder={t(
+                    "UpdateProduct:placeholders.attribute_value_ar"
+                  )}
+                  value={attr.attribute_value_ar}
+                  onChange={(e) =>
+                    handleAttributeChange(
+                      index,
+                      "attribute_value_ar",
+                      e.target.value
+                    )
+                  }
+                />
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  placeholder={t(
+                    "UpdateProduct:placeholders.attribute_label_en"
+                  )}
+                  value={attr.attribute_name_en}
+                  onChange={(e) =>
+                    handleAttributeChange(
+                      index,
+                      "attribute_name_en",
+                      e.target.value
+                    )
+                  }
+                />
+                <Input
+                  placeholder={t(
+                    "UpdateProduct:placeholders.attribute_value_en"
+                  )}
+                  value={attr.attribute_value_en}
+                  onChange={(e) =>
+                    handleAttributeChange(
+                      index,
+                      "attribute_value_en",
+                      e.target.value
+                    )
+                  }
+                />
+              </div>
               <button
                 type="button"
-                onClick={() => removeAttribute(i)}
-                className="text-red-600 text-xl"
+                onClick={() => removeAttribute(index)}
+                className="text-red-600 text-xl flex items-center gap-2"
               >
-                <FiDelete className="text-red-600 text-xl" />
+                <DeleteIcon className="text-red-600 text-xl" />
+                <span className="text-base">{t("form.delete_attribute")}</span>
               </button>
             </div>
           ))}
@@ -694,24 +899,33 @@ const UpdateProductPage: React.FC = () => {
         <div>
           <Label>{t("UpdateProduct:form.tags")}</Label>
           {tags.map((tag, i) => (
-            <div key={i} className="mb-2 flex items-center gap-2">
+            <div
+              key={i}
+              className="mb-2 flex gap-2 items-center flex-wrap p-2 rounded"
+            >
               <Input
-                value={tag}
-                onChange={(e) => handleTagChange(i, e.target.value)}
-                placeholder={t("UpdateProduct:placeholders.tag")}
+                value={tag.name_ar}
+                onChange={(e) => handleTagChange(i, "name_ar", e.target.value)}
+                placeholder={t("UpdateProduct:placeholders.tag_ar")}
+              />
+              <Input
+                value={tag.name_en}
+                onChange={(e) => handleTagChange(i, "name_en", e.target.value)}
+                placeholder={t("UpdateProduct:placeholders.tag_en")}
               />
               <button
                 type="button"
                 onClick={() => removeTag(i)}
-                className="text-red-600 text-xl"
+                className="text-red-600 text-xl flex items-center gap-2"
               >
-                <FiDelete className="text-red-600 text-xl" />
+                <DeleteIcon className="text-red-600 text-xl" />
+                <span className="text-base">{t("form.delete_tag")}</span>
               </button>
             </div>
           ))}
           <button
             type="button"
-            onClick={addTag}
+            onClick={() => addTag()}
             className="text-brand-600 hover:underline mt-2"
           >
             {t("UpdateProduct:form.add_tag")}

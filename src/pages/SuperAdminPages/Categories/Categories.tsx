@@ -31,6 +31,7 @@ const Categories = () => {
     searchValues
   );
 
+
   const pageSize = data?.per_page ?? 15;
   useEffect(() => {
     if (isError && error instanceof AxiosError) {

@@ -197,7 +197,7 @@ const SearchResultsDropdown: React.FC<SearchDropdownProps> = ({
                         className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-sm"
                       >
                         <span className="text-gray-700 dark:text-gray-200">
-                          {category.name}
+                          {category[`name_${lang}`]}
                         </span>
                       </NavLink>
                     ))}

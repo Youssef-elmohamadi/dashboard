@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
@@ -19,13 +19,15 @@ export default function CreateBrand() {
   const { t } = useTranslation(["CreateBrand", "Meta"]);
 
   const [brandData, setBrandData] = useState<MutateBrand>({
-    name: "",
+    name_ar: "",
+    name_en: "",
     status: "",
     image: null,
   });
 
   const [errors, setErrors] = useState<BrandFormErrors>({
-    name: [],
+    name_ar: [],
+    name_en: [],
     status: [],
     image: [],
     global: "",
@@ -35,7 +37,8 @@ export default function CreateBrand() {
   const navigate = useNavigate();
   const [clientSideErrors, setClientSideErrors] =
     useState<BrandClientSideErrors>({
-      name: "",
+      name_ar: "",
+      name_en: "",
       status: "",
       image: "",
     });
@@ -60,38 +63,77 @@ export default function CreateBrand() {
       image: file,
     }));
   };
+  const inputRefs = useRef<
+    Record<string, HTMLInputElement | HTMLTextAreaElement | null>
+  >({});
 
   const validate = () => {
     const newErrors = {
-      name: "",
+      name_ar: "",
+      name_en: "",
       status: "",
       image: "",
     };
-    if (!brandData.name) {
-      newErrors.name = t("CreateBrand:errors.name");
-    } else if (!brandData.status) {
+
+    if (!brandData.name_ar) {
+      newErrors.name_ar = t("CreateBrand:errors.name");
+    }
+
+    if (!brandData.name_en) {
+      newErrors.name_en = t("CreateBrand:errors.name");
+    }
+
+    if (!brandData.status) {
       newErrors.status = t("CreateBrand:errors.status");
-    } else if (!brandData.image) {
+    }
+
+    if (!brandData.image) {
       newErrors.image = t("CreateBrand:errors.image");
     }
+
+    const isValid = Object.values(newErrors).every((error) => error === "");
     setClientSideErrors(newErrors);
-    return Object.values(newErrors).every((error) => error === "");
+    return { isValid, newErrors };
   };
 
+  const focusOnError = (errors: Record<string, string | string[]>) => {
+    const errorEntry = Object.entries(errors).find(
+      ([_, value]) =>
+        (typeof value === "string" && value !== "") ||
+        (Array.isArray(value) && value.length > 0)
+    );
+
+    if (errorEntry) {
+      const fieldName = errorEntry[0];
+      const ref = inputRefs?.current[fieldName];
+      ref?.focus();
+      if (ref) {
+        ref.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          ref.focus({ preventScroll: true });
+        }, 300);
+      }
+    }
+  };
   const { mutateAsync } = useCreateBrand();
   const isCurrentlyOnline = useCheckOnline();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
-    setLoading(true);
     if (!isCurrentlyOnline()) {
       toast.error(t("CreateBrand:errors.no_internet"));
       setLoading(false);
       return;
     }
+    const { isValid, newErrors } = validate();
+    if (!isValid) {
+      focusOnError(newErrors);
+      return;
+    }
     try {
+      setLoading(true);
       const brandFormData = new FormData();
-      brandFormData.append("name", brandData.name);
+      brandFormData.append("name_ar", brandData.name_ar);
+      brandFormData.append("name_en", brandData.name_en);
       brandFormData.append("status", brandData.status || "active");
 
       if (brandData.image) {
@@ -125,6 +167,7 @@ export default function CreateBrand() {
         });
 
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
+        focusOnError(formattedErrors);
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -185,23 +228,54 @@ export default function CreateBrand() {
       <form onSubmit={handleSubmit} className="space-y-6 pt-3">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
           <div>
-            <Label htmlFor="name">{t("CreateBrand:name_label")}</Label>{" "}
+            <Label htmlFor="name_ar">{t("CreateBrand:name_label_ar")}</Label>{" "}
             <Input
               type="text"
-              name="name"
-              id="name"
-              value={brandData.name}
+              name="name_ar"
+              id="name_ar"
+              value={brandData.name_ar}
               onChange={handleChange}
-              placeholder={t("CreateBrand:name_placeholder")}
+              placeholder={t("CreateBrand:name_placeholder_ar")}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["name_ar"] = el;
+                }
+              }}
             />
-            {clientSideErrors.name && (
+            {clientSideErrors.name_ar && (
               <p className="text-red-500 text-sm mt-1">
-                {clientSideErrors.name}
+                {clientSideErrors.name_ar}
               </p>
             )}
-            {errors.name[0] && (
+            {errors.name_ar[0] && (
               <p className="text-red-600 text-sm mt-1">
-                {t("CreateBrand:errors.name_unique")}
+                {t("CreateBrand:errors.name_unique_ar")}
+              </p>
+            )}
+          </div>
+          <div>
+            <Label htmlFor="name_en">{t("CreateBrand:name_label_en")}</Label>{" "}
+            <Input
+              type="text"
+              name="name_en"
+              id="name_en"
+              value={brandData.name_en}
+              onChange={handleChange}
+              placeholder={t("CreateBrand:name_placeholder_en")}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["name_en"] = el;
+                }
+              }}
+            />
+            {clientSideErrors.name_en && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientSideErrors.name_en}
+              </p>
+            )}
+            {errors.name_en[0] && (
+              <p className="text-red-600 text-sm mt-1">
+                {t("CreateBrand:errors.name_unique_en")}
               </p>
             )}
           </div>
@@ -209,8 +283,11 @@ export default function CreateBrand() {
             <Label>{t("CreateBrand:status_label")}</Label>{" "}
             <Select
               options={[
-                { label: t("CreateBrand:status_active"), value: "active" }, // إضافة namespace
-                { label: t("CreateBrand:status_inactive"), value: "inactive" }, // إضافة namespace
+                { label: t("CreateBrand:status_active"), value: "active" },
+                {
+                  label: t("CreateBrand:status_inactive"),
+                  value: "inactive",
+                },
               ]}
               onChange={handleSelectChange}
               placeholder={t("CreateBrand:status_label")}
@@ -228,7 +305,9 @@ export default function CreateBrand() {
           <Label>{t("CreateBrand:image_label")}</Label>
           <ImageUpload file={brandData.image} onFileChange={handleFileChange} />
           {clientSideErrors.image && (
-            <p className="text-red-500 text-sm mt-1">{clientSideErrors.name}</p>
+            <p className="text-red-500 text-sm mt-1">
+              {clientSideErrors.image}
+            </p>
           )}
           {errors.image[0] && (
             <p className="text-red-600 text-sm mt-1">

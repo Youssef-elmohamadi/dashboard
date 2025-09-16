@@ -5,13 +5,16 @@ import { Vendor } from "./Vendor";
 export type Attribute = {
   id?: number;
   product_id?: number;
-  attribute_name: string;
-  attribute_value: string;
+  attribute_name_ar: string;
+  attribute_value_ar: string;
+  attribute_name_en: string;
+  attribute_value_en: string;
 };
 
 export type Tag = {
   id: number;
-  name: string;
+  name_ar: string;
+  name_en: string;
   slug: string;
   created_at: string;
   updated_at: string;
@@ -28,16 +31,19 @@ export type image = {
   created_at?: string;
   updated_at?: string;
 };
-export type Product = {
+type BaseProduct = {
   id: number;
   vendor_id?: number;
-  name: string;
+  description_ar: string;
+  description_en: string;
   description: string | undefined;
   category_id?: string;
   brand_id?: string;
   price: number | string;
   discount_price?: number | string | null;
   stock_quantity?: number | string;
+  unit_ar?: string;
+  unit_en?: string;
   status?: string;
   rate?: number | null;
   review: any[];
@@ -56,8 +62,15 @@ export type Product = {
   slug?: string;
   vendor?: Vendor;
   tax?: number | null;
-  quantity?: number; // For cart management
+  quantity?: number;
 };
+
+type LocalizedNames = {
+  [key in `name_${"ar" | "en"}`]: string;
+};
+
+export type Product = BaseProduct & LocalizedNames;
+
 
 export type SearchValues = {
   name: string;
@@ -84,11 +97,15 @@ export type ProductsPaginate = {
 };
 
 export type productInputData = {
-  name: string;
-  description: string;
+  name_ar: string;
+  name_en: string;
+  description_ar: string;
+  description_en: string;
   price: string;
   discount_price: string;
   stock_quantity: string;
+  unit_ar: string;
+  unit_en: string;
   category_id: string;
   brand_id: string;
   status: string;
@@ -96,12 +113,16 @@ export type productInputData = {
 };
 
 export type ServerError = {
-  name: string[];
+  name_ar: string[];
+  name_en: string[];
   price: string[];
-  description: string[];
+  description_ar: string[];
+  description_en: string[];
   category_id: string[];
   brand_id: string[];
   stock_quantity: string[];
+  unit_ar: string[];
+  unit_en: string[];
   status: string[];
   is_featured: string[];
   discount_price: string[];
@@ -113,3 +134,7 @@ export type ServerError = {
 };
 
 export type ClientErrors = Record<string, string>;
+export type TagInput = {
+  name_ar: string;
+  name_en: string;
+};

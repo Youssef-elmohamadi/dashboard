@@ -7,10 +7,7 @@ import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 import LazyImage from "../../common/LazyImage";
 import { Category } from "../../../types/Categories";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
-import {
-  FacebookIcon,
-  InstagramIcon,
-} from "../../../icons/SocialmediaIcon";
+import { FacebookIcon, InstagramIcon } from "../../../icons/SocialmediaIcon";
 import MapIcon from "../../../icons/MapIcon";
 import CallIcon from "../../../icons/CallIcon";
 import MessageIcon from "../../../icons/MessageIcon";
@@ -20,10 +17,15 @@ import StoreIcon from "../../../icons/StoreIcon";
 import HeartIcon from "../../../icons/HeartIcon";
 import { Order } from "../../../icons";
 import TiktokIcon from "../../../icons/TiktokIcon";
+import ReturnIcon from "../../../icons/ReturnIcon";
+import DocumentIcon from "../../../icons/DocumentIcon";
+import SupportIcon from "../../../icons/SupportIcon";
+import PrivacyIcon from "../../../icons/PrivacyIcon";
 
 export default function Footer() {
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const [informationOpen, setInformationOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [sellerAreaOpen, setSellerAreaOpen] = useState(false);
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ export default function Footer() {
             <LazyImage
               src={`/images/logo/${lang}-dark-logo.webp`}
               alt="Company Logo"
-              className="h-[76px] w-[200px] mb-3 drop-shadow-lg"
+              className="h-[50px] w-[150px] mb-3 drop-shadow-lg"
             />
             <p className="text-sm text-gray-300 italic tracking-wide">
               {t("footer.tagline")}
@@ -75,7 +77,7 @@ export default function Footer() {
               </p>
               <div className="flex gap-4 text-2xl">
                 <a
-                  href="https://www.tiktok.com"
+                  href="https://www.tiktok.com/@tashtiba.eg"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -144,7 +146,7 @@ export default function Footer() {
           </div>
         </div>
         {/* Footer Sections */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 border-t border-gray-700 pt-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 border-t border-gray-700 pt-10">
           {/* Quick Links */}
           <FooterSection
             title={t("footer.quick_links")}
@@ -158,7 +160,7 @@ export default function Footer() {
                     to={`/${lang}/category/${category.id}`}
                     className="block py-1 hover:text-red-400 text-sm transition-all duration-200"
                   >
-                    {category.name}
+                    {category[`name_${lang}`]}
                   </Link>
                 </li>
               ))}
@@ -196,6 +198,50 @@ export default function Footer() {
               </li>
             </ul>
           </FooterSection>
+          <FooterSection
+            title={t("Politics.heading")}
+            isOpen={informationOpen}
+            setIsOpen={setInformationOpen}
+          >
+            <ul className="text-sm space-y-2 text-gray-300">
+              <li className="flex items-center gap-2">
+                <ReturnIcon className="text-red-400 w-4" />
+                <Link
+                  to={`/${lang}/return`}
+                  className="hover:text-red-400 transition"
+                >
+                  {t("Politics.refund.title")}
+                </Link>
+              </li>
+              <li className="flex items-center gap-2">
+                <DocumentIcon className="text-red-400 w-4" />
+                <Link
+                  to={`/${lang}/terms`}
+                  className="hover:text-red-400 transition"
+                >
+                  {t("Politics.terms.title")}
+                </Link>
+              </li>
+              <li className="flex items-center gap-2">
+                <SupportIcon className="text-red-400 w-4" />
+                <Link
+                  to={`/${lang}/support`}
+                  className="hover:text-red-400 transition"
+                >
+                  {t("Politics.support.title")}
+                </Link>
+              </li>
+              <li className="flex items-center gap-2">
+                <PrivacyIcon className="text-red-400 w-4" />
+                <Link
+                  to={`/${lang}/privacy`}
+                  className="hover:text-red-400 transition"
+                >
+                  {t("Politics.privacy.title")}
+                </Link>
+              </li>
+            </ul>
+          </FooterSection>
 
           {/* My Account */}
           <FooterSection
@@ -206,13 +252,13 @@ export default function Footer() {
             <ul className="text-sm space-y-1">
               <li className="flex items-center gap-2">
                 <Order className="text-red-400 text-lg" />
-                <Link to="/order-history" className="hover:text-red-400">
+                <Link to={`/${lang}/u-orders`} className="hover:text-red-400">
                   {t("footer.order_history")}
                 </Link>
               </li>
               <li className="flex items-center gap-2">
                 <HeartIcon className="text-red-400 w-4" />
-                <Link to="/u-favorite" className="hover:text-red-400">
+                <Link to={`/${lang}/u-favorites`} className="hover:text-red-400">
                   {t("footer.favorite_list")}
                 </Link>
               </li>
@@ -222,7 +268,7 @@ export default function Footer() {
                   {t("footer.be_seller")}
                 </Link>
               </li>
-              <li className="flex items-center gap-2">
+              {/* <li className="flex items-center gap-2">
                 <LogoutIcon className="text-red-400 w-4" />
                 <button
                   onClick={() => {
@@ -233,7 +279,7 @@ export default function Footer() {
                 >
                   {t("footer.logout")}
                 </button>
-              </li>
+              </li> */}
             </ul>
           </FooterSection>
 

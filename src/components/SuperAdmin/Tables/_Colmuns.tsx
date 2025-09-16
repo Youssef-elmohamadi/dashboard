@@ -43,10 +43,12 @@ interface ColumnBuilderOptions<T extends BaseEntity> {
   productsIncludeImagesAndNameCell?: boolean;
 }
 import { useTranslation } from "react-i18next";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 export const buildColumns = <T extends BaseEntity>(
   options: ColumnBuilderOptions<T>
 ): any[] => {
   const { t } = useTranslation(["ColmunsAdmin"]);
+  const { lang } = useDirectionAndLanguage();
   const columns: any[] = [
     {
       Header: t("table.id"),
@@ -59,17 +61,21 @@ export const buildColumns = <T extends BaseEntity>(
       Header: t("table.name"),
       id: "name_and_image",
       Cell: ({ row }: any) => (
-        <BrandCell name={row.original?.name} image={row.original?.image} />
+        <BrandCell
+          name={row.original?.[`name_${lang}`]}
+          image={row.original?.image}
+        />
       ),
     });
   }
+
   if (options.productsIncludeImagesAndNameCell) {
     columns.push({
       Header: t("table.name"),
       id: "name_and_image",
       Cell: ({ row }: any) => (
         <BrandCell
-          name={row.original?.name}
+          name={row.original?.[`name_${lang}`]}
           image={row.original?.images[0]?.image}
         />
       ),
@@ -183,7 +189,7 @@ export const buildColumns = <T extends BaseEntity>(
       accessor: "position",
       Cell: ({ value }: any) => {
         const category = options.categories?.find((cat) => cat.id === value);
-        return category ? `before ${category.name}` : "-";
+        return category ? `before ${category[`name_${lang}`]}` : "-";
       },
     });
   }

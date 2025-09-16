@@ -32,7 +32,14 @@ function UserControlLayoutComponent() {
           <div className="text-center flex flex-col items-center">
             <div className="w-20 h-20 rounded-full">
               <img
-                src={user?.avatar || "/images/default-avatar.webp"}
+                src={
+                  !user?.avatar ||
+                  user?.avatar.trim() === "" ||
+                  user?.avatar ===
+                    "https://tashtiba.com/storage/app/public/content/user/profile/"
+                    ? "/images/default-avatar.webp"
+                    : user.avatar
+                }
                 className="w-full h-full rounded-full"
                 alt="User Avatar"
               />

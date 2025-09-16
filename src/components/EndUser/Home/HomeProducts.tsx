@@ -74,8 +74,8 @@ const HomeProducts: React.FC = () => {
 
         const bannerAltText =
           lang === "ar"
-            ? `تشطيبة | إعلان تصنيف ${category.name}`
-            : `Tashtiba | Category banner for ${category.name}`;
+            ? `تشطيبة | إعلان تصنيف ${category[`name_${lang}`]}`
+            : `Tashtiba | Category banner for ${category[`name_${lang}`]}`;
 
         return (
           <div key={category.id} className="mb-8">
@@ -94,7 +94,7 @@ const HomeProducts: React.FC = () => {
             <div className="h-[550px]">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg md:text-xl font-semibold text-gray-800">
-                  {category.name}
+                  {category[`name_${lang}`]}
                 </h2>
                 <Link
                   to={`/${lang}/category/${category.id}`}

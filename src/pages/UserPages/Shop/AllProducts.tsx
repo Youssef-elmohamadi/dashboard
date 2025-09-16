@@ -27,10 +27,10 @@ const AllProducts = () => {
   });
   const { lang } = useParams();
 
-  console.log(products);
+
   const productKeywords = products
     .slice(0, 8)
-    .map((p) => p.name)
+    .map((p) => p[`name_[${lang}]`])
     .join(", ");
 
   return (
@@ -41,8 +41,8 @@ const AllProducts = () => {
           en: "All Finishing Products - Ceramic, Paints, Sanitary Ware & More",
         }}
         description={{
-          ar: "تصفح مجموعة ضخمة من منتجات التشطيب بأفضل الأسعار في مصر. سيراميك، بورسلين، دهانات، أبواب، أدوات صحية والمزيد. اطلب الآن من تشطيبة.",
-          en: "Browse a huge range of finishing products at the best prices in Egypt. Ceramic, porcelain, paints, doors, sanitary ware & more. Shop now at Tashtiba.",
+          ar: "تصفح مجموعة ضخمة من منتجات التشطيب بأفضل الأسعار في مصر. خلاطات، تكييفات، دهانات، أبواب، أدوات صحية والمزيد. اطلب الآن من تشطيبة.",
+          en: "Browse a huge range of finishing products at the best prices in Egypt. Mixers, air conditioners, paints, doors, sanitary ware & more. Shop now at Tashtiba.",
         }}
         keywords={{
           ar: [

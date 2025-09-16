@@ -85,7 +85,7 @@ const AppHeader = () => {
         />
 
         {/* Desktop Search Bar */}
-        <DesktopSearchBar dir={dir} />
+        <DesktopSearchBar dir={dir} lang={lang} />
 
         {/* Right Section: User Actions or Guest Actions */}
         <div className="hidden lg:flex items-center justify-end gap-2 flex-[1]">

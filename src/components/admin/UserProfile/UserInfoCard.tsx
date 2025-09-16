@@ -53,19 +53,22 @@ export default function UserInfoCard({ userType }: { userType: string }) {
 
   const storedAdminId = localStorage.getItem("admin_id");
   const adminId = userType === "admin" ? storedAdminId : undefined;
-
+  const superAdminToken = localStorage.getItem("super_admin_token");
   const {
     data: adminUserData,
     isLoading: isAdminLoading,
     error: adminError,
-  } = useAdminUser(adminId || "");
-  const superAdminTokin = localStorage.getItem("super_admin_token");
+  } = useAdminUser(adminId || "", {
+    enabled: userType === "admin" && !!adminId,
+  });
 
   const {
     data: superAdminProfileData,
     isLoading: isSuperAdminLoading,
     error: superAdminError,
-  } = useSuperAdminProfile(!!superAdminTokin);
+  } = useSuperAdminProfile(superAdminToken, {
+    enabled: userType === "super_admin",
+  });
 
   const userData = userType === "admin" ? adminUserData : superAdminProfileData;
   const isLoading = userType === "admin" ? isAdminLoading : isSuperAdminLoading;

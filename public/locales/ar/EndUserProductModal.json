@@ -4,10 +4,15 @@
   "egp": "جنيه",
   "price": "السعر",
   "discountApplied": "تم تطبيق الخصم",
+  "available": "متاح",
+  "inStock": "في المخزون",
+  "outOfStock": "نفذ من المخزون",
+  "specifications": "المواصفات",
   "quantity": "الكمية",
   "total": "المجموع",
   "addToCart": "اضف الى السلة",
   "reviews": "المراجعات",
   "noReviews": "لا يوجد مراجعات حتى الان",
-  "sale": "خصم"
+  "sale": "خصم",
+  "outOfStockMessage": "عذراً، المنتج غير متوفر حالياً."
 }

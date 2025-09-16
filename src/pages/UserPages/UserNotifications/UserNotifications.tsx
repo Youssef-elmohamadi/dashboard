@@ -49,7 +49,7 @@ const UserNotifications: React.FC = () => {
     isFetchingNextPage,
   } = useNotifications();
 
-  const notifications = data?.pages.flatMap((page) => page.data) || [];
+  const notifications = data?.pages.flatMap((page) => page.data.data) || [];
 
   const deleteNotificationMutation = useDeleteNotification();
   const markAsReadMutation = useMarkAsRead();

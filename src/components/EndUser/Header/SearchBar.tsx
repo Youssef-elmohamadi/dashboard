@@ -137,7 +137,7 @@ const SearchResultsDropdown: React.FC<SearchDropdownProps> = ({
                         onClick={handleResultClick}
                         className="px-3 py-1 text-sm rounded-full bg-purple-100 text-purple-800 hover:bg-purple-200 transition-colors duration-200"
                       >
-                        {category.name}
+                        {category[`name_${lang}`]}
                       </NavLink>
                     ))}
                   </div>
@@ -162,7 +162,7 @@ const SearchResultsDropdown: React.FC<SearchDropdownProps> = ({
                             product.images?.[0]?.image ??
                             `https://placehold.co/60x60/F3E8FF/3B0764?text=Product`
                           }
-                          alt={product.name}
+                          alt={product[`name_${lang}`]}
                           className="w-16 h-16 object-cover rounded-md flex-shrink-0"
                           onError={(e: any) => {
                             e.target.onerror = null;
@@ -172,7 +172,8 @@ const SearchResultsDropdown: React.FC<SearchDropdownProps> = ({
                         />
                         <div className="flex-grow">
                           <h4 className="text-base font-medium text-gray-800 line-clamp-1">
-                            {product.name}
+                            {product[`name_${lang}`]}
+                            {/* {product.name_ar} */}
                           </h4>
                           <div className="flex items-center text-sm text-gray-600">
                             <div className="flex text-yellow-400 mr-1">
@@ -180,7 +181,7 @@ const SearchResultsDropdown: React.FC<SearchDropdownProps> = ({
                                 <StarIcon
                                   key={i}
                                   className={
-                                    i < Math.floor(product.rate || 0)
+                                    i < Math.floor(product.rating || 0)
                                       ? "w-3 h-3"
                                       : "w-3 h-3 text-gray-300"
                                   }
@@ -189,8 +190,8 @@ const SearchResultsDropdown: React.FC<SearchDropdownProps> = ({
                             </div>
                             <span className="text-xs">
                               (
-                              {typeof product.rate === "number"
-                                ? product.rate.toFixed(1)
+                              {typeof product.rating === "number"
+                                ? product.rating.toFixed(1)
                                 : "0.0"}
                               )
                             </span>

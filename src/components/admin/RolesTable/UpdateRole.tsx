@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
@@ -22,6 +22,7 @@ import PageStatusHandler, {
 } from "../../common/PageStatusHandler/PageStatusHandler";
 import useCheckOnline from "../../../hooks/useCheckOnline";
 import { toast } from "react-toastify";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const UpdateRole: React.FC = () => {
   const [updateData, setUpdateData] = useState<UpdateRoleInput>({
@@ -37,10 +38,14 @@ const UpdateRole: React.FC = () => {
     global: "",
   });
 
+  const inputRefs = useRef<
+    Record<string, HTMLInputElement | HTMLTextAreaElement | null>
+  >({});
+
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation(["UpdateRole", "Meta"]);
-
+  const { lang } = useDirectionAndLanguage();
   const {
     data: roleData,
     isLoading: isRoleLoading,
@@ -131,8 +136,29 @@ const UpdateRole: React.FC = () => {
     ) {
       newFormErrors.permissions = t("UpdateRole:role.errors.permission");
     }
+    const isValid = Object.values(newFormErrors).every((error) => error === "");
     setFormErrors(newFormErrors);
-    return Object.keys(newFormErrors).length === 0;
+    return { isValid, newFormErrors };
+  };
+
+  const focusOnError = (errors: Record<string, string | string[]>) => {
+    const errorEntry = Object.entries(errors).find(
+      ([_, value]) =>
+        (typeof value === "string" && value !== "") ||
+        (Array.isArray(value) && value.length > 0)
+    );
+
+    if (errorEntry) {
+      const fieldName = errorEntry[0];
+      const ref = inputRefs?.current[fieldName];
+      ref?.focus();
+      if (ref) {
+        ref.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          ref.focus({ preventScroll: true });
+        }, 300);
+      }
+    }
   };
 
   const { mutateAsync } = useUpdateRole(id!!);
@@ -140,7 +166,6 @@ const UpdateRole: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setErrors({
       name: [],
       permissions: [],
@@ -158,6 +183,13 @@ const UpdateRole: React.FC = () => {
       setIsSubmitting(false);
       return;
     }
+
+    const { isValid, newFormErrors } = validateForm();
+    if (!isValid) {
+      focusOnError(newFormErrors);
+      return;
+    }
+    setIsSubmitting(true);
 
     try {
       if (id) {
@@ -183,6 +215,7 @@ const UpdateRole: React.FC = () => {
           formattedErrors[err.code].push(err.message);
         });
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
+        focusOnError(formattedErrors);
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -259,6 +292,11 @@ const UpdateRole: React.FC = () => {
                 value={updateData.name}
                 onChange={handleChange}
                 placeholder={t("UpdateRole:role.placeholder.name")}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["name"] = el;
+                  }
+                }}
               />
               {formErrors.name && (
                 <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
@@ -281,14 +319,13 @@ const UpdateRole: React.FC = () => {
                   {fetchingPermissionsError}
                 </p>
               ) : (
-                <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
+                <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pr-2 p-4">
                   {permissions?.map((permission: Permission) => (
                     <Checkbox
                       key={permission.id}
-                      label={permission.name}
+                      label={permission[`name_${lang}`]}
                       checked={updateData.permissions.includes(permission.id)}
                       onChange={() => handleCheckbox(permission.id)}
-                      // تم تعديل هذا الجزء: تعطيل خانات الاختيار أثناء التحميل أو في حالة وجود خطأ
                       disabled={isPermissionError || isPermissionLoading}
                     />
                   ))}
@@ -310,7 +347,7 @@ const UpdateRole: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ${
+            className={`text-white inline-flex items-center bg-brand-600 hover:bg-brand-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ${
               isSubmitting ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >

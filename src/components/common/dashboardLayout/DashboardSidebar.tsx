@@ -52,11 +52,11 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       name: t("Products"),
       path: "/admin/products",
     },
-    {
-      icon: <Category />,
-      name: t("Categories"),
-      path: "/admin/categories",
-    },
+    // {
+    //   icon: <Category />,
+    //   name: t("Categories"),
+    //   path: "/admin/categories",
+    // },
     {
       icon: <Order />,
       name: t("Orders"),
@@ -415,6 +415,8 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
           <Link to="/admin">
             {isExpanded || isHovered || isMobileOpen ? (
               <>
+              <div className="items-center h-[64px] flex dark:hidden">
+
                 <img
                   className="dark:hidden "
                   src={`/images/logo/${lang}-light-logo.webp`}
@@ -422,7 +424,8 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
                   width={150}
                   height={84}
                 />
-                <div className="items-center h-[84px] hidden dark:flex">
+              </div>
+                <div className="items-center h-[64px] hidden dark:flex">
                   <img
                     className="hidden dark:block "
                     src={`/images/logo/${lang}-dark-logo.webp`}

@@ -1,8 +1,10 @@
 {
   "create_title": "Create Brand",
   "main_title": "Create New Brand",
-  "name_label": "Brand Name",
-  "name_placeholder": "Enter the Brand Name",
+  "name_label_en": "Brand Name (English)",
+  "name_label_ar": "Brand Name (Arabic)",
+  "name_placeholder_en": "Enter the Brand Name (English)",
+  "name_placeholder_ar": "Enter the Brand Name (Arabic)",
   "name_required": "Brand name is required.",
   "status_label": "Select Status",
   "status_active": "Active",

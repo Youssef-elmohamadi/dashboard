@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Label from "../../common/form/Label";
@@ -25,14 +25,18 @@ const UpdateBrandPage = () => {
   const { t } = useTranslation(["UpdateBrand", "Meta"]);
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const inputRefs = useRef<
+    Record<string, HTMLInputElement | HTMLTextAreaElement | null>
+  >({});
   const [updateData, setUpdateData] = useState<MutateBrand>({
-    name: "",
+    name_ar: "",
+    name_en: "",
     status: "active",
     image: "",
   });
   const [errors, setErrors] = useState<BrandFormErrors>({
-    name: [],
+    name_ar: [],
+    name_en: [],
     status: [],
     image: [],
     global: "",
@@ -40,7 +44,8 @@ const UpdateBrandPage = () => {
   });
   const [clientSideErrors, setClientSideErrors] =
     useState<BrandClientSideErrors>({
-      name: "",
+      name_ar: "",
+      name_en: "",
       status: "",
       image: "",
     });
@@ -60,7 +65,8 @@ const UpdateBrandPage = () => {
   useEffect(() => {
     if (brandData) {
       setUpdateData({
-        name: brandData.name || "",
+        name_ar: brandData.name_ar,
+        name_en: brandData.name_en,
         status: brandData.status || "active",
         image: brandData.image,
       });
@@ -90,9 +96,17 @@ const UpdateBrandPage = () => {
   };
 
   const validate = () => {
-    const newErrors: BrandClientSideErrors = { name: "", status: "", image: "" };
-    if (!updateData.name) {
-      newErrors.name = t("UpdateBrand:errors.name");
+    const newErrors: BrandClientSideErrors = {
+      name_ar: "",
+      name_en: "",
+      status: "",
+      image: "",
+    };
+    if (!updateData.name_ar) {
+      newErrors.name_ar = t("UpdateBrand:errors.name");
+    }
+    if (!updateData.name_en) {
+      newErrors.name_en = t("UpdateBrand:errors.name");
     }
     if (!updateData.status) {
       newErrors.status = t("UpdateBrand:errors.status");
@@ -100,18 +114,44 @@ const UpdateBrandPage = () => {
     if (!updateData.image) {
       newErrors.image = t("UpdateBrand:errors.image");
     }
+    const isValid = Object.values(newErrors).every((error) => error === "");
     setClientSideErrors(newErrors);
-    return Object.values(newErrors).every((error) => !error);
+    return { isValid, newErrors };
+  };
+
+  const focusOnError = (errors: Record<string, string | string[]>) => {
+    const errorEntry = Object.entries(errors).find(
+      ([_, value]) =>
+        (typeof value === "string" && value !== "") ||
+        (Array.isArray(value) && value.length > 0)
+    );
+
+    if (errorEntry) {
+      const fieldName = errorEntry[0];
+      const ref = inputRefs?.current[fieldName];
+      ref?.focus();
+      if (ref) {
+        ref.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          ref.focus({ preventScroll: true });
+        }, 300);
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
+    const { isValid, newErrors } = validate();
+    if (!isValid) {
+      focusOnError(newErrors);
+      return;
+    }
     setLoading(true);
 
     try {
       const formData = new FormData();
-      formData.append("name", updateData.name);
+      formData.append("name_ar", updateData.name_ar);
+      formData.append("name_en", updateData.name_en);
       formData.append("status", updateData.status);
 
       if (updateData.image && typeof updateData.image !== "string") {
@@ -124,6 +164,7 @@ const UpdateBrandPage = () => {
       });
     } catch (error: any) {
       console.error("Error updating brand:", error);
+
       const status = error?.response?.status;
       if (status === 403 || status === 401) {
         setErrors((prev) => ({
@@ -143,6 +184,7 @@ const UpdateBrandPage = () => {
           formattedErrors[err.code].push(err.message);
         });
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
+        focusOnError(formattedErrors);
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -181,15 +223,15 @@ const UpdateBrandPage = () => {
     <>
       <SEO
         title={{
-          ar: `تحديث ماركة ${updateData.name || ""}`,
-          en: `Update Brand ${updateData.name || ""}`,
+          ar: `تحديث ماركة ${updateData.name_ar || ""}`,
+          en: `Update Brand ${updateData.name_en || ""}`,
         }}
         description={{
           ar: `صفحة تحديث بيانات الماركة ${
-            updateData.name || ""
+            updateData.name_ar || ""
           } في نظام تشطيبة. قم بتعديل اسم الماركة، حالتها، وشعارها.`,
           en: `Update brand details for ${
-            updateData.name || ""
+            updateData.name_en || ""
           } in Tashtiba system. Modify brand name, status, and logo.`,
         }}
         keywords={{
@@ -239,21 +281,53 @@ const UpdateBrandPage = () => {
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 w-full">
             <div>
-              <Label htmlFor="name">{t("UpdateBrand:name_label")}</Label>
+              <Label htmlFor="name_ar">{t("UpdateBrand:name_label_ar")}</Label>
               <Input
                 type="text"
-                name="name"
-                id="name"
-                value={updateData.name}
+                name="name_ar"
+                id="name_ar"
+                value={updateData.name_ar}
                 onChange={handleChange}
-                placeholder={t("UpdateBrand:name_placeholder_edit")}
+                placeholder={t("UpdateBrand:name_placeholder_ar")}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["name_ar"] = el;
+                  }
+                }}
               />
-              {clientSideErrors.name && (
+              {clientSideErrors.name_ar && (
                 <p className="text-red-500 text-sm mt-1">
-                  {clientSideErrors.name}
+                  {clientSideErrors.name_ar}
                 </p>
               )}
-              {errors.name[0] && (
+              {errors.name_ar[0] && (
+                <p className="text-red-600 text-sm mt-1">
+                  {t("UpdateBrand:errors.unique_name")}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="name_en">{t("UpdateBrand:name_label_en")}</Label>
+              <Input
+                type="text"
+                name="name_en"
+                id="name_en"
+                value={updateData.name_en}
+                onChange={handleChange}
+                placeholder={t("UpdateBrand:name_placeholder_en")}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["name_en"] = el;
+                  }
+                }}
+              />
+              {clientSideErrors.name_en && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientSideErrors.name_en}
+                </p>
+              )}
+              {errors.name_en[0] && (
                 <p className="text-red-600 text-sm mt-1">
                   {t("UpdateBrand:errors.unique_name")}
                 </p>
@@ -273,7 +347,7 @@ const UpdateBrandPage = () => {
                 onChange={handleSelectChange}
                 placeholder={t("UpdateBrand:status_label")}
                 value={updateData.status}
-                />
+              />
               {clientSideErrors.status && (
                 <p className="text-red-500 text-sm mt-1">
                   {clientSideErrors.status}
@@ -288,17 +362,17 @@ const UpdateBrandPage = () => {
               <ImageUpload
                 file={updateData.image}
                 onFileChange={handleFileChange}
-                />
-                {clientSideErrors.image && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {clientSideErrors.name}
-                  </p>
-                )}
-                {errors.image[0] && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {t("UpdateBrand:errors.unique_name")}
-                  </p>
-                )}
+              />
+              {clientSideErrors.image && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientSideErrors.image}
+                </p>
+              )}
+              {errors.image[0] && (
+                <p className="text-red-600 text-sm mt-1">
+                  {t("UpdateBrand:errors.unique_name")}
+                </p>
+              )}
             </div>
 
             <div>

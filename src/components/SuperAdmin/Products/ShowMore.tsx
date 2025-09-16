@@ -7,11 +7,12 @@ import { AxiosError } from "axios";
 import PageStatusHandler, {
   PageStatus,
 } from "../../common/PageStatusHandler/PageStatusHandler";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const ProductDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["ProductDetails", "Meta"]);
-
+  const { lang } = useDirectionAndLanguage();
   const { data, isLoading, error, isError } = useGetProductById(id!);
 
   const product = data?.data?.data;
@@ -54,20 +55,20 @@ const ProductDetails: React.FC = () => {
     >
       <SEO
         title={{
-          ar: ` ${product?.name || "تفاصيل المنتج"} (سوبر أدمن)`,
-          en: `${product?.name || "Product Details"} (Super Admin)`,
+          ar: ` ${product?.name_ar || "تفاصيل المنتج"} (سوبر أدمن)`,
+          en: `${product?.name_en || "Product Details"} (Super Admin)`,
         }}
         description={{
           ar: `استعرض تفاصيل المنتج "${
-            product?.name || "غير معروف"
+            product?.name_ar || "غير معروف"
           }" بواسطة المشرف العام في تشطيبة، بما في ذلك السعر، الوصف، والصور.`,
           en: `View details for product "${
-            product?.name || "Unknown"
+            product?.name_en || "Unknown"
           }" by Super Admin on Tashtiba, including price, description, and images.`,
         }}
         keywords={{
           ar: [
-            `${product?.name || "منتج"}`,
+            `${product?.name_ar || "منتج"}`,
             "تفاصيل المنتج",
             "عرض منتج",
             "سعر المنتج",
@@ -77,7 +78,7 @@ const ProductDetails: React.FC = () => {
             "سوبر أدمن",
           ],
           en: [
-            `${product?.name || "product"}`,
+            `${product?.name_en || "product"}`,
             "product details",
             "view product",
             "product price",
@@ -100,13 +101,14 @@ const ProductDetails: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
             <p>
-              <strong>{t("fields.name")}:</strong> {product?.name}
+              <strong>{t("fields.name")}:</strong> {product?.[`name_${lang}`]}
             </p>
             <p>
               <strong>{t("fields.slug")}:</strong> {product?.slug}
             </p>
             <p>
-              <strong>{t("fields.description")}:</strong> {product?.description}
+              <strong>{t("fields.description")}:</strong>{" "}
+              {product?.[`description_${lang}`]}
             </p>
             <p>
               <strong>{t("fields.status")}:</strong> {product?.status}
@@ -143,10 +145,12 @@ const ProductDetails: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
             <p>
-              <strong>{t("fields.category")}:</strong> {product?.category?.name}
+              <strong>{t("fields.category")}:</strong>{" "}
+              {product?.category?.[`name_${lang}`]}
             </p>
             <p>
-              <strong>{t("fields.brand")}:</strong> {product?.brand?.name}
+              <strong>{t("fields.brand")}:</strong>{" "}
+              {product?.brand?.[`name_${lang}`]}
             </p>
           </div>
         </section>
@@ -179,7 +183,8 @@ const ProductDetails: React.FC = () => {
             <ul className="list-disc list-inside text-gray-700 dark:text-white">
               {product?.attributes.map((attr: any) => (
                 <li key={attr.id}>
-                  <strong>{attr.attribute_name}:</strong> {attr.attribute_value}
+                  <strong>{attr[`attribute_name_${lang}`]}:</strong>{" "}
+                  {attr[`attribute_value_${lang}`]}
                 </li>
               ))}
             </ul>
@@ -197,7 +202,7 @@ const ProductDetails: React.FC = () => {
                   key={tag.id}
                   className="bg-gray-200 text-sm px-3 py-1 rounded-full"
                 >
-                  {tag.name}
+                  {tag[`name_${lang}`]}
                 </span>
               ))}
             </div>

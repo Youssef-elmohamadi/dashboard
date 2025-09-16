@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
 import Checkbox from "../../common/input/Checkbox";
@@ -18,6 +18,8 @@ import {
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import useCheckOnline from "../../../hooks/useCheckOnline";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+
 export default function CreateRole() {
   const [roleData, setRoleData] = useState<CreateRoleInput>({
     name: "",
@@ -32,11 +34,15 @@ export default function CreateRole() {
     global: "",
     general: "",
   });
+  const inputRefs = useRef<
+    Record<string, HTMLInputElement | HTMLTextAreaElement | null>
+  >({});
+
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const { t } = useTranslation(["CreateRole", "Meta"]);
-
+  const { lang } = useDirectionAndLanguage();
   const {
     data,
     isLoading,
@@ -90,18 +96,36 @@ export default function CreateRole() {
     if (roleData.permissions.length === 0) {
       errors.permissions = t("CreateRole:role.errors.permission");
     }
+    const isValid = Object.values(errors).every((error) => error === "");
     setFormErrors(errors);
-    return Object.keys(errors).length === 0;
+    return { isValid, errors };
   };
+  const focusOnError = (errors: Record<string, string | string[]>) => {
+    const errorEntry = Object.entries(errors).find(
+      ([_, value]) =>
+        (typeof value === "string" && value !== "") ||
+        (Array.isArray(value) && value.length > 0)
+    );
 
+    if (errorEntry) {
+      const fieldName = errorEntry[0];
+      const ref = inputRefs?.current[fieldName];
+      ref?.focus();
+      if (ref) {
+        ref.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          ref.focus({ preventScroll: true });
+        }, 300);
+      }
+    }
+  };
   const { mutateAsync } = useCreateRole();
 
   const isCurrentlyOnline = useCheckOnline();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
+    
     if (!validateForm()) {
       setIsSubmitting(false);
       return;
@@ -112,6 +136,13 @@ export default function CreateRole() {
       setIsSubmitting(false);
       return;
     }
+    
+    const { isValid, errors: newFormErrors } = validateForm();
+    if (!isValid) {
+      focusOnError(newFormErrors);
+      return;
+    }
+    setIsSubmitting(true);
 
     try {
       await mutateAsync(roleData);
@@ -143,6 +174,7 @@ export default function CreateRole() {
           ...prev,
           ...formattedErrors,
         }));
+        focusOnError(formattedErrors);
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -213,6 +245,11 @@ export default function CreateRole() {
               value={roleData.name}
               onChange={handleChange}
               placeholder={t("CreateRole:role.placeholder.name")}
+              ref={(el)=> {
+                if(inputRefs?.current){
+                  inputRefs.current["name"] = el;
+                }
+              }}
             />
             {formErrors.name && (
               <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
@@ -231,16 +268,18 @@ export default function CreateRole() {
               <h2 className="text-sm font-medium mb-4 text-gray-700 dark:text-gray-400">
                 {t("CreateRole:role.permission")}
               </h2>
-              <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
+              {/* Improved permissions grid layout */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 pr-2 overflow-y-auto max-h-60">
                 {permissions?.map((permission: Permission) => (
                   <Checkbox
                     key={permission.id}
-                    label={permission.name}
+                    label={permission[`name_${lang}`]}
                     checked={roleData.permissions.includes(permission.id)}
                     onChange={() => handleCheckbox(permission.id)}
                   />
                 ))}
               </div>
+              {/* End of improved layout */}
               {formErrors.permissions && (
                 <p className="text-red-500 text-sm mt-1">
                   {formErrors.permissions}

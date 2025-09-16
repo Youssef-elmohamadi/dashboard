@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Label from "../../common/form/Label";
 import Input from "../../common/input/InputField";
 import Select from "../../common/form/Select";
@@ -19,12 +19,17 @@ import { AxiosError } from "axios";
 import SEO from "../../common/SEO/seo";
 import useCheckOnline from "../../../hooks/useCheckOnline";
 import { toast } from "react-toastify";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 export default function CreateCategory() {
   const { t } = useTranslation(["CreateCategory", "Meta"]);
+  const { lang } = useDirectionAndLanguage();
   const [categoryData, setCategoryData] = useState<CategoryInputData>({
-    name: "",
-    description: "",
+    name_ar: "",
+    name_en: "",
+    icon: "",
+    description_ar: "",
+    description_en: "",
     commission_rate: "",
     parent_id: "",
     image: null as File | null,
@@ -33,10 +38,16 @@ export default function CreateCategory() {
   });
 
   const [errorFetchingCategories, setErrorFetchingCategories] = useState("");
+  const inputRefs = useRef<
+    Record<string, HTMLInputElement | HTMLTextAreaElement | null>
+  >({});
 
   const [errors, setErrors] = useState<ServerErrors>({
-    name: [],
-    description: [],
+    name_ar: [],
+    name_en: [],
+    icon: [],
+    description_ar: [],
+    description_en: [],
     commission_rate: [],
     parent_id: [],
     image: [],
@@ -46,8 +57,10 @@ export default function CreateCategory() {
     general: "",
   });
   const [clientErrors, setClientErrors] = useState<ClientErrors>({
-    name: "",
-    description: "",
+    name_ar: "",
+    name_en: "",
+    description_ar: "",
+    description_en: "",
     commission_rate: "",
     parent_id: "",
     image: "",
@@ -94,17 +107,43 @@ export default function CreateCategory() {
 
   const validate = () => {
     const newErrors: any = {};
-    if (!categoryData.name) newErrors.name = t("category.errors.name");
-    if (!categoryData.description)
-      newErrors.description = t("category.errors.description");
+    if (!categoryData.name_ar) newErrors.name_ar = t("category.errors.name");
+    if (!categoryData.name_en) {
+      newErrors.name_en = t("category.errors.name");
+    }
+    if (!categoryData.description_ar)
+      newErrors.description_ar = t("category.errors.description");
+    if (!categoryData.description_en)
+      newErrors.description_en = t("category.errors.description");
     if (!categoryData.image) newErrors.image = t("category.errors.image");
     if (!categoryData.commission_rate) {
       newErrors.commission_rate = t("category.errors.commissionRequired");
     } else if (+categoryData.commission_rate > 100) {
       newErrors.commission_rate = t("category.errors.commissionMax");
     }
+    const isValid = Object.values(newErrors).every((error) => error === "");
     setClientErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return { isValid, newErrors };
+  };
+
+  const focusOnError = (errors: Record<string, string | string[]>) => {
+    const errorEntry = Object.entries(errors).find(
+      ([_, value]) =>
+        (typeof value === "string" && value !== "") ||
+        (Array.isArray(value) && value.length > 0)
+    );
+
+    if (errorEntry) {
+      const fieldName = errorEntry[0];
+      const ref = inputRefs?.current[fieldName];
+      ref?.focus();
+      if (ref) {
+        ref.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          ref.focus({ preventScroll: true });
+        }, 300);
+      }
+    }
   };
 
   const { mutateAsync: createCategory } = useCreateCategory();
@@ -112,8 +151,11 @@ export default function CreateCategory() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({
-      name: [],
-      description: [],
+      name_ar: [],
+      name_en: [],
+      icon: [],
+      description_ar: [],
+      description_en: [],
       commission_rate: [],
       parent_id: [],
       image: [],
@@ -126,10 +168,17 @@ export default function CreateCategory() {
       toast.error(t("category.errors.no_internet"));
       return;
     }
-    if (!validate()) return;
+    const { isValid, newErrors } = validate();
+    if (!isValid) {
+      focusOnError(newErrors);
+      return;
+    }
     const formData = new FormData();
-    formData.append("name", categoryData.name);
-    formData.append("description", categoryData.description);
+    formData.append("name_ar", categoryData.name_ar);
+    formData.append("name_en", categoryData.name_en);
+    formData.append("icon", categoryData.icon);
+    formData.append("description_ar", categoryData.description_ar);
+    formData.append("description_en", categoryData.description_en);
     formData.append("commission_rate", categoryData.commission_rate ?? "");
     if (categoryData.parent_id)
       formData.append("parent_id", categoryData.parent_id);
@@ -162,6 +211,7 @@ export default function CreateCategory() {
           formattedErrors[err.code].push(err.message);
         });
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
+        focusOnError(formattedErrors);
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -223,21 +273,139 @@ export default function CreateCategory() {
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
           <div>
-            <Label>{t("category.name")}</Label>
+            <Label>{t("category.name_ar")}</Label>
             <Input
               type="text"
-              name="name"
-              placeholder={t("category.namePlaceholder")}
+              name="name_ar"
+              placeholder={t("category.namePlaceholder_ar")}
               onChange={handleChange}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["name_ar"] = el;
+                }
+              }}
             />
-            {errors.name[0] && (
+            {errors.name_ar && errors.name_ar[0] && (
               <p className="text-red-500 text-sm mt-1">
                 {t("category.errors.nameTaken")}
               </p>
             )}
-            {clientErrors.name && (
-              <p className="text-red-500 text-sm mt-1">{clientErrors.name}</p>
+            {clientErrors.name_ar && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientErrors.name_ar}
+              </p>
             )}
+          </div>
+          <div>
+            <Label>{t("category.name_en")}</Label>
+            <Input
+              type="text"
+              name="name_en"
+              placeholder={t("category.namePlaceholder_en")}
+              onChange={handleChange}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["name_en"] = el;
+                }
+              }}
+            />
+            {errors.name_en && errors.name_en[0] && (
+              <p className="text-red-500 text-sm mt-1">
+                {t("category.errors.nameTaken")}
+              </p>
+            )}
+            {clientErrors.name_en && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientErrors.name_en}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+          <div className="w-full">
+            <Label>{t("category.description_ar")}</Label>
+            <TextArea
+              name="description_ar"
+              placeholder={t("category.descPlaceholder_ar")}
+              value={categoryData.description_ar}
+              onChange={(value) =>
+                setCategoryData((prev) => ({ ...prev, description_ar: value }))
+              }
+              className="w-full mt-2 p-2 border border-gray-200 outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
+              rows={4}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["description_ar"] = el;
+                }
+              }}
+            />
+            {errors.description_ar && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.description_ar[0]}
+              </p>
+            )}
+            {clientErrors.description_ar && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientErrors.description_ar}
+              </p>
+            )}
+          </div>
+          <div className="w-full">
+            <Label>{t("category.description_en")}</Label>
+            <TextArea
+              name="description_en"
+              placeholder={t("category.descPlaceholder_en")}
+              value={categoryData.description_en}
+              onChange={(value) =>
+                setCategoryData((prev) => ({ ...prev, description_en: value }))
+              }
+              className="w-full mt-2 p-2 border border-gray-200 outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
+              rows={4}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["description_en"] = el;
+                }
+              }}
+            />
+            {errors.description_en && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.description_en[0]}
+              </p>
+            )}
+            {clientErrors.description_en && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientErrors.description_en}
+              </p>
+            )}
+          </div>
+          <div className="w-full">
+            <Label>{t("category.icon")}</Label>
+            <TextArea
+              name="icon"
+              placeholder={t("category.iconPlaceholder")}
+              value={categoryData.icon}
+              onChange={(value) =>
+                setCategoryData((prev) => ({ ...prev, icon: value }))
+              }
+              className="w-full mt-2 p-2 border border-gray-200 outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
+              rows={4}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["icon"] = el;
+                }
+              }}
+            />
+            {errors.icon && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.icon[0]}
+              </p>
+            )}
+            {/* {clientErrors.icon && (
+              <p className="text-red-500 text-sm mt-1">
+                {clientErrors.icon}
+              </p>
+            )} */}
           </div>
           <div>
             <Label>{t("category.commission")}</Label>
@@ -246,6 +414,11 @@ export default function CreateCategory() {
               name="commission_rate"
               placeholder={t("category.commissionPlaceholder")}
               onChange={handleChange}
+              ref={(el) => {
+                if (inputRefs?.current) {
+                  inputRefs.current["commission_rate"] = el;
+                }
+              }}
             />
             {errors.commission_rate && (
               <p className="text-red-500 text-sm mt-1">
@@ -258,38 +431,12 @@ export default function CreateCategory() {
               </p>
             )}
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-          <div className="w-full">
-            <Label>{t("category.description")}</Label>
-            <TextArea
-              name="description"
-              placeholder={t("category.descPlaceholder")}
-              value={categoryData.description}
-              onChange={(value) =>
-                setCategoryData((prev) => ({ ...prev, description: value }))
-              }
-              className="w-full mt-2 p-2 border border-gray-200 outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
-              rows={4}
-            />
-            {errors.description && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.description[0]}
-              </p>
-            )}
-            {clientErrors.description && (
-              <p className="text-red-500 text-sm mt-1">
-                {clientErrors.description}
-              </p>
-            )}
-          </div>
           <div>
             <Label>{t("category.parent")}</Label>
             <Select
               options={categories?.map((cat: Category) => ({
                 value: cat.id.toString(),
-                label: cat.name,
+                label: cat[`name_${lang}`],
               }))}
               value={categoryData.parent_id!!}
               onChange={handleSelectChange}
@@ -328,7 +475,7 @@ export default function CreateCategory() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 flex gap-4 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+          className="bg-brand-500 flex gap-4 text-white px-5 py-2 rounded hover:bg-brand-600 disabled:bg-brand-300 disabled:opacity-50"
         >
           <FiPlus size={20} />
           {loading ? t("category.submitting") : t("category.submit")}

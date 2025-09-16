@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
-const LazyToastContainer = lazy(() =>
-  import("react-toastify").then((module) => ({
-    default: module.ToastContainer,
-  }))
-);
+const LazyToastContainer = lazy(async () => {
+  await import("react-toastify/dist/ReactToastify.css");
+  const module = await import("react-toastify");
+  return { default: module.ToastContainer };
+});
 const LazyEndUserRoutes = lazy(() => import("./EndUserRoute/EndUserRoute"));
 const LazyAdminRoutes = lazy(() => import("./AdminRoute/AdminRoute"));
 const LazySuperAdminRoutes = lazy(
@@ -32,7 +32,7 @@ export default function AppRoutes() {
           }
         />
         <Route
-          path="/admin/*" 
+          path="/admin/*"
           element={
             <Suspense fallback={null}>
               <LazyAdminRoutes />
@@ -41,7 +41,7 @@ export default function AppRoutes() {
         />
 
         <Route
-          path="/super_admin/*" 
+          path="/super_admin/*"
           element={
             <Suspense fallback={null}>
               <LazySuperAdminRoutes />

@@ -43,14 +43,27 @@ export default function UserDropdown({ userType }: UserDropDownProps) {
       setDataUser(superAdminUserData.data.data);
     }
   }, [adminUserData, superAdminUserData, userType]);
+  const avatarType = userType === "admin" ? "user" : "superAdmin";
   return (
     <div className="relative">
       <button
         onClick={toggleDropdown}
-        className="flex items-center text-gray-700 dropdown-toggle dark:text-gray-400"
+        className="flex items-center text-gray-700 gap-2 dropdown-toggle dark:text-gray-400"
       >
-        <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-          <img src={dataUser.avatar} alt="User Avatar" />
+        <span className="mr-3 overflow-hidden rounded-full h-9 w-9">
+          <img
+            src={
+              !dataUser?.avatar ||
+              dataUser?.avatar.trim() === "" ||
+              dataUser?.avatar ===
+                `https://tashtiba.com/storage/app/public/content/${avatarType}/avatars/` ||
+              dataUser?.avatar ===
+                `https:\/\/tashtiba.comstorage\/app\/public\/content\/${avatarType}\/avatars\/`
+                ? "/images/default-avatar.webp"
+                : dataUser.avatar
+            }
+            alt="User Avatar"
+          />
         </span>
 
         <span className="block mr-1 font-medium text-theme-sm">

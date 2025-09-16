@@ -30,7 +30,7 @@ const CategoriesDropdownContent: React.FC<CategoriesDropdownContentProps> = ({
     <li key={subCategory.id} className="p-2">
       {subCategory.childs && subCategory.childs.length > 0 ? (
         <div>
-          <div className="font-bold mb-1">{subCategory.name}</div>
+          <div className="font-bold mb-1">{subcategory[`name_${lang}`]}</div>
           <ul className="pl-4 space-y-1">
             {subCategory.childs.map((nested: Child) => (
               <li key={nested.id}>
@@ -51,7 +51,7 @@ const CategoriesDropdownContent: React.FC<CategoriesDropdownContentProps> = ({
           className="hover:bg-gray-100 block p-2 rounded"
           onClick={closeDropdown}
         >
-          {subCategory.name}
+          {subcategory[`name_${lang}`]}
         </Link>
       )}
     </li>
@@ -80,7 +80,7 @@ const CategoriesDropdownContent: React.FC<CategoriesDropdownContentProps> = ({
               className="flex justify-between items-center w-full"
               onClick={closeDropdown}
             >
-              <div className="">{category.name}</div>
+              <div className="">{category[`name_${lang}`]}</div>
               {category.childs && category.childs.length > 0 && (
                 <ArrowDown
                   className={`transform w-4 ${

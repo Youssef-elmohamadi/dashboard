@@ -20,7 +20,7 @@ const getStatusColor = (status: string) => {
       return "text-blue-600 bg-blue-100";
     case "delivered":
       return "text-green-600 bg-green-100";
-    case "canceled":
+    case "cancelled":
       return "text-red-600 bg-red-100";
     default:
       return "text-gray-700 bg-gray-100";
@@ -61,9 +61,9 @@ const OrderDetailsPage: React.FC = () => {
   const handleRateProduct = async (productId: number) => {
     const result = await showReviewPopup(
       productId,
-      t("orderDetails.ratePlaceholder"),
+      t("orderDetails.ratingPlaceholder"),
       t("orderDetails.titleRate"),
-      t("orderDetails.rateError"),
+      t("orderDetails.ratingError"),
       t("orderDetails.confirmText"),
       t("orderDetails.cancelText")
     );
@@ -238,7 +238,7 @@ const OrderDetailsPage: React.FC = () => {
                     </span>
                   </p>
                   <p>
-                    <span className="font-semibold">
+                    <span className="font-semibold ">
                       {t("orderDetails.status")}:
                     </span>{" "}
                     <span
@@ -249,11 +249,11 @@ const OrderDetailsPage: React.FC = () => {
                       {t(`statuses.${order.status.toLowerCase()}`)}
                     </span>
                   </p>
-                  {!order.is_paid && (
+                  {/* {!order.is_paid && (
                     <button className="mt-4 bg-green-600 text-white px-5 py-2.5 rounded-lg hover:bg-green-700 transition duration-300 shadow-md">
                       {t("orderDetails.payNow")}
                     </button>
-                  )}
+                  )} */}
                 </div>
                 <div className="p-6 border border-gray-200 rounded-lg shadow-sm space-y-4">
                   {" "}
@@ -343,7 +343,7 @@ const OrderDetailsPage: React.FC = () => {
                             className="border-t border-gray-200 hover:bg-gray-50"
                           >
                             <td className="p-3">{index + 1}</td>
-                            <td className="p-3">{item.product.name}</td>
+                            <td className="p-3">{item.product[`name_${lang}`]}</td>
                             <td className="p-3">{item.quantity}</td>
                             <td className="p-3">
                               {item.price.toLocaleString()}{" "}

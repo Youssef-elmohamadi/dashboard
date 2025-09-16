@@ -7,6 +7,7 @@
   "total": "Total",
   "have_coupon": "Have a coupon?",
   "apply": "Apply",
+  "discount": "Discount",
   "coupon_success": "Coupon applied successfully",
   "coupon_error": "Coupon could not be applied.",
   "proceed_to_payment": "Proceed to Payment ({{count}} Items)",

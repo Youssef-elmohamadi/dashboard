@@ -1,6 +1,6 @@
 {
   "footer": {
-"tagline": "Your Perfect Partner in the World of Finishing",
+    "tagline": "Your Perfect Partner in the World of Finishing",
     "newsletter_title": "Stay Updated",
     "newsletter_description": "Subscribe to get hot offers & product launches.",
     "newsletter_placeholder": "Enter your email",
@@ -20,5 +20,21 @@
     "seller_zone": "Seller Zone",
     "join_seller_portal": "Join Seller Portal",
     "rights_reserved": "&copy; 2025 TASHTIBA — All rights reserved."
+  },
+  "Politics": {
+    "heading": "Information you need",
+    "description": "Everything you need to know about our policies.",
+    "terms": {
+      "title": "Terms and Conditions"
+    },
+    "privacy": {
+      "title": "Privacy Policy"
+    },
+    "support": {
+      "title": "Customer Support"
+    },
+    "refund": {
+      "title": "Refund Policy"
+    }
   }
 }

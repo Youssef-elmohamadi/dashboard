@@ -7,11 +7,12 @@ import { AxiosError } from "axios";
 import PageStatusHandler, {
   PageStatus,
 } from "../../common/PageStatusHandler/PageStatusHandler";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const BrandDetails: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["BrandDetails", "Meta"]);
-
+  const { lang } = useDirectionAndLanguage();
   const { data, isLoading, error, isError } = useGetBrandById(id!);
 
   const brand = data;
@@ -58,20 +59,20 @@ const BrandDetails: React.FC = () => {
     >
       <SEO
         title={{
-          ar: ` تفاصيل الماركة ${brand?.name || ""}`,
-          en: `Brand Details ${brand?.name || ""}`,
+          ar: ` تفاصيل الماركة ${brand?.name_ar || ""}`,
+          en: `Brand Details ${brand?.name_en || ""}`,
         }}
         description={{
           ar: `استعرض التفاصيل الكاملة للماركة "${
-            brand?.name || "غير معروف"
+            brand?.name_ar || "غير معروف"
           }" بواسطة المشرف العام في تشطيبة، بما في ذلك الحالة والصورة.`,
           en: `View full details for brand "${
-            brand?.name || "unknown"
+            brand?.name_en || "unknown"
           }" by Super Admin on Tashtiba, including status and image.`,
         }}
         keywords={{
           ar: [
-            `الماركة ${brand?.name || ""}`,
+            `الماركة ${brand?.name_ar || ""}`,
             "تفاصيل الماركة",
             "عرض الماركة",
             "حالة الماركة",
@@ -80,7 +81,7 @@ const BrandDetails: React.FC = () => {
             "سوبر أدمن",
           ],
           en: [
-            `brand ${brand?.name || ""}`,
+            `brand ${brand?.name_en || ""}`,
             "brand details",
             "view brand",
             "brand status",
@@ -102,10 +103,11 @@ const BrandDetails: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 gap-4 text-gray-700 dark:text-gray-200">
             <p>
-              <strong>{t("name")}:</strong> {brand?.name}
+              <strong>{t("name")}:</strong> {brand?.[`name_${lang}`]}
             </p>
             <p>
-              <strong>{t("status")}:</strong> {brand?.status}
+              <strong>{t("status")}:</strong>{" "}
+              {brand?.status === "active" ? t("active") : t("inactive")}
             </p>
           </div>
         </section>
@@ -118,7 +120,7 @@ const BrandDetails: React.FC = () => {
             <div className="flex justify-center">
               <img
                 src={brand?.image}
-                alt={brand?.name}
+                alt={brand?.[`name_${lang}`]}
                 className="w-64 h-64 object-contain rounded-lg border border-gray-200"
               />
             </div>

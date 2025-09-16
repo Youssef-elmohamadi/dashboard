@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
-import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { Category } from "../../../types/Categories";
 import { PriceChangeParams } from "../../../types/Shop";
 import CategoryBreadCrump from "../../../components/EndUser/Shop/CategoryBreadCrump";
@@ -15,6 +14,7 @@ import FilterSidebar from "../../../components/EndUser/Shop/FilterSidebar";
 import Sidebar from "../../../components/EndUser/Shop/Sidebar";
 import FilterIcon from "../../../icons/FilterIcon";
 import ArrowDown from "../../../icons/ArrowDown";
+import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 
 function CategoriesLayout() {
   const [showCategories, setShowCategories] = useState<boolean>(true);
@@ -56,8 +56,8 @@ function CategoriesLayout() {
     setIsMenuOpen(false);
   };
 
-  const { data } = useAllCategories();
-  const categories: Category[] | undefined = data?.original;
+  const { data } = useCategories();
+  const categories: Category[] | undefined = data;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -80,7 +80,7 @@ function CategoriesLayout() {
         (cat) => cat.id.toString() === category_id
       );
       if (category) {
-        setCurrentPage(category.name);
+        setCurrentPage(category[`name_${lang}`]);
       }
     }
   }, [category_id, categories, location.pathname, t]);

@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import PriceRangeFilter from "../Shop/PriceRangeFilter";
-import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { SidebarShopProps } from "../../../types/Shop";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import ArrowDown from "../../../icons/ArrowDown";
+import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
 
 const Sidebar = ({
   setCurrentPage,
@@ -13,9 +13,9 @@ const Sidebar = ({
   showCategories,
 }: SidebarShopProps) => {
   const { t } = useTranslation(["EndUserShop"]);
-  const { data, isLoading } = useAllCategories();
+  const { data, isLoading } = useCategories();
 
-  const categories = data?.original || [];
+  const categories = data || [];
   const { lang } = useDirectionAndLanguage();
   return (
     <aside className="w-64 hidden 2xl:block">
@@ -45,17 +45,14 @@ const Sidebar = ({
                         ? "text-[#d62828] font-semibold hover:text-[#d62828] transition"
                         : "text-gray-500 hover:text-[#d62828] transition"
                     }
-                    to={`/${lang}/category/`}
+                    to={`/${lang}/category`}
                     end
                   >
                     {t("allCategories")}
                   </NavLink>
                 </li>
                 {categories?.map((category) => (
-                  <li
-                    key={category.id}
-                    onClick={() => setCurrentPage(category.name)}
-                  >
+                  <li key={category.id}>
                     <NavLink
                       className={({ isActive }) =>
                         isActive
@@ -63,8 +60,10 @@ const Sidebar = ({
                           : "text-gray-500 hover:text-[#d62828] transition"
                       }
                       to={`/${lang}/category/${category.id}`}
+                      onClick={() => setCurrentPage(category[`name_${lang}`])}
+                      end
                     >
-                      {category.name}
+                      {category[`name_${lang}`]}
                     </NavLink>
                   </li>
                 ))}

@@ -79,7 +79,14 @@ const UserProfile = () => {
         password_confirmation: "",
         avatar: null,
       });
-      setExistingImage(userProfileData.avatar || "/images/default-avatar.webp");
+      setExistingImage(
+        !userProfileData?.avatar ||
+          userProfileData?.avatar.trim() === "" ||
+          userProfileData?.avatar ===
+            "https://tashtiba.com/storage/app/public/content/user/profile/"
+          ? "/images/default-avatar.webp"
+          : userProfileData.avatar
+      );
     }
   }, [userProfileData]);
 

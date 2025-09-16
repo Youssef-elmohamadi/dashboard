@@ -17,8 +17,10 @@ import { SearchValues } from "../../../types/Product";
 import { Category } from "../../../types/Categories";
 import { Brand } from "../../../types/Brands";
 import SEO from "../../../components/common/SEO/seo";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const Products = () => {
+  const { lang } = useDirectionAndLanguage();
   const [pageIndex, setPageIndex] = useState(0);
   const [unauthorized, setUnauthorized] = useState<boolean>(false);
   const [globalError, setGlobalError] = useState<boolean>(false);
@@ -145,7 +147,7 @@ const Products = () => {
               label: "Category",
               type: "select",
               options: categories?.map((category: Category) => ({
-                label: category.name,
+                label: category[`name_${lang}`],
                 value: category.id,
               })),
             },
@@ -154,7 +156,7 @@ const Products = () => {
               label: "Brand",
               type: "select",
               options: brands?.map((brand: Brand) => ({
-                label: brand.name,
+                label: brand[`name_${lang}`],
                 value: brand.id,
               })),
             },

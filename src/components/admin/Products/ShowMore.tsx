@@ -7,11 +7,12 @@ import { AxiosError } from "axios";
 import PageStatusHandler, {
   PageStatus,
 } from "../../common/PageStatusHandler/PageStatusHandler";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const ProductDetails: React.FC = () => {
   const { t } = useTranslation(["ProductDetails", "Meta"]);
   const { id }: any = useParams();
-
+const { lang } = useDirectionAndLanguage();
   const {
     data: product,
     isError,
@@ -64,20 +65,20 @@ const ProductDetails: React.FC = () => {
     >
       <SEO
         title={{
-          ar: ` ${product?.name || "تفاصيل المنتج"}`,
-          en: `${product?.name || "Product Details"}`,
+          ar: ` ${product?.name_ar || "تفاصيل المنتج"}`,
+          en: `${product?.name_en || "Product Details"}`,
         }}
         description={{
           ar: `استعرض تفاصيل المنتج "${
-            product?.name || "غير معروف"
+            product?.name_ar || "غير معروف"
           }" في تشطيبة، بما في ذلك السعر، الوصف، والصور.`,
           en: `View details for product "${
-            product?.name || "Unknown"
+            product?.name_en || "Unknown"
           }" on Tashtiba, including price, description, and images.`,
         }}
         keywords={{
           ar: [
-            `${product?.name || "منتج"}`,
+            `${product?.name_ar || "منتج"}`,
             "تفاصيل المنتج",
             "عرض منتج",
             "سعر المنتج",
@@ -86,7 +87,7 @@ const ProductDetails: React.FC = () => {
             "تشطيبة",
           ],
           en: [
-            `${product?.name || "product"}`,
+            `${product?.name_en || "product"}`,
             "product details",
             "view product",
             "product price",
@@ -110,7 +111,7 @@ const ProductDetails: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
             <p>
               <strong>{t("ProductDetails:fields.name")}:</strong>{" "}
-              {product?.name}{" "}
+              {product?.[`name_${lang}`]}{" "}
             </p>
             <p>
               <strong>{t("ProductDetails:fields.slug")}:</strong>{" "}
@@ -118,7 +119,7 @@ const ProductDetails: React.FC = () => {
             </p>
             <p>
               <strong>{t("ProductDetails:fields.description")}:</strong>{" "}
-              {product?.description}
+              {product?.[`description_${lang}`]}
             </p>
             <p>
               <strong>{t("ProductDetails:fields.status")}:</strong>{" "}
@@ -160,16 +161,16 @@ const ProductDetails: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-white">
             <p>
               <strong>{t("ProductDetails:fields.category")}:</strong>{" "}
-              {product?.category?.name}
+              {product?.category?.[`name_${lang}`]}
             </p>
             <p>
               <strong>{t("ProductDetails:fields.brand")}:</strong>{" "}
-              {product?.brand?.name}
+              {product?.brand?.[`name_${lang}`]}
             </p>
           </div>
         </section>
 
-        <section className="bg-white dark:bg-gray-900 p-6 rounded-xl">
+        {/* <section className="bg-white dark:bg-gray-900 p-6 rounded-xl">
           <h2 className="text-xl font-semibold mb-4 text-yellow-700">
             {t("ProductDetails:sections.vendor_info")}
           </h2>
@@ -187,7 +188,7 @@ const ProductDetails: React.FC = () => {
               {product?.vendor?.phone}
             </p>
           </div>
-        </section>
+        </section> */}
 
         {(product?.attributes?.length ?? 0) > 0 && (
           <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
@@ -197,7 +198,7 @@ const ProductDetails: React.FC = () => {
             <ul className="list-disc list-inside text-gray-700 dark:text-white">
               {product?.attributes?.map((attr) => (
                 <li key={attr.id}>
-                  <strong>{attr.attribute_name}:</strong> {attr.attribute_value}
+                  <strong>{attr[`attribute_name_${lang}`]}:</strong> {attr[`attribute_value_${lang}`]}
                 </li>
               ))}
             </ul>
@@ -215,7 +216,7 @@ const ProductDetails: React.FC = () => {
                   key={tag.id}
                   className="bg-gray-200 text-sm px-3 py-1 rounded-full"
                 >
-                  {tag.name}
+                  {tag[`name_${lang}`]}
                 </span>
               ))}
             </div>

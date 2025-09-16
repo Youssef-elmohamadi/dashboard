@@ -8,6 +8,7 @@
   "store": "Store",
   "available": "Available",
   "inStock": "In Stock",
+  "outOfStock": "Out of Stock",
   "specifications": "Specifications",
   "price": "Price",
   "addToWishlist": "Add to Wishlist",

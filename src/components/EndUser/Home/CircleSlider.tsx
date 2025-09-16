@@ -42,8 +42,8 @@ const CircleSlider: FC<CategorySliderProps> = ({ items, loading }) => {
         {items.map((item, index) => {
           const altText =
             lang === "ar"
-              ? `تصنيف تشطيبة ${item.name}`
-              : `Tashtiba Category ${item.name}`;
+              ? `تصنيف تشطيبة ${item.name_ar}`
+              : `Tashtiba Category ${item.name_en}`;
 
           const shouldEagerLoad = index < 2;
 
@@ -63,7 +63,7 @@ const CircleSlider: FC<CategorySliderProps> = ({ items, loading }) => {
                   className="w-[120px] h-[120px] rounded-full object-cover border border-gray-200 shadow-sm"
                 />
                 <span className="text-center font-medium end-user-text-base">
-                  {item.name}
+                  {item[`name_${lang}`]}
                 </span>
               </Link>
             </SwiperSlide>

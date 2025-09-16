@@ -41,6 +41,7 @@ export default function CreateAdmin() {
     password: "",
     role: "",
   });
+
   const [adminData, setAdminData] = useState<CreateAdminInput>({
     first_name: "",
     last_name: "",
@@ -192,6 +193,7 @@ export default function CreateAdmin() {
             ...prev,
             ...formattedErrors,
           }));
+          focusOnError(formattedErrors);
         } else {
           setErrors((prev) => ({
             ...prev,
@@ -199,7 +201,6 @@ export default function CreateAdmin() {
           }));
         }
       }
-      focusOnError(errors);
     } finally {
       setLoading(false);
     }

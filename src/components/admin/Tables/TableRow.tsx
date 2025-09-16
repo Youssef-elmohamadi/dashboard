@@ -29,7 +29,6 @@ const TableRow: React.FC<TableRowProps> = ({
 }) => {
   const rowData = row.original;
 
-
   const { key: rowKey, ...restOfRowProps } = row.getRowProps();
 
   return (
@@ -42,7 +41,7 @@ const TableRow: React.FC<TableRowProps> = ({
           <td
             key={cellKey}
             {...restOfCellProps}
-            className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-200"
+            className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-200 truncate "
           >
             {isActionsColumn ? (
               <TableActions

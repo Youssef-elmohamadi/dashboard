@@ -7,6 +7,7 @@
   "total": "الإجمالي",
   "have_coupon": "هل لديك كوبون؟",
   "apply": "تطبيق",
+  "discount": "الخصم",
   "coupon_success": "تم تطبيق الكوبون بنجاح",
   "coupon_error": "لم يتم تطبيق الكوبون.",
   "proceed_to_payment": "المتابعة إلى الدفع ({{count}} عنصر)",

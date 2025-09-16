@@ -22,6 +22,7 @@ import PageStatusHandler, {
   PageStatus,
 } from "../../common/PageStatusHandler/PageStatusHandler";
 import Loading from "../../common/Loading";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 const UpdateRole: React.FC = () => {
   const [updateData, setUpdateData] = useState<UpdateRoleInput>({
     name: "",
@@ -68,7 +69,7 @@ const UpdateRole: React.FC = () => {
     error: roleError,
   } = useGetRoleById(id);
 
-  const role = roleData;
+  const role = roleData?.data;
   useEffect(() => {
     if (isRoleError && roleError instanceof AxiosError) {
       const status = roleError?.response?.status;
@@ -192,6 +193,8 @@ const UpdateRole: React.FC = () => {
     status = PageStatus.NOT_FOUND;
   }
 
+  const { lang } = useDirectionAndLanguage();
+
   return (
     <PageStatusHandler
       status={status}
@@ -270,40 +273,40 @@ const UpdateRole: React.FC = () => {
               )}
             </div>
 
-            {isPermissionLoading ? (
-              <Loading text={t("role.get_permissions")} />
-            ) : (
-              <div className="col-span-2">
-                <h2 className="text-sm font-medium mb-4 text-gray-700 dark:text-gray-400">
-                  {t("role.permission")}
-                </h2>
-                <div className="grid grid-cols-2 gap-2 max-h-60 pr-2">
-                  {permissions.map((permission: Permission) => (
+            <div className="col-span-2">
+              <h2 className="text-sm font-medium mb-4 text-gray-700 dark:text-gray-400">
+                {t("UpdateRole:role.permission")}
+              </h2>
+              {isPermissionLoading ? (
+                <Loading text={t("UpdateRole:role.get_permissions")} />
+              ) : fetchingPermissionsError ? (
+                <p className="text-red-500 text-sm mt-1">
+                  {fetchingPermissionsError}
+                </p>
+              ) : (
+                <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pr-2 p-4">
+                  {permissions?.map((permission: Permission) => (
                     <Checkbox
                       key={permission.id}
-                      label={permission.name}
+                      label={permission[`name_${lang}`]}
                       checked={updateData.permissions.includes(permission.id)}
                       onChange={() => handleCheckbox(permission.id)}
+                      disabled={isPermissionError || isPermissionLoading}
                     />
                   ))}
                 </div>
-                {formErrors.permissions && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {formErrors.permissions}
-                  </p>
-                )}
-                {errors.permissions && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.permissions[0]}
-                  </p>
-                )}
-                {fetchingPermissionsError && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {fetchingPermissionsError}
-                  </p>
-                )}
-              </div>
-            )}
+              )}
+              {formErrors.permissions && (
+                <p className="text-red-500 text-sm mt-1">
+                  {formErrors.permissions}
+                </p>
+              )}
+              {errors.permissions && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.permissions[0]}
+                </p>
+              )}
+            </div>
           </div>
 
           <button

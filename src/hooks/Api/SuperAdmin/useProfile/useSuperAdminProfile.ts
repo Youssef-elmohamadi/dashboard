@@ -4,11 +4,14 @@ import {
   updateSuperAdminProfileData,
 } from "../../../../api/SuperAdminApi/profileApi/_request";
 
-export const useSuperAdminProfile = (enabled: boolean = true) => {
+export const useSuperAdminProfile = (
+  superAdminToken: string | null,
+  options?: { enabled?: boolean }
+) => {
   return useQuery({
-    queryKey: ["superAdminProfile"],
+    queryKey: ["superAdminProfile", superAdminToken],
     queryFn: getSuperAdminProfile,
-    enabled,
+    enabled: !!superAdminToken && options?.enabled,
   });
 };
 

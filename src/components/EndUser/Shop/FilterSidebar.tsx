@@ -56,10 +56,10 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   <NavLink
                     className={({ isActive }) =>
                       isActive
-                        ? "text-[#d62828] font-semibold hover:text-[#d62828] transition"
-                        : "text-gray-500 hover:text-[#d62828] transition"
+                        ? "text-[#d62828] block font-semibold hover:text-[#d62828] transition"
+                        : "text-gray-500 block hover:text-[#d62828] transition"
                     }
-                    to={`/${lang}/category/`}
+                    to={`/${lang}/category`}
                     onClick={closeMenu}
                     end
                   >
@@ -71,13 +71,14 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                     <NavLink
                       className={({ isActive }) =>
                         isActive
-                          ? "text-[#d62828] font-semibold hover:text-[#d62828] transition"
-                          : "text-gray-500 hover:text-[#d62828] transition"
+                          ? "text-[#d62828] block font-semibold hover:text-[#d62828] transition"
+                          : "text-gray-500 block hover:text-[#d62828] transition"
                       }
                       to={`/${lang}/category/${category.id}`}
                       onClick={closeMenu}
+                      end
                     >
-                      {category.name}
+                      {category[`name_${lang}`]}
                     </NavLink>
                   </li>
                 ))}

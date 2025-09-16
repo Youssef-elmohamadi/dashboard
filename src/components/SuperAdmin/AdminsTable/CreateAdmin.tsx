@@ -64,7 +64,9 @@ export default function CreateAdmin() {
     } else if (!adminData.email) {
       newErrors.email = t("admin.errors.email_required");
     } else if (
-      /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(adminData.email)
+      !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
+        adminData.email.trim()
+      )
     ) {
       newErrors.email = t("admin.errors.email_invalid");
     } else if (!adminData.phone) {

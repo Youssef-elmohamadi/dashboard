@@ -6,12 +6,12 @@ import {
   useNotifications,
 } from "../../../hooks/Api/EndUser/useNotification/useEndUserNotification";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
-import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
 import {
   NotificationItem,
   NotificationDropdownProps,
 } from "../../../types/Notification";
+import { formatDistanceToNow } from "date-fns";
 
 export default function NotificationDropdown({
   open,
@@ -53,7 +53,7 @@ export default function NotificationDropdown({
   const { data, hasNextPage, fetchNextPage } = useNotifications();
 
   const notificationData: NotificationItem[] =
-    data?.pages.flatMap((page) => page.data) || [];
+    data?.pages.flatMap((page) => page.data.data) || [];
 
   const { mutateAsync: deleteNotificationMutate } = useDeleteNotification();
   const handleDeleteNotification = async (id: number | string) => {

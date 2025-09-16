@@ -74,7 +74,14 @@ const MobileMenu = ({
         <div className="flex items-center gap-2 border-b border-gray-200 py-3">
           <div className="w-10 h-10 rounded-full overflow-hidden">
             <img
-              src={user?.avatar || "/images/default-avatar.webp"}
+              src={
+                !user?.avatar ||
+                user?.avatar.trim() === "" ||
+                user?.avatar ===
+                  "https://tashtiba.com/storage/app/public/content/user/profile/"
+                  ? "/images/default-avatar.webp"
+                  : user.avatar
+              }
               alt="User Avatar"
               className="w-full h-full object-cover"
             />
@@ -153,7 +160,7 @@ const MobileMenu = ({
             }
             onClick={closeMenu}
           >
-            <li>{category.name}</li>
+            <li>{category[`name_${lang}`]}</li>
           </NavLink>
         ))}
       </ul>

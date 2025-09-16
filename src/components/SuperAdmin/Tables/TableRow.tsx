@@ -34,18 +34,16 @@ const TableRow: React.FC<TableRowProps> = ({
   const { key: rowKey, ...restOfRowProps } = row.getRowProps();
 
   return (
-    
     <tr key={rowKey} {...restOfRowProps}>
       {row.cells.map((cell: any) => {
-        
         const { key: cellKey, ...restOfCellProps } = cell.getCellProps();
         const isActionsColumn = cell.column.id === actionsColumnId;
 
         return (
           <td
-            key={cellKey} 
-            {...restOfCellProps} 
-            className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-200"
+            key={cellKey}
+            {...restOfCellProps}
+            className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-200 overflow-hidden truncate"
           >
             {isActionsColumn ? (
               <TableActions
@@ -64,7 +62,7 @@ const TableRow: React.FC<TableRowProps> = ({
             ) : (
               cell.render("Cell")
             )}
-          </td> 
+          </td>
         );
       })}
     </tr>

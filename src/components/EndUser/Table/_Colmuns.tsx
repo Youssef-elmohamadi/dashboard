@@ -61,8 +61,10 @@ export const buildOrderColumns = <T extends BaseEntity>(
           <span
             className={`px-2 py-1 rounded-full text-xs font-medium ${
               shippingStatus === "shipped"
-                ? "bg-green-100 text-green-700"
-                : "bg-gray-200 text-gray-600"
+                ? "bg-green-300 text-gray-600"
+                : shippingStatus === "pending"
+                ? "bg-orange-200 text-gray-600"
+                : "bg-red-200 text-gray-600"
             }`}
           >
             {shippingStatus}
@@ -96,9 +98,11 @@ export const buildOrderColumns = <T extends BaseEntity>(
       Cell: ({ value }: any) => (
         <span
           className={`px-2 py-1 rounded-full text-xs font-medium ${
-            value === "paid"
-              ? "bg-blue-100 text-blue-700"
-              : "bg-gray-200 text-gray-600"
+            value === "shipped"
+              ? "bg-green-300 text-gray-600"
+              : value === "pending"
+              ? "bg-orange-200 text-gray-600"
+              : "bg-red-200 text-gray-600"
           }`}
         >
           {value}

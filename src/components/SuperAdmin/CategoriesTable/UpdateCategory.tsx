@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FiEdit } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
@@ -23,23 +23,32 @@ import {
 import PageStatusHandler, {
   PageStatus,
 } from "../../common/PageStatusHandler/PageStatusHandler";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 export default function UpdateCategory() {
   const { t } = useTranslation(["UpdateCategory", "Meta"]);
+  const { lang } = useDirectionAndLanguage();
   const [categoryData, setCategoryData] = useState<CategoryInputData>({
-    name: "",
-    description: "",
+    name_ar: "",
+    name_en: "",
+    icon: "",
+    description_ar: "",
+    description_en: "",
     commission_rate: "",
     parent_id: "",
     image: null as File | null,
     status: "active",
     appears_in_website: false,
   });
-
+  const inputRefs = useRef<
+    Record<string, HTMLInputElement | HTMLTextAreaElement | null>
+  >({});
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [clientErrors, setClientErrors] = useState<ClientErrors>({
-    name: "",
-    description: "",
+    name_ar: "",
+    name_en: "",
+    description_ar: "",
+    description_en: "",
     commission_rate: "",
     parent_id: "",
     image: "",
@@ -47,8 +56,11 @@ export default function UpdateCategory() {
     appears_in_website: "",
   });
   const [errors, setErrors] = useState<ServerErrors>({
-    name: [],
-    description: [],
+    name_ar: [],
+    name_en: [],
+    icon: [],
+    description_ar: [],
+    description_en: [],
     commission_rate: [],
     parent_id: [],
     image: [],
@@ -91,8 +103,11 @@ export default function UpdateCategory() {
   useEffect(() => {
     if (!Category) return;
     setCategoryData({
-      name: Category.name || "",
-      description: Category.description || "",
+      name_ar: Category.name_ar || "",
+      name_en: Category.name_en || "",
+      icon: Category.icon || "",
+      description_ar: Category.description_ar || "",
+      description_en: Category.description_en || "",
       commission_rate: Category.commission_rate?.toString() || "",
       parent_id: Category.parent_id ? Category.parent_id.toString() : "",
       image: null,
@@ -139,23 +154,54 @@ export default function UpdateCategory() {
 
   const validate = () => {
     const newErrors: any = {};
-    if (!categoryData.name) newErrors.name = t("category.errors.name");
-    if (!categoryData.description)
-      newErrors.description = t("category.errors.description");
+    if (!categoryData.name_ar) {
+      newErrors.name_ar = t("category.errors.name");
+    }
+    if (!categoryData.name_en) newErrors.name_en = t("category.errors.name");
+    if (!categoryData.description_ar) {
+      newErrors.description_ar = t("category.errors.description");
+    }
+    if (!categoryData.description_en)
+      newErrors.description_en = t("category.errors.description");
     if (!categoryData.commission_rate) {
       newErrors.commission_rate = t("category.errors.commissionRequired");
     } else if (+categoryData.commission_rate > 100) {
       newErrors.commission_rate = t("category.errors.commissionMax");
     }
+    const isValid = Object.values(newErrors).every((error) => error === "");
     setClientErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return { isValid, newErrors };
   };
+
+  const focusOnError = (errors: Record<string, string | string[]>) => {
+    const errorEntry = Object.entries(errors).find(
+      ([_, value]) =>
+        (typeof value === "string" && value !== "") ||
+        (Array.isArray(value) && value.length > 0)
+    );
+
+    if (errorEntry) {
+      const fieldName = errorEntry[0];
+      const ref = inputRefs?.current[fieldName];
+      ref?.focus();
+      if (ref) {
+        ref.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          ref.focus({ preventScroll: true });
+        }, 300);
+      }
+    }
+  };
+
   const { mutateAsync } = useUpdateCategory(id!);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({
-      name: [],
-      description: [],
+      name_ar: [],
+      name_en: [],
+      icon: [],
+      description_ar: [],
+      description_en: [],
       commission_rate: [],
       parent_id: [],
       image: [],
@@ -164,11 +210,18 @@ export default function UpdateCategory() {
       global: "",
       general: "",
     });
-    if (!validate()) return;
+    const { isValid, newErrors } = validate();
+    if (!isValid) {
+      focusOnError(newErrors);
+      return;
+    }
 
     const formData = new FormData();
-    formData.append("name", categoryData.name);
-    formData.append("description", categoryData.description);
+    formData.append("name_ar", categoryData.name_ar);
+    formData.append("name_en", categoryData.name_en);
+    formData.append("icon", categoryData.icon);
+    formData.append("description_en", categoryData.description_en);
+    formData.append("description_ar", categoryData.description_ar);
     formData.append("commission_rate", categoryData.commission_rate ?? "");
     if (categoryData.parent_id)
       formData.append("parent_id", categoryData.parent_id);
@@ -200,6 +253,7 @@ export default function UpdateCategory() {
           formattedErrors[err.code].push(err.message);
         });
         setErrors((prev) => ({ ...prev, ...formattedErrors }));
+        focusOnError(formattedErrors);
       } else {
         setErrors((prev) => ({
           ...prev,
@@ -240,20 +294,20 @@ export default function UpdateCategory() {
       <div>
         <SEO
           title={{
-            ar: ` تحديث فئة ${Category?.name || ""}`,
-            en: `Update Category ${Category?.name || ""}`,
+            ar: ` تحديث فئة ${Category?.name_ar || ""}`,
+            en: `Update Category ${Category?.name_en || ""}`,
           }}
           description={{
             ar: `صفحة تحديث الفئة "${
-              Category?.name || "غير معروف"
+              Category?.name_ar || "غير معروف"
             }" بواسطة المشرف العام في تشطيبة. عدّل تفاصيل الفئة والعمولة والصورة.`,
             en: `Update category "${
-              Category?.name || "unknown"
+              Category?.name_en || "unknown"
             }" by Super Admin on Tashtiba. Modify category details, commission, and image.`,
           }}
           keywords={{
             ar: [
-              `تحديث فئة ${Category?.name || ""}`,
+              `تحديث فئة ${Category?.name_ar || ""}`,
               "تعديل تصنيف",
               "إدارة الفئات",
               "سوبر أدمن",
@@ -261,7 +315,7 @@ export default function UpdateCategory() {
               "تشطيبة",
             ],
             en: [
-              `update category ${Category?.name || ""}`,
+              `update category ${Category?.name_en || ""}`,
               "edit category",
               "category management",
               "super admin",
@@ -289,24 +343,153 @@ export default function UpdateCategory() {
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
             <div>
-              <Label>{t("category.name")}</Label>
+              <Label>{t("category.name_ar")}</Label>
               <Input
                 type="text"
-                name="name"
-                value={categoryData.name}
+                name="name_ar"
+                value={categoryData.name_ar}
                 onChange={handleChange}
-                placeholder={t("category.namePlaceholder")}
+                placeholder={t("category.namePlaceholder_ar")}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["name_ar"] = el;
+                  }
+                }}
               />
-              {errors.name[0] && (
+              {errors.name_ar[0] && (
                 <p className="text-red-500 text-sm mt-1">
                   {t("category.errors.nameTaken")}
                 </p>
               )}
-              {clientErrors.name && (
-                <p className="text-red-500 text-sm mt-1">{clientErrors.name}</p>
+              {clientErrors.name_ar && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientErrors.name_ar}
+                </p>
               )}
             </div>
             <div>
+              <Label>{t("category.name_en")}</Label>
+              <Input
+                type="text"
+                name="name_en"
+                value={categoryData.name_en}
+                onChange={handleChange}
+                placeholder={t("category.namePlaceholder_en")}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["name_en"] = el;
+                  }
+                }}
+              />
+              {errors.name_en[0] && (
+                <p className="text-red-500 text-sm mt-1">
+                  {t("category.errors.nameTaken")}
+                </p>
+              )}
+              {clientErrors.name_en && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientErrors.name_en}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+            <div className="w-full">
+              <Label>{t("category.description_ar")}</Label>
+              <TextArea
+                name="description_ar"
+                value={categoryData.description_ar}
+                placeholder={t("category.descPlaceholder_ar")}
+                onChange={(value) =>
+                  setCategoryData((prev) => ({
+                    ...prev,
+                    description_ar: value,
+                  }))
+                }
+                className="w-full mt-2 p-2 border border-gray-200 outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
+                rows={4}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["description_ar"] = el;
+                  }
+                }}
+              />
+              {errors.description_ar && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.description_ar[0]}
+                </p>
+              )}
+              {clientErrors.description_ar && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientErrors.description_ar}
+                </p>
+              )}
+            </div>
+            <div className="w-full">
+              <Label>{t("category.description_en")}</Label>
+              <TextArea
+                name="description_en"
+                value={categoryData.description_en}
+                placeholder={t("category.descPlaceholder_en")}
+                onChange={(value) =>
+                  setCategoryData((prev) => ({
+                    ...prev,
+                    description_en: value,
+                  }))
+                }
+                className="w-full mt-2 p-2 border border-gray-200 outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
+                rows={4}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["description_en"] = el;
+                  }
+                }}
+              />
+              {errors.description_en && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.description_en[0]}
+                </p>
+              )}
+              {clientErrors.description_en && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientErrors.description_en}
+                </p>
+              )}
+            </div>
+            <div className="w-full">
+              <Label>{t("category.icon")}</Label>
+              <TextArea
+                name="icon"
+                value={categoryData.icon}
+                placeholder={t("category.iconPlaceholder")}
+                onChange={(value) =>
+                  setCategoryData((prev) => ({
+                    ...prev,
+                    icon: value,
+                  }))
+                }
+                className="w-full mt-2 p-2 border border-gray-200 outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
+                rows={4}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["icon"] = el;
+                  }
+                }}
+              />
+              {errors.icon && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.icon[0]}
+                </p>
+              )}
+              {/* {clientErrors.icon && (
+                <p className="text-red-500 text-sm mt-1">
+                  {clientErrors.icon}
+                </p>
+              )} */}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+            <div className="w-full">
               <Label>{t("category.commission")}</Label>
               <Input
                 type="number"
@@ -314,6 +497,11 @@ export default function UpdateCategory() {
                 value={categoryData?.commission_rate!}
                 onChange={handleChange}
                 placeholder={t("category.commissionPlaceholder")}
+                ref={(el) => {
+                  if (inputRefs?.current) {
+                    inputRefs.current["commission_rate"] = el;
+                  }
+                }}
               />
               {errors.commission_rate && (
                 <p className="text-red-500 text-sm mt-1">
@@ -326,37 +514,12 @@ export default function UpdateCategory() {
                 </p>
               )}
             </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
-            <div className="w-full">
-              <Label>{t("category.description")}</Label>
-              <TextArea
-                name="description"
-                value={categoryData.description}
-                placeholder={t("category.descPlaceholder")}
-                onChange={(value) =>
-                  setCategoryData((prev) => ({ ...prev, description: value }))
-                }
-                className="w-full mt-2 p-2 border border-gray-200 outline-0 rounded dark:bg-dark-900 dark:text-gray-400"
-                rows={4}
-              />
-              {errors.description && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.description[0]}
-                </p>
-              )}
-              {clientErrors.description && (
-                <p className="text-red-500 text-sm mt-1">
-                  {clientErrors.description}
-                </p>
-              )}
-            </div>
             <div className="w-full">
               <Label>{t("category.parent")}</Label>
               <Select
                 options={categories?.map((cat: Category) => ({
                   value: cat.id.toString(),
-                  label: cat.name,
+                  label: cat[`name_${lang}`],
                 }))}
                 value={categoryData?.parent_id!}
                 onChange={handleSelectChange}
@@ -411,7 +574,7 @@ export default function UpdateCategory() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-green-600 flex gap-4 text-white px-5 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+            className="bg-brand-500 flex gap-4 text-white px-5 py-2 rounded hover:bg-brand-600 disabled:opacity-50"
           >
             <FiEdit size={20} />
             {loading ? t("category.submitting") : t("category.submit")}

@@ -19,7 +19,7 @@ const staticRoutes = [
   "signup",
 ];
 
-// دالة لتوليد sitemap لكل لغة
+
 async function generateSitemapForLang(lang, products, categories) {
   const sitemap = new SitemapStream({
     hostname: "https://tashtiba.com",

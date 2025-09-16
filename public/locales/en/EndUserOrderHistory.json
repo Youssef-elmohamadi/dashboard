@@ -51,7 +51,7 @@
     "pending": "Pending",
     "shipped": "Shipped",
     "delivered": "Delivered",
-    "canceled": "Canceled",
+    "cancelled": "Canceled",
     "paid": "Paid",
     "unpaid": "Unpaid"
   },

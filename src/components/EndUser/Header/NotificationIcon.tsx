@@ -7,7 +7,7 @@ interface NotificationIconProps {
   notificationIconRef: React.RefObject<HTMLDivElement | null>;
 }
 
-const LazyNotificationDropdown = lazy(() => import("./Dropdown")); // تأكد من المسار الصحيح لـ NotificationDropdown
+const LazyNotificationDropdown = lazy(() => import("./Dropdown")); 
 
 const NotificationIcon: React.FC<NotificationIconProps> = ({
   openNotification,

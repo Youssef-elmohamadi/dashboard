@@ -45,6 +45,11 @@ export const applyCoupon = async (data: any) => {
 export const checkout = async (data: any) => {
   return await axiosInstanceEndUser.post("/api/user/orders/checkout", data);
 };
+
+export const getCheckoutInfo = async () => {
+  return await axiosInstanceEndUser.get(`/api/user/savedUserInfo`);
+};
+
 export const addToFavorite = async (productId: any) => {
   return await axiosInstanceEndUser.get("/api/user/products/addToFav", {
     params: {

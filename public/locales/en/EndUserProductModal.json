@@ -4,10 +4,15 @@
   "egp": "EGP",
   "price": "Price",
   "discountApplied": "Discount Applied",
+  "available": "Available",
+  "inStock": "In Stock",
+  "outOfStock": "Out of Stock",
   "quantity": "Quantity",
   "total": "Total",
   "addToCart": "Add to Cart",
   "reviews": "Reviews",
   "noReviews": "No reviews yet",
-  "sale": "Sale"
+  "sale": "Sale",
+  "specifications": "Specifications",
+  "outOfStockMessage": "This product is currently out of stock."
 }

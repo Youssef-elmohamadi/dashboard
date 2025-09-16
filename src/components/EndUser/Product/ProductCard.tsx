@@ -51,21 +51,22 @@ const ProductCard = ({
 
   const altText =
     lang === "ar"
-      ? `صورة منتج ${product.name} تشطيبة`
-      : `Product image for ${product.name} Tashtiba`;
+      ? `صورة منتج ${product["name_ar"]} تشطيبة`
+      : `Product image for ${product["name_en"]} Tashtiba`;
 
   const hasDiscount =
     product.discount_price && product.discount_price < product.price;
 
   return (
-    <div className="w-full border border-gray-200 rounded p-3 relative h-[490px]">
+    <div className="w-full border border-gray-200 rounded p-3 relative min-h-[490px] max-h-[550px]">
       <div className="w-full h-[300px]">
         <LazyImage
           src={product?.images[0]?.image}
           alt={altText}
-          className="w-full h-full object-cover rounded"
+          className="w-full h-full object-cover rounded cursor-pointer"
           loading={loadingPriority}
           fetchPriority={loadingPriority === "eager" ? "high" : undefined}
+          onClick={() => openModal("product", product)}
         />
       </div>
 
@@ -91,9 +92,9 @@ const ProductCard = ({
 
       <Link
         to={`/${lang}/product/${product.id}`}
-        className="end-user-text-secondary my-2 px-1 block font-medium line-clamp-2"
+        className="end-user-text-secondary my-2 px-1 block font-medium truncate "
       >
-        {product.name}
+        {product[`name_${lang}`]}
       </Link>
 
       <div className="flex flex-col justify-between items-start gap-2 border-t border-gray-200 py-3">
@@ -114,7 +115,7 @@ const ProductCard = ({
 
         <div className="flex items-center gap-1">
           <StarRatings
-            rating={product.rate || 0}
+            rating={product.rating || 0}
             starDimension="17px"
             starSpacing="1px"
             starRatedColor="#fbbf24"

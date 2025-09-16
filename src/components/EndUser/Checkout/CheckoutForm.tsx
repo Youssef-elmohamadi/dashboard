@@ -14,7 +14,10 @@ import { Checkout, ClientErrors, Location } from "../../../types/CheckoutType";
 import { RootState } from "../Redux/Store";
 import { Product } from "../../../types/Product";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
-import { useCheckout } from "../../../hooks/Api/EndUser/Checkout/useCheckout";
+import {
+  useCheckout,
+  useCheckoutInfo,
+} from "../../../hooks/Api/EndUser/Checkout/useCheckout";
 import WalletIcon from "../../../icons/WalletIcon";
 
 const CheckoutForm: React.FC = () => {
@@ -22,6 +25,7 @@ const CheckoutForm: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const { data: checkoutInfoSaved } = useCheckoutInfo();
 
   const [clientSideErrors, setClientSideErrors] = useState<ClientErrors>({
     payment_method: "",
@@ -137,11 +141,35 @@ const CheckoutForm: React.FC = () => {
       product_id: item.id,
       quantity: item.quantity,
     }));
-    setCheckoutForm((prev) => ({
-      ...prev,
-      items: updatedItems,
-    }));
-  }, [items]);
+
+    setCheckoutForm((prev) => {
+      const newFormState = {
+        ...prev,
+        items: updatedItems,
+      };
+
+      if (checkoutInfoSaved?.data) {
+        const savedData = checkoutInfoSaved.data.data;
+        newFormState.location = {
+          full_name: savedData.full_name || prev.location.full_name,
+          phone: savedData.phone || prev.location.phone,
+          city: savedData.city || prev.location.city,
+          area: savedData.area || prev.location.area,
+          street: savedData.street || prev.location.street,
+          building_number:
+            savedData.building_number || prev.location.building_number,
+          floor_number: savedData.floor_number || prev.location.floor_number,
+          apartment_number:
+            savedData.apartment_number || prev.location.apartment_number,
+          landmark: savedData.landmark || prev.location.landmark,
+          notes: savedData.notes || prev.location.notes,
+        };
+      }
+
+      return newFormState;
+    });
+  }, [items, checkoutInfoSaved]);
+
 
   const handleChangeLocation = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -205,6 +233,7 @@ const CheckoutForm: React.FC = () => {
         focusOnError(errors);
       } else {
         setErrors({ general: [t("checkout.general")] });
+        toast.error(t("checkout.general"));
       }
     }
   };
@@ -389,7 +418,7 @@ const CheckoutForm: React.FC = () => {
         type="submit"
         className="w-full mt-6 bg-[#d62828] hover:bg-[#d62828] text-white py-3 rounded-xl font-medium shadow-sm"
       >
-        {t("checkout.pay_now")}
+        {t("checkout.order_now")}
       </button>
     </form>
   );
