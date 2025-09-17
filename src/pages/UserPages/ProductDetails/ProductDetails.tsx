@@ -165,56 +165,12 @@ const ProductDetails: React.FC = () => {
     }
   };
 
-  const productStructuredData = {
-    "@type": "Product",
-    name: product[`name_${currentLang}`],
-    image:
-      product.images?.length === 1
-        ? product.images[0].image
-        : product.images?.map((img) => img.image) || [],
-    description: product[`description_${currentLang}`] || "",
-    sku: product.id.toString(),
-    mpn: product.slug,
-    brand: {
-      "@type": "Brand",
-      name: product.brand?.[`name_${currentLang}`],
-      logo: product.brand?.image,
-    },
-    category: product.category?.[`name_${currentLang}`],
-    offers: {
-      "@type": "Offer",
-      url: `https://tashtiba.com/${currentLang}/product/${product.id}`,
-      priceCurrency: "EGP",
-      price: product.discount_price
-        ? product.discount_price.toFixed(2)
-        : product.price.toFixed(2),
-      availability:
-        product.stock_quantity && product.stock_quantity > 0
-          ? "https://schema.org/InStock"
-          : "https://schema.org/OutOfStock",
-      seller: {
-        "@type": "Organization",
-        name: product.vendor?.name || "Tashtiba",
-      },
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: product.rate || 0,
-      reviewCount: product.review?.length || 0,
-    },
-  };
-
-  // Merge WebPage + Product locally (only here)
-  const structuredData = {
-    "@type": "WebPage",
-    url: `https://tashtiba.com/${currentLang}/product/${product.id}`,
-    inLanguage: currentLang,
-    mainEntity: productStructuredData,
-  };
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-10">
       <SEO
+        lang={currentLang}
+        pageType="product"
+        url={`https://tashtiba.com/${currentLang}/product/${product.id}`}
         title={{
           ar: `${product[`name_${currentLang}`]} | سعر ومواصفات`,
           en: `${product[`name_${currentLang}`]} | Price & Specs`,
@@ -227,8 +183,9 @@ const ProductDetails: React.FC = () => {
           ar: generateKeywords(),
           en: generateKeywords(),
         }}
-        url={`https://tashtiba.com/${currentLang}/product/${product.id}`}
-        image={product.images?.[0]?.image || "https://tashtiba.com/og-image.png"}
+        image={
+          product.images?.[0]?.image || "https://tashtiba.com/og-image.png"
+        }
         alternates={[
           {
             lang: "ar",
@@ -243,9 +200,122 @@ const ProductDetails: React.FC = () => {
             href: `https://tashtiba.com/ar/product/${product.id}`,
           },
         ]}
-        structuredData={structuredData}
-        lang={currentLang}
+        productData={{
+          name: product[`name_${currentLang}`],
+          description: product[`description_${currentLang}`] || "",
+          image:
+            product.images?.length === 1
+              ? product.images[0].image
+              : product.images?.map((img) => img.image) || [],
+          sku: product.id.toString(),
+          mpn: product.slug,
+          brand: {
+            "@type": "Brand",
+            name: product.brand?.[`name_${currentLang}`],
+            ...(product.brand?.image && {
+              logo: { "@type": "ImageObject", url: product.brand?.image || "" },
+            }),
+          },
+          additionalProperty: [
+            {
+              "@type": "PropertyValue",
+              name: "Category",
+              value: product.category?.[`name_${currentLang}`],
+            },
+          ],
+          ...(product.review?.length > 0 && {
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: product.rate || 1,
+              ratingCount: product.review.length,
+            },
+          }),
+          offers: {
+            "@type": "Offer",
+            url: `https://tashtiba.com/${currentLang}/product/${product.id}`,
+            priceCurrency: "EGP",
+            price: product.discount_price
+              ? product.discount_price.toFixed(2)
+              : product.price.toFixed(2),
+            availability:
+              product.stock_quantity && product.stock_quantity > 0
+                ? "https://schema.org/InStock"
+                : "https://schema.org/OutOfStock",
+            priceValidUntil: new Date(
+              new Date().setFullYear(new Date().getFullYear() + 1)
+            )
+              .toISOString()
+              .split("T")[0],
+            seller: {
+              "@type": "Organization",
+              name: product.vendor?.name || "Tashtiba",
+            },
+            shippingDetails: {
+              "@type": "OfferShippingDetails",
+              shippingRate: {
+                "@type": "MonetaryAmount",
+                value: 0.0,
+                currency: "EGP",
+              },
+              shippingDestination: {
+                "@type": "Country",
+                name: "Egypt",
+              },
+              deliveryTime: {
+                "@type": "ShippingDeliveryTime",
+                handlingTime: {
+                  "@type": "QuantitativeValue",
+                  minValue: 1,
+                  maxValue: 3,
+                  unitCode: "d",
+                },
+                transitTime: {
+                  "@type": "QuantitativeValue",
+                  minValue: 1,
+                  maxValue: 5,
+                  unitCode: "d",
+                },
+              },
+            },
+            hasMerchantReturnPolicy: {
+              "@type": "MerchantReturnPolicy",
+              applicableCountry: "EG",
+              returnPolicyCategory:
+                "https://schema.org/MerchantReturnFiniteReturnWindow",
+              merchantReturnDays: 14,
+              returnMethod: "https://schema.org/ReturnByMail",
+              returnFees: "https://schema.org/FreeReturn",
+            },
+          },
+        }}
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: currentLang === "ar" ? "الرئيسية" : "Home",
+                item: `https://tashtiba.com/${currentLang}`,
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: product.category?.[`name_${currentLang}`],
+                item: `https://tashtiba.com/${currentLang}/category/${product.category?.id}`,
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: product[`name_${currentLang}`],
+                item: `https://tashtiba.com/${currentLang}/product/${product.id}`,
+              },
+            ],
+          },
+        ]}
       />
+
       <div className="grid lg:grid-cols-2 gap-10">
         <div>
           <div className="border flex justify-center items-center h-[500px] w-full border-gray-200 rounded-2xl overflow-hidden shadow-md">
@@ -406,3 +476,57 @@ const ProductDetails: React.FC = () => {
 };
 
 export default React.memo(ProductDetails);
+// const productStructuredData = {
+//   "@type": "Product",
+//   name: product[`name_${currentLang}`],
+//   image:
+//     product.images?.length === 1
+//       ? product.images[0].image
+//       : product.images?.map((img) => img.image) || [],
+//   description: product[`description_${currentLang}`] || "",
+//   sku: product.id.toString(),
+//   mpn: product.slug,
+//   brand: {
+//     "@type": "Brand",
+//     name: product.brand?.[`name_${currentLang}`],
+//     ...(product.brand?.image && { logo: product.brand.image }),
+//   },
+//   category: product.category?.[`name_${currentLang}`],
+//   offers: {
+//     "@type": "Offer",
+//     url: `https://tashtiba.com/${currentLang}/product/${product.id}`,
+//     priceCurrency: "EGP",
+//     price: product.discount_price
+//       ? product.discount_price.toFixed(2)
+//       : product.price.toFixed(2),
+//     availability:
+//       product.stock_quantity && product.stock_quantity > 0
+//         ? "https://schema.org/InStock"
+//         : "https://schema.org/OutOfStock",
+//     priceValidUntil: new Date(
+//       new Date().setFullYear(new Date().getFullYear() + 1)
+//     )
+//       .toISOString()
+//       .split("T")[0],
+//     seller: {
+//       "@type": "Organization",
+//       name: product.vendor?.name || "Tashtiba",
+//     },
+//   },
+// };
+
+// if (product.review?.length > 0) {
+//   productStructuredData.aggregateRating = {
+//     "@type": "AggregateRating",
+//     ratingValue: product.rate || 1,
+//     ratingCount: product.review.length,
+//   };
+// }
+
+// Merge WebPage + Product locally (only here)
+// const structuredData = {
+//   "@type": "WebPage",
+//   url: `https://tashtiba.com/${currentLang}/product/${product.id}`,
+//   inLanguage: currentLang,
+//   mainEntity: productStructuredData,
+// };
