@@ -11,6 +11,17 @@ export type Attribute = {
   attribute_value_en: string;
 };
 
+export type Variant = {
+  id?: number;
+  name_ar: string;
+  name_en: string;
+  value_ar: string;
+  value_en: string;
+  stock_quantity: number | null;
+  price: number | null;
+  discount_price: number | null;
+};
+
 export type Tag = {
   id: number;
   name_ar: string;
@@ -58,7 +69,7 @@ type BaseProduct = {
   attributes: Attribute[];
   images: image[];
   tags: Tag[];
-  variants?: any[];
+  variants?: Variant[];
   slug?: string;
   vendor?: Vendor;
   tax?: number | null;
@@ -70,7 +81,6 @@ type LocalizedNames = {
 };
 
 export type Product = BaseProduct & LocalizedNames;
-
 
 export type SearchValues = {
   name: string;
@@ -128,6 +138,7 @@ export type ServerError = {
   discount_price: string[];
   images: string[];
   attributes: string[];
+  variants: string[];
   tags: string[];
   general: string;
   global: string;

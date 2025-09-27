@@ -110,17 +110,13 @@ const PrivacyPolicyPage: React.FC = () => {
           ],
         }}
         image="https://tashtiba.com/og-image.png"
-        url={`https://tashtiba.com/${lang}/privacy-policy`}
+        url={`https://tashtiba.com/${lang}/privacy`}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.com/ar/privacy-policy" },
-          { lang: "en", href: "https://tashtiba.com/en/privacy-policy" },
-          { lang: "x-default", href: "https://tashtiba.com/ar/privacy-policy" },
+          { lang: "ar", href: "https://tashtiba.com/ar/privacy" },
+          { lang: "en", href: "https://tashtiba.com/en/privacy" },
+          { lang: "x-default", href: "https://tashtiba.com/ar/privacy" },
         ]}
-        structuredData={{
-          "@type": "WebPage",
-          url: `https://tashtiba.com/${lang}/privacy-policy`,
-          inLanguage: lang,
-        }}
+        pageType="privacy"
         lang={lang as "ar" | "en"}
       />
 

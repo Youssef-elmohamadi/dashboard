@@ -10,7 +10,7 @@ import PageStatusHandler, {
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const OrderDetails: React.FC = () => {
-  const { t } = useTranslation(["OrderDetails", "Meta"]);
+  const { t } = useTranslation(["OrderDetails"]);
   const { lang } = useDirectionAndLanguage();
   const { id } = useParams();
   const {
@@ -187,6 +187,30 @@ const OrderDetails: React.FC = () => {
                       <strong>{t("OrderDetails:fields.description")}:</strong>{" "}
                       {item?.product[`description_${lang}`]}
                     </p>
+                    {item?.varient && (
+                      <>
+                        <p>
+                          <strong>
+                            {t("OrderDetails:fields.variant_name")}:
+                          </strong>{" "}
+                          {item?.varient?.[`variant_name_${lang}`]}
+                        </p>
+                        <p>
+                          <strong>
+                            {t("OrderDetails:fields.variant_value")}:
+                          </strong>{" "}
+                          {item?.varient?.[`variant_value_${lang}`]}
+                        </p>
+                        <p>
+                          <strong>
+                            {t("OrderDetails:fields.variant_price")}:
+                          </strong>{" "}
+                          {item?.varient?.discount_price ||
+                            item?.varient?.price}{" "}
+                          {t("OrderDetails:egp")}
+                        </p>
+                      </>
+                    )}
                     <p>
                       <strong>{t("OrderDetails:fields.price")}:</strong>{" "}
                       {item?.price} {t("OrderDetails:egp")}

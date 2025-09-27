@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useAllCategories } from "../../../hooks/Api/Admin/useCategories/useCategories";
 import { Category } from "../../../types/Categories";
-import LazyImage from "../../../components/common/LazyImage";
+//import LazyImage from "../../../components/common/LazyImage";
 import SEO from "../../../components/common/SEO/seo";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useProductsByCategory } from "../../../hooks/Api/EndUser/useProducts/useProducts";
@@ -17,6 +16,7 @@ const Shop = () => {
   const sort = searchParams.get("sort") || "";
   const min = searchParams.get("min") || "";
   const max = searchParams.get("max") || "";
+  const brand_id = searchParams.get("brand_id") || "";
 
   const { t } = useTranslation(["EndUserShop"]);
   const { data } = useCategories();
@@ -31,7 +31,6 @@ const Shop = () => {
     }
   }, [category_id, categories, lang]);
 
-
   const {
     products,
     fetchNextPage,
@@ -44,8 +43,8 @@ const Shop = () => {
     sort,
     min,
     max,
+    brand_id,
   });
-
 
   return (
     <div className="flex flex-col items-center min-h-[540px]">
@@ -100,12 +99,32 @@ const Shop = () => {
             href: `https://tashtiba.com/ar/category/${category_id}`,
           },
         ]}
-        structuredData={{
-          "@type": "WebPage",
-          url: `https://tashtiba.com/${lang}/category/${category_id}`,
-          inLanguage: lang,
-        }}
+        pageType="category"
+        itemList={products.slice(0, 6).map((p, idx) => ({
+          name: p[`name_${lang}`],
+          url: `https://tashtiba.com/${lang}/product/${p.id}`,
+        }))}
         lang={lang as "ar" | "en"}
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: lang === "ar" ? "الرئيسية" : "Home",
+                item: `https://tashtiba.com/${lang}`,
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: categoryName,
+                item: `https://tashtiba.com/${lang}/category/${category_id}`,
+              },
+            ],
+          },
+        ]}
       />
 
       {isError ? (

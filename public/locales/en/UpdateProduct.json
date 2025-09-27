@@ -27,6 +27,8 @@
     "attributes": "Attributes",
     "tags": "Tags",
     "add_attribute": "+ Add Attribute",
+    "variants": "Variants",
+    "add_variant": "+ Add Variant",
     "add_tag": "+ Add Tag",
     "update_button": "Update Product",
     "updating_button": "Updating..."
@@ -45,6 +47,13 @@
     "attribute_label_en": "English Attribute Name",
     "attribute_value_ar": "Arabic Attribute Value",
     "attribute_value_en": "English Attribute Value",
+    "variant_name_ar": "Arabic Variant Name",
+    "variant_name_en": "English Variant Name",
+    "variant_value_ar": "Arabic Variant Value",
+    "variant_value_en": "English Variant Value",
+    "variant_price": "Variant Price",
+    "variant_stock": "Variant Stock",
+    "variant_discount_price": "Variant Discount Price",
     "tag_ar": "Arabic Tag",
     "tag_en": "English Tag"
   },

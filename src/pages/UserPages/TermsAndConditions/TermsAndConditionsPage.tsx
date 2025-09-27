@@ -119,11 +119,7 @@ const CreativeTermsPage: React.FC = () => {
           { lang: "en", href: "https://tashtiba.com/en/terms" },
           { lang: "x-default", href: "https://tashtiba.com/ar/terms" },
         ]}
-        structuredData={{
-          "@type": "WebPage",
-          url: `https://tashtiba.com/${lang}/terms`,
-          inLanguage: lang,
-        }}
+        pageType="terms"
         lang={lang as "ar" | "en"}
       />
 

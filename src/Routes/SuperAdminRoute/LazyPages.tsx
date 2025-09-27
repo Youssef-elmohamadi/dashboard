@@ -1,5 +1,9 @@
-import { lazy, Suspense } from "react"; 
+import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
+import Articles from "../../pages/SuperAdminPages/Articles/Articles";
+import CreateArticle from "../../components/SuperAdmin/ArticlesTable/CreateArticles";
+import UpdateArticle from "../../components/SuperAdmin/ArticlesTable/UpdateArticle";
+import ArticleDetails from "../../components/SuperAdmin/ArticlesTable/ShowDetails";
 const Vendors = lazy(
   () => import("../../pages/SuperAdminPages/vendors/Vendors")
 );
@@ -104,7 +108,12 @@ export default function LazyPages() {
         <Route path="banners/create" element={<CreateBanner />} />
         <Route path="banners/update/:id" element={<UpdateBanner />} />
         <Route path="banners/details/:id" element={<BannerDetails />} />
+        <Route path="articles" element={<Articles />} />
+        <Route path="articles/create" element={<CreateArticle />} />
+        <Route path="articles/update/:id" element={<UpdateArticle />} />
+        <Route path="articles/details/:id" element={<ArticleDetails />} />
         <Route path="profile" element={<UserProfiles />} />
+
       </Routes>
     </Suspense>
   );

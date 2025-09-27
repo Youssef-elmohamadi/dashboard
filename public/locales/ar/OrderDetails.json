@@ -14,6 +14,9 @@
     "vendor_order": "طٌلب من البائع"
   },
   "fields": {
+    "variant_name": "اسم المتغير",
+    "variant_value": "قيمة المتغير",
+    "variant_price": "سعر المتغير",
     "order_id": "رقم الطلب",
     "status": "الحالة",
     "total": "الإجمالي",

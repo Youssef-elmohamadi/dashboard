@@ -40,7 +40,7 @@ const SupportPolicyPage: React.FC = () => {
         <div className="space-y-3">
           <p>{t("support.channels.description")}</p>
           <ul className="list-disc list-inside space-y-2">
-            <li>{t("support.channels.chat")}</li>
+            {/* <li>{t("support.channels.chat")}</li> */}
             <li>
               {t("support.channels.email")}{" "}
               <a
@@ -113,18 +113,14 @@ const SupportPolicyPage: React.FC = () => {
             "product assistance",
           ],
         }}
-        url={`https://tashtiba.com/${lang}/support-policy`}
+        url={`https://tashtiba.com/${lang}/support`}
         image="https://tashtiba.com/og-image.png"
         alternates={[
-          { lang: "ar", href: "https://tashtiba.com/ar/support-policy" },
-          { lang: "en", href: "https://tashtiba.com/en/support-policy" },
-          { lang: "x-default", href: "https://tashtiba.com/ar/support-policy" },
+          { lang: "ar", href: "https://tashtiba.com/ar/support" },
+          { lang: "en", href: "https://tashtiba.com/en/support" },
+          { lang: "x-default", href: "https://tashtiba.com/ar/support" },
         ]}
-        structuredData={{
-          "@type": "WebPage",
-          url: `https://tashtiba.com/${lang}/support-policy`,
-          inLanguage: lang,
-        }}
+        pageType="support"
         lang={lang as "ar" | "en"}
       />
 

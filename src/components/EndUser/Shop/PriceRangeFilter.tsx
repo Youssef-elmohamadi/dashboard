@@ -1,78 +1,87 @@
-import React, { useState } from "react";
-import { Range, getTrackBackground } from "react-range";
-import { useSearchParams } from "react-router-dom";
-import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
+import { useSearchParams } from "react-router";
+
 interface PriceRangeFilterProps {
-  setValuesProp: (range: { min: number; max: number }) => void;
+  setValuesProp: (range: { min?: number; max?: number }) => void;
+  setIsMenuOpen?: (open: boolean) => void;
 }
 
 const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
   setValuesProp,
+  setIsMenuOpen,
 }) => {
-  const [searchParams] = useSearchParams();
-  const min = Number(searchParams.get("min")) || 0;
-  const max = Number(searchParams.get("max")) || 10000;
-  const [values, setValues] = useState<[number, number]>([min, max]);
-  const { dir } = useDirectionAndLanguage();
-  const STEP = 1;
-  const MIN = 0;
-  const MAX = 10000;
-  const isRTL = dir === "rtl";
+  const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation(["EndUserShop"]);
+  const { dir } = useDirectionAndLanguage();
+  const isRTL = dir === "rtl";
+
+  const priceRanges = [
+    { label: t("priceFilter.all"), min: null, max: null },
+    { label: `0 - 50,000 ${t("priceFilter.egp")}`, min: 0, max: 50000 },
+    { label: `50,000 - 100,000 ${t("priceFilter.egp")}`, min: 50000, max: 100000 },
+    { label: `100,000 - 200,000 ${t("priceFilter.egp")}`, min: 100000, max: 200000 },
+    { label: `200,000 - 350,000 ${t("priceFilter.egp")}`, min: 200000, max: 350000 },
+    { label: `350,000 - 500,000 ${t("priceFilter.egp")}`, min: 350000, max: 500000 },
+  ];
+
+  const getInitialRange = () => {
+    const min = searchParams.get("min");
+    const max = searchParams.get("max");
+
+    if (!min && !max) return priceRanges[0];
+
+    const found = priceRanges.find(
+      (r) => String(r.min) === min && String(r.max) === max
+    );
+
+    return found || priceRanges[0];
+  };
+
+  const [selectedRange, setSelectedRange] = useState(getInitialRange);
+
+  useEffect(() => {
+    setSelectedRange(getInitialRange());
+  }, [searchParams]);
+
+  const handleChange = (range: { min?: number | null; max?: number | null }) => {
+    const newParams = new URLSearchParams(searchParams);
+
+    if (range.min == null && range.max == null) {
+      newParams.delete("min");
+      newParams.delete("max");
+    } else {
+      range.min != null ? newParams.set("min", String(range.min)) : newParams.delete("min");
+      range.max != null ? newParams.set("max", String(range.max)) : newParams.delete("max");
+    }
+
+    setSearchParams(newParams);
+    setSelectedRange(range);
+    setValuesProp(range);
+    setIsMenuOpen && setIsMenuOpen(false);
+  };
+
   return (
-    <div
-      className={`w-full mx-auto p-5 bg-white border border-gray-200 mt-6 ${
-        isRTL ? "rtl" : "ltr"
-      }`}
-    >
+    <div className={`w-full p-5 bg-white border border-gray-200 rounded-md mt-4 ${isRTL ? "rtl text-right" : "ltr text-left"}`}>
       <h2 className="text-lg font-bold mb-4">{t("priceFilter.title")}</h2>
-      <Range
-        values={values}
-        step={STEP}
-        min={MIN}
-        max={MAX}
-        rtl={isRTL}
-        onChange={(vals) => setValues(vals as [number, number])}
-        onFinalChange={(vals) => setValuesProp({ min: vals[0], max: vals[1] })}
-        renderTrack={({ props, children }) => (
-          <div
-            {...props}
-            style={{
-              ...props.style,
-              height: "8px",
-              borderRadius: "4px",
-              background: getTrackBackground({
-                values,
-                colors: isRTL
-                  ? ["#e5e7eb", "#d62828", "#e5e7eb"].reverse()
-                  : ["#e5e7eb", "#d62828", "#e5e7eb"],
-                min: MIN,
-                max: MAX,
-                rtl: isRTL,
-              }),
-            }}
-          >
-            {children}
-          </div>
-        )}
-        renderThumb={({ props }) => (
-          <div
-            {...props}
-            className="h-4 w-4 rounded-full border-2 border-[#d62828] bg-white flex items-center justify-center"
-          />
-        )}
-      />
-      <div className="flex justify-between text-sm text-gray-600 mt-3">
-        <span>
-          {values[0]} {t("priceFilter.egp")}
-        </span>
-        <span>
-          {values[1]} {t("priceFilter.egp")}
-        </span>
+      <div className="space-y-3">
+        {priceRanges.map((range, idx) => (
+          <label key={idx} className="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
+            <input
+              type="radio"
+              name="priceRange"
+              checked={selectedRange.label === range.label}
+              onChange={() => handleChange(range)}
+              className="accent-red-600 focus:ring-red-500"
+            />
+            <span>{range.label}</span>
+          </label>
+        ))}
       </div>
     </div>
   );
 };
+
 
 export default PriceRangeFilter;

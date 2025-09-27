@@ -12,7 +12,7 @@ import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 const ProductDetails: React.FC = () => {
   const { t } = useTranslation(["ProductDetails", "Meta"]);
   const { id }: any = useParams();
-const { lang } = useDirectionAndLanguage();
+  const { lang } = useDirectionAndLanguage();
   const {
     data: product,
     isError,
@@ -190,6 +190,31 @@ const { lang } = useDirectionAndLanguage();
           </div>
         </section> */}
 
+        {(product?.variants?.length ?? 0) > 0 && (
+          <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
+            <h2 className="text-xl font-semibold mb-4 text-indigo-700">
+              {t("ProductDetails:sections.variants")}
+            </h2>
+            <ul className="list-disc list-inside text-gray-700 dark:text-white">
+              {product?.variants?.map((variant) => (
+                <li key={variant.id}>
+                  <strong>{variant[`variant_name_${lang}`]}:</strong>{" "}
+                  {variant[`variant_value_${lang}`]} - {variant.price}{" "}
+                  {t("ProductDetails:egp")}
+                  {variant.discount_price && (
+                    <>
+                      {" "}
+                      ({t("ProductDetails:fields.discount_price")}:{" "}
+                      {variant.discount_price} {t("ProductDetails:egp")})
+                    </>
+                  )}
+                  - {t("ProductDetails:fields.stock_quantity")}:{" "}
+                  {variant.stock_quantity}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         {(product?.attributes?.length ?? 0) > 0 && (
           <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
             <h2 className="text-xl font-semibold mb-4 text-indigo-700">
@@ -198,7 +223,8 @@ const { lang } = useDirectionAndLanguage();
             <ul className="list-disc list-inside text-gray-700 dark:text-white">
               {product?.attributes?.map((attr) => (
                 <li key={attr.id}>
-                  <strong>{attr[`attribute_name_${lang}`]}:</strong> {attr[`attribute_value_${lang}`]}
+                  <strong>{attr[`attribute_name_${lang}`]}:</strong>{" "}
+                  {attr[`attribute_value_${lang}`]}
                 </li>
               ))}
             </ul>

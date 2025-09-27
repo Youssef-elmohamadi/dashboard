@@ -89,7 +89,7 @@ const CartPopup: React.FC<CartPopupProps> = ({
                       onClick={toggleCartPopup}
                     >
                       <div className="font-semibold line-clamp-1">
-                        {item.name}
+                        {item[`name_${lang}`]}
                       </div>
                     </Link>
                     <div className="text-sm text-gray-500">
@@ -105,7 +105,7 @@ const CartPopup: React.FC<CartPopupProps> = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      dispatch(removeItem(item.id));
+                      dispatch(removeItem({ id: item.id, variantId: item.variant_id }));
                     }}
                     className="ml-2"
                   >

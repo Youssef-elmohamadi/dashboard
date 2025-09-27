@@ -17,16 +17,27 @@ const ProductModal = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation(["EndUserProductModal"]);
   const { lang } = useDirectionAndLanguage();
-
-  const stockQuantity = Number(modalProps?.stock_quantity) || 0;
+  const [selectedVariant, setSelectedVariant] = useState<any | null>(null);
+  const displayStock =
+    selectedVariant && selectedVariant.stock_quantity
+      ? selectedVariant.stock_quantity
+      : modalProps.stock_quantity;
+  const stockQuantity = Number(displayStock) || 0;
   const isAvailable = stockQuantity > 0;
   const [quantity, setQuantity] = useState(isAvailable ? 1 : 0);
-
   useEffect(() => {
     if (modalProps?.images && modalProps.images.length > 0) {
       setSelectedImage(modalProps.images[0]?.image);
     }
     setQuantity(1);
+    if (modalProps?.variant_id) {
+      setSelectedVariant(
+        modalProps.variants.find((v: any) => v.id === modalProps.variant_id) ||
+          null
+      );
+    } else {
+      setSelectedVariant(null);
+    }
   }, [modalProps]);
   useEffect(() => {
     if (modalType === "product" && modalProps) {
@@ -48,20 +59,37 @@ const ProductModal = () => {
       toast.error(t("outOfStockMessage"));
       return;
     }
-    dispatch(addItem({ item, quantity }));
-    openModal("addtocart", { ...item, quantity });
+    const itemWithVariant = {
+      ...item,
+      variant_id: selectedVariant?.id,
+      price: selectedVariant ? selectedVariant.price : item.price,
+      discount_price: selectedVariant
+        ? selectedVariant.discount_price
+        : item.discount_price,
+    };
+
+    dispatch(addItem({ item: itemWithVariant, quantity }));
+    openModal("addtocart", { ...itemWithVariant, quantity });
+  };
+
+  const handleVariantSelect = (variant: any) => {
+    setSelectedVariant(variant);
   };
 
   const images = modalProps.images?.map(
     (imageObj: ImageObject) => imageObj.image
   );
 
-  const hasDiscount =
-    modalProps.discount_price && modalProps.discount_price < modalProps.price;
-  const finalPrice = hasDiscount ? modalProps.discount_price : modalProps.price;
-  const totalPriceOfItem = (+finalPrice * quantity).toFixed(2);
-  const totalOutOfDiscount = (+modalProps.price * quantity).toFixed(2);
+  const priceToDisplay = selectedVariant || modalProps;
+  const hasDiscount = priceToDisplay.discount_price;
 
+  const currentPrice = hasDiscount
+    ? Number(priceToDisplay.discount_price).toFixed(2)
+    : Number(priceToDisplay.price).toFixed(2);
+
+  const originalPrice = hasDiscount
+    ? Number(priceToDisplay.price).toFixed(2)
+    : null;
 
   return (
     <div
@@ -145,8 +173,7 @@ const ProductModal = () => {
                 <div>
                   {isAvailable ? (
                     <>
-                      <strong>{t("available")}:</strong>{" "}
-                      {modalProps.stock_quantity}
+                      <strong>{t("available")}:</strong> {displayStock}
                       {"    "}
                       {modalProps[`unit_${lang}`]} {"    "}
                       <strong>{t("inStock")}</strong>
@@ -187,19 +214,19 @@ const ProductModal = () => {
               )}
               <div className="flex items-center gap-3">
                 <span className="text-lg font-bold end-user-text-base">
-                  {finalPrice} {t("egp")}
+                  {currentPrice} {t("egp")}
                 </span>
                 {hasDiscount && (
                   <span className="line-through text-sm text-gray-500">
-                    {modalProps.price} {t("egp")}
+                    {originalPrice} {t("egp")}
                   </span>
                 )}
                 {hasDiscount && (
                   <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
                     {t("discountApplied")}{" "}
                     {Math.round(
-                      ((modalProps.price - modalProps.discount_price) /
-                        modalProps.price) *
+                      ((Number(originalPrice) - Number(currentPrice)) /
+                        Number(originalPrice)) *
                         100
                     )}
                     % {t("sale")}
@@ -207,6 +234,37 @@ const ProductModal = () => {
                 )}
               </div>
             </div>
+
+            {Array.isArray(modalProps.variants) &&
+              modalProps.variants.length > 0 && (
+                <div className="flex flex-col gap-4">
+                  <h3 className="font-semibold text-gray-700">
+                    {lang === "ar"
+                      ? "الاختيارات المتاحة"
+                      : "Available Variants"}
+                    :
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {modalProps.variants.map((variant, i) => (
+                      <button
+                        key={i}
+                        onClick={() => handleVariantSelect(variant)}
+                        className={`
+            px-4 py-2 rounded-lg border transition-colors duration-200
+            ${
+              selectedVariant?.id === variant.id
+                ? "bg-brand-600 text-white border-brand-600"
+                : "bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200"
+            }
+          `}
+                      >
+                        <span>{variant[`variant_name_${lang}`]}: </span>
+                        {variant[`variant_value_${lang}`]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
             <div className="flex gap-4 items-center">
               <span className="text-sm text-gray-600">{t("quantity")}:</span>
@@ -223,7 +281,7 @@ const ProductModal = () => {
                 onChange={(e) => {
                   const val = parseInt(e.target.value);
                   if (!isNaN(val) && val > 0) {
-                    setQuantity(Math.min(val, stockQuantity));
+                    setQuantity(Math.min(val, displayStock));
                   }
                 }}
                 className="w-12 text-center border border-gray-200 rounded"
@@ -231,14 +289,14 @@ const ProductModal = () => {
               <button
                 className="bg-gray-400 text-white px-2 py-1 rounded disabled:opacity-50"
                 onClick={() =>
-                  setQuantity((prev) => Math.min(prev + 1, stockQuantity))
+                  setQuantity((prev) => Math.min(prev + 1, displayStock))
                 }
-                disabled={quantity >= stockQuantity}
+                disabled={quantity >= displayStock}
               >
                 +
               </button>
             </div>
-            <div className="flex items-center gap-3">
+            {/* <div className="flex items-center gap-3">
               <span className="text-lg font-bold end-user-text-base">
                 {totalPriceOfItem} {t("egp")}
               </span>
@@ -247,7 +305,7 @@ const ProductModal = () => {
                   {totalOutOfDiscount} {t("egp")}
                 </span>
               )}
-            </div>
+            </div> */}
 
             <button
               onClick={() => handleAddToCart(modalProps)}

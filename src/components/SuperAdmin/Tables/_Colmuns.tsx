@@ -11,8 +11,10 @@ interface ColumnBuilderOptions<T extends BaseEntity> {
   includeName?: boolean;
   includeEmail?: boolean;
   includeTitle?: boolean;
+  includeArticleTitle?: boolean;
   includePosition?: boolean;
   includeIsActive?: boolean;
+  includeArticleIsActive?: boolean;
   includeBannerIsActive?: boolean;
   includeRoles?: boolean;
   includeRoleName?: boolean;
@@ -122,6 +124,12 @@ export const buildColumns = <T extends BaseEntity>(
       accessor: "title",
     });
   }
+  if (options.includeArticleTitle) {
+    columns.push({
+      Header: t("table.name"),
+      accessor: `title_${lang}`,
+    });
+  }
 
   if (options.includeName) {
     columns.push({
@@ -170,6 +178,17 @@ export const buildColumns = <T extends BaseEntity>(
       Cell: ({ row }: any) => (
         <TableStatus
           status={row.original.is_active === 1 ? "active" : "inactive"}
+        />
+      ),
+    });
+  }
+  if (options.includeArticleIsActive) {
+    columns.push({
+      Header: t("table.status"),
+      accessor: "active" as keyof T,
+      Cell: ({ row }: any) => (
+        <TableStatus
+          status={row.original.published === 1 ? "active" : "inactive"}
         />
       ),
     });

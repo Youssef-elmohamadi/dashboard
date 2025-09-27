@@ -23,12 +23,15 @@
     "upload_images": "رفع الصور",
     "attributes": "الصفات",
     "tags": "الهاشتاجز",
+    "variants": "الاصدارات",
     "add_attribute": "+ إضافة صفة",
     "add_tag": "+ إضافة هاشتاج",
+    "add_variant": "+ إضافة اصدار",
     "update_button": "تعديل المنتج",
     "updating_button": "جارٍ التعديل...",
     "delete_tag": "حذف الهاشتاج",
-    "delete_attribute": "حذف الصفة"
+    "delete_attribute": "حذف الصفة",
+    "delete_variant": "حذف الاصدار"
   },
   "placeholders": {
     "name_ar": "ادخل اسم المنتج بالعربية",
@@ -41,10 +44,17 @@
     "description_en": "ادخل وصف المنتج بالانجليزية",
     "tag_ar": "هاشتاج بالعربية",
     "tag_en": "هاشتاج بالانجليزية",
+    "variant_name_ar": "اسم الاصدار بالعربية",
+    "variant_name_en": "اسم الاصدار بالانجليزية",
+    "variant_value_ar": "قيمة الاصدار بالعربية",
+    "variant_discount_price": "سعر الخصم للاصدار",
+    "variant_value_en": "قيمة الاصدار بالانجليزية",
     "attribute_label_ar": "اسم الصفة بالعربية",
     "attribute_label_en": "اسم الصفة بالانجليزية",
     "attribute_value_ar": "قيمة الصفة بالعربية",
-    "attribute_value_en": "قيمة الصفة بالانجليزية"
+    "attribute_value_en": "قيمة الصفة بالانجليزية",
+    "variant_price": "سعر الاصدار",
+    "variant_stock": "كمية الاصدار"
   },
   "validation": {
     "name": "اسم المنتج مطلوب",

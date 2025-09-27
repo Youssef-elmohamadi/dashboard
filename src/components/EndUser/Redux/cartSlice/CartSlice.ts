@@ -9,6 +9,7 @@ const initialState: CartState = storedCart
 const saveToLocalStorage = (state: CartState): void => {
   localStorage.setItem("cart", JSON.stringify(state));
 };
+
 const calculateTotals = (items: CartItem[]) => {
   const totalQuantity = items.reduce((total, item) => total + item.quantity, 0);
   const totalPrice = items.reduce(
@@ -28,7 +29,10 @@ const cartSlice = createSlice({
       action: PayloadAction<{ item: CartItem; quantity: number }>
     ) => {
       const { item, quantity } = action.payload;
-      const existingItem = state.items.find((i) => i.id === item.id);
+
+      const existingItem = state.items.find(
+        (i) => i.id === item.id && i.variant_id === item.variant_id
+      );
 
       if (existingItem) {
         existingItem.quantity += quantity;
@@ -42,14 +46,22 @@ const cartSlice = createSlice({
       saveToLocalStorage(state);
     },
 
-    removeItem: (state, action: PayloadAction<string | number>) => {
-      const id = action.payload;
-      const existingItem = state.items.find((item) => item.id === id);
+    removeItem: (
+      state,
+      action: PayloadAction<{ id: string | number; variantId: string | number }>
+    ) => {
+      const { id, variantId } = action.payload;
+      const existingItem = state.items.find(
+        (item) => item.id === id && item.variant_id === variantId
+      );
 
       if (existingItem) {
         existingItem.quantity--;
         if (existingItem.quantity === 0) {
-          state.items = state.items.filter((item) => item.id !== id);
+          // ✅ هنا عدلت الشرط
+          state.items = state.items.filter(
+            (item) => !(item.id === id && item.variant_id === variantId)
+          );
         }
       }
 
@@ -59,11 +71,21 @@ const cartSlice = createSlice({
       saveToLocalStorage(state);
     },
 
-    deleteItem: (state, action: PayloadAction<string | number>) => {
-      const id = action.payload;
-      state.items = state.items.filter((item) => item.id !== id);
+    deleteItem: (
+      state,
+      action: PayloadAction<{
+        id: string | number;
+        variantId?: string | number;
+      }>
+    ) => {
+      const { id, variantId } = action.payload;
 
-      // إعادة حساب الإجمالي بعد حذف العنصر بالكامل
+      state.items = state.items.filter((item) =>
+        variantId
+          ? !(item.id === id && item.variant_id === variantId)
+          : item.id !== id
+      );
+
       const { totalQuantity, totalPrice } = calculateTotals(state.items);
       state.totalQuantity = totalQuantity;
       state.totalPrice = totalPrice;
@@ -80,10 +102,19 @@ const cartSlice = createSlice({
 
     updateQuantity: (
       state,
-      action: PayloadAction<{ id: string | number; quantity: number }>
+      action: PayloadAction<{
+        id: string | number;
+        variantId?: string | number;
+        quantity: number;
+      }>
     ) => {
-      const { id, quantity } = action.payload;
-      const existingItem = state.items.find((item) => item.id === id);
+      const { id, variantId, quantity } = action.payload;
+
+      const existingItem = state.items.find((item) =>
+        variantId
+          ? item.id === id && item.variant_id === variantId
+          : item.id === id
+      );
 
       if (existingItem) {
         existingItem.quantity = quantity;

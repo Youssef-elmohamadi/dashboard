@@ -26,9 +26,8 @@ export default function Footer() {
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [informationOpen, setInformationOpen] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
+  const [blogsOpen, setBlogsOpen] = useState(false);
   const [sellerAreaOpen, setSellerAreaOpen] = useState(false);
-  const navigate = useNavigate();
   const { t } = useTranslation(["EndUserFooter"]);
   const { data: categories } = useCategories();
   const { lang } = useDirectionAndLanguage();
@@ -245,12 +244,21 @@ export default function Footer() {
 
           {/* My Account */}
           <FooterSection
-            title={t("footer.my_account")}
-            isOpen={accountOpen}
-            setIsOpen={setAccountOpen}
+            title={t("footer.blogs")}
+            isOpen={blogsOpen}
+            setIsOpen={setBlogsOpen}
           >
             <ul className="text-sm space-y-1">
-              <li className="flex items-center gap-2">
+              <li>
+                <Link
+                  to={`/${lang}/blogs`}
+                  className="hover:text-red-400 flex items-center gap-2"
+                >
+                  <DocumentIcon className="text-red-400 w-4" />
+                  {t("footer.view_our_blogs")}
+                </Link>
+              </li>
+              {/* <li className="flex items-center gap-2">
                 <Order className="text-red-400 text-lg" />
                 <Link to={`/${lang}/u-orders`} className="hover:text-red-400">
                   {t("footer.order_history")}
@@ -267,7 +275,7 @@ export default function Footer() {
                 <Link to="/admin/signup" className="hover:text-red-400 ">
                   {t("footer.be_seller")}
                 </Link>
-              </li>
+              </li> */}
               {/* <li className="flex items-center gap-2">
                 <LogoutIcon className="text-red-400 w-4" />
                 <button

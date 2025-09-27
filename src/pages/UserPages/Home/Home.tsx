@@ -61,11 +61,11 @@ const Home = () => {
             "تشطيب شقق",
             "خدمات تشطيب",
             "تشطيبات مصر",
-            " تشطيبات",
-            " تجهيز المنزل",
-            " مواد بناء",
-            " أدوات صحية",
-            " إكسسوارات منزلية",
+            "تشطيبات",
+            "تجهيز المنزل",
+            "مواد بناء",
+            "أدوات صحية",
+            "إكسسوارات منزلية",
             "مستلزمات ديكورات",
           ],
           en: [
@@ -95,10 +95,28 @@ const Home = () => {
           { lang: "en", href: "https://tashtiba.com/en" },
           { lang: "x-default", href: "https://tashtiba.com/ar" },
         ]}
+        pageType="home"
         structuredData={{
-          "@type": "CollectionPage",
-          url: `https://tashtiba.com/${lang}`,
-          inLanguage: lang,
+          "@type": "Organization",
+          "@context": "https://schema.org",
+          name: "تشطيبة",
+          alternateName: "Tashtiba",
+          url: "https://tashtiba.com",
+          logo: "https://tashtiba.com/images/logo/ar-dark-logo.webp",
+          sameAs: [
+            "https://www.facebook.com/share/1aKRVrf8rZ/?mibextid=wwXIfr",
+            "https://www.instagram.com/tashtiba.eg/",
+            "https://www.tiktok.com/@tashtiba.eg",
+          ],
+          contactPoint: [
+            {
+              "@type": "ContactPoint",
+              telephone: "+20-155-740-8095",
+              contactType: "customer service",
+              areaServed: "EG",
+              availableLanguage: ["ar", "en"],
+            },
+          ],
         }}
         lang={lang as "ar" | "en"}
       />

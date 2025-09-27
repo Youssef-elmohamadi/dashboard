@@ -63,10 +63,25 @@ export default function EndUserSignUp() {
           { lang: "x-default", href: "https://tashtiba.com/ar/signup" },
         ]}
         structuredData={{
+          "@context": "https://schema.org",
           "@type": "WebPage",
           url: `https://tashtiba.com/${lang}/signup`,
           inLanguage: lang,
+          name:
+            lang === "ar"
+              ? "إنشاء حساب جديد على تشطيبة"
+              : "Create Account on Tashtiba",
+          description:
+            lang === "ar"
+              ? "سجل الآن على تشطيبة لتجربة تسوق مواد التشطيب في مصر"
+              : "Register now on Tashtiba to shop finishing materials in Egypt",
+          isPartOf: {
+            "@type": "WebSite",
+            name: lang === "ar" ? "تشطيبة" : "Tashtiba",
+            url: "https://tashtiba.com",
+          },
         }}
+        pageType="register"
         lang={lang as "ar" | "en"}
       />
 

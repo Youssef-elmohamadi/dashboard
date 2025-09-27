@@ -15,23 +15,31 @@ interface UseAllProductsProps {
   sort?: string;
   min?: number | string;
   max?: number | string;
+  brand_id?: number | string;
 }
 interface UseProductsByCategoryProps {
   category_id?: number | string;
   sort?: string;
   min?: number | string;
   max?: number | string;
+  brand_id?: number | string;
 }
 
-export const useAllProducts = ({ sort, min, max }: UseAllProductsProps) => {
+export const useAllProducts = ({
+  sort,
+  min,
+  max,
+  brand_id,
+}: UseAllProductsProps) => {
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
     useInfiniteQuery({
-      queryKey: ["endUserAllProducts", sort, min, max],
+      queryKey: ["endUserAllProducts", sort, min, max, brand_id],
       queryFn: async ({ pageParam = 1 }) => {
         const response = await getAllProducts({
           sort,
           min,
           max,
+          brand_id,
           page: pageParam,
         });
         return response.data.data;
@@ -62,10 +70,11 @@ export const useProductsByCategory = ({
   sort,
   min,
   max,
+  brand_id,
 }: UseProductsByCategoryProps) => {
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
     useInfiniteQuery({
-      queryKey: ["endUserProducts", category_id, sort, min, max],
+      queryKey: ["endUserProducts", category_id, sort, min, max, brand_id],
       queryFn: async ({ pageParam = 1 }) => {
         const response = await getProductCategoriesById({
           category_id,
@@ -73,6 +82,7 @@ export const useProductsByCategory = ({
           min,
           max,
           page: pageParam,
+          brand_id,
         });
 
         return response.data.data;

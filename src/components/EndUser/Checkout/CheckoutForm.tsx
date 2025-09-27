@@ -65,6 +65,8 @@ const CheckoutForm: React.FC = () => {
   });
 
   const items = useSelector((state: RootState) => state.cart.items);
+  console.log(items);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -140,6 +142,7 @@ const CheckoutForm: React.FC = () => {
     const updatedItems = items.map((item: Product) => ({
       product_id: item.id,
       quantity: item.quantity,
+      varient_id: item.variant_id,
     }));
 
     setCheckoutForm((prev) => {
@@ -169,7 +172,6 @@ const CheckoutForm: React.FC = () => {
       return newFormState;
     });
   }, [items, checkoutInfoSaved]);
-
 
   const handleChangeLocation = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

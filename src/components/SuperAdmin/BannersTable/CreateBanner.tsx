@@ -17,6 +17,7 @@ import { Category } from "../../../types/Categories";
 import SEO from "../../common/SEO/seo";
 import useCheckOnline from "../../../hooks/useCheckOnline";
 import { toast } from "react-toastify";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const CreateBanner = () => {
   const { t } = useTranslation(["CreateBanner", "Meta"]);
@@ -63,6 +64,7 @@ const CreateBanner = () => {
   } = useAllCategories();
 
   const categories = allCategories?.original || [];
+  console.log(categories);
 
   useEffect(() => {
     if (isErrorFetchingCategories && categoriesError instanceof AxiosError) {
@@ -192,6 +194,7 @@ const CreateBanner = () => {
       setIsSubmitting(false);
     }
   };
+  const { lang } = useDirectionAndLanguage();
 
   return (
     <div>
@@ -318,7 +321,7 @@ const CreateBanner = () => {
               <Select
                 options={categories?.map((cat: Category) => ({
                   value: cat.id.toString(),
-                  label: cat.name,
+                  label: cat[`name_${lang}`],
                 }))}
                 value={bannerData.link_id}
                 onChange={(value) =>
@@ -352,7 +355,7 @@ const CreateBanner = () => {
               }
               options={categories?.map((cat: Category) => ({
                 value: cat.id,
-                label: `Before ${cat.name}`,
+                label: `Before ${cat[`name_${lang}`]}`,
               }))}
               placeholder={t("banner.positionPlaceholder")}
             />

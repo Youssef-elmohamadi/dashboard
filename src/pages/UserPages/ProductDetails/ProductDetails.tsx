@@ -14,6 +14,7 @@ import {
 } from "../../../hooks/Api/EndUser/useProducts/useFavoriteProducts";
 import SEO from "../../../components/common/SEO/seo";
 import { Product } from "../../../types/Product";
+import LazyImage from "../../../components/common/LazyImage";
 
 type ProductParams = {
   id: string;
@@ -26,14 +27,12 @@ const ProductDetails: React.FC = () => {
   const numericId = Number(id);
   const { t } = useTranslation(["EndUserProductDetails"]);
   const { openModal } = useModal();
-
   const { data, isLoading: isProductLoading } = useGetProductById(numericId);
   const product: Product | undefined = data?.data?.data;
-
   const [selectedImage, setSelectedImage] = useState<string>("");
+  const [selectedVariant, setSelectedVariant] = useState<any | null>(null);
   const [is_fav, setIs_fav] = useState<boolean>(false);
   // const [quantity, setQuantity] = useState<number>(1);
-
   useEffect(() => {
     if (product?.images?.length) {
       setSelectedImage(product.images[0].image);
@@ -41,6 +40,9 @@ const ProductDetails: React.FC = () => {
     if (typeof product?.is_fav === "boolean") {
       setIs_fav(product.is_fav);
     }
+    // if (product?.variants?.length) {
+    //   setSelectedVariant(product.variants[0]);
+    // }
   }, [product]);
 
   const { mutateAsync: addToFavorite } = useAddFavorite();
@@ -82,6 +84,38 @@ const ProductDetails: React.FC = () => {
       </div>
     );
   }
+
+  const handleVariantSelect = (variant: any) => {
+    setSelectedVariant(variant);
+  };
+
+  const priceToDisplay = selectedVariant || product;
+  const hasDiscount = priceToDisplay.discount_price;
+
+  const currentPrice = hasDiscount
+    ? Number(priceToDisplay.discount_price).toFixed(2)
+    : Number(priceToDisplay.price).toFixed(2);
+
+  const originalPrice = hasDiscount
+    ? Number(priceToDisplay.price).toFixed(2)
+    : null;
+
+  const displayStock =
+    selectedVariant && selectedVariant.stock_quantity
+      ? selectedVariant.stock_quantity
+      : product.stock_quantity;
+
+  const productToOpenInModal = {
+    ...product,
+    variant_id: selectedVariant ? selectedVariant.id : null,
+    price: selectedVariant ? selectedVariant.price : product.price,
+    discount_price: selectedVariant
+      ? selectedVariant.discount_price
+      : product.discount_price,
+    stock_quantity: selectedVariant
+      ? selectedVariant.stock_quantity
+      : product.stock_quantity,
+  };
   const generateKeywords = () => {
     const baseKeywords =
       currentLang === "ar"
@@ -155,11 +189,11 @@ const ProductDetails: React.FC = () => {
         : "";
 
     if (currentLang === "ar") {
-      return `اكتشف ${productName} من تشطيبة (${categoryName} - ${brandName}) بسعر ${productPrice} ${currency}. ${
+      return `اشتري ${productName} من تشطيبة (${categoryName} - ${brandName}) بسعر ${productPrice} ${currency}. ${
         productDescription ? productDescription + " " : ""
       }${specs ? "المواصفات: " + specs + "." : ""}`;
     } else {
-      return `Discover ${productName} from Tashtiba (${categoryName} - ${brandName}) at ${productPrice} ${currency}. ${
+      return `Buy ${productName} from Tashtiba (${categoryName} - ${brandName}) at ${productPrice} ${currency}. ${
         productDescription ? productDescription + " " : ""
       }${specs ? "Specifications: " + specs + "." : ""}`;
     }
@@ -172,8 +206,8 @@ const ProductDetails: React.FC = () => {
         pageType="product"
         url={`https://tashtiba.com/${currentLang}/product/${product.id}`}
         title={{
-          ar: `${product[`name_${currentLang}`]} | سعر ومواصفات`,
-          en: `${product[`name_${currentLang}`]} | Price & Specs`,
+          ar: `${product[`name_${currentLang}`]} | افضل سعر في مصر`,
+          en: `${product[`name_${currentLang}`]} | Best Price in Egypt`,
         }}
         description={{
           ar: generateDescription(),
@@ -209,6 +243,7 @@ const ProductDetails: React.FC = () => {
               : product.images?.map((img) => img.image) || [],
           sku: product.id.toString(),
           mpn: product.slug,
+          inLanguage: currentLang,
           brand: {
             "@type": "Brand",
             name: product.brand?.[`name_${currentLang}`],
@@ -230,63 +265,74 @@ const ProductDetails: React.FC = () => {
               ratingCount: product.review.length,
             },
           }),
-          offers: {
-            "@type": "Offer",
-            url: `https://tashtiba.com/${currentLang}/product/${product.id}`,
-            priceCurrency: "EGP",
-            price: product.discount_price
-              ? product.discount_price.toFixed(2)
-              : product.price.toFixed(2),
-            availability:
-              product.stock_quantity && product.stock_quantity > 0
-                ? "https://schema.org/InStock"
-                : "https://schema.org/OutOfStock",
-            priceValidUntil: new Date(
-              new Date().setFullYear(new Date().getFullYear() + 1)
-            )
-              .toISOString()
-              .split("T")[0],
-            seller: {
-              "@type": "Organization",
-              name: product.vendor?.name || "Tashtiba",
-            },
-            shippingDetails: {
-              "@type": "OfferShippingDetails",
-              shippingRate: {
-                "@type": "MonetaryAmount",
-                value: 0.0,
-                currency: "EGP",
-              },
-              shippingDestination: {
-                "@type": "Country",
-                name: "Egypt",
-              },
-              deliveryTime: {
-                "@type": "ShippingDeliveryTime",
-                handlingTime: {
-                  "@type": "QuantitativeValue",
-                  minValue: 1,
-                  maxValue: 3,
-                  unitCode: "d",
+          offers:
+            Array.isArray(product.variants) && product.variants.length > 0
+              ? product.variants.map((variant) => ({
+                  "@type": "Offer",
+                  url: `https://tashtiba.com/${currentLang}/product/${product.id}`,
+                  name: `${product[`name_${currentLang}`]} - ${
+                    variant[`variant_name_${currentLang}`]
+                  } ${variant[`variant_value_${currentLang}`]}`,
+
+                  priceCurrency: "EGP",
+                  price: variant.discount_price
+                    ? Number(variant.discount_price).toFixed(2)
+                    : Number(variant.price).toFixed(2),
+                  availability:
+                    variant.stock_quantity && Number(variant.stock_quantity) > 0
+                      ? "https://schema.org/InStock"
+                      : "https://schema.org/OutOfStock",
+                  sku: `${product.id}-${variant.id}`,
+                  itemCondition: "https://schema.org/NewCondition",
+                  priceValidUntil: new Date(
+                    new Date().setFullYear(new Date().getFullYear() + 1)
+                  )
+                    .toISOString()
+                    .split("T")[0],
+                  seller: {
+                    "@type": "Organization",
+                    name: product.vendor?.name || "Tashtiba",
+                  },
+                  shippingDetails: {
+                    "@type": "OfferShippingDetails",
+                    shippingDestination: {
+                      "@type": "DefinedRegion",
+                      addressCountry: "EG",
+                      addressRegion: "Cairo",
+                    },
+                  },
+                }))
+              : {
+                  "@type": "Offer",
+                  url: `https://tashtiba.com/${currentLang}/product/${product.id}`,
+                  priceCurrency: "EGP",
+                  price: product.discount_price
+                    ? Number(product.discount_price).toFixed(2)
+                    : Number(product.price).toFixed(2),
+                  availability:
+                    product.stock_quantity && product.stock_quantity > 0
+                      ? "https://schema.org/InStock"
+                      : "https://schema.org/OutOfStock",
+                  sku: product.id.toString(),
+                  itemCondition: "https://schema.org/NewCondition",
+                  priceValidUntil: new Date(
+                    new Date().setFullYear(new Date().getFullYear() + 1)
+                  )
+                    .toISOString()
+                    .split("T")[0],
+                  seller: {
+                    "@type": "Organization",
+                    name: product.vendor?.name || "Tashtiba",
+                  },
+                  shippingDetails: {
+                    "@type": "OfferShippingDetails",
+                    shippingDestination: {
+                      "@type": "DefinedRegion",
+                      addressCountry: "EG",
+                      addressRegion: "Cairo",
+                    },
+                  },
                 },
-                transitTime: {
-                  "@type": "QuantitativeValue",
-                  minValue: 1,
-                  maxValue: 5,
-                  unitCode: "d",
-                },
-              },
-            },
-            hasMerchantReturnPolicy: {
-              "@type": "MerchantReturnPolicy",
-              applicableCountry: "EG",
-              returnPolicyCategory:
-                "https://schema.org/MerchantReturnFiniteReturnWindow",
-              merchantReturnDays: 14,
-              returnMethod: "https://schema.org/ReturnByMail",
-              returnFees: "https://schema.org/FreeReturn",
-            },
-          },
         }}
         structuredData={[
           {
@@ -335,14 +381,17 @@ const ProductDetails: React.FC = () => {
 
           <div className="mt-4 flex gap-3 flex-wrap">
             {product.images?.slice(0, product.images.length).map((img, i) => (
-              <img
-                key={i}
-                src={img.image}
-                onClick={() => setSelectedImage(img.image)}
-                className={`w-16 h-16 rounded-lg border border-gray-200 object-cover cursor-pointer transition-transform duration-150 hover:scale-105 ${
-                  selectedImage === img.image ? "ring-2 ring-brand-600" : ""
-                }`}
-              />
+              <div>
+                <LazyImage
+                  key={i}
+                  src={img.image}
+                  onClick={() => setSelectedImage(img.image)}
+                  className={`w-16 h-16 rounded-lg border border-gray-200 object-cover cursor-pointer transition-transform duration-150 hover:scale-105 ${
+                    selectedImage === img.image ? "ring-2 ring-brand-600" : ""
+                  }`}
+                  alt={product[`name_${currentLang}`]}
+                />
+              </div>
             ))}
           </div>
         </div>
@@ -351,7 +400,6 @@ const ProductDetails: React.FC = () => {
           <h1 className="text-3xl font-semibold text-gray-800">
             {product[`name_${currentLang}`]}
           </h1>
-
           <div className="flex items-center gap-2">
             <StarRatings
               rating={product.rate || 0}
@@ -365,30 +413,21 @@ const ProductDetails: React.FC = () => {
               ({product.review?.length || 0} {t("reviews")})
             </span>
           </div>
-
           {/* Description */}
           <p className="text-gray-600 leading-relaxed">
             {product[`description_${currentLang}`]}
           </p>
-
-          {/* Price */}
+          {/* Price */}     {" "}
           <div className="flex items-center gap-4 text-2xl font-semibold">
-            {product.discount_price ? (
-              <>
-                <span className="line-through text-gray-400">
-                  {Number(product.price).toFixed(2)} {t("egp")}
-                </span>
-                <span className="text-brand-600">
-                  {Number(product.discount_price).toFixed(2)} {t("egp")}
-                </span>
-              </>
-            ) : (
-              <span className="text-[#d62828]">
-                {Number(product.price).toFixed(2)} {t("egp")}
+            {originalPrice && (
+              <span className="line-through text-gray-400">
+                {originalPrice} {t("egp")}
               </span>
             )}
+            <span className={hasDiscount ? "text-brand-600" : "text-[#d62828]"}>
+              {currentPrice} {t("egp")}
+            </span>
           </div>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-600">
             {/* <div>
               <strong>{t("store")}:</strong> {product.vendor?.name || "-"}
@@ -406,9 +445,9 @@ const ProductDetails: React.FC = () => {
               <span>{product.brand?.[`name_${currentLang}`]}</span>
             </div>
             <div>
-              {product?.stock_quantity && Number(product.stock_quantity) > 0 ? (
+              {displayStock && Number(displayStock) > 0 ? (
                 <>
-                  <strong>{t("available")}:</strong> {product.stock_quantity}{" "}
+                  <strong>{t("available")}:</strong> {displayStock}{" "}
                   <strong>{t("inStock")}</strong>
                 </>
               ) : (
@@ -416,7 +455,6 @@ const ProductDetails: React.FC = () => {
               )}
             </div>
           </div>
-
           {/* Attributes */}
           {Array.isArray(product.attributes) &&
             product.attributes.length > 0 && (
@@ -434,7 +472,35 @@ const ProductDetails: React.FC = () => {
                 </ul>
               </div>
             )}
-
+          {Array.isArray(product.variants) && product.variants.length > 0 && (
+            <div className="flex flex-col gap-4">
+              <h3 className="font-semibold text-gray-700">
+                {currentLang === "ar"
+                  ? "الاختيارات المتاحة"
+                  : "Available Variants"}
+                :
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {product.variants.map((variant, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleVariantSelect(variant)}
+                    className={`
+            px-4 py-2 rounded-lg border transition-colors duration-200
+            ${
+              selectedVariant?.id === variant.id
+                ? "bg-brand-600 text-white border-brand-600"
+                : "bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200"
+            }
+          `}
+                  >
+                    <span>{variant[`variant_name_${currentLang}`]}: </span>
+                    {variant[`variant_value_${currentLang}`]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           {Array.isArray(product.tags) && product.tags.length > 0 && (
             <div className="flex gap-2 flex-wrap pt-2">
               {product.tags.map((tag, i) => (
@@ -447,11 +513,10 @@ const ProductDetails: React.FC = () => {
               ))}
             </div>
           )}
-
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-4">
             <div className="flex gap-3 mt-2 sm:mt-0">
               <button
-                onClick={() => openModal("product", product)}
+                onClick={() => openModal("product", productToOpenInModal)}
                 className="bg-[#d62828] text-white px-5 py-2 rounded-xl hover:bg-[#d62828]/90 transition"
               >
                 {t("addToCart")}

@@ -174,6 +174,33 @@ const ProductDetails: React.FC = () => {
             </p>
           </div>
         </section>
+
+        {(product?.variants?.length ?? 0) > 0 && (
+          <section className="bg-white p-6 rounded-xl dark:bg-gray-900">
+            <h2 className="text-xl font-semibold mb-4 text-indigo-700">
+              {t("ProductDetails:sections.variants")}
+            </h2>
+            <ul className="list-disc list-inside text-gray-700 dark:text-white">
+              {product?.variants?.map((variant) => (
+                <li key={variant.id}>
+                  <strong>{variant[`variant_name_${lang}`]}:</strong>{" "}
+                  {variant[`variant_value_${lang}`]} - {variant.price}{" "}
+                  {t("ProductDetails:egp")}
+                  {variant.discount_price && (
+                    <>
+                      {" "}
+                      ({t("ProductDetails:fields.discount_price")}:{" "}
+                      {variant.discount_price} {t("ProductDetails:egp")})
+                    </>
+                  )}
+                  - {t("ProductDetails:fields.stock_quantity")}:{" "}
+                  {variant.stock_quantity}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         {/* Section 5: Attributes */}
         {(product?.attributes?.length ?? 0) > 0 && (
           <section className="bg-white p-6 rounded-xl dark:bg-gray-900">

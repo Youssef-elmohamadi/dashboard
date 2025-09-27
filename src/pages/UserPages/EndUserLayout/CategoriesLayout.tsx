@@ -38,8 +38,24 @@ function CategoriesLayout() {
   const handlePriceChange = useCallback(
     ({ min, max }: PriceChangeParams) => {
       const newParams = new URLSearchParams(searchParams);
-      newParams.set("min", min);
-      newParams.set("max", max);
+
+      if (min == null && max == null) {
+        newParams.delete("min");
+        newParams.delete("max");
+      } else {
+        if (min != null) {
+          newParams.set("min", String(min));
+        } else {
+          newParams.delete("min");
+        }
+
+        if (max != null) {
+          newParams.set("max", String(max));
+        } else {
+          newParams.delete("max");
+        }
+      }
+
       setSearchParams(newParams);
     },
     [searchParams, setSearchParams]
@@ -107,11 +123,13 @@ function CategoriesLayout() {
       <main className="flex-1 p-6">
         <CategoryBreadCrump currentPage={currentPage} />
         <div>
-          <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-6">
-            <h2 className="md:text-lg font-bold">{currentPage}</h2>
+          <div className="flex items-center justify-between border-b border-gray-200 pb-4 my-6">
+            <h2 className="md:text-lg md:font-bold text-sm font-bold mx-1">
+              {currentPage}
+            </h2>
             <div className="flex items-center gap-4">
               <button
-                className="flex items-center 2xl:hidden gap-2 px-4 py-2 border border-gray-200 rounded hover:bg-gray-100 transition"
+                className="flex items-center 2xl:hidden gap-1 px-3 py-2 border border-gray-200 rounded hover:bg-gray-100 transition"
                 onClick={() => setIsFilterOpen((prev) => !prev)}
               >
                 <FilterIcon className="text-lg" />

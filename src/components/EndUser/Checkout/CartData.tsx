@@ -4,6 +4,7 @@ import { removeItem } from "../Redux/cartSlice/CartSlice";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../Redux/Store";
 import DeleteIcon from "../../../icons/DeleteIcon";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 
 const CartData: React.FC = () => {
   const { t } = useTranslation(["EndUserCheckout"]);
@@ -13,7 +14,7 @@ const CartData: React.FC = () => {
   const subtotal = useSelector((state: RootState) => state.cart.totalPrice);
   const dispatch = useDispatch();
   const finalPrice = subtotal - discount;
-
+  const {lang}=useDirectionAndLanguage();
   return (
     <div className="bg-white border border-gray-300 rounded-xl p-6 sticky top-4 w-full">
       <h3 className="text-2xl font-extrabold mb-6 text-gray-900 text-center tracking-wide">
@@ -34,12 +35,12 @@ const CartData: React.FC = () => {
               >
                 <img
                   src={item.images[0]?.image}
-                  alt={item.title || item.name}
+                  alt={item[`name_${lang}`]}
                   className="w-24 h-24 object-cover rounded-lg border border-gray-200 shadow-sm"
                 />
                 <div className="flex-1 min-w-0 flex flex-col gap-1">
                   <h4 className="font-semibold text-gray-900 text-base truncate">
-                    {item.name}
+                    {item[`name_${lang}`]}
                   </h4>
                   <p className="text-sm text-gray-500">
                     {t("cartData.quantity")}: {item.quantity}

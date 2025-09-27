@@ -22,6 +22,7 @@ import {
   Product,
   ServerError,
   TagInput,
+  Variant,
 } from "../../../types/Product";
 import useCheckOnline from "../../../hooks/useCheckOnline";
 import { toast } from "react-toastify";
@@ -54,6 +55,7 @@ const UpdateProductPage: React.FC = () => {
     created_at: "",
     updated_at: "",
     attributes: [],
+    variants: [],
     images: [],
     tags: [],
     review: [],
@@ -65,6 +67,7 @@ const UpdateProductPage: React.FC = () => {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [existingImages, setExistingImages] = useState<image[]>([]);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
+  const [variants, setVariants] = useState<Variant[] | undefined>([]);
   const [tags, setTags] = useState<TagInput[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -83,6 +86,7 @@ const UpdateProductPage: React.FC = () => {
     status: [],
     is_featured: [],
     images: [],
+    variants: [],
     attributes: [],
     tags: [],
     general: "",
@@ -124,6 +128,17 @@ const UpdateProductPage: React.FC = () => {
         attribute_name_en: attr.attribute_name_en,
         attribute_value_ar: attr.attribute_value_ar,
         attribute_value_en: attr.attribute_value_en,
+      }))
+    );
+    setVariants(
+      product.variants?.map((variant: Variant) => ({
+        name_ar: variant.variant_name_ar,
+        name_en: variant.variant_name_en,
+        value_ar: variant.variant_value_ar,
+        value_en: variant.variant_value_en,
+        stock_quantity: variant.stock_quantity,
+        price: variant.price,
+        discount_price: variant.discount_price,
       }))
     );
     setTags(
@@ -209,6 +224,15 @@ const UpdateProductPage: React.FC = () => {
     (updated[index] as any)[field] = value;
     setAttributes(updated);
   };
+  const handleVariantChange = (
+    index: number,
+    field: keyof Variant,
+    value: string
+  ) => {
+    const updated = [...(variants ?? [])] as Variant[];
+    (updated[index] as any)[field] = value;
+    setVariants(updated);
+  };
 
   const handleTagChange = (
     index: number,
@@ -225,6 +249,11 @@ const UpdateProductPage: React.FC = () => {
     updated.splice(index, 1);
     setAttributes(updated);
   };
+  const removeVariant = (index: number) => {
+    const updated = [...(variants ?? [])];
+    updated.splice(index, 1);
+    setVariants(updated);
+  };
   const removeTag = (index: number) => {
     const updated = [...tags];
     updated.splice(index, 1);
@@ -239,6 +268,19 @@ const UpdateProductPage: React.FC = () => {
         attribute_name_en: "",
         attribute_value_ar: "",
         attribute_value_en: "",
+      },
+    ]);
+  const addVariant = () =>
+    setVariants([
+      ...(variants ?? []),
+      {
+        name_ar: "",
+        name_en: "",
+        value_ar: "",
+        value_en: "",
+        price: null,
+        stock_quantity: null,
+        discount_price: null,
       },
     ]);
   const addTag = () => setTags([...tags, { name_ar: "", name_en: "" }]);
@@ -278,10 +320,10 @@ const UpdateProductPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // if (!validate()) {
-    //   setLoading(false);
-    //   return;
-    // }
+    if (validate()) {
+      setLoading(false);
+      return;
+    }
     setErrors({
       name_ar: [],
       name_en: [],
@@ -298,6 +340,7 @@ const UpdateProductPage: React.FC = () => {
       is_featured: [],
       images: [],
       attributes: [],
+      variants: [],
       tags: [],
       global: "",
       general: "",
@@ -317,6 +360,7 @@ const UpdateProductPage: React.FC = () => {
         key !== "images" &&
         key !== "tags" &&
         key !== "attributes" &&
+        key !== "variants" &&
         key !== "status" &&
         value !== null &&
         value !== undefined
@@ -334,6 +378,21 @@ const UpdateProductPage: React.FC = () => {
       formData.append(`attributes[${i}][value_ar]`, attr.attribute_value_ar);
       formData.append(`attributes[${i}][name_en]`, attr.attribute_name_en);
       formData.append(`attributes[${i}][value_en]`, attr.attribute_value_en);
+    });
+    variants?.forEach((variant, i) => {
+      formData.append(`variants[${i}][name_ar]`, variant.name_ar);
+      formData.append(`variants[${i}][value_ar]`, variant.value_ar);
+      formData.append(`variants[${i}][name_en]`, variant.name_en);
+      formData.append(`variants[${i}][value_en]`, variant.value_en);
+      formData.append(`variants[${i}][price]`, variant.price!.toString());
+      formData.append(
+        `variants[${i}][stock_quantity]`,
+        variant.stock_quantity!.toString()
+      );
+      formData.append(
+        `variants[${i}][discount_price]`,
+        variant.discount_price!.toString()
+      );
     });
     tags.forEach((tag, i) => {
       formData.append(`tags[${i}][name_ar]`, tag.name_ar);
@@ -589,11 +648,11 @@ const UpdateProductPage: React.FC = () => {
             )}
           </div>
           <div>
-            <Label htmlFor="unit_en">{t("CreateProduct:form.unit_en")}</Label>
+            <Label htmlFor="unit_en">{t("UpdateProduct:form.unit_en")}</Label>
             <Input
               name="unit_en"
               value={productData.unit_en}
-              placeholder={t("CreateProduct:placeholders.unit_en")}
+              placeholder={t("UpdateProduct:placeholders.unit_en")}
               onChange={handleChange}
               id="unit_en"
               ref={(el) => {
@@ -612,11 +671,11 @@ const UpdateProductPage: React.FC = () => {
             )}
           </div>
           <div>
-            <Label htmlFor="unit_ar">{t("CreateProduct:form.unit_ar")}</Label>
+            <Label htmlFor="unit_ar">{t("UpdateProduct:form.unit_ar")}</Label>
             <Input
               name="unit_ar"
               value={productData.unit_ar}
-              placeholder={t("CreateProduct:placeholders.unit_ar")}
+              placeholder={t("UpdateProduct:placeholders.unit_ar")}
               onChange={handleChange}
               id="unit_ar"
               ref={(el) => {
@@ -812,6 +871,88 @@ const UpdateProductPage: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+        <div>
+          <Label>{t("UpdateProduct:form.variants")}</Label>
+          {variants?.map((variant, index) => (
+            <div key={index} className="flex flex-col gap-2 mb-2">
+              <div className="flex gap-2">
+                <Input
+                  placeholder={t("UpdateProduct:placeholders.variant_name_ar")}
+                  value={variant.name_ar}
+                  onChange={(e) =>
+                    handleVariantChange(index, "name_ar", e.target.value)
+                  }
+                />
+                <Input
+                  placeholder={t("UpdateProduct:placeholders.variant_value_ar")}
+                  value={variant.value_ar}
+                  onChange={(e) =>
+                    handleVariantChange(index, "value_ar", e.target.value)
+                  }
+                />
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  placeholder={t("UpdateProduct:placeholders.variant_name_en")}
+                  value={variant.name_en}
+                  onChange={(e) =>
+                    handleVariantChange(index, "name_en", e.target.value)
+                  }
+                />
+                <Input
+                  placeholder={t("UpdateProduct:placeholders.variant_value_en")}
+                  value={variant.value_en}
+                  onChange={(e) =>
+                    handleVariantChange(index, "value_en", e.target.value)
+                  }
+                />
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  placeholder={t("UpdateProduct:placeholders.variant_price")}
+                  value={variant.price!}
+                  onChange={(e) =>
+                    handleVariantChange(index, "price", e.target.value)
+                  }
+                />
+                <Input
+                  placeholder={t(
+                    "UpdateProduct:placeholders.variant_discount_price"
+                  )}
+                  value={variant.discount_price!}
+                  onChange={(e) =>
+                    handleVariantChange(index, "discount_price", e.target.value)
+                  }
+                />
+                <Input
+                  placeholder={t("UpdateProduct:placeholders.variant_stock")}
+                  value={variant.stock_quantity!}
+                  onChange={(e) =>
+                    handleVariantChange(index, "stock_quantity", e.target.value)
+                  }
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => removeVariant(index)}
+                className="text-red-600 text-xl flex items-center gap-2"
+              >
+                <DeleteIcon className="text-red-600 text-xl" />
+                <span className="text-base">{t("form.delete_variant")}</span>
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addVariant}
+            className="text-brand-500 mt-1"
+          >
+            {t("UpdateProduct:form.add_variant")}
+          </button>
+          {errors.variants && errors.variants[0] && (
+            <p className="text-red-500 text-sm mt-1">{errors.variants[0]}</p>
+          )}
         </div>
         <div>
           <Label>{t("UpdateProduct:form.attributes")}</Label>

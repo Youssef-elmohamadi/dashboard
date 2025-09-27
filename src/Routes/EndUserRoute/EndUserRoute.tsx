@@ -12,6 +12,7 @@ const UserForgotPassword = lazy(
 import LazyPages from "./LazyPages";
 import ScrollToTop from "../../components/common/ScrollToTop";
 import LoadingPage from "../../components/ui/loading-screen";
+import LoadingPageEndUser from "../../components/ui/LoadingPageEndUser";
 const EndUserSignIn = lazy(
   () => import("../../pages/UserPages/AuthPages/EndUserSignin")
 );
@@ -40,7 +41,7 @@ const EndUserRoutes = () => {
             <Route
               path="*"
               element={
-                <Suspense fallback={null}>
+                <Suspense fallback={<LoadingPageEndUser />}>
                   <LazyPages />
                 </Suspense>
               }
@@ -58,7 +59,7 @@ const EndUserRoutes = () => {
           <Route
             path=":lang/signin"
             element={
-              <Suspense fallback={null}>
+              <Suspense fallback={<LoadingPageEndUser />}>
                 <EndUserSignIn />
               </Suspense>
             }
@@ -66,7 +67,7 @@ const EndUserRoutes = () => {
           <Route
             path=":lang/signup"
             element={
-              <Suspense fallback={null}>
+              <Suspense fallback={<LoadingPageEndUser />}>
                 <EndUserSignUp />
               </Suspense>
             }
@@ -75,7 +76,7 @@ const EndUserRoutes = () => {
           <Route
             path="/checkout"
             element={
-              <Suspense fallback={null}>
+              <Suspense fallback={<LoadingPageEndUser />}>
                 <Checkout />
               </Suspense>
             }

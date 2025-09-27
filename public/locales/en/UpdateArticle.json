@@ -1,0 +1,33 @@
+{
+  "title": "Update Article",
+  "loading": "Loading article...",
+  "notFound": "Article not found",
+  "form": {
+    "title_ar": "Title (Arabic)",
+    "title_en": "Title (English)",
+    "titlePlaceholder_ar": "Enter article title (Arabic)",
+    "titlePlaceholder_en": "Enter article title (English)",
+    "content_ar": "Content (Arabic)",
+    "content_en": "Content (English)",
+    "contentPlaceholder_ar": "Write content here (Arabic)...",
+    "contentPlaceholder_en": "Write content here (English)...",
+    "status": "Status",
+    "statusPlaceholder": "Select status",
+    "options": {
+      "published": "Published",
+      "draft": "Draft"
+    }
+  },
+  "submit": "Update Article",
+  "submitting": "Saving...",
+  "success": "Article updated successfully",
+  "errors": {
+    "global": "You don’t have permission to update this article",
+    "general": "An error occurred while updating. Please try again.",
+    "title_ar": "Article title is required",
+    "title_en": "Article title is required",
+    "content_ar": "Content is required",
+    "content_en": "Content is required",
+    "status": "Status is required"
+  }
+}

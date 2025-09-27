@@ -5,6 +5,7 @@ import { FilterSidebarProps } from "../../../types/Shop";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { CloseIcon } from "../../../icons";
 import ArrowDown from "../../../icons/ArrowDown";
+import BrandFilter from "./BrandFilter";
 
 const FilterSidebar: React.FC<FilterSidebarProps> = ({
   isMenuOpen,
@@ -85,7 +86,11 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               </ul>
             )}
           </div>
-          <PriceRangeFilter setValuesProp={handlePriceChange} />
+          <PriceRangeFilter
+            // setIsMenuOpen={closeMenu}
+            setValuesProp={handlePriceChange}
+          />
+          <BrandFilter setIsMenuOpen={closeMenu} isMenuOpen={isMenuOpen} />
         </div>
       </div>
     </>

@@ -1,0 +1,26 @@
+{
+  "article": {
+    "title": "Article Details",
+    "basicInfo": "Basic Info",
+    "contentHeading": "Content",
+    "authorHeading": "Author",
+    "timestamps": "Timestamps",
+    "fields": {
+      "title": "Title",
+      "published": "Published",
+      "slug": "Slug",
+      "author": "Author"
+    },
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "unknown": "Unknown",
+    "errors": {
+      "global": "You don't have permission to view this content",
+      "general": "Something went wrong"
+    }
+  },
+  "yes": "Yes",
+  "no": "No",
+  "visitLink": "Visit link",
+  "notAvailable": "Not available"
+}

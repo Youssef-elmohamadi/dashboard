@@ -14,6 +14,9 @@
     "vendor_order": "Vendor Order"
   },
   "fields": {
+     "variant_name": "Variant",
+    "variant_value": "Value",
+    "variant_price": "Variant Price",
     "order_id": "Order ID",
     "status": "Status",
     "total": "Total",

@@ -220,22 +220,21 @@ const Cart: React.FC = () => {
                 <div className="flex gap-4 items-center">
                   <img
                     src={item?.images?.[0]?.image || "/placeholder.jpg"}
-                    alt={item.name}
+                    alt={item[`name_${lang}`]}
                     className="w-20 h-20 object-cover rounded"
                   />
                   <div>
                     <Link to={`/${lang}/product/${item.id}`}>
                       <h3 className="text-sm font-semibold text-gray-800">
-                        {item.name}
+                        {item[`name_${lang}`]}
                       </h3>
                     </Link>
                     <div className="text-sm text-gray-500">
                       {/* {t("tax_label", {
                         amount: item.tax?.toFixed(2) || "0.00",
                       })} */}
-                      {item?.description}
+                      {item?.[`description_${lang}`]}
                     </div>
-                    {/* عرض السعر مع الخصم (إن وجد) */}
                     <div className="text-sm flex gap-1.5 font-bold text-gray-800">
                       {item.discount_price ? (
                         <>
@@ -303,7 +302,9 @@ const Cart: React.FC = () => {
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
-                      dispatch(removeItem(item.id));
+                      dispatch(
+                        removeItem({ id: item.id, variantId: item.variant_id })
+                      );
                     }}
                   >
                     <DeleteIcon className="text-error-500 text-xl" />

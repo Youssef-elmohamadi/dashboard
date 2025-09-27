@@ -202,6 +202,23 @@ const OrderDetails: React.FC = () => {
                       <strong>{t("fields.description")}:</strong>{" "}
                       {item.product[`description_${lang}`]}
                     </p>
+                    {item.varient && (
+                      <>
+                        <p>
+                          <strong>{t("fields.variant_name")}:</strong>{" "}
+                          {item.varient[`variant_name_${lang}`]}
+                        </p>
+                        <p>
+                          <strong>{t("fields.variant_value")}:</strong>{" "}
+                          {item.varient[`variant_value_${lang}`]}
+                        </p>
+                        <p>
+                          <strong>{t("fields.variant_price")}:</strong>{" "}
+                          {item.varient.discount_price || item.varient.price}{" "}
+                          {t("egp")}
+                        </p>
+                      </>
+                    )}
                     <p>
                       <strong>{t("fields.price")}:</strong> {item.price}{" "}
                       {t("egp")}

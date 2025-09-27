@@ -4,12 +4,23 @@ import { getHome } from "../../../../api/EndUserApi/HomeApi/_requests";
 import { getProductCategories } from "../../../../api/EndUserApi/ensUserProducts/_requests";
 import { CategoryWithProductsType, HomeDataType } from "../../../../types/Home";
 import { Category } from "../../../../types/Categories";
+import { getAllBrands } from "../../../../api/EndUserApi/endUserBrands/requests";
 
 export const useCategories = () => {
   return useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: async () => {
       const res = await getAllCategories();
+      return res.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+};
+export const useBrands = () => {
+  return useQuery<Category[]>({
+    queryKey: ["brands"],
+    queryFn: async () => {
+      const res = await getAllBrands();
       return res.data.data;
     },
     staleTime: 1000 * 60 * 5,

@@ -5,11 +5,14 @@
   "mainTitleCategory": "Tashtiba | Discover the Best {{categoryName}} Products Online | Great Deals & Trusted Quality",
   "categoryDescription": "Enjoy a unique shopping experience with our curated collection of {{categoryName}} products. High quality, affordable prices, and fast delivery—all in one place.",
   "categories": "Categories",
+  "brands": "Brands",
+  "allBrands": "All Brands",
   "allCategories": "All Categories",
   "showMore": "Show More",
   "priceFilter": {
     "egp": "EGP",
-    "title": "Price Filter"
+    "title": "Price Filter",
+    "all": "All Products"
   },
   "breadcrumbCategory": {
     "home": "Home"
@@ -21,7 +24,7 @@
   },
   "mainContent": {
     "filter": "Filter",
-    "noDataForCategory": "No products for this category",
+    "noDataForCategory": "No products for this Filter",
     "loadingMore": "Loading More..."
   }
 }

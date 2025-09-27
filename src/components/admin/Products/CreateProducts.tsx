@@ -17,6 +17,7 @@ import {
   ClientErrors,
   productInputData,
   ServerError,
+  Variant,
 } from "../../../types/Product";
 import { AxiosError } from "axios";
 import DeleteIcon from "../../../icons/DeleteIcon";
@@ -30,6 +31,7 @@ export default function CreateProducts() {
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
+  const [variants, setVariants] = useState<Variant[]>([]);
   const [tags, setTags] = useState<{ ar: string[]; en: string[] }>({
     ar: [],
     en: [],
@@ -50,6 +52,7 @@ export default function CreateProducts() {
     discount_price: [],
     images: [],
     attributes: [],
+    variants: [],
     tags: [],
     general: "",
     global: "",
@@ -168,11 +171,25 @@ export default function CreateProducts() {
     (updated[index] as any)[field] = value;
     setAttributes(updated);
   };
+  const handleVariantChange = (
+    index: number,
+    field: keyof Variant,
+    value: string
+  ) => {
+    const updated = [...variants] as Variant[];
+    (updated[index] as any)[field] = value;
+    setVariants(updated);
+  };
 
   const removeAttribute = (index: number) => {
     const updated = [...attributes];
     updated.splice(index, 1);
     setAttributes(updated);
+  };
+  const removeVariant = (index: number) => {
+    const updated = [...variants];
+    updated.splice(index, 1);
+    setVariants(updated);
   };
 
   const handleTagChange = (lang: "ar" | "en", index: number, value: string) => {
@@ -273,6 +290,21 @@ export default function CreateProducts() {
       formData.append(`attributes[${i}][value_ar]`, attr.attribute_value_ar);
       formData.append(`attributes[${i}][name_en]`, attr.attribute_name_en);
       formData.append(`attributes[${i}][value_en]`, attr.attribute_value_en);
+    });
+    variants.forEach((variant, i) => {
+      formData.append(`variants[${i}][name_ar]`, variant.name_ar);
+      formData.append(`variants[${i}][name_en]`, variant.name_en);
+      formData.append(`variants[${i}][value_ar]`, variant.value_ar);
+      formData.append(`variants[${i}][value_en]`, variant.value_en);
+      formData.append(`variants[${i}][price]`, variant.price!.toString());
+      formData.append(
+        `variants[${i}][discount_price]`,
+        variant.discount_price!.toString()
+      );
+      formData.append(
+        `variants[${i}][stock_quantity]`,
+        variant.stock_quantity!.toString()
+      );
     });
     tags.ar.forEach((tagAr, index) => {
       if (tagAr.trim() !== "" || tags.en[index]?.trim() !== "") {
@@ -698,6 +730,117 @@ export default function CreateProducts() {
                 </p>
               )}
             </div>
+          </div>
+          <div>
+            <Label>{t("CreateProduct:form.variants")}</Label>
+            {variants.map((variant, index) => (
+              <div key={index} className="flex flex-col gap-2 mb-2">
+                <div className="flex gap-2">
+                  <Input
+                    placeholder={t(
+                      "CreateProduct:placeholders.variant_label_ar"
+                    )}
+                    value={variant.name_ar}
+                    onChange={(e) =>
+                      handleVariantChange(index, "name_ar", e.target.value)
+                    }
+                  />
+                  <Input
+                    placeholder={t(
+                      "CreateProduct:placeholders.variant_value_ar"
+                    )}
+                    value={variant.value_ar}
+                    onChange={(e) =>
+                      handleVariantChange(index, "value_ar", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder={t(
+                      "CreateProduct:placeholders.variant_label_en"
+                    )}
+                    value={variant.name_en}
+                    onChange={(e) =>
+                      handleVariantChange(index, "name_en", e.target.value)
+                    }
+                  />
+                  <Input
+                    placeholder={t(
+                      "CreateProduct:placeholders.variant_value_en"
+                    )}
+                    value={variant.value_en}
+                    onChange={(e) =>
+                      handleVariantChange(index, "value_en", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder={t("CreateProduct:placeholders.variant_price")}
+                    value={variant.price!}
+                    onChange={(e) =>
+                      handleVariantChange(index, "price", e.target.value)
+                    }
+                    type="number"
+                  />
+                  <Input
+                    placeholder={t(
+                      "CreateProduct:placeholders.variant_discount_price"
+                    )}
+                    value={variant.discount_price!}
+                    onChange={(e) =>
+                      handleVariantChange(
+                        index,
+                        "discount_price",
+                        e.target.value
+                      )
+                    }
+                    type="number"
+                  />
+                  <Input
+                    placeholder={t("CreateProduct:placeholders.variant_stock")}
+                    value={variant.stock_quantity!}
+                    onChange={(e) =>
+                      handleVariantChange(
+                        index,
+                        "stock_quantity",
+                        e.target.value
+                      )
+                    }
+                    type="number"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeVariant(index)}
+                  className="text-red-600 text-xl flex items-center gap-2"
+                >
+                  <DeleteIcon className="text-red-600 text-xl" />
+                  <span className="text-base">{t("form.delete_variant")}</span>
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() =>
+                setVariants([
+                  ...variants,
+                  {
+                    name_ar: "",
+                    value_ar: "",
+                    name_en: "",
+                    value_en: "",
+                    stock_quantity: null,
+                    discount_price: null,
+                    price: null,
+                  },
+                ])
+              }
+              className="text-brand-500 mt-1"
+            >
+              {t("CreateProduct:form.add_variant")}
+            </button>
           </div>
           <div>
             <Label>{t("CreateProduct:form.attributes")}</Label>

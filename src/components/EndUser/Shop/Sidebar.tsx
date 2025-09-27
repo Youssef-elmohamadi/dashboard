@@ -5,6 +5,7 @@ import { SidebarShopProps } from "../../../types/Shop";
 import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import ArrowDown from "../../../icons/ArrowDown";
 import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
+import BrandFilter from "./BrandFilter";
 
 const Sidebar = ({
   setCurrentPage,
@@ -73,6 +74,7 @@ const Sidebar = ({
         )}
       </div>
       <PriceRangeFilter setValuesProp={handlePriceChange} />
+      <BrandFilter />
     </aside>
   );
 };

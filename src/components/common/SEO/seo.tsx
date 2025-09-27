@@ -13,6 +13,7 @@ type SEOProps = {
   structuredData?: Record<string, any>;
   pageType?:
     | "product"
+    | "allProducts"
     | "category"
     | "categories"
     | "home"
@@ -22,7 +23,8 @@ type SEOProps = {
     | "support"
     | "login"
     | "register"
-    | "default";
+    | "default"
+    | "blog";
   productData?: Record<string, any>;
   itemList?: { name: string; url: string }[];
 };
@@ -101,12 +103,33 @@ const SEO = ({
       };
       break;
 
+    case "allProducts":
+      autoStructuredData = {
+        "@context": "https://schema.org",
+        "@type": "SearchResultsPage",
+        name: pageTitle,
+        description: pageDescription,
+        url: pageUrl,
+        inLanguage: currentLang,
+        ...(itemList?.length && {
+          mainEntity: itemList.slice(0, 6).map((item, idx) => ({
+            "@type": "Product",
+            name: item.name,
+            url: item.url,
+            position: idx + 1,
+          })),
+        }),
+      };
+      break;
+
     case "category":
       autoStructuredData = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
         name: pageTitle,
         description: pageDescription,
+        url: pageUrl,
+        inLanguage: currentLang,
         ...(itemList?.length && {
           mainEntity: {
             "@type": "ItemList",
@@ -118,15 +141,6 @@ const SEO = ({
             })),
           },
         }),
-      };
-      break;
-
-    case "categories":
-      autoStructuredData = {
-        "@context": "https://schema.org",
-        "@type": "CollectionPage",
-        name: isArabic ? "كل الأقسام" : "All Categories",
-        description: pageDescription,
       };
       break;
 
@@ -143,28 +157,83 @@ const SEO = ({
     case "privacy":
       autoStructuredData = {
         "@type": "PrivacyPolicy",
-        "@context": "https://schema.org",
+        inLanguage: currentLang,
+        url: pageUrl,
+        name: pageTitle,
+        description: pageDescription,
+        publisher: {
+          "@type": "Organization",
+          name: siteName,
+          url: "https://tashtiba.com",
+          logo: {
+            "@type": "ImageObject",
+            url: "https://tashtiba.com/favicon.png",
+          },
+        },
       };
       break;
 
     case "terms":
       autoStructuredData = {
         "@type": "TermsOfService",
-        "@context": "https://schema.org",
+        inLanguage: currentLang,
+        url: pageUrl,
+        name: pageTitle,
+        description: pageDescription,
+        publisher: {
+          "@type": "Organization",
+          name: siteName,
+          url: "https://tashtiba.com",
+          logo: {
+            "@type": "ImageObject",
+            url: "https://tashtiba.com/favicon.png",
+          },
+        },
       };
       break;
 
     case "return":
       autoStructuredData = {
         "@type": "RefundPolicy",
-        "@context": "https://schema.org",
+        inLanguage: currentLang,
+        url: pageUrl,
+        name: pageTitle,
+        description: pageDescription,
+        publisher: {
+          "@type": "Organization",
+          name: siteName,
+          url: "https://tashtiba.com",
+          logo: {
+            "@type": "ImageObject",
+            url: "https://tashtiba.com/favicon.png",
+          },
+        },
       };
       break;
 
     case "support":
       autoStructuredData = {
         "@type": "ContactPage",
-        "@context": "https://schema.org",
+        inLanguage: currentLang,
+        url: pageUrl,
+        name: pageTitle,
+        description: pageDescription,
+        publisher: {
+          "@type": "Organization",
+          name: siteName,
+          url: "https://tashtiba.com",
+          logo: {
+            "@type": "ImageObject",
+            url: "https://tashtiba.com/favicon.png",
+          },
+        },
+        contactPoint: {
+          "@type": "ContactPoint",
+          telephone: "+201557408095",
+          contactType: "customer service",
+          areaServed: "EG",
+          availableLanguage: ["en", "ar"],
+        },
       };
       break;
 
@@ -173,6 +242,35 @@ const SEO = ({
       autoStructuredData = {
         "@type": "WebPage",
         "@context": "https://schema.org",
+      };
+      break;
+
+    case "blog":
+      autoStructuredData = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: pageTitle,
+        description: pageDescription,
+        image: pageImage,
+        inLanguage: currentLang,
+        author: {
+          "@type": "Person",
+          name: productData?.authorName || "Tashtiba Team",
+        },
+        datePublished: productData?.datePublished,
+        dateModified: productData?.dateModified || productData?.datePublished,
+        mainEntityOfPage: {
+          "@type": "WebPage",
+          "@id": pageUrl,
+        },
+        publisher: {
+          "@type": "Organization",
+          name: siteName,
+          logo: {
+            "@type": "ImageObject",
+            url: "https://tashtiba.com/favicon.png",
+          },
+        },
       };
       break;
 

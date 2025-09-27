@@ -11,6 +11,7 @@ const AllProducts = () => {
   const sort = searchParams.get("sort") || "";
   const min = searchParams.get("min") || "";
   const max = searchParams.get("max") || "";
+  const brand_id = searchParams.get("brand_id") || "";
   const { t } = useTranslation(["EndUserShop"]);
 
   const {
@@ -24,9 +25,9 @@ const AllProducts = () => {
     sort: sort,
     min: min,
     max: max,
+    brand_id: brand_id,
   });
   const { lang } = useParams();
-
 
   const productKeywords = products
     .slice(0, 8)
@@ -41,7 +42,7 @@ const AllProducts = () => {
           en: "All Finishing Products - Ceramic, Paints, Sanitary Ware & More",
         }}
         description={{
-          ar: "تصفح مجموعة ضخمة من منتجات التشطيب بأفضل الأسعار في مصر. خلاطات، تكييفات، دهانات، أبواب، أدوات صحية والمزيد. اطلب الآن من تشطيبة.",
+          ar: "تصفح مجموعة ضخمة من منتجات ومواد التشطيب بأفضل الأسعار في مصر. خلاطات، تكييفات، دهانات، أبواب، أدوات صحية والمزيد. اطلب الآن من تشطيبة.",
           en: "Browse a huge range of finishing products at the best prices in Egypt. Mixers, air conditioners, paints, doors, sanitary ware & more. Shop now at Tashtiba.",
         }}
         keywords={{
@@ -56,6 +57,7 @@ const AllProducts = () => {
             "أبواب",
             "مطابخ",
             "بلاط الأرضيات",
+            "تكييفات",
             ...productKeywords.split(", ").slice(0, 5),
           ],
           en: [
@@ -69,6 +71,7 @@ const AllProducts = () => {
             "kitchens",
             "floor tiles",
             "apartment finishing",
+            "air conditioners",
             ...productKeywords.split(", ").slice(0, 5),
           ],
         }}
@@ -79,12 +82,12 @@ const AllProducts = () => {
           { lang: "x-default", href: "https://tashtiba.com/ar/category" },
         ]}
         image="https://tashtiba.com/og-image.png"
-        structuredData={{
-          "@type": "WebPage",
-          url: `https://tashtiba.com/${lang}/category`,
-          inLanguage: lang,
-        }}
+        pageType="allProducts"
         lang={lang as "ar" | "en"}
+        itemList={products.slice(0, 6).map((p, idx) => ({
+          name: p[`name_${lang}`],
+          url: `https://tashtiba.com/${lang}/product/${p.id}`,
+        }))}
       />
 
       {isError ? (

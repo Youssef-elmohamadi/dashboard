@@ -74,52 +74,26 @@ const ReturnPolicyPage: React.FC = () => {
     <div className="min-h-screen">
       <SEO
         title={{
-          ar: `سياسة الاسترجاع والاستبدال`,
-          en: `Return & Exchange Policy`,
+          ar: "سياسة الاسترجاع والاستبدال",
+          en: "Return & Exchange Policy",
         }}
         description={{
-          ar: `تعرّف على سياسة الاسترجاع والاستبدال لمنتجات تشطيبة في مصر. نقدم دليلاً واضحاً لعملية الإرجاع، شروط القبول، والاستثناءات لضمان تجربة تسوق سلسة.`,
-          en: `Understand Tashtiba's return and exchange policy for products in Egypt. We provide clear guidelines on the return process, eligibility conditions, and exceptions for a smooth shopping experience.`,
+          ar: "تعرّف على سياسة الاسترجاع والاستبدال لمنتجات تشطيبة في مصر...",
+          en: "Understand Tashtiba's return and exchange policy...",
         }}
         keywords={{
-          ar: [
-            "تشطيبة",
-            "سياسة الاسترجاع",
-            "استبدال المنتجات",
-            "إرجاع الطلبات",
-            "شروط الإرجاع",
-            "استثناءات الاسترجاع",
-            "عملية الاسترجاع",
-            "مصر",
-            "خدمة العملاء",
-            "تسوق",
-          ],
-          en: [
-            "tashtiba",
-            "return policy",
-            "exchange policy",
-            "product returns",
-            "return conditions",
-            "return exceptions",
-            "return process",
-            "Egypt",
-            "customer service",
-            "shopping",
-          ],
+          ar: ["تشطيبة", "سياسة الاسترجاع", "استبدال المنتجات", "مصر"],
+          en: ["tashtiba", "return policy", "exchange policy", "Egypt"],
         }}
         alternates={[
-          { lang: "ar", href: "https://tashtiba.com/ar/return-policy" },
-          { lang: "en", href: "https://tashtiba.com/en/return-policy" },
-          { lang: "x-default", href: "https://tashtiba.com/ar/return-policy" },
+          { lang: "ar", href: "https://tashtiba.com/ar/return" },
+          { lang: "en", href: "https://tashtiba.com/en/return" },
+          { lang: "x-default", href: "https://tashtiba.com/ar/return" },
         ]}
-        url={`https://tashtiba.com/${lang}/return-policy`}
+        url={`https://tashtiba.com/${lang}/return`}
         image="https://tashtiba.com/og-image.png"
-        structuredData={{
-          "@type": "WebPage",
-          url: `https://tashtiba.com/${lang}/return-policy`,
-          inLanguage: lang,
-        }}
         lang={lang as "ar" | "en"}
+        pageType="return"
       />
 
       <div className="max-w-4xl mx-auto py-20 px-4 sm:px-6 lg:px-8">

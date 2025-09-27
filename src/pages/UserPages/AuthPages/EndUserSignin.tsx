@@ -20,12 +20,12 @@ export default function EndUserSignIn() {
     <>
       <SEO
         title={{
-          ar: "تسجيل الدخول - حسابك على تشطيبة | تسوق أثاث، ديكورات، سباكة، إضاءات والمزيد",
-          en: "Login - Your Tashtiba Account | Shop Furniture, Plumbing, Lighting & More",
+          ar: "تسجيل الدخول - حسابك على تشطيبة | متابعة الطلبات والمفضلة",
+          en: "Login - Your Tashtiba Account | Track Orders & Favorites",
         }}
         description={{
-          ar: "سجّل الدخول إلى حسابك في تشطيبة للوصول إلى جميع منتجات التشطيب: أثاث منزلي، أبواب، إضاءات، تشطيبات وسباكة، خلاطات، ديكورات وغيرها. تتبع طلباتك واحفظ منتجاتك المفضلة بكل سهولة.",
-          en: "Log in to your Tashtiba account to access all finishing categories including furniture, doors, lighting, plumbing fixtures, mixers, decorations, and more. Track your orders and manage your favorites easily.",
+          ar: "سجّل الدخول إلى حسابك في تشطيبة للوصول إلى جميع منتجات التشطيب وتتبع طلباتك وحفظ المفضلة بسهولة.",
+          en: "Log in to your Tashtiba account to access all finishing categories, track your orders, and manage favorites easily.",
         }}
         keywords={{
           ar: [
@@ -64,12 +64,33 @@ export default function EndUserSignIn() {
           { lang: "en", href: "https://tashtiba.com/en/signin" },
           { lang: "x-default", href: "https://tashtiba.com/ar/signin" },
         ]}
-        structuredData={{
-          "@type": "WebPage",
-          url: `https://tashtiba.com/${lang}/signin`,
-          inLanguage: lang,
-        }}
+        pageType="login"
         lang={lang as "ar" | "en"}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          url: "https://tashtiba.com/",
+          name: {
+            ar: "تشطيبة",
+            en: "Tashtiba",
+          },
+          inLanguage: lang,
+          alternateName: ["Tashtiba", "تشطيبة"],
+          sameAs: ["https://tashtiba.com/ar", "https://tashtiba.com/en"],
+          publisher: {
+            "@type": "Organization",
+            name: {
+              ar: "تشطيبة",
+              en: "Tashtiba",
+            },
+            logo: {
+              "@type": "ImageObject",
+              url: "https://tashtiba.com/images/logo/ar-dark-logo.webp",
+              width: 200,
+              height: 60,
+            },
+          },
+        }}
       />
 
       <AuthLayout userType="end_user">

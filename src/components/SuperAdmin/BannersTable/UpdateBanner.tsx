@@ -23,6 +23,7 @@ import PageStatusHandler, {
 } from "../../common/PageStatusHandler/PageStatusHandler";
 import { toast } from "react-toastify";
 import useCheckOnline from "../../../hooks/useCheckOnline";
+import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 const UpdateBanner = () => {
   const { id } = useParams();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -68,6 +69,8 @@ const UpdateBanner = () => {
   const { data, isError, error, isLoading } = useGetBannerById(id);
 
   const banner = data;
+
+  const { lang } = useDirectionAndLanguage();
 
   useEffect(() => {
     if (!banner) return;
@@ -375,7 +378,7 @@ const UpdateBanner = () => {
               <Select
                 options={categories?.map((cat: Category) => ({
                   value: cat.id,
-                  label: cat.name,
+                  label: cat[`name_${lang}`],
                 }))}
                 value={bannerData.link_id}
                 onChange={(value) =>
@@ -404,7 +407,7 @@ const UpdateBanner = () => {
               }
               options={categories?.map((cat: Category) => ({
                 value: cat.id,
-                label: `Before ${cat.name}`,
+                label: `Before ${cat[`name_${lang}`]}`,
               }))}
               placeholder={t("banner.positionPlaceholder")}
             />

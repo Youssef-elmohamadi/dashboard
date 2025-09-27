@@ -147,6 +147,11 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       path: "/super_admin/banners",
     },
     {
+      icon: <Banners />,
+      name: t("articlesManagement"),
+      path: "/super_admin/articles",
+    },
+    {
       icon: <UserCircleIcon />,
       name: t("User Profile"),
       path: "/super_admin/profile",
