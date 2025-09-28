@@ -6,6 +6,8 @@ import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { CloseIcon } from "../../../icons";
 import ArrowDown from "../../../icons/ArrowDown";
 import BrandFilter from "./BrandFilter";
+import PriceRangeMobileFilter from "./PriceRangeMobile";
+import { memo } from "react";
 
 const FilterSidebar: React.FC<FilterSidebarProps> = ({
   isMenuOpen,
@@ -86,8 +88,9 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               </ul>
             )}
           </div>
-          <PriceRangeFilter
-            // setIsMenuOpen={closeMenu}
+          <PriceRangeMobileFilter
+            setIsMenuOpen={closeMenu}
+            isMenuOpen={isMenuOpen}
             setValuesProp={handlePriceChange}
           />
           <BrandFilter setIsMenuOpen={closeMenu} isMenuOpen={isMenuOpen} />
@@ -97,4 +100,4 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   );
 };
 
-export default FilterSidebar;
+export default memo(FilterSidebar);
