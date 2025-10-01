@@ -1,3 +1,3 @@
-import {ReactComponent as Group} from "./Group.svg?react";
+import {ReactComponent as Group} from "./group.svg?react";
 
 export default Group;

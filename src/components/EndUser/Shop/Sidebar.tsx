@@ -73,8 +73,8 @@ const Sidebar = ({
           </>
         )}
       </div>
-      <PriceRangeFilter setValuesProp={handlePriceChange} />
       <BrandFilter />
+      <PriceRangeFilter setValuesProp={handlePriceChange} />
     </aside>
   );
 };

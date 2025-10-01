@@ -1,4 +1,3 @@
-import PriceRangeFilter from "../Shop/PriceRangeFilter";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FilterSidebarProps } from "../../../types/Shop";
@@ -88,12 +87,12 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               </ul>
             )}
           </div>
+          <BrandFilter setIsMenuOpen={closeMenu} isMenuOpen={isMenuOpen} />
           <PriceRangeMobileFilter
             setIsMenuOpen={closeMenu}
             isMenuOpen={isMenuOpen}
             setValuesProp={handlePriceChange}
           />
-          <BrandFilter setIsMenuOpen={closeMenu} isMenuOpen={isMenuOpen} />
         </div>
       </div>
     </>
