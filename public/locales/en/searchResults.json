@@ -1,0 +1,14 @@
+{
+  "searchResultsTitle": "Search Results",
+  "categoriesFound": "Categories",
+  "productsFound": "Products",
+  "currency": "EGP",
+  "addToCart": "Add to Cart",
+  "noResultsFound": "No results found matching your search.",
+  "generalError": "An error occurred while fetching search results. Please try again.",
+  "addToFavorites": "Add to Favorites",
+  "removeFromFavorites": "Remove from Favorites",
+  "loadingResults": "Loading results...",
+  "errorFetchingResults": "Error fetching results. Please try again later.",
+  "search_placeholder": "Search for products, categories"
+}

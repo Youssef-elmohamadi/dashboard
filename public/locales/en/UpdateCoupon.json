@@ -1,0 +1,59 @@
+{
+  "coupon": {
+    "mainTitle": "Update Coupon",
+    "editCoupon": "Edit Coupon",
+    "loading": "Loading coupon details...",
+    "code": "Code",
+    "type": "Type",
+    "value": "Value",
+    "maxDiscount": "Max Discount",
+    "minOrderAmount": "Min Order Amount",
+    "usageLimit": "Usage Limit",
+    "status": "Status",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "fixed": "Fixed",
+    "percent": "Percent",
+    "active": "Active",
+    "inactive": "Inactive",
+    "placeholders": {
+      "code": "Coupon Code",
+      "value": "Value (e.g. 50 or 10%)",
+      "max_discount": "Maximum Discount (optional)",
+      "min_order_amount": "Minimum Order Amount",
+      "usage_limit": "Usage Limit",
+      "select_type": "Select type",
+      "select_status": "Select status"
+    },
+    "types": {
+      "fixed": "Fixed",
+      "percent": "Percent"
+    },
+    "statusOptions": {
+      "1": "Active",
+      "0": "Inactive"
+    },
+    "errors": {
+      "code": "Coupon code is required.",
+      "value": "Value is required.",
+      "code_exists": "Coupon code already exists.",
+      "min_order_amount": "Minimum order amount is required.",
+      "usage_limit": "Usage limit is required.",
+      "start_at": "Start date is required.",
+      "expires_at": {
+        "required": "End date is required.",
+        "invalid": "End date must be after start date."
+      },
+      "type": "Type is required.",
+      "status": "Status is required.",
+      "general": "Something went wrong, please try again.",
+      "global": "You are not authorized to perform this action.",
+      "no_internet": "No internet connection. Please check your connection and try again."
+    },
+    "success": "Coupon updated successfully.",
+    "button": {
+      "submit": "Update Coupon",
+      "submitting": "Updating Coupon..."
+    }
+  }
+}

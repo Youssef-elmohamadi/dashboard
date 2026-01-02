@@ -1,0 +1,39 @@
+{
+  "ordersPage": {
+    "title": "الطلبات",
+    "all": "كل الطلبات",
+    "mainTitle": "تشطيبة | الطلبات",
+    "statuses": {
+      "pending": "قيد الانتظار",
+      "paid": "مدفوع",
+      "shipped": "تم الشحن",
+      "delivered": "تم التوصيل",
+      "canceled": "ملغي"
+    },
+    "cancel": {
+      "confirmTitle": "إلغاء الطلب؟",
+      "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
+      "confirmButtonText": "نعم، إلغاء",
+      "cancelButtonText": "الغاء",
+      "successTitle": "تم الإلغاء!",
+      "successText": "تم إلغاء الطلب.",
+      "errorTitle": "خطاء",
+      "errorText": "تعذر إلغاء الطلب.",
+      "lastButton": "خروج"
+    },
+    "ship": {
+      "title": "أدخل تفاصيل الشحن",
+      "tracking_placeholder": "رقم التتبع",
+      "delivery_date_label": "تاريخ التسليم المتوقع",
+      "confirm_button": "تأكيد الشحن",
+      "estimated_label": "تاريخ التوصيل المتوقع",
+      "fill_all_fields": "يرجى ملء جميع الحقول",
+      "date_error": "تاريخ التسليم يجب أن يكون اليوم أو بعده",
+      "success_message": "تم إرسال معلومات الشحن بنجاح!",
+      "error_message": "فشل في إرسال معلومات الشحن"
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات الطلبات"
+    }
+  }
+}

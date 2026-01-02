@@ -1,0 +1,41 @@
+{
+  "brandsPage": {
+    "title": "العلامات التجارية",
+    "addNew": "إضافة علامة تجارية جديدة",
+    "mainTitle": "تشطيبة | العلامات التجارية",
+    "all": "كل العلامات التجارية",
+    "createdSuccessTitle": "تم الانشاء",
+    "createdSuccessMessage": "تم انشاء العلامة التجارية بنجاح",
+    "updatedSuccessTitle": "تم التحديث",
+    "updatedSuccessMessage": "تم تحديث العلامة التجارية بنجاح",
+    "delete": {
+      "confirmTitle": "حذف العلامة التجارية؟",
+      "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
+      "confirmButtonText": "نعم، احذف",
+      "cancelButtonText": "الغاء",
+      "successTitle": "تم الحذف!",
+      "successText": "تم حذف العلامة التجارية.",
+      "errorTitle": "خطأ",
+      "errorText": "لا يمكن حذف العلامة التجارية.",
+      "lastButton": "حسنا"
+    },
+    "changeStatus": {
+      "title": "تغيير الحالة",
+      "inputPlaceholder": "اختر الحالة",
+      "errorSelect": "يجب اختيار الحالة",
+      "success": "تم تحديث الحالة بنجاح: {{status}}",
+      "noChangeMessage": "لم يتم إجراء أي تغيير",
+      "errorResponse": "تعذر تحديث الحالة",
+      "confirmButtonText": "تأكيد",
+      "cancelButtonText": "إلغاء"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات العلامات التجارية"
+    }
+  }
+}

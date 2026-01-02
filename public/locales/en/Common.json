@@ -1,0 +1,141 @@
+{
+    "AboutSection": {
+    "heading": "Everything You Need to Finish Your Dream Home – All in One Place!",
+    "description": "Welcome to Tashtiba, your first destination for high-quality and affordable home finishing and furnishing solutions. We offer a complete range of products including doors (wood and metal), lighting (indoor and outdoor), home furniture (modern and classic), decorations, faucets and sanitary ware, plumbing installation and finishing, as well as electrical tools, tiles, ceramics, and other essential building materials.\n\nAt Tashtiba, we ensure the latest designs and premium quality materials, with fast delivery across Full coverage across Cairo and Giza and expert support to help you choose the right products for your needs. Whether you’re starting from scratch or renovating your home, you’ll find everything you need in one place.",
+    "alt": "Tashtiba | Modern and Elegant Living Room",
+    "features": {
+      "quality": {
+        "title": "Unparalleled quality",
+        "description": "We select the best suppliers and products to ensure the highest quality standards in every piece."
+      },
+      "price": {
+        "title": "Affordable prices",
+        "description": "We offer competitive prices that don't compromise on quality or style."
+      },
+      "delivery": {
+        "title": "Fast and reliable delivery",
+        "description": "We prioritize speed and reliability to ensure your home finishes are delivered on time and in perfect condition."
+      }
+    },
+    "Politics": {
+      "heading": "Information you need",
+      "description": "Everything you need to know about our policies.",
+      "terms": {
+        "title": "Terms and Conditions"
+      },
+      "privacy": {
+        "title": "Privacy Policy"
+      },
+      "support": {
+        "title": "Customer Support"
+      },
+      "refund": {
+        "title": "Refund Policy"
+      }
+    }
+  },
+  "BottomNav": {
+    "home": "Home",
+    "shop": "Shop",
+    "cart": "Cart",
+    "notifications": "Notifications",
+    "profile": "Profile"
+  },
+  "Buttons": {
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "login_to_enjoy": "Login for a better shopping experience",
+    "add_to_cart": "Add to Cart",
+    "add_to_favorites": "Add to Favorites",
+    "remove_from_favorites": "Remove from Favorites",
+    "subscribe": "Subscribe",
+    "continueShopping": "Continue Shopping",
+    "checkout": "Proceed to Checkout",
+          "shopNow": "Shop Now",
+      "learnMore": "Learn More"
+  },
+    "navbar": {
+    "categories": "All Categories",
+    "noCategoryFound": "No Category Found",
+    "viewAll": "Shop All",
+    "comingSoon": "New Items Coming Soon",
+    "yourCart": "Your Cart",
+    "qty": "Qty",
+    "cartIsEmpty": "Cart is empty",
+    "total": "Total",
+    "goToShoppingCart": "Go To Shopping Cart",
+    "items": "{{count}} Items",
+    "priceWithCurrency": "{{price}} EGP",
+    "clearCart": "Clear Cart"
+  },
+  "Header": {
+    "menu": "Main Menu",
+    "welcome": "Welcome,",
+    "categories": "Main Categories",
+    "my_account": "My Account",
+    "profile": "Profile",
+    "orders_history": "Order History",
+    "favorite_products": "Favorites",
+    "notifications": "Notifications"
+  },
+  "Search": {
+    "title": "Search Results",
+    "categoriesFound": "Categories",
+    "productsFound": "Products",
+    "currency": "EGP",
+    "placeholder": "Search for products, categories",
+    "loading": "Loading results...",
+    "noResults": "No results found for your search.",
+    "generalError": "An error occurred while fetching search results. Please try again.",
+    "errorFetching": "An error occurred while fetching results. Please try again later."
+  },
+  "TopBar": {
+    "contact_number": "Direct Contact Number",
+    "language": {
+      "arabic": "Arabic",
+      "english": "English"
+    }
+  },
+  "currency": {
+    "egp": "EGP"
+  },
+  "Footer": {
+    "tagline": "Your ideal partner in the world of finishing",
+    "newsletter": {
+      "title": "Stay Updated",
+      "description": "Subscribe to receive hot offers and product launches.",
+      "placeholder": "Enter your email"
+    },
+    "follow_us": "Follow Us",
+    "download_app": "Download App",
+    "quick_links": "Quick Links",
+    "contact": {
+            "title":"Contact US",
+      "location": "Egypt - Cairo"
+    },
+    "account": {
+      "my_account": "My Account",
+      "order_history": "Order History",
+      "favorite_list": "Wishlist",
+      "be_seller": "Become a Seller"
+    },
+    "blogs": {
+      "title": "Blogs",
+      "view": "View our blogs"
+    },
+    "seller_zone": {
+      "title": "Seller Zone",
+      "join": "Join Seller Portal"
+    },
+    "rights_reserved": "© 2025 TASHTIBA — All Rights Reserved."
+  },
+  "Policies": {
+    "heading": "Important Information",
+    "description": "All the links you need to learn about our policies.",
+    "terms": "Terms and Conditions",
+    "privacy": "Privacy Policy",
+    "support": "Customer Support",
+    "refund": "Refund Policy"
+  }
+}

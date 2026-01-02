@@ -1,0 +1,100 @@
+{
+  "mainTitle": "Tashtiba | Order History",
+  "pageTitle": "my Orders",
+  "pageSubtitle": "Review all details of your orders and the products included.",
+  "loading": "Loading order...",
+  "no_id": "No Order ID provided.",
+  "not_found": "Order not found.",
+  "global_error": "Something went wrong. Please try again.",
+  "orderDetails": {
+    "title": "Order Summary",
+    "subtitle": "Review all details of your order and the products included.",
+    "orderSummary": "Order Summary",
+    "shippingAddress": "Shipping Address",
+    "orderId": "Order ID",
+    "orderDate": "Order Date",
+    "paymentMethod": "Payment Method",
+    "wallet": "Wallet",
+    "cod": "Cash on Delivery",
+    "paymentStatus": "Payment Status",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
+    "status": "Order Status",
+    "fullName": "Full Name",
+    "phone": "Phone Number",
+    "address": "Address",
+    "landmark": "Landmark",
+    "apartment": "Apartment Details",
+    "floor": "Floor",
+    "apt": "Apartment",
+    "vendor": "Vendor",
+    "productName": "Product Name",
+    "quantity": "Quantity",
+    "price": "Price",
+    "total": "Total",
+    "actions": "Actions",
+    "rateProduct": "Rate Product",
+    "subtotal": "Subtotal",
+    "commission": "Commission",
+    "orderTotal": "Order Total",
+    "reviewSubmitted": "Your review has been submitted!",
+    "loading": "Loading order details...",
+    "payNow": "Pay Now",
+    "egp": "EGP",
+    "ratePlaceholder": "Your review here...",
+    "titleRate": "Rate Product",
+    "rateError": "Please rate the product.",
+    "confirmText": "Rate Product",
+    "cancelText": "Cancel",
+    "shipping_price":"Shipping Price"
+  },
+  "statuses": {
+    "pending": "Pending",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "cancelled": "Canceled",
+    "paid": "Paid",
+    "unpaid": "Unpaid"
+  },
+  "common": {
+    "success": "Success",
+    "error": "Error",
+    "somethingWentWrong": "Something went wrong. Please try again."
+  },
+  "ordersTable": {
+    "title": "Order History",
+    "loadingText": "Loading order history...",
+    "noOrders": "No orders found.",
+    "columns": {
+      "id": "Order ID",
+      "orderStatus": "Order Status",
+      "total": "Total Amount",
+      "actions": "Actions",
+      "date": "Order Date",
+      "shippingStatus": "Shipping Status",
+      "paidStatus": "Payment Status"
+    }
+  },
+  "cancelAlert": {
+    "cancelTitle": "Cancel Order?",
+    "successTitle": "Canceled!",
+    "successText": "Order has been canceled.",
+    "errorTitle": "Error",
+    "errorText": "Could not cancel the order.",
+    "cancelButtonText": "Cancel",
+    "confirmButtonText": "Yes, Cancel",
+    "cancelText": "Are you sure you want to cancel this order? This action cannot be undone."
+  },
+  "tableActions": {
+    "view": "View",
+    "cancel": "Cancel"
+  },
+  "pagination": {
+    "showing": "Showing",
+    "to": "to",
+    "of": "of",
+    "entries": "Entries",
+    "previous": "Previous",
+    "next": "Next"
+  }
+}

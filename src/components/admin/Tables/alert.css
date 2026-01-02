@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ترفع الـ container كله */
+.swal2-container {
+  z-index: 99999 !important;
+}
+
+/*alert delete Dashboard*/
+.custom-popup {
+  @apply bg-white text-gray-800 dark:bg-gray-800 dark:text-white rounded-lg shadow-lg;
+}
+
+.swal2-confirm {
+  @apply bg-red-700 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded;
+}
+
+.swal2-cancel {
+  @apply bg-gray-500 hover:bg-gray-400 text-white font-semibold py-2 px-4 rounded ml-2;
+}
+
+/* ترفع الـ popup نفسه
+  .custom-popup {
+    z-index: 99999 !important;
+  }
+  
+  /* الـ backdrop لازم يكون تحته */
+/* .swal2-backdrop {
+    z-index: 99999 !important;
+  } */

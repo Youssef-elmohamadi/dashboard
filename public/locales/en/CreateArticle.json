@@ -1,0 +1,38 @@
+{
+  "article": {
+    "title": "Create New Article",
+    "fields": {
+      "title_ar": "Title (Arabic)",
+      "title_en": "Title (English)",
+      "content_ar": "Content (Arabic)",
+      "content_en": "Content (English)",
+      "published": "Status",
+      "image": "Article Image (optional)"
+    },
+    "placeholders": {
+      "title_ar": "Enter title (Arabic)",
+      "title_en": "Enter title (English)",
+      "content_ar": "Enter content (Arabic)",
+      "content_en": "Enter content (English)",
+      "published": "Select status"
+    },
+    "options": {
+      "published": "Published",
+      "unpublished": "Draft"
+    },
+    "errors": {
+      "title_ar": "Title is required (Arabic)",
+      "title_en": "Title is required (English)",
+      "content_ar": "Content is required (Arabic)",
+      "content_en": "Content is required (English)",
+      "published": "Please select publish status",
+      "image": "Invalid image",
+      "no_internet": "No internet connection",
+      "global": "You don’t have permission to perform this action",
+      "general": "Something went wrong"
+    },
+    "success": "Article created successfully",
+    "submit": "Submit",
+    "submitting": "Submitting..."
+  }
+}

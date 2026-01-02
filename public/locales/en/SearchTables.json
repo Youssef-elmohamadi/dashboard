@@ -1,0 +1,22 @@
+{
+  "searchTable": {
+    "title": "Search",
+    "all": "All",
+    "placeholder": "Enter {{field}}",
+    "fields": {
+      "Name": "Name",
+      "Email": "Email",
+      "Phone": "Phone",
+      "Status": "Status",
+      "Category": "Category",
+      "Brand": "Brand",
+      "Tracking Number": "Tracking Number",
+      "Shipping Status": "Shipping Status",
+      "From": "From",
+      "To": "To",
+      "All": "All",
+      "Code": "Code",
+      "Type": "Type"
+    }
+  }
+}

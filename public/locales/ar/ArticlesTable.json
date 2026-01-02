@@ -1,0 +1,23 @@
+{
+  "articlesPage": {
+    "title": "المقالات",
+    "all": "كل المقالات",
+    "addNew": "إضافة مقالة جديدة",
+    "createdSuccess": "تم الانشاء بنجاح",
+    "updatedSuccess": "تم التحديث بنجاح",
+    "delete": {
+      "confirmTitle": "حذف المقالة؟",
+      "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
+      "confirmButtonText": "نعم، حذف",
+      "cancelButtonText": "الغاء",
+      "successTitle": "تم الحذف!",
+      "successText": "تم حذف المقالة بنجاح.",
+      "errorTitle": "خطأ",
+      "errorText": "تعذر حذف المقالة.",
+      "lastButton": "حسنا"
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات المقالات..."
+    }
+  }
+}

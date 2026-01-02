@@ -1,0 +1,35 @@
+{
+  "terms": {
+    "pageTitle": "Our Foundation",
+    "pageSubtitle": "Clear terms for a great and trusted experience on \"Tashtiba\"",
+    "intro": {
+      "title": "Introduction",
+      "content": "Welcome to \"Tashtiba\". By using this site, you agree to these terms which form the basis of a clear and trustworthy relationship."
+    },
+    "definitions": {
+      "title": "Definitions",
+      "platform": "\"Tashtiba\"",
+      "platformDesc": "Refers to our website and platform.",
+      "user": "\"User\"",
+      "userDesc": "Any person who visits or uses the site's services.",
+      "supplier": "\"Supplier\"",
+      "supplierDesc": "Any party showcasing its products on the platform."
+    },
+    "usage": {
+      "title": "Website Usage",
+      "content": "Please use the website for lawful purposes only, and avoid posting illegal or harmful content."
+    },
+    "accounts": {
+      "title": "Accounts",
+      "content": "You are responsible for keeping your account information confidential. We reserve the right to suspend any account violating our terms to ensure everyone's safety."
+    },
+    "products": {
+      "title": "Information & Products",
+      "content": "We strive for accuracy, but prices or specifications may change. We are not liable for unintended errors in product descriptions."
+    },
+    "copyright": {
+      "title": "Copyrights",
+      "content": "All content on this site is owned by \"Tashtiba\". Copying or using any part of it without prior written permission is strictly prohibited."
+    }
+  }
+}

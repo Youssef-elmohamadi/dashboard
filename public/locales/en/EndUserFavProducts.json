@@ -1,0 +1,11 @@
+{
+  "pageTitle": "My WishList",
+  "pageSubtitle": "Here you can see the products you have added to your WishList.",
+  "mainContent": {
+    "fetchError": "An error occurred while loading the products. Try again later.",
+    "emptyWishlist": "There are no products in your WishList.",
+    "removeFromWishlist": "Remove from WishList",
+    "loadingMore": "Loading More..."
+  },
+  "showMore": "Show More"
+}

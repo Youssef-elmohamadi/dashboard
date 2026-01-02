@@ -1,0 +1,23 @@
+{
+  "support": {
+    "title": "We Are Here for You",
+    "subtitle": "Clear support policy to ensure the best service and help you every step of the way.",
+    "channels": {
+      "title": "Contact Channels",
+      "description": "Support is available through:",
+      "chat": "Live chat on the website.",
+      "email": "Email:",
+      "phone": "Phone:",
+      "phoneNote": "(Will be announced soon)"
+    },
+    "hours": {
+      "title": "Working Hours",
+      "description": "Our team is available daily from 10 AM to 6 PM, except on Fridays."
+    },
+    "response": {
+      "title": "Response Time",
+      "first": "We commit to responding to all inquiries within a maximum of 24 hours.",
+      "second": "We prioritize issues and inquiries related to ongoing orders to ensure no delays."
+    }
+  }
+}

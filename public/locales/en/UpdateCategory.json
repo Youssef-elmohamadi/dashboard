@@ -1,0 +1,36 @@
+{
+  "category": {
+    "title": "Update Category",
+    "mainTitle": "Update Category",
+    "name_ar": "Arabic Name",
+    "name_en": "English Name",
+    "icon": "Category Icon (Optional)",
+    "iconPlaceholder": "Enter category icon (SVG code)",
+    "description_ar": "Arabic Description",
+    "description_en": "English Description",
+    "commission": "Commission Rate %",
+    "commissionPlaceholder": "Enter commission rate (0 - 100)",
+    "namePlaceholder_ar": "Enter Arabic Category Name",
+    "descPlaceholder_ar": "Enter Arabic Description",
+    "descPlaceholder_en": "Enter English Description",
+    "namePlaceholder_en": "Enter English Category Name",
+    "parent": "Parent Category (Optional)",
+    "selectParent": "Select parent category",
+    "image": "Category Image",
+    "submit": "Update Category",
+    "submitting": "Updating...",
+    "loading": "Loading category...",
+    "errors": {
+      "name": "Name is required",
+      "nameTaken": "The name is already in use",
+      "description": "Description is required",
+      "commissionRequired": "Commission rate is required",
+      "commissionMax": "Commission rate cannot exceed 100",
+      "parent": "Parent category is invalid",
+      "global": "You are not authorized to perform this action.",
+      "general": "Something went wrong. Please try again later.",
+      "fetching_categories": "Failed to fetch categories. Please try again later."
+    },
+    "success": "Category Updated Successfully"
+  }
+}

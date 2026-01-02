@@ -1,0 +1,8 @@
+{
+  "brandImage": {
+    "click_to_upload": "Click to upload",
+    "or_drag_drop": "or drag and drop",
+    "allowed_formats": "PNG or JPG (MAX. 800x400px)",
+    "remove": "Remove"
+  }
+}

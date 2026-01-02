@@ -1,0 +1,41 @@
+{
+  "brandsPage": {
+    "title": "Brands",
+    "addNew": "Add New Brand",
+    "mainTitle": "Tashtiba | Brands",
+    "all": "All Brands",
+    "createdSuccessTitle": "Created Successfully",
+    "createdSuccessMessage": "Brand Created Successfully",
+    "updatedSuccessTitle": "Updated Successfully",
+    "updatedSuccessMessage": "Brand Updated Successfully",
+    "delete": {
+      "confirmTitle": "Delete Brand?",
+      "confirmText": "This action cannot be undone!",
+      "confirmButtonText": "Yes, delete",
+      "cancelButtonText": "Cancel",
+      "successTitle": "Brand Deleted!",
+      "successText": "Brand has been deleted.",
+      "errorTitle": "Error",
+      "errorText": "Could not delete the Brand.",
+      "lastButton": "OK"
+    },
+    "changeStatus": {
+      "title": "Change Status",
+      "inputPlaceholder": "Select Status",
+      "errorSelect": "Please select a status",
+      "success": "Status Changed Successfully: {{status}}",
+      "noChangeMessage": "No changes were made",
+      "errorResponse": "Failed to change status",
+      "confirmButtonText": "Confirm",
+      "cancelButtonText": "Cancel"
+    },
+    "status": {
+      "pending": "Pending",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "table": {
+      "loadingText": "Brands data Loading"
+    }
+  }
+}

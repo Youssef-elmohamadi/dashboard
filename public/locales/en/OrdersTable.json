@@ -1,0 +1,39 @@
+{
+  "ordersPage": {
+    "title": "Orders",
+    "all": "All Orders",
+    "mainTitle": "Tashtiba | Orders",
+    "statuses": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "canceled": "Canceled"
+    },
+    "cancel": {
+      "confirmTitle": "Cancel Order?",
+      "confirmText": "This action cannot be undone!",
+      "confirmButtonText": "Yes, Cancel",
+      "cancelButtonText": "Cancel",
+      "successTitle": "Order Cancelled!",
+      "successText": "Order has been Cancelled.",
+      "errorTitle": "Error",
+      "errorText": "Could not Cancel The Order.",
+      "lastButton": "Ok Close"
+    },
+    "ship": {
+      "title": "Enter Shipping Details",
+      "tracking_placeholder": "Tracking Number",
+      "delivery_date_label": "Expected Delivery Date",
+      "confirm_button": "Confirm Shipping",
+      "estimated_label": "Estimated Delivery Date",
+      "fill_all_fields": "Please fill all fields",
+      "date_error": "Expected Delivery Date should be today or later",
+      "success_message": "Shipping Details Sent Successfully!",
+      "error_message": "Failed to Send Shipping Details"
+    },
+    "table": {
+      "loadingText": "Orders data Loading"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "navbar": {
+    "categories": "جميع الفئات",
+    "noCategoryFound": "لا توجد فئات",
+    "navbar.viewAll": "تسوق الكل",
+    "comingSoon": "أصناف جديدة قريباً",
+    "yourCart": "سلة المشتريات",
+    "qty": "الكمية",
+    "cartIsEmpty": "السلة فارغة",
+    "total": "الإجمالي",
+    "goToShoppingCart": "اذهب إلى سلة الشراء",
+    "items": "{{count}} عنصر",
+    "priceWithCurrency": "{{price}} جنيه",
+    "clearCart": "حذف السلة"
+  }
+}

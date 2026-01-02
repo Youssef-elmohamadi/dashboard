@@ -1,0 +1,44 @@
+{
+  "productsPage": {
+    "title": "Products",
+    "addNew": "Add New Product",
+    "all": "All Products",
+    "mainTitle": "Tashtiba | Manage Products",
+    "createdSuccessTitle": "Created Successfully",
+    "createdSuccessMessage": "Product Created Successfully",
+    "updatedSuccessTitle": "Updated Successfully",
+    "updatedSuccessMessage": "Product Updated Successfully",
+
+    "delete": {
+      "confirmTitle": "Delete Product?",
+      "confirmText": "This action cannot be undone!",
+      "confirmButtonText": "Yes, delete",
+      "cancelButtonText": "Cancel",
+      "successTitle": "Product Deleted!",
+      "successText": "Product has been deleted.",
+      "errorTitle": "Error",
+      "errorText": "Could not delete the Product.",
+      "lastButton": "OK"
+    },
+    "status": {
+      "pending": "Pending",
+      "active": "Active",
+      "inactive": "Inactive",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "changeStatus": {
+      "title": "Change Status",
+      "inputPlaceholder": "Select a status",
+      "errorSelect": "You need to select a status",
+      "success": "Status updated to: {{status}}",
+      "noChangeMessage": "No change made",
+      "errorResponse": "The Status didn't update",
+      "confirmButtonText": "Confirm",
+      "cancelButtonText": "Cancel"
+    },
+    "table": {
+      "loadingText": "Products data Loading"
+    }
+  }
+}

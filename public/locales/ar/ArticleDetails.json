@@ -1,0 +1,26 @@
+{
+  "article": {
+    "title": "تفاصيل المقال",
+    "basicInfo": "معلومات أساسية",
+    "contentHeading": "المحتوى",
+    "authorHeading": "المؤلف",
+    "timestamps": "تواريخ",
+    "fields": {
+      "title": "العنوان",
+      "published": "منشور",
+      "slug": "الـ Slug",
+      "author": "المؤلف"
+    },
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "آخر تحديث",
+    "unknown": "غير متوفر",
+    "errors": {
+      "global": "ليس لديك صلاحية لعرض هذا المحتوى",
+      "general": "حدث خطأ ما"
+    }
+  },
+  "yes": "نعم",
+  "no": "لا",
+  "visitLink": "زيارة الرابط",
+  "notAvailable": "غير متوفر"
+}

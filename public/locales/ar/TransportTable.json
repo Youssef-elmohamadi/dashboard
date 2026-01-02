@@ -1,0 +1,43 @@
+{
+  "transportPage": {
+    "title": "إدارة اسعار النقل",
+    "addNew": "إضافة سعر جديد",
+    "all": "كل النقلات",
+    "mainTitle": "تشطيبة | ادارة النقل",
+    "createdSuccessTitle": "تم الانشاء",
+    "createdSuccessMessage": "تم انشاء النقل بنجاح",
+    "updatedSuccessTitle": "تم التحديث",
+    "updatedSuccessMessage": "تم تحديث النقل بنجاح",
+    "delete": {
+      "confirmTitle": "حذف النقل؟",
+      "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
+      "confirmButtonText": "نعم، احذف",
+      "cancelButtonText": "الغاء",
+      "successTitle": "تم الحذف!",
+      "successText": "تم حذف النقل.",
+      "errorTitle": "خطأ",
+      "errorText": "تعذر حذف النقل.",
+      "lastButton": "حسنا"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "approved": "موافق",
+      "rejected": "مرفوض"
+    },
+    "changeStatus": {
+      "title": "تغيير الحالة",
+      "inputPlaceholder": "اختر الحالة",
+      "errorSelect": "يجب اختيار الحالة",
+      "success": "تم تحديث الحالة إلى: {{status}}",
+      "noChangeMessage": "لم يتم إجراء أي تغيير",
+      "errorResponse": "تعذر تحديث الحالة",
+      "confirmButtonText": "تأكيد",
+      "cancelButtonText": "إلغاء"
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات النقلات"
+    }
+  }
+}

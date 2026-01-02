@@ -1,0 +1,16 @@
+{
+  "menu": "Main Menu",
+  "welcome": "Welcome,",
+  "login_to_enjoy": "Log in for a better experience",
+  "login": "Login",
+  "signup": "Sign Up",
+  "categories": "Main Categories",
+  "my_account": "My Account",
+  "profile": "My Profile",
+  "orders_history": "Orders History",
+  "favorite_products": "Wishlist",
+  "compare_product": "Compare Products",
+  "notifications": "Notifications",
+  "logout": "Logout",
+  "profileLoadError": "Failed to load profile"
+}

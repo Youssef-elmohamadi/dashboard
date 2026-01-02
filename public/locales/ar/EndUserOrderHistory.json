@@ -1,0 +1,101 @@
+{
+  "mainTitle": "تشطيبة | تاريخ الطلبات",
+  "pageTitle": "طلباتي",
+  "pageSubtitle": "مراجعة وتتبع جميع طلباتك السابقة والحالية.",
+  "loading": "جاري تحميل تفاصيل الطلب...",
+  "no_id": "لا يوجد معرف للطلب.",
+  "not_found": "الطلب غير موجود.",
+  "global_error": "حدث خطأ ما. يرجى المحاولة في وقت لاحق.",
+  "orderDetails": {
+    "title": "ملخص الطلب",
+    "subtitle": "راجع جميع تفاصيل طلبك والمنتجات المضمنة.",
+    "orderSummary": "ملخص الطلب",
+    "shippingAddress": "عنوان الشحن",
+    "orderDetails": "تفاصيل الطلب",
+    "orderId": "رقم الطلب",
+    "orderDate": "تاريخ الطلب",
+    "paymentMethod": "طريقة الدفع",
+    "wallet": "المحفظة",
+    "cod": "الدفع عند الاستلام",
+    "paymentStatus": "حالة الدفع",
+    "paid": "مدفوع",
+    "unpaid": "غير مدفوع",
+    "status": "حالة الطلب",
+    "fullName": "الاسم الكامل",
+    "phone": "رقم الهاتف",
+    "address": "العنوان",
+    "landmark": "علامة مميزة",
+    "apartment": "تفاصيل الشقة",
+    "floor": "الطابق",
+    "apt": "شقة",
+    "vendor": "البائع",
+    "productName": "اسم المنتج",
+    "quantity": "الكمية",
+    "price": "السعر",
+    "total": "الإجمالي",
+    "actions": "الإجراءات",
+    "rateProduct": "قيّم المنتج",
+    "subtotal": "الإجمالي الفرعي",
+    "commission": "العمولة",
+    "orderTotal": "إجمالي الطلب",
+    "reviewSubmitted": "تم إرسال تقييمك!",
+    "loading": "جاري تحميل تفاصيل الطلب...",
+    "payNow": "ادفع الآن",
+    "egp": "جنيه",
+    "ratePlaceholder": "قيّم المنتج",
+    "titleRate": "قيّم المنتج",
+    "rateError": "يرجى تقييم المنتج",
+    "confirmText": "تقييم",
+    "cancelText": "اغلاق",
+    "shipping_price":"سعر الشحن"
+  },
+  "statuses": {
+    "pending": "قيد الانتظار",
+    "shipped": "تم الشحن",
+    "delivered": "تم التوصيل",
+    "canceled": "ملغي",
+    "paid": "مدفوع",
+    "unpaid": "غير مدفوع"
+  },
+  "common": {
+    "success": "تم بنجاح",
+    "error": "خطأ",
+    "somethingWentWrong": "حدث خطأ ما. حاول مرة أخرى."
+  },
+  "ordersTable": {
+    "title": "تاريخ الطلبات",
+    "loadingText": "جاري تحميل تفاصيل الطلبات...",
+    "noOrders": "لا يوجد طلبات.",
+    "columns": {
+      "id": "رقم الطلب",
+      "orderStatus": "حالة الطلب",
+      "total": "الإجمالي",
+      "actions": "الإجراءات",
+      "date": "تاريخ الطلب",
+      "shippingStatus": "حالة الشحن",
+      "paidStatus": "حالة الدفع"
+    }
+  },
+  "cancelAlert": {
+    "cancelTitle": "الغاء الطلب؟",
+    "successTitle": "الغاء!",
+    "successText": "تم الغاء الطلب.",
+    "errorTitle": "خطأ",
+    "errorText": "لم يتم الغاء الطلب.",
+    "cancelButtonText": "الغاء",
+    "confirmButtonText": "نعم، الغاء",
+    "cancelText": "هل تريد الغاء هذا الطلب؟ هذا الاجراء لا يمكن التراجع عنه."
+  },
+  "tableActions": {
+    "view": "عرض",
+    "cancel": "الغاء"
+  },
+  "pagination": {
+    "showing": "تشاهد",
+    "to": "إلى",
+    "of": "من",
+    "entries": "عناصر",
+    "previous": "السابق",
+    "next": "التالي"
+  }
+}

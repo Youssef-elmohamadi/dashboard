@@ -1,0 +1,31 @@
+{
+  "landingSection": {
+    "welcome": {
+      "title": "اهلا بك في ",
+      "description": "حل متكامل لتشطيب بيتك استشارات، منتجات، وخدمات – كل ذلك في مكان واحد!"
+    }
+  },
+  "featuredSection": {
+    "fastDelivery": {
+      "title": "توصيل سريع",
+      "description": "نضمن لك أفضل سرعة توصيل"
+    },
+    "returnable": {
+      "title": "قابل للإرجاع",
+      "description": "يمكن الإرجاع خلال 14 أيام"
+    },
+    "fullCoverage": {
+      "title": "تغطية كاملة",
+      "description": "لحد باب بيتك في القاهرة والجيزة"
+    },
+    "currentOffers": {
+      "title": "عروض حالية",
+      "description": "عروض ضخمة على جميع الأقسام"
+    }
+  },
+  "homeProducts": {
+    "showAll": "اظهار الكل"
+  },
+  "latestProducts": "المنتجات الحديثة",
+  "loading": "جاري التحميل..."
+}

@@ -1,0 +1,29 @@
+{
+  "questionsPage": {
+    "title": "الأسئلة",
+    "mainTitle": "تشطيبة | الأسئلة",
+    "addNew": "إضافة سؤال جديد",
+    "all": "كل الأسئلة",
+    "createdSuccessTitle": "تم الانشاء",
+    "createdSuccessMessage": "تم انشاء السؤال بنجاح",
+    "updatedSuccessTitle": "تم التحديث",
+    "updatedSuccessMessage": "تم تحديث السؤال بنجاح",
+    "delete": {
+      "confirmTitle": "حذف السؤال؟",
+      "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
+      "confirmButtonText": "نعم، احذف",
+      "cancelButtonText": "الغاء",
+      "lastButton": "حسنا",
+      "successTitle": "تم الحذف!",
+      "successText": "تم حذف السؤال.",
+      "errorTitle": "خطأ",
+      "errorText": "تعذر حذف السؤال."
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات الأسئلة"
+    },
+    "search": {
+      "nameLabel": "الاسم"
+    }
+  }
+}

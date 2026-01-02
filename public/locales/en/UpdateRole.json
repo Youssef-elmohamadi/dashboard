@@ -1,0 +1,29 @@
+{
+  "role": {
+    "update_title": "Update Role",
+    "main_title": "Update Role",
+    "name": "Name",
+    "permission": "Permission",
+    "loadingRole": "Wait, getting role...",
+
+    "placeholder": {
+      "name": "Enter the Role Name"
+    },
+    "button": {
+      "submit": "Update Role",
+      "submitting": "Updating..."
+    },
+    "errors": {
+      "notFound": "Role not found",
+      "name": "Name is Required",
+      "name_unique": "This Name already exists",
+      "permission": "At least one permission must be selected.",
+      "global": "You don't have permission to perform this action.",
+      "general": "Something went wrong.",
+      "fetching_permissions": "something went wrong while fetching permissions.",
+      "no_internet": "No internet connection. Please check your connection and try again."
+    },
+    "get_permissions": "Wait, getting permissions...",
+    "success_message": "Role Updated Successfully"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "adminsPage": {
+    "mainTitle": "Tashtiba | Manage Admins",
+    "title": "Admins",
+    "addNew": "Add New Admin",
+    "all": "All Admins",
+    "createdSuccessTitle": "Created Successfully",
+    "createdSuccessMessage": "Admin Created Successfully",
+    "updatedSuccessTitle": "Updated Successfully",
+    "updatedSuccessMessage": "Admin Updated Successfully",
+    "delete": {
+      "confirmTitle": "Delete Admin?",
+      "confirmText": "This action cannot be undone!",
+      "confirmButtonText": "Yes, delete",
+      "cancelButtonText": "Cancel",
+      "successTitle": "Admin Deleted!",
+      "successText": "Admin has been deleted.",
+      "errorTitle": "Error",
+      "errorText": "Could not delete the Admin.",
+      "unauthorized": "You are not authorized to delete this admin.",
+      "generalError": "An error occurred while deleting the admin.",
+      "lastButton": "OK"
+    },
+    "table": {
+      "loadingText": "Admins data Loading..."
+    }
+  }
+}

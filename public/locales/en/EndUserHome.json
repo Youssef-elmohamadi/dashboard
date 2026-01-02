@@ -1,0 +1,31 @@
+{
+  "landingSection": {
+    "welcome": {
+      "title": "Welcome to ",
+      "description": "Your all-in-one solution for finishing your home – consultations, products, and services – all in one place!"
+    }
+  },
+  "featuredSection": {
+    "fastDelivery": {
+      "title": "Fast Delivery",
+      "description": "We guarantee the best delivery speed"
+    },
+    "returnable": {
+      "title": "Returnable",
+      "description": "Returnable within 14 days"
+    },
+    "fullCoverage": {
+      "title": "Full Coverage",
+      "description": "Full coverage across Cairo and Giza"
+    },
+    "currentOffers": {
+      "title": "Current Offers",
+      "description": "Massive deals across all categories"
+    }
+  },
+  "homeProducts": {
+    "showAll": "Show All"
+  },
+  "latestProducts": "Latest Products",
+  "loading": "Loading..."
+}

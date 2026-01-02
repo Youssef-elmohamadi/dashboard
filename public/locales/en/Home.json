@@ -1,0 +1,51 @@
+{
+  "customers": "Customers",
+  "orders": "Orders",
+  "products": "Products",
+  "vendors": "Vendors",
+  "mainTitle": "Tashtiba | Dashboard | Home",
+  "unExpectedError": "An unexpected error has occurred, please try again.",
+  "monthlySalesChart": {
+    "title": "Monthly Orders",
+    "tooltipLabel": "Order",
+    "dropdown": {
+      "viewMore": "View More",
+      "delete": "Delete"
+    },
+    "months": {
+      "01": "Jan",
+      "02": "Feb",
+      "03": "Mar",
+      "04": "Apr",
+      "05": "May",
+      "06": "Jun",
+      "07": "Jul",
+      "08": "Aug",
+      "09": "Sep",
+      "10": "Oct",
+      "11": "Nov",
+      "12": "Dec"
+    }
+  },
+  "statistics": {
+    "title": "Statistics",
+    "subtitle": "Your Monthly statistics will be displayed here"
+  },
+  "demographic": {
+    "title": "Customers Demographic",
+    "subtitle": "Number of customer based on country",
+    "viewMore": "View More",
+    "delete": "Delete",
+    "usa": "USA",
+    "eg": "Egypt",
+    "france": "France",
+    "usa_customers": "{{count}} Customers",
+    "eg_customers": "{{count}} Customers",
+    "france_customers": "{{count}} Customers"
+  },
+  "metrics": {
+    "all": "All",
+    "active": "Active",
+    "inactive": "Inactive"
+  }
+}

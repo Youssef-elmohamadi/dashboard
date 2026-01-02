@@ -1,0 +1,19 @@
+{
+  "articlesPage": {
+    "title": "Articles",
+    "all": "All Articles",
+    "addNew": "Add New Article",
+    "createdSuccess": "Created Successfully",
+    "updatedSuccess": "Updated Successfully",
+    "delete": {
+      "confirmTitle": "Delete Article?",
+      "confirmText": "This action cannot be undone!",
+      "confirmButtonText": "Yes, delete it",
+      "cancelButtonText": "Cancel",
+      "deletedSuccess": "Deleted Successfully"
+    },
+    "table": {
+      "loadingText": "Loading articles data..."
+    }
+  }
+}

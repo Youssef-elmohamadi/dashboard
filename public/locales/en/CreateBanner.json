@@ -1,0 +1,41 @@
+{
+  "banner": {
+    "title": "Create New Banner",
+    "name": "Title",
+    "linkType": "Link Type",
+    "url": "Enter URL",
+    "category": "Category",
+    "position": "Position",
+    "status": "Status",
+    "bannerImage": "Banner Image",
+    "titlePlaceholder": "Enter banner title",
+    "positionPlaceholder": "Enter banner position",
+    "linkTypePlaceholder": "Select link type",
+    "categoryPlaceholder": "Select category",
+    "statusPlaceholder": "Select status",
+    "options": {
+      "externalOption": "External",
+      "categoryOption": "Category",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "submit": "Create Banner",
+    "submitting": "Creating...",
+    "errors": {
+      "name": "Title is required",
+      "titleTaken": "The title is already in use",
+      "url": "URL is required",
+      "linkType": "Link type is required",
+      "category": "Category is required",
+      "position": "Position is required",
+      "status": "Status is required",
+      "invalidUrl": "The URL is invalid",
+      "image": "Banner image is required",
+      "invalidImage": "Invalid image file",
+      "global": "You are not authorized to perform this action.",
+      "general": "Something went wrong. Please try again later.",
+      "fetching_categories": "Failed to fetch categories. Please try again later."
+    },
+    "success": "Banner created successfully"
+  }
+}

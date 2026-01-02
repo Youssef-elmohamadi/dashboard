@@ -1,0 +1,28 @@
+{
+  "create_title": "Create Brand",
+  "main_title": "Create New Brand",
+  "name_label_en": "Brand Name (English)",
+  "name_label_ar": "Brand Name (Arabic)",
+  "name_placeholder_en": "Enter the Brand Name (English)",
+  "name_placeholder_ar": "Enter the Brand Name (Arabic)",
+  "name_required": "Brand name is required.",
+  "status_label": "Select Status",
+  "status_active": "Active",
+  "status_inactive": "Inactive",
+  "image_label": "Brand Image",
+  "submit_button": "Add Brand",
+  "loading_button": "Creating...",
+  "submit_error": "Something went wrong.",
+  "create_success": "Brand Created Successfully",
+  "errors": {
+    "name": "Brand name is required.",
+    "name_unique": "Brand name already exists.",
+    "status": "Select brand status.",
+    "image": "Brand image is required.",
+    "general": "Something went wrong.",
+    "global": "You don't have permission to perform this action.",
+    "no_internet": "No internet connection. Please check your connection and try again.",
+    "image_valid": "Brand image is not valid. It should be a jpeg, jpg, or png image with a maximum size of 800x400 pixels."
+    
+  }
+}

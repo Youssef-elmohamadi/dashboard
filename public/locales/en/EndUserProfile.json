@@ -1,0 +1,35 @@
+{
+  "title": "Profile Management",
+  "subtitle": "Manage your profile and contact details.",
+  "form": {
+    "avatar": "Change Avatar",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "password_confirmation": "Confirm Password",
+    "submit": "Update Profile",
+    "updating": "Updating..."
+  },
+  "toast": {
+    "update_success": "Profile updated successfully.",
+    "update_fail": "Failed to update profile.",
+    "form_error": "Please correct the errors in the form."
+  },
+  "validation": {
+    "first_name_required": "First name is required.",
+    "last_name_required": "Last name is required.",
+    "email_required": "Email is required.",
+    "email_invalid": "Email is not valid.",
+    "phone_required": "Phone number is required.",
+    "password_short": "Password must be at least 6 characters.",
+    "password_confirmation_mismatch": "Passwords do not match."
+  },
+  "backend": {
+    "emailTaken": "This email is already taken.",
+    "phoneTaken": "This phone number is already taken.",
+    "invalidEmail": "Email is not valid.",
+    "invalidPhone": "Phone number is not valid."
+  }
+}

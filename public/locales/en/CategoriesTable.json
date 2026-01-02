@@ -1,0 +1,23 @@
+{
+  "categoriesPage": {
+    "title": "Categories",
+    "all": "All Categories",
+    "mainTitle": "Tashtiba | Categories",
+    "addNew": "Add New Category",
+    "createdSuccess": "Category Created Successfully",
+    "updatedSuccess": "Category Updated Successfully",
+    "delete": {
+      "confirmTitle": "Delete Category?",
+      "confirmText": "This action cannot be undone!",
+      "confirmButtonText": "Yes, delete",
+      "cancelButtonText": "Cancel",
+      "successTitle": "Category Deleted!",
+      "successText": "Category has been deleted.",
+      "errorTitle": "Error",
+      "errorText": "Could not delete the Category."
+    },
+    "table": {
+      "loadingText": "Categories data Loading"
+    }
+  }
+}

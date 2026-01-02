@@ -1,0 +1,16 @@
+{
+  "menu": "القائمة الرئيسية",
+  "welcome": "أهلاً بك،",
+  "login_to_enjoy": "سجل دخولك لتجربة تسوق أفضل",
+  "login": "تسجيل الدخول",
+  "signup": "إنشاء حساب",
+  "categories": "الأقسام الرئيسية",
+  "my_account": "حسابي الشخصي",
+  "profile": "ملف التعريف",
+  "orders_history": "سجل الطلبات",
+  "favorite_products": "المفضلات",
+  "compare_product": "مقارنة المنتجات",
+  "notifications": "التنبيهات",
+  "logout": "تسجيل الخروج",
+  "profileLoadError": "فشل تحميل البيانات"
+}

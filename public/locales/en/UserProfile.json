@@ -1,0 +1,41 @@
+{
+  "userProfile": {
+    "title": "Profile"
+  },
+  "userInfoCard": {
+    "title": "Personal Information",
+    "avatar": "Avatar",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email": "Email Address",
+    "phone": "Phone",
+    "update": "Edit",
+    "loading": "Loading user details...",
+    "errorFetch": "Failed to fetch user details.",
+    "noData": "No user details available.",
+    "general_error": "Something went wrong. Please try again later.",
+    "global_error": "You are not authorized to perform this action."
+  },
+  "validation": {
+    "first_name_required": "First name is required.",
+    "last_name_required": "Last name is required.",
+    "email_required": "Email is required.",
+    "email_invalid": "Email is not valid.",
+    "phone_invalid": "Phone number is not valid.",
+    "phone_required": "Phone number is required.",
+    "password_short": "Password must be at least 6 characters.",
+    "password_confirmation_mismatch": "Passwords do not match."
+  },
+  "editInfoCard": {
+    "change_avatar": "Click to change your profile picture",
+    "editDescription": "Update your details to keep your profile up-to-date.",
+    "avatar": "Avatar",
+    "password": "Password",
+    "save": "Save Changes",
+    "saving": "Saving changes...",
+    "close": "Close",
+    "successUpdate": "Profile updated successfully.",
+    "errorUpdate": "Failed to update profile."
+  },
+  "no_internet": "No internet connection. Please check your connection and try again."
+}

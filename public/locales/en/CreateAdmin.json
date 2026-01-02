@@ -1,0 +1,42 @@
+{
+  "admin": {
+    "create_title": "Create Admin",
+    "main_title": "Create New Admin",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "select_role": "Select Role",
+    "placeholder": {
+      "first_name": "Enter the Admin First Name",
+      "last_name": "Enter the Admin Last Name",
+      "email": "Enter the Admin Email",
+      "phone": "Enter the Admin Phone",
+      "password": "Enter The Admin password",
+      "select_role": "Select a Role"
+    },
+    "button": {
+      "submit": "Add Admin",
+      "submitting": "Creating..."
+    },
+    "errors": {
+      "first_name": "First Name is Required",
+      "last_name": "Last Name is Required",
+      "email_required": "The Email is Required",
+      "email_invalid": "Invalid Email",
+      "email_taken": "This email is already registered",
+      "phone_required": "The Phone Number is Required",
+      "phone_invalid": "Please Enter Valid Phone Number",
+      "phone_taken": "This phone number is already in use",
+      "password": "The Password is Required",
+      "length_password": "The Password must be at least 8 characters",
+      "role": "The Role is Required",
+      "global": "You don't have permission to perform this action.",
+      "general": "Something went wrong.",
+      "fetching_roles": "something went wrong while fetching roles.",
+      "no_internet": "No internet connection. Please check your connection and try again."
+    },
+    "success_message": "Admin Created Successfully"
+  }
+}

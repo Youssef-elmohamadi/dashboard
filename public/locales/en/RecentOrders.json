@@ -1,0 +1,33 @@
+{
+  "recentOrders": {
+    "title": "Recent Orders",
+    "filter": "Filter",
+    "seeAll": "See all",
+    "orderId": "Order ID",
+    "vendor": "Vendor",
+    "total": "Total",
+    "orderStatus": "Order Status",
+    "shippingStatus": "Shipping Status",
+    "estimatedDate": "Estimated Date",
+    "product": "Product",
+    "category": "Category",
+    "price": "Price",
+    "na": "N/A",
+    "unknown": "Unknown",
+    "egp": "EGP",
+    "noData": "No recent orders available",
+    "paymentMethod": "Payment Method",
+    "location": {
+      "fullName": "Full Name",
+      "phone": "Phone Number"
+    },
+    "statuses": {
+      "delivered": "Delivered",
+      "shipped": "Shipped",
+      "pending": "Pending",
+      "cancelled": "Cancelled",
+      "returned": "Returned",
+      "paid": "Paid"
+    }
+  }
+}

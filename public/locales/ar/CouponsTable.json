@@ -1,0 +1,32 @@
+{
+  "couponsPage": {
+    "mainTitle": "تشطيبة | كوبونات",
+    "title": "كوبونات",
+    "addNew": "إضافة كوبون جديد",
+    "all": "كل الكوبونات",
+    "createdSuccess": "تم الانشاء",
+    "updatedSuccess": "تم التحديث",
+    "delete": {
+      "confirmTitle": "حذف الكوبون؟",
+      "confirmText": "لا يمكن التراجع عن هذا الاجراء!",
+      "confirmButtonText": "نعم، احذف",
+      "cancelButtonText": "الغاء",
+      "successTitle": "تم حذف الكوبون!",
+      "successText": "تم حذف الكوبون.",
+      "errorTitle": "خطأ",
+      "errorText": "لا يمكن حذف الكوبون.",
+      "lastButton": "حسنا"
+    },
+    "types": {
+      "fixed": "ثابت",
+      "percent": "نسبة مئوية"
+    },
+    "status": {
+      "active": "مفعل",
+      "inactive": "غير مفعل"
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات الكوبونات..."
+    }
+  }
+}

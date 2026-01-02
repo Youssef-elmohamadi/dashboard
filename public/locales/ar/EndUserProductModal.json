@@ -1,0 +1,21 @@
+{
+  "unknownCategory": "غير معروف",
+  "category": "القسم",
+  "discountApplied": "تم تطبيق الخصم",
+  "available": "متوفر",
+  "inStock": "متوفر في المخزون",
+  "outOfStock": "نفد من المخزون",
+  "specifications": "المواصفات",
+  "quantity": "الكمية",
+  "availableOptions": "الخيارات المتاحة",
+  "extraCharges": "رسوم إضافية",
+  "required": "مطلوب",
+  "requiredInfo": "مطلوب للاستمرار",
+  "missingRequired": "يرجى اختيار الإضافات المطلوبة",
+  "reviews": "التقييمات",
+  "noReviews": "لا توجد تقييمات حتى الآن",
+  "sale": "خصم",
+  "outOfStockMessage": "عذرًا، هذا المنتج غير متوفر حاليًا.",
+  "image": "الصورة",
+  "uncategorized": "غير مصنّف"
+}

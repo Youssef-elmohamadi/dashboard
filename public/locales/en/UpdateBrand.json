@@ -1,0 +1,25 @@
+{
+  "update_title": "Update Brand",
+  "main_title": "Update Brand",
+  "name_label_en": "Brand Name (English)",
+  "name_label_ar": "Brand Name (Arabic)",
+  "name_placeholder_en": "Enter the Brand Name (English)",
+  "name_placeholder_ar": "Enter the Brand Name (Arabic)",
+  "name_required": "Brand name is required.",
+  "status_label": "Select Status",
+  "status_active": "Active",
+  "status_inactive": "Inactive",
+  "image_label": "Brand Image",
+  "current_image": "Current Brand Image:",
+  "submit_button": "Save Changes",
+  "loading_button": "Updating...",
+  "submit_error": "An error occurred while updating the brand.",
+  "loading": "Loading brand...",
+  "errors": {
+    "name": "Brand name is required.",
+    "status": "Select brand status.",
+    "image": "Brand image is required.",
+    "general": "un expected error occurred, please try again.",
+    "global": "You don't have permission to perform this action."
+  }
+}

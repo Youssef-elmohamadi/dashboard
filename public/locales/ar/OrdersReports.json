@@ -1,0 +1,9 @@
+{
+  "ordersCount": "عدد الطلبات",
+  "mainTitle": "تشطيبة | تقرير الطلبات",
+  "deliveredOrdersCount": "عدد الطلبات المستلمة",
+  "cancelledOrdersCount": "عدد الطلبات الملغية",
+  "totalItemsSold": "العدد الكلي للمنتجات المباعة",
+  "averageOrderValue": "متوسط قيمة الطلب",
+  "loading": "جاري تحميل التقرير..."
+}

@@ -1,0 +1,26 @@
+{
+  "rolesPage": {
+    "title": "الادوار",
+    "mainTitle": "تشطيبة | الادوار",
+    "addNew": "إضافة دور جديد",
+    "all": "كل الادوار",
+    "createdSuccessTitle": "تم الانشاء",
+    "createdSuccessMessage": "تم انشاء الدور بنجاح",
+    "updatedSuccessTitle": "تم التحديث",
+    "updatedSuccessMessage": "تم تحديث الدور بنجاح",
+    "delete": {
+      "confirmTitle": "حذف الدور؟",
+      "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
+      "confirmButtonText": "نعم، احذف",
+      "cancelButtonText": "الغاء",
+      "lastButton": "حسنا",
+      "successTitle": "تم الحذف!",
+      "successText": "تم حذف الدور.",
+      "errorTitle": "خطأ",
+      "errorText": "تعذر حذف الدور."
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات الادوار"
+    }
+  }
+}

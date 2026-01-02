@@ -1,0 +1,56 @@
+.swiper-pagination {
+  position: absolute;
+  text-align: center;
+  transition: 300ms opacity;
+  transform: translateZ(0);
+  z-index: 10;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+}
+
+.swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 100%;
+  background: #000;
+  opacity: 0.2;
+  margin: 0 4px;
+  cursor: pointer;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+  background: #007aff;
+}
+.swiper {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.swiper-wrapper {
+  display: flex;
+  transition-property: transform;
+  box-sizing: content-box;
+}
+
+.swiper-slide {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition-property: transform;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #c9222b !important; /* درجة الأحمر بتاعتك تقريباً */
+  transform: scale(0.7); /* تصغير حجم السهم شوية عشان يكون شيك */
+}
+
+/* لون النقط (Dots) */
+.swiper-pagination-bullet-active {
+  background-color: #c9222b !important;
+}

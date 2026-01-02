@@ -1,0 +1,16 @@
+{
+  "Errors": {
+    "firstNameRequired": "الاسم الأول مطلوب",
+    "lastNameRequired": "اسم العائلة مطلوب",
+    "phoneRequired": "رقم الهاتف مطلوب",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "passwordRequired": "كلمة المرور مطلوبة",
+    "confirmPasswordRequired": "تأكيد كلمة المرور مطلوب",
+    "passwordsNotMatch": "كلمة المرور وتأكيدها غير متطابقين"
+  },
+  "ServerErrors": {
+    "emailTaken": "هذا البريد الإلكتروني مستخدم بالفعل",
+    "phoneTaken": "رقم الهاتف مستخدم بالفعل",
+    "unauthorized": "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+  }
+}

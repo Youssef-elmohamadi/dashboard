@@ -1,0 +1,21 @@
+{
+  "unknownCategory": "Unknown Category",
+  "category": "Category",
+  "discountApplied": "Discount applied",
+  "available": "Available",
+  "inStock": "In stock",
+  "outOfStock": "Out of stock",
+  "specifications": "Specifications",
+  "quantity": "Quantity",
+  "availableOptions": "Available options",
+  "extraCharges": "Extra charges",
+  "required": "Required",
+  "requiredInfo": "Required to continue",
+  "missingRequired": "Please select the required options",
+  "reviews": "Reviews",
+  "noReviews": "No reviews yet",
+  "sale": "Sale",
+  "outOfStockMessage": "Sorry, this product is currently out of stock.",
+  "image": "Image",
+  "uncategorized": "Uncategorized"
+}

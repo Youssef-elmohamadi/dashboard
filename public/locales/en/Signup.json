@@ -1,0 +1,62 @@
+{
+  "title": "Create Account",
+  "basicInformation": {
+    "stepOneHeading": "Basic Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phone": "Phone Number",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "placeholder": {
+      "firstName": "Enter your first name",
+      "lastName": "Enter your last name",
+      "phone": "Enter your phone number",
+      "email": "Enter your email address",
+      "password": "Create a password",
+      "confirmPassword": "Confirm your password"
+    }
+  },
+  "bankInformation": {
+    "stepTwoHeading": "Bank Information",
+    "bankName": "Bank Name",
+    "accountNumber": "Account Number",
+    "accountName": "Account Name",
+    "phone": "Phone Number",
+    "placeholder": {
+      "bankName": "Enter your bank name",
+      "accountNumber": "Enter your account number",
+      "accountName": "Enter your account name",
+      "phone": "Enter your phone number"
+    }
+  },
+  "storeInformation": {
+    "stepThreeHeading": "Store Information",
+    "commercialRegisterDoc": "Commercial Register",
+    "taxRegisterDoc": "Tax Registration Certificate",
+    "storeName": "Store Name",
+    "phone": "Phone Number",
+    "storeEmail": "Store Email",
+    "placeholder": {
+      "storeName": "Enter your store name",
+      "phone": "Enter your phone number",
+      "storeEmail": "Enter your store email address"
+    }
+  },
+  "next": "Next",
+  "previous": "Previous",
+  "button": "Create Account",
+  "alreadyHaveAccount": "Already have an account?",
+  "login": "Login",
+  "agreeTerms": "I agree to the terms and conditions",
+  "signupErrors": {
+    "fistNameError": "First name is required",
+    "lastNameError": "Last name is required",
+    "phoneError": "Phone number is required",
+    "emailError": "Email is required",
+    "emailFormatError": "Invalid email format",
+    "passwordError": "Password is required",
+    "confirmPasswordError": "Confirmation password is required",
+    "passwordMatchError": "Passwords do not match"
+  }
+}

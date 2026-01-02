@@ -1,0 +1,19 @@
+{
+  "title": "Transport Details",
+  "basicInfo": "Basic Information",
+  "area": "Area",
+  "line": "Line",
+  "vehicle_type": "Vehicle Type",
+  "fixed_price": "Fixed Price",
+  "price_per_km": "Price Per KM",
+  "timestamps": "Timestamps",
+  "createdAt": "Created At",
+  "updatedAt": "Last Updated",
+  "unknown": "Unknown",
+  "notAvailable": "Not Available",
+  "currency": "EGP",
+  "currencyPerKm": "EGP/KM",
+  "free": "Free",
+  "global_error": "You are not authorized to access this page.",
+  "general_error": "An error occurred while loading data. Please try again."
+}

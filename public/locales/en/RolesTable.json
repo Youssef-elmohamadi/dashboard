@@ -1,0 +1,26 @@
+{
+  "rolesPage": {
+    "title": "Roles",
+    "mainTitle": "Tashtiba | Roles",
+    "addNew": "Add New Role",
+    "all": "All Roles",
+    "createdSuccessTitle": "Created Successfully",
+    "createdSuccessMessage": "Role Created Successfully",
+    "updatedSuccessTitle": "Updated Successfully",
+    "updatedSuccessMessage": "Role Updated Successfully",
+    "delete": {
+      "confirmTitle": "Delete Role?",
+      "confirmText": "This action cannot be undone!",
+      "confirmButtonText": "Yes, delete",
+      "cancelButtonText": "Cancel",
+      "lastButton": "OK",
+      "successTitle": "Role Deleted!",
+      "successText": "Role has been deleted.",
+      "errorTitle": "Error",
+      "errorText": "Could not delete the Role."
+    },
+    "table": {
+      "loadingText": "Roles data Loading"
+    }
+  }
+}

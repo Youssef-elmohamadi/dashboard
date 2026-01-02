@@ -1,0 +1,11 @@
+{
+    "active": "نشط",
+    "delivered": "تم التسليم",
+    "inactive": "غير نشط",
+    "pending": "قيد الانتظار",
+    "unpaid": "غير مدفوع",
+    "shipped": "تم الشحن",
+    "paid": "مدفوع",
+    "cancelled": "ملغى",
+    "processing": "قيد المعالجة"
+}

@@ -1,0 +1,15 @@
+{
+  "firstNameError": "First name is required",
+  "lastNameError": "Last name is required",
+  "phoneError": "Phone number is required",
+  "emailError": "Email is required",
+  "emailFormatError": "Email format is invalid",
+  "passwordError": "Password is required",
+  "passwordLengthError": "Password must be at least 8 characters",
+  "confirmPasswordError": "Confirm password is required",
+  "passwordMatchError": "Passwords do not match",
+  "storeNameError": "Store name is required",
+  "storePhoneError": "Store phone number is required",
+  "storeEmailError": "Store email is required",
+  "documentError": "Document is required"
+}

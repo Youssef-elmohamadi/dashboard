@@ -1,0 +1,9 @@
+{
+  "allProducts": "All Products",
+  "mainTitle": "Tashtiba | Products Report",
+  "activeProducts": "Active Products",
+  "inactiveProducts": "Inactive Products",
+  "outOfStockProducts": "Out of Stock Products",
+  "lowStockProducts": "Low Stock Products",
+  "loading": "Loading Report..."
+}

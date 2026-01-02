@@ -1,0 +1,34 @@
+{
+  "recentOrders": {
+    "title": "الطلبات الأخيرة",
+    "filter": "تصفية",
+    "seeAll": "عرض الكل",
+    "orderId": "رقم الطلب",
+    "vendor": "المورد",
+    "total": "المجموع",
+    "orderStatus": "حالة الطلب",
+    "shippingStatus": "حالة الشحن",
+    "estimatedDate": "تاريخ التوصيل المتوقع",
+    "product": "المنتج",
+    "category": "الفئة",
+    "price": "السعر",
+    "status": "الحالة",
+    "na": "غير متوفر",
+    "unknown": "غير معروف",
+    "noData": "لا توجد بيانات متاحة",
+    "egp": "ج.م",
+    "paymentMethod": "طريقة الدفع",
+    "location": {
+      "fullName": "الاسم بالكامل",
+      "phone": "رقم الهاتف"
+    },
+    "statuses": {
+      "delivered": "تم التوصيل",
+      "shipped": "تم الشحن",
+      "pending": "قيد الانتظار",
+      "cancelled": "أُلغيت",
+      "returned": "تم الإرجاع",
+      "paid": "مدفوع"
+    }
+  }
+}

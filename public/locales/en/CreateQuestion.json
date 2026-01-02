@@ -1,0 +1,26 @@
+{
+  "create_title": "Create New Product Question",
+  "title_label_ar": "Question Title (Arabic)",
+  "title_label_en": "Question Title (English)",
+  "type_label": "Question Type",
+  "type_placeholder": "Select type",
+  "type_single": "Single Choice",
+  "type_multi": "Multiple Choice",
+  "status_label": "Status",
+  "active": "Active",
+  "inactive": "Inactive",
+  "desc_label_ar": "Question (Arabic)",
+  "desc_label_en": "Question (English)",
+  "required_label": "This question is required",
+  "submit_button": "Save Question",
+  "loading_button": "Saving...",
+  "create_success": "Question created successfully",
+  "errors": {
+    "title_ar_required": "Arabic title is required",
+    "title_en_required": "English title is required",
+    "type_required": "Question type is required",
+    "global": "You don't have permission to perform this action",
+    "general": "Something went wrong, please try again later",
+    "no_internet": "No internet connection"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "transport": {
+    "title": "Update Transportation Price",
+    "area_ar": "Area in Arabic",
+    "area_ar_placeholder": "Enter area name",
+    "area_en": "Area in English",
+    "area_en_placeholder": "Enter area name",
+    "vehicle_type": "Vehicle Type",
+    "vehicle_type_placeholder": "Select vehicle type",
+    "fixed_price": "Fixed Price",
+    "fixed_price_placeholder": "Enter transportation fixed price",
+    "is_free": "Is Transport Free?",
+    "submit": "Update Price",
+    "submitting": "Updating...",
+    "success": "Transportation price updated successfully",
+
+    "errors": {
+      "area": "Please enter the area name",
+      "vehicle_type": "Please select a vehicle type",
+      "fixed_price": "Please enter the fixed price",
+      "no_internet": "No internet connection, please try again later",
+      "global": "You do not have permission to update this price",
+      "general": "An unexpected error occurred while updating",
+      "areaRequired": "Area is required",
+      "status":"Price is required",
+      "vehicleTypeRequired": "Vehicle type is required",
+      "fixedPriceRequired": "Fixed price is required"
+    }
+  }
+}

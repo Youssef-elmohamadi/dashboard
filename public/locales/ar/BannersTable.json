@@ -1,0 +1,23 @@
+{
+  "bannersPage": {
+    "title": "البانرات",
+    "all": "كل البانرات",
+    "addNew": "إضافة بانر جديد",
+    "createdSuccess": "تم الانشاء بنجاح",
+    "updatedSuccess": "تم التحديث بنجاح",
+    "delete": {
+      "confirmTitle": "حذف البانر؟",
+      "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
+      "confirmButtonText": "نعم، حذف",
+      "cancelButtonText": "الغاء",
+      "successTitle": "تم الحذف!",
+      "successText": "تم حذف البانر بنجاح.",
+      "errorTitle": "خطأ",
+      "errorText": "تعذر حذف البانر.",
+      "lastButton": "حسنا"
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات البانرات..."
+    }
+  }
+}

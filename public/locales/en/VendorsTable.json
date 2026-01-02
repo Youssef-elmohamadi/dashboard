@@ -1,0 +1,69 @@
+{
+  "vendorsPage": {
+    "title": "Vendors",
+    "mainTitle": "Tashtiba | Vendors",
+
+    "all": "All Vendors",
+    "mainTitleDetails": "Tashtiba | Vendor Details",
+    "details": {
+      "pageTitle": "Vendor Details",
+      "basicInfo": "Basic Info",
+      "name": "Name",
+      "downloadPdfBtn": "Download PDF",
+      "email": "Email",
+      "phone": "Phone",
+      "description": "Description",
+      "noDescription": "No description",
+      "dates": "Dates",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "documents": "Documents",
+      "status": "Status",
+      "noDocuments": "No documents uploaded.",
+      "changeStatusBtn": "Change Status",
+      "documentTypes": {
+        "1": "Commercial Registration",
+        "2": "Tax Registration Certificate",
+        "default": "Other"
+      },
+      "documentStatus": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "modal": {
+        "title": "Document Details",
+        "vendorName": "Vendor Name:",
+        "documentType": "Document Type:",
+        "status": "Status:",
+        "createdAt": "Creation At:",
+        "updatedAt": "Updated At:"
+      },
+      "loading": "Loading vendor details...",
+      "notFound": "Vendor not found.",
+      "noId": "No Vendor ID provided.",
+      "globalError": "Something went wrong. Please try again later."
+    },
+    "status": {
+      "pending": "Pending",
+      "active": "Active",
+      "inactive": "Inactive",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "changeStatus": {
+      "title": "Change Status",
+      "inputPlaceholder": "Select a status",
+      "errorSelect": "You need to select a status",
+      "success": "Status updated to: {{status}}",
+      "noChangeMessage": "No change made",
+      "errorResponse": "The Status didn't update",
+      "confirmButtonText": "Confirm",
+      "cancelButtonText": "Cancel",
+      "documentNotApproved": "You can't change the status before all documents are approved"
+    },
+    "table": {
+      "loadingText": "Vendors data Loading..."
+    }
+  }
+}

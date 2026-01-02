@@ -1,0 +1,42 @@
+{
+  "footer": {
+    "tagline": "Your Perfect Partner in the World of Finishing",
+    "newsletter_title": "Stay Updated",
+    "newsletter_description": "Subscribe to get hot offers & product launches.",
+    "newsletter_placeholder": "Enter your email",
+    "newsletter_button": "Subscribe",
+    "follow_us": "Follow us",
+    "download_app": "Download App",
+    "quick_links": "Quick Links",
+    "contact": "Contact",
+    "location": "Egypt - Cairo",
+    "phone": "966501326310",
+    "email": "support@tashtiba.com",
+    "my_account": "My Account",
+    "order_history": "Order History",
+    "favorite_list": "Favorite List",
+    "be_seller": "Be A Seller",
+    "logout": "Logout",
+    "blogs": "Blogs",
+    "view_our_blogs": "View Our Blogs",
+    "seller_zone": "Seller Zone",
+    "join_seller_portal": "Join Seller Portal",
+    "rights_reserved": "&copy; 2025 TASHTIBA — All rights reserved."
+  },
+  "Politics": {
+    "heading": "Information you need",
+    "description": "Everything you need to know about our policies.",
+    "terms": {
+      "title": "Terms and Conditions"
+    },
+    "privacy": {
+      "title": "Privacy Policy"
+    },
+    "support": {
+      "title": "Customer Support"
+    },
+    "refund": {
+      "title": "Refund Policy"
+    }
+  }
+}

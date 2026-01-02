@@ -1,0 +1,16 @@
+{
+  "navbar": {
+    "categories": "All Categories",
+    "noCategoryFound": "No Category Found",
+    "viewAll": "Shop All",
+    "comingSoon": "New Items Coming Soon",
+    "yourCart": "Your Cart",
+    "qty": "Qty",
+    "cartIsEmpty": "Cart is empty",
+    "total": "Total",
+    "goToShoppingCart": "Go To Shopping Cart",
+    "items": "{{count}} Items",
+    "priceWithCurrency": "{{price}} EGP",
+    "clearCart": "Clear Cart"
+  }
+}

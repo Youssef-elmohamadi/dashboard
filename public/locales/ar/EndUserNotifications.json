@@ -1,0 +1,17 @@
+{
+  "pageTitle": "اشعاراتي",
+  "pageSubtitle": "هنا يمكنك مراجعة جميع التنبيهات والتحديثات الهامة.",
+  "authRequired": "يرجى تسجيل الدخول",
+  "notificationDeleted": "تم حذف الاشعار بنجاح.",
+  "deleteError": "فشل حذف الاشعار.",
+  "markAsRead": "وضع علامة 'تمت القراءة'",
+  "markReadError": "فشل تعيين الاشعار كمقروء.",
+  "markAllAsRead": "وضع علامة 'تمت القراءة' للكل",
+  "markAllReadError": "فشل تعيين جميع الاشعارات كمقروءة.",
+  "allNotificationsRead": "تم تعيين جميع الاشعارات كمقروءة.",
+  "notifications": "الاشعارات",
+  "fetchError": "حدث خطاء ما اثناء تحميل الاشعارات. حاول مرة اخرى لاحقا.",
+  "deleteNotification": "حذف الاشعار",
+  "noNotifications": "لا توجد إشعارات حاليًا.",
+  "showMore": "عرض المزيد"
+}

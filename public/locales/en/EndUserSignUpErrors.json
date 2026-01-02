@@ -1,0 +1,16 @@
+{
+  "Errors": {
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "phoneRequired": "Phone number is required",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "confirmPasswordRequired": "Confirm password is required",
+    "passwordsNotMatch": "Passwords do not match"
+  },
+  "ServerErrors": {
+    "emailTaken": "This email is already registered",
+    "phoneTaken": "This phone number is already in use",
+    "unauthorized": "Invalid email or password"
+  }
+}

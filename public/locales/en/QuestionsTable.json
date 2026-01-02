@@ -1,0 +1,29 @@
+{
+  "questionsPage": {
+    "title": "Questions",
+    "mainTitle": "Tashtiba | Questions",
+    "addNew": "Add New Question",
+    "all": "All Questions",
+    "createdSuccessTitle": "Created Successfully",
+    "createdSuccessMessage": "Question Created Successfully",
+    "updatedSuccessTitle": "Updated Successfully",
+    "updatedSuccessMessage": "Question Updated Successfully",
+    "delete": {
+      "confirmTitle": "Delete Question?",
+      "confirmText": "This action cannot be undone!",
+      "confirmButtonText": "Yes, delete",
+      "cancelButtonText": "Cancel",
+      "lastButton": "OK",
+      "successTitle": "Question Deleted!",
+      "successText": "Question has been deleted.",
+      "errorTitle": "Error",
+      "errorText": "Could not delete the Question."
+    },
+    "table": {
+      "loadingText": "Questions data Loading"
+    },
+    "search": {
+      "nameLabel": "Name"
+    }
+  }
+}

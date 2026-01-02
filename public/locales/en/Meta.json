@@ -1,0 +1,138 @@
+{
+  "userProfile": {
+    "title": "User Profile",
+    "description": "View and edit user personal information"
+  },
+  "admins": {
+    "title": "All Admins",
+    "description": "Manage all administrator accounts"
+  },
+  "createAdmin": {
+    "title": "Create Admin",
+    "description": "Add a new administrator and define permissions"
+  },
+  "updateAdmin": {
+    "title": "Update Admin",
+    "description": "Modify existing admin data"
+  },
+  "roles": {
+    "title": "All Roles",
+    "description": "Manage user roles and permissions"
+  },
+  "createRole": {
+    "title": "Create Role",
+    "description": "Add a new role and configure its permissions"
+  },
+  "updateRole": {
+    "title": "Update Role",
+    "description": "Update details of an existing role"
+  },
+  "categories": {
+    "title": "All Categories",
+    "description": "Manage product categories and subcategories"
+  },
+  "createCategory": {
+    "title": "Create Category",
+    "description": "Add a new category to the system"
+  },
+  "updateCategory": {
+    "title": "Update Category",
+    "description": "Modify details of an existing category"
+  },
+  "categoryDetails": {
+    "title": "Category Details",
+    "description": "View full information of a category"
+  },
+  "products": {
+    "title": "All Products",
+    "description": "View and manage all platform products"
+  },
+  "createProduct": {
+    "title": "Create Product",
+    "description": "Add a new product with full details"
+  },
+  "updateProduct": {
+    "title": "Update Product",
+    "description": "Edit information of an existing product"
+  },
+  "productDetails": {
+    "title": "Product Details",
+    "description": "View full product information"
+  },
+  "productsReport": {
+    "title": "Products Report",
+    "description": "Analytics and reports on all products"
+  },
+  "brands": {
+    "title": "All Brands",
+    "description": "Manage brands listed in the platform"
+  },
+  "createBrand": {
+    "title": "Create Brand",
+    "description": "Add a new brand to the platform"
+  },
+  "updateBrand": {
+    "title": "Update Brand",
+    "description": "Edit existing brand information"
+  },
+  "brandDetails": {
+    "title": "Brand Details",
+    "description": "View full details of the brand"
+  },
+  "orders": {
+    "title": "All Orders",
+    "description": "Manage and track all orders in the system"
+  },
+  "orderDetails": {
+    "title": "Order Details",
+    "description": "View order status and customer details"
+  },
+  "ordersReport": {
+    "title": "Orders Report",
+    "description": "Comprehensive analytics and reports on orders"
+  },
+  "vendors": {
+    "title": "All Vendors",
+    "description": "View and manage all vendors and stores"
+  },
+  "vendorDetails": {
+    "title": "Vendor Details",
+    "description": "View store and vendor information"
+  },
+  "coupons": {
+    "title": "All Coupons",
+    "description": "Manage promotional coupons and discounts"
+  },
+  "createCoupon": {
+    "title": "Create Coupon",
+    "description": "Add a new discount coupon"
+  },
+  "updateCoupon": {
+    "title": "Update Coupon",
+    "description": "Edit details of an existing coupon"
+  },
+  "couponDetails": {
+    "title": "Coupon Details",
+    "description": "View full information of a coupon"
+  },
+  "banners": {
+    "title": "All Banners",
+    "description": "Manage homepage and promotional banners"
+  },
+  "createBanner": {
+    "title": "Create Banner",
+    "description": "Add a new promotional banner"
+  },
+  "updateBanner": {
+    "title": "Update Banner",
+    "description": "Update banner content or design"
+  },
+  "bannerDetails": {
+    "title": "Banner Details",
+    "description": "View details of a specific banner"
+  },
+  "vendorSettings": {
+    "title": "Vendor Settings",
+    "description": "Edit store settings and vendor info"
+  }
+}

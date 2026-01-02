@@ -1,0 +1,29 @@
+{
+  "transport": {
+    "title": "Create New Transport Price",
+    "area_ar": "Area in Arabic",
+    "area_ar_placeholder": "Enter area name in Arabic",
+    "area_en": "Area in English",
+    "area_en_placeholder": "Enter area name in English",
+    "vehicle_type": "Vehicle Type",
+    "vehicle_typePlaceholder": "Select vehicle type",
+    "fixed_price": "Fixed Price",
+    "fixed_price_placeholder": "Enter fixed price in local currency",
+    "is_free": "Is Transport Free?",
+    "submit": "Create Price",
+    "submitting": "Submitting...",
+    "success": "Transport price created successfully!",
+    "errors": {
+      "global": "You are not authorized to perform this action.",
+      "general": "An error occurred while creating the transport price. Please try again.",
+      "areaRequired": "Area name is required",
+      "lineRequired": "Line is required",
+      "vehicleRequired": "Vehicle type is required",
+      "priceRequired": "Price is required",
+      "no_internet": "No internet connection",
+         "name": "Area name is required",
+      "position": "Vehicle type is required",
+      "status": "Price is required"
+    }
+  }
+}

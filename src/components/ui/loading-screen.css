@@ -1,0 +1,33 @@
+@keyframes loading-fill {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    /* تبطئ قليلاً في المنتصف لتعطي شعوراً بالمعالجة */
+    transform: translateX(-20%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-loading-fill {
+  /* تعديل التوقيت ليكون أكثر انسيابية */
+  animation: loading-fill 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* حركة بسيطة للنص "جاري التحميل" */
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s infinite ease-in-out;
+}

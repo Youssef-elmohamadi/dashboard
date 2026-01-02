@@ -1,0 +1,14 @@
+{
+  "searchResultsTitle": "نتائج البحث",
+  "categoriesFound": "الفئات",
+  "productsFound": "المنتجات",
+  "currency": "جنيه",
+  "addToCart": "أضف إلى السلة",
+  "noResultsFound": "لم يتم العثور على نتائج مطابقة لبحثك.",
+  "generalError": "حدث خطأ أثناء جلب نتائج البحث. يرجى المحاولة مرة أخرى.",
+  "addToFavorites": "أضف إلى المفضلة",
+  "removeFromFavorites": "إزالة من المفضلة",
+  "loadingResults": "جاري تحميل النتائج...",
+  "errorFetchingResults": "حدث خطأ أثناء جلب النتائج. يرجى المحاولة لاحقاً.",
+    "search_placeholder": "ابحث عن المنتجات، الفئات"
+}

@@ -1,0 +1,32 @@
+{
+  "invoice_header": "فاتورة مبيعات",
+  "fields": {
+    "invoice_no": "رقم الفاتورة",
+    "invoice_date": "تاريخ الفاتورة",
+    "customer_name": "اسم المشتري",
+    "price_unit": "السعر",
+    "total_amount": "المبلغ الإجمالي",
+    "subtotal": "الإجمالي الفرعي",
+    "tax_shipping": "الضريبة والنقل",
+    "tax": "الضريبة",
+    "shipping": "النقل",
+    "returns_text": "الاستبدال والاسترجاع: الاستبدال والاسترجاع خلال فترة أقصاها 14 يوم من تاريخ استلام السلعة.",
+    "thank_you": "شكراً لشرائك!",
+    "seller_signature": "توقيع البائع",
+    "name": "الاسم",
+    "quantity": "الكمية",
+    "product_unknown": "منتج غير معروف",
+    "not_available": "غير متوفر",
+    "loading": "جارٍ تحميل تفاصيل الفاتورة...",
+    "phone": "الهاتف",
+    "address": "العنوان",
+    "email": "البريد الإلكتروني",
+    "product_name": "اسم المنتج",
+    "total": "الإجمالي",
+    "egp": "ج.م",
+    "order_number": "رقم الطلب"
+  },
+  "sections": {
+    "returns_policy": "الاستبدال والاسترجاع"
+  }
+}

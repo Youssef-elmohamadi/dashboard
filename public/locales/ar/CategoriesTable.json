@@ -1,0 +1,23 @@
+{
+  "categoriesPage": {
+    "title": "الفئات",
+    "all": "كل الفئات",
+    "mainTitle": "تشطيبة | الفئات",
+    "addNew": "إضافة فئة جديدة",
+    "createdSuccess": "تم انشاء الفئة بنجاح",
+    "updatedSuccess": "تم تعديل بيانات الفئة بنجاح",
+    "delete": {
+      "confirmTitle": "حذف الفئة؟",
+      "confirmText": "لا يمكن التراجع عن هذا الإجراء!",
+      "confirmButtonText": "نعم، حذف",
+      "cancelButtonText": "الغاء",
+      "successTitle": "تم الحذف!",
+      "successText": "تم حذف الفئة.",
+      "errorTitle": "خطأ",
+      "errorText": "تعذر حذف الفئة."
+    },
+    "table": {
+      "loadingText": "جاري تحميل بيانات الفئات"
+    }
+  }
+}

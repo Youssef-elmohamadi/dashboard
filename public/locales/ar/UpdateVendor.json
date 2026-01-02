@@ -1,0 +1,34 @@
+{
+    "vendor": {
+      "edit_title": "تعديل معلومات التاجر",
+      "name": "اسم التاجر",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "description": "الوصف",
+      "documents_title": "مستندات التاجر",
+      "selected_file": "الملف المحدد",
+      "cannot_edit_approved": "لا يمكن تعديل المستند المعتمد",
+      "save_changes": "حفظ التغييرات",
+      "document_1": "السجل التجاري",
+      "document_2": "البطاقة الضريبية",
+      "status_approved": "تمت الموافقة",
+      "status_pending": "قيد الانتظار",
+      "status_rejected": "مرفوض",
+      "vendorProfile": "ملف التاجر",
+      "successUpdate": "تم تحديث المعلومات بنجاح",
+      "errorUpdate": "حدث خطاء ما، يرجى المحاولة مرة أخرى"
+    },
+    "validation": {
+      "name": "الاسم مطلوب",
+      "email": "البريد الإلكتروني مطلوب",
+      "phone": "رقم الهاتف مطلوب",
+      "description": "الوصف مطلوب",
+      "commercial_record": "السجل التجاري",
+      "tax_record": "البطاقة الضريبية"
+    },
+    "errors": {
+      "general": "حدث خطأ غير متوقع"
+    },
+    "no_internet": "لا يوجد اتصال بالانترنت، يرجى التحقق من الاتصال والمحاولة مرة أخرى."
+  }
+  

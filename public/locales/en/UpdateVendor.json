@@ -1,0 +1,33 @@
+{
+  "vendor": {
+    "edit_title": "Edit Vendor",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "description": "Description",
+    "documents_title": "Vendor Documents",
+    "selected_file": "Selected File",
+    "cannot_edit_approved": "Cannot edit approved document",
+    "save_changes": "Save Changes",
+    "document_1": "Certificate of Commercial Registration",
+    "document_2": "Tax Registration Certificate",
+    "status_approved": "Approved",
+    "status_pending": "Pending",
+    "status_rejected": "Rejected",
+    "vendorProfile": "Vendor Profile",
+    "successUpdate": "Vendor information updated successfully",
+    "errorUpdate": "Something went wrong, please try again"
+  },
+  "validation": {
+    "name": "Name is required",
+    "email": "Email is required",
+    "phone": "Phone is required",
+    "description": "Description is required",
+    "commercial_record": "Certificate of Commercial Registration",
+    "tax_record": "Tax Registration Certificate"
+  },
+  "errors": {
+    "general": "Something went wrong"
+  },
+  "no_internet": "No internet connection. Please check your connection and try again."
+}

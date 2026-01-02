@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /super_admin/
+Allow: /
+
+Sitemap: https://tashtiba.com/sitemap-ar.xml
+Sitemap: https://tashtiba.com/sitemap-en.xml

@@ -1,0 +1,69 @@
+{
+  "title": "تفاصيل السؤال",
+  "loading": "جاري تحميل تفاصيل السؤال...",
+  "not_found": "عذراً، هذا السؤال غير موجود",
+  "no_id": "خطأ في المعرف: لا يوجد ID لهذا السؤال",
+  "not_available": "غير متوفر",
+  "no_description": "لا يوجد وصف متوفر لهذا السؤال.",
+  "yes": "نعم",
+  "no": "لا",
+  "confirm_delete_answer": "هل أنت متأكد من حذف هذه الإجابة؟",
+  "sections": {
+    "basic_info": "المعلومات الأساسية",
+    "descriptions": "السؤال والبيانات الإضافية",
+    "metadata": "بيانات النظام"
+  },
+  "fields": {
+    "title_ar": "العنوان بالعربية",
+    "title_en": "العنوان بالإنجليزية",
+    "type": "نوع السؤال",
+    "status": "حالة السؤال",
+    "is_required": "إلزامي؟",
+    "cover": "الغلاف",
+    "description_ar": "السؤال بالعربية",
+    "description_en": "السؤال بالإنجليزية",
+    "created_at": "تاريخ الإنشاء",
+    "updated_at": "آخر تحديث"
+  },
+  "types": {
+    "single_choice": "اختيار واحد (Single Choice)",
+    "multiple_choice": "اختيار متعدد (Multiple Choice)"
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط"
+  },
+  "errors": {
+    "unauthorized": "ليس لديك صلاحية لعرض هذه البيانات",
+    "general": "حدث خطأ أثناء تحميل البيانات"
+  },
+  "Answers": {
+    "title": "إدارة الإجابات",
+    "add_new": "+ إضافة إجابة",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "save": "حفظ",
+    "update": "تحديث",
+    "create": "إنشاء",
+    "cancel": "إلغاء",
+    "loading_list": "جاري تحميل الإجابات...",
+    "empty_state": "لا توجد إجابات مضافة لهذا السؤال.",
+    "label_en": "الإجابة بالإنجليزية",
+    "label_ar": "الإجابة بالعربية",
+    "price_effect": "تأثير السعر",
+    "price_effect_type": "نوع تأثير السعر",
+    "fixed": "ثابت",
+    "percentage": "نسبة مئوية",
+    "status": "الحالة",
+    "id_column": "المعرف",
+    "label_column": "العنوان",
+    "actions_column": "العمليات"
+  },
+  "validation": {
+    "answer_name_ar": "برجاء ادخال الإجابة بالعربية",
+    "answer_name_en": "برجاء ادخال الإجابة بالإنجليزية",
+    "price_effect": "برجاء ادخال رقم صحيح لتأثير السعر",
+    "price_effect_type": "نوع تأثير السعر غير صالح",
+    "status": "الحالة المختارة غير صالحة"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "footer": {
+    "tagline": "شريكك المثالي في عالم التشطيبات",
+    "newsletter_title": "ابقَ على اطلاع",
+    "newsletter_description": "اشترك لتصلك العروض الساخنة وإطلاق المنتجات.",
+    "newsletter_placeholder": "أدخل بريدك الإلكتروني",
+    "newsletter_button": "اشترك",
+    "follow_us": "تابعنا",
+    "download_app": "تحميل التطبيق",
+    "quick_links": "روابط سريعة",
+    "contact": "تواصل معنا",
+    "location": "مصر - القاهرة",
+    "phone": "966501326310",
+    "email": "support@tashtiba.com",
+    "my_account": "حسابي",
+    "order_history": "سجل الطلبات",
+    "favorite_list": "قائمة المفضلة",
+    "be_seller": "كن بائعًا",
+    "logout": "تسجيل خروج",
+    "blogs": "المدونات",
+    "view_our_blogs": "اطلع على مدوناتنا",
+    "seller_zone": "منطقة البائع",
+    "join_seller_portal": "انضم إلى بوابة البائعين",
+    "rights_reserved": "&copy; 2025 TASHTIBA — جميع الحقوق محفوظة."
+  },
+      "Politics": {
+      "heading": "معلومات تهمك",
+      "description": "كل ما تحتاجه من روابط للتعرف على سياساتنا.",
+      "terms": {
+        "title": "الشروط والاحكام"
+      },
+      "privacy": {
+        "title": "سياسة الخصوصية"
+      },
+      "support": {
+        "title": "دعم العملاء"
+      },
+      "refund": {
+        "title": "سياسة الاسترجاع"
+      }
+    }
+}

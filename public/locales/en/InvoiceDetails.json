@@ -1,0 +1,32 @@
+{
+  "invoice_header": "Sales Invoice",
+  "fields": {
+    "invoice_no": "Invoice No.",
+    "invoice_date": "Invoice Date",
+    "customer_name": "Customer Name",
+    "price_unit": "Price",
+    "total_amount": "Total Amount",
+    "subtotal": "Subtotal",
+    "tax_shipping": "Tax & Shipping",
+    "tax": "Tax",
+    "shipping": "Shipping",
+    "returns_text": "Returns & Exchanges: Returns and exchanges are permitted within a maximum period of 14 days from the date of receiving the item.",
+    "thank_you": "Thank you for your purchase!",
+    "seller_signature": "Seller Signature",
+    "name": "Name",
+    "quantity": "Quantity",
+    "product_unknown": "Unknown Product",
+    "not_available": "Not Available",
+    "loading": "Loading invoice details...",
+    "phone": "Phone",
+    "address": "Address",
+    "email": "Email",
+    "product_name": "Product Name",
+    "total": "Total",
+    "egp": "EGP",
+    "order_number": "Order Number"
+  },
+  "sections": {
+    "returns_policy": "Returns & Exchange Policy"
+  }
+}
