@@ -8,7 +8,6 @@ type BaseEntity = {
 };
 
 interface ColumnBuilderOptions<T extends BaseEntity> {
-
   includeName?: boolean;
   includeEmail?: boolean;
   includeTitle?: boolean;
@@ -93,6 +92,12 @@ export const buildColumns = <T extends BaseEntity>(
     columns.push({
       Header: t("table.name"),
       accessor: "name",
+    });
+  }
+  if (options.includeEmail) {
+    columns.push({
+      Header: t("table.email"),
+      accessor: "email",
     });
   }
   if (options.includeFullName) {
@@ -343,8 +348,6 @@ export const buildColumns = <T extends BaseEntity>(
       accessor: "vehicle_type" as keyof T,
     });
   }
-  
-
 
   // if (options.includeStartAt) {
   //   columns.push({

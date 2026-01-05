@@ -1,6 +1,10 @@
 import { Helmet } from "react-helmet-async";
 import i18n from "../../../i18n";
-
+type PreloadImage = {
+  href: string;
+  imagesrcset?: string;
+  imagesizes?: string;
+};
 type SEOProps = {
   lang?: "ar" | "en";
   title: { ar: string; en: string };
@@ -27,6 +31,7 @@ type SEOProps = {
     | "blog";
   productData?: Record<string, any>;
   itemList?: { name: string; url: string }[];
+  preloadImages?: PreloadImage[];
 };
 
 const SEO = ({
@@ -42,6 +47,7 @@ const SEO = ({
   pageType = "default",
   productData,
   itemList,
+  preloadImages,
 }: SEOProps) => {
   const currentLang = lang || i18n.language;
   const isArabic = currentLang === "ar";
@@ -316,7 +322,16 @@ const SEO = ({
       <meta name="twitter:title" content={pageTitle} />
       <meta name="twitter:description" content={pageDescription} />
       <meta name="twitter:image" content={pageImage || "/og-image.png"} />
-
+      {preloadImages?.map((img, index) => (
+        <link
+          key={index}
+          rel="preload"
+          as="image"
+          href={img.href}
+          {...(img.imagesrcset && { imagesrcset: img.imagesrcset })}
+          {...(img.imagesizes && { imagesizes: img.imagesizes })}
+        />
+      ))}
       {alternates?.map((alt) => (
         <link
           key={alt.lang}

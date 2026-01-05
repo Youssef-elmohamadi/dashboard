@@ -1,0 +1,24 @@
+{
+  "requestsPage": {
+    "title": "طلبات التسعير",
+    "status": {
+      "pending": "قيد الانتظار",
+      "reviewed": "تمت المراجعة",
+      "responded": "تم الرد",
+      "closed": "مغلق"
+    },
+    "changeStatus": {
+      "title": "تغيير حالة الطلب",
+      "inputPlaceholder": "اختر الحالة الجديدة",
+      "errorSelect": "يرجى اختيار حالة صالحة",
+      "success": "تم تحديث حالة الطلب بنجاح",
+      "noChangeMessage": "لم يتم إجراء أي تغيير على الحالة",
+      "errorResponse": "حدث خطأ أثناء محاولة تحديث الحالة، حاول مرة أخرى",
+      "confirmButtonText": "تأكيد التغيير",
+      "cancelButtonText": "إلغاء"
+    },
+    "table": {
+      "loadingText": "جاري تحميل طلبات التسعير..."
+    }
+  }
+}

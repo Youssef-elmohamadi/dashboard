@@ -119,6 +119,16 @@ const Home = () => {
           ],
         }}
         lang={lang as "ar" | "en"}
+        preloadImages={[
+          {
+            href: "/images/landing/desktop-landing.webp",
+            imagesrcset: `
+              /images/landing/desktop-landing.webp 400w,
+              /images/landing/desktop-landing.webp 1200w
+            `,
+            imagesizes: "(max-width: 768px) 100vw, 100vw",
+          },
+        ]}
       />
 
       <LandingSection />

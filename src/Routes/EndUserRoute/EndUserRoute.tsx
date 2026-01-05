@@ -93,7 +93,9 @@ const EndUserRoutes = () => {
           />
         </Route>
       </Routes>
-      <ScrollRestoration />
+      <Suspense fallback={null}>
+        <ScrollRestoration />
+      </Suspense>
     </>
   );
 };

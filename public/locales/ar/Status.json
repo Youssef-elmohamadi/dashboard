@@ -1,11 +1,14 @@
 {
-    "active": "نشط",
-    "delivered": "تم التسليم",
-    "inactive": "غير نشط",
-    "pending": "قيد الانتظار",
-    "unpaid": "غير مدفوع",
-    "shipped": "تم الشحن",
-    "paid": "مدفوع",
-    "cancelled": "ملغى",
-    "processing": "قيد المعالجة"
+  "active": "نشط",
+  "inactive": "غير نشط",
+  "pending": "قيد الانتظار",
+  "reviewed": "تمت المراجعة",
+  "responded": "تم الرد",
+  "closed": "مغلق",
+  "delivered": "تم التوصيل",
+  "shipped": "تم الشحن",
+  "paid": "مدفوع",
+  "unpaid": "غير مدفوع",
+  "cancelled": "ملغي",
+  "processing": "جاري المعالجة"
 }

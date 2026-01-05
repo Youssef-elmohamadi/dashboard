@@ -7,6 +7,8 @@ import ArticleDetails from "../../components/SuperAdmin/ArticlesTable/ShowDetail
 import CreateTransport from "../../components/SuperAdmin/Transport/CreateTransport";
 import UpdateTransport from "../../components/SuperAdmin/Transport/UpdateTransport";
 import TransportDetails from "../../components/SuperAdmin/Transport/ShowMore";
+import RequestQuotation from "../../pages/SuperAdminPages/RequestQuotation/RequestQuotation";
+import RFQDetails from "../../components/SuperAdmin/Quotation/ShowMore";
 const Vendors = lazy(
   () => import("../../pages/SuperAdminPages/vendors/Vendors")
 );
@@ -77,7 +79,9 @@ const CouponDetails = lazy(
   () => import("../../components/SuperAdmin/couponsTable/ShowMore")
 );
 const Orders = lazy(() => import("../../pages/SuperAdminPages/Orders/Orders"));
-const Transport = lazy(() => import("../../pages/SuperAdminPages/Transport/Transport"));
+const Transport = lazy(
+  () => import("../../pages/SuperAdminPages/Transport/Transport")
+);
 const OrderDetails = lazy(
   () => import("../../components/SuperAdmin/ordersTable/ShowMore")
 );
@@ -121,7 +125,8 @@ export default function LazyPages() {
         <Route path="transport/update/:id" element={<UpdateTransport />} />
         <Route path="transport/details/:id" element={<TransportDetails />} />
         <Route path="profile" element={<UserProfiles />} />
-
+        <Route path="quotations" element={<RequestQuotation />} />
+        <Route path="quotations/details/:id" element={<RFQDetails />} />
       </Routes>
     </Suspense>
   );

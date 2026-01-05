@@ -1,7 +1,9 @@
 import { lazy, Suspense } from "react"; // استورد lazy و Suspense هنا
 import { Route, Routes } from "react-router-dom";
 import LoadingPageEndUser from "../../components/ui/LoadingPageEndUser";
-
+const RequestQuotation = lazy(
+  () => import("../../pages/UserPages/RequestQuotation/RequestQuotation")
+);
 const AllBlogs = lazy(() => import("../../pages/UserPages/Blogs/AllBlogs"));
 const SingleBlog = lazy(() => import("../../pages/UserPages/Blogs/ShowBlog"));
 
@@ -75,6 +77,7 @@ export default function LazyPages() {
           <Route index element={<AllProducts />} />
           <Route path=":category_id" element={<Shop />} />
         </Route>
+        <Route path="request-quotation" element={<RequestQuotation />} />
       </Routes>
     </Suspense>
   );

@@ -13,7 +13,7 @@ import {
   Brand,
   DocsIcon,
   Banners,
-Car
+  Car,
 } from "../../../icons";
 import { useSidebar } from "../../../context/SidebarContext";
 import { PiSignOut } from "react-icons/pi";
@@ -136,6 +136,11 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
       icon: <Order />,
       name: t("Orders"),
       path: "/super_admin/orders",
+    },
+    {
+      icon: <TicketsIcon />,
+      name: t("Quotations"),
+      path: "/super_admin/quotations",
     },
     {
       icon: <TicketsIcon />,
@@ -426,32 +431,27 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ userType }) => {
           <Link to="/admin">
             {isExpanded || isHovered || isMobileOpen ? (
               <>
-              <div className="items-center h-[64px] flex dark:hidden">
-                <img
-                  className="dark:hidden "
-                  src={`/images/logo/${lang}-light-logo.webp`}
-                  alt="Logo"
-                  width={150}
-                  height={84}
-                />
-              </div>
+                <div className="items-center h-[64px] flex dark:hidden">
+                  <img
+                    className="dark:hidden "
+                    src={`/images/logo/${lang}-light-logo.webp`}
+                    alt="Logo"
+                    width={150}
+                    height={84}
+                  />
+                </div>
                 <div className="items-center h-[64px] hidden dark:flex">
                   <img
                     className="hidden dark:block "
                     src={`/images/logo/${lang}-dark-logo.webp`}
                     alt="Logo"
                     width={150}
-                                      height={84}
+                    height={84}
                   />
                 </div>
               </>
             ) : (
-              <img
-                src="favicon.png"
-                alt="Logo"
-                width={32}
-                height={32}
-              />
+              <img src="favicon.png" alt="Logo" width={32} height={32} />
             )}
           </Link>
         ) : (

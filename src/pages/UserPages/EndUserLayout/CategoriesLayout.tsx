@@ -10,13 +10,19 @@ import { useDirectionAndLanguage } from "../../../context/DirectionContext";
 import { Category } from "../../../types/Categories";
 import { PriceChangeParams } from "../../../types/Shop";
 import CategoryBreadCrump from "../../../components/EndUser/Shop/CategoryBreadCrump";
-const FilterSidebar = lazy(
-  () => import("../../../components/EndUser/Shop/FilterSidebar")
-);
 import Sidebar from "../../../components/EndUser/Shop/Sidebar";
 import FilterIcon from "../../../icons/FilterIcon";
 import ArrowDown from "../../../icons/ArrowDown";
 import { useCategories } from "../../../hooks/Api/EndUser/useHome/UseHomeData";
+
+const FilterSidebar = lazy(
+  () => import("../../../components/EndUser/Shop/FilterSidebar")
+);
+
+interface BreadcrumbItem {
+  label: string;
+  path?: string;
+}
 
 function CategoriesLayout() {
   const [showCategories, setShowCategories] = useState<boolean>(true);
@@ -30,6 +36,7 @@ function CategoriesLayout() {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedSort = searchParams.get("sort");
   const { lang } = useDirectionAndLanguage();
+  const [breadcrumbItems, setBreadcrumbItems] = useState<BreadcrumbItem[]>([]);
 
   const sortOptions = [
     { label: t("sortByMenu.title"), value: "" },
@@ -76,6 +83,8 @@ function CategoriesLayout() {
 
   const { data } = useCategories("parent");
   const categories: Category[] | undefined = data;
+  const { data: all } = useCategories("all");
+  const allCat: Category[] | undefined = all;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -88,20 +97,37 @@ function CategoriesLayout() {
   }, []);
 
   useEffect(() => {
-    if (
+    const isMainCategoryPage =
       location.pathname === `/${lang}/category` ||
-      location.pathname === `/${lang}/category/`
-    ) {
+      location.pathname === `/${lang}/category/`;
+
+    if (isMainCategoryPage) {
       setCurrentPage(t("allCategories"));
+      setBreadcrumbItems([{ label: t("allCategories") }]);
     } else {
-      const category = categories?.find(
-        (cat) => cat.id.toString() === category_id
-      );
+      const category = allCat?.find((cat) => cat.id.toString() === category_id);
+
       if (category) {
+        const items: BreadcrumbItem[] = [];
+
+        if (category.parent_id) {
+          const parentCategory = allCat?.find(
+            (cat) => cat.id === category.parent_id
+          );
+          if (parentCategory) {
+            items.push({
+              label: parentCategory[`name_${lang}`],
+              path: `/${lang}/category/${parentCategory.id}`,
+            });
+          }
+        }
+        items.push({ label: category[`name_${lang}`] });
+
+        setBreadcrumbItems(items);
         setCurrentPage(category[`name_${lang}`]);
       }
     }
-  }, [category_id, categories, location.pathname, t]);
+  }, [category_id, allCat, location.pathname, t, lang]);
 
   return (
     <div className="flex flex-row min-h-screen enduser_container my-10">
@@ -123,7 +149,7 @@ function CategoriesLayout() {
       />
 
       <main className="flex-1 p-6">
-        <CategoryBreadCrump currentPage={currentPage} />
+        <CategoryBreadCrump items={breadcrumbItems} />
         <div>
           <div className="flex items-center justify-between border-b border-gray-200 pb-4 my-6">
             <h2 className="md:text-lg md:font-bold text-sm font-bold mx-1">
@@ -155,12 +181,12 @@ function CategoriesLayout() {
                 </button>
 
                 {isMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded z-10 overflow-hidden">
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded z-10 overflow-hidden shadow-lg">
                     {sortOptions.map((option) => (
                       <button
                         key={option.value}
                         onClick={() => handleSortChange(option.value)}
-                        className="block w-full px-4 py-2 hover:bg-[#d62828] hover:text-white transition"
+                        className="block w-full text-start px-4 py-2 hover:bg-[#d62828] hover:text-white transition"
                       >
                         {option.label}
                       </button>

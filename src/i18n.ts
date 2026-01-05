@@ -9,7 +9,6 @@ i18n
   .use(HttpApi)
   .init({
     supportedLngs: ["ar", "en"],
-    lng: localStorage.getItem("i18nextLng") || "ar",
     fallbackLng: "ar",
     detection: {
       order: ["path", "localStorage", "htmlTag", "cookie", "subdomain"],

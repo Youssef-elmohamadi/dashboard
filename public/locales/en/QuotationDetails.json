@@ -1,0 +1,36 @@
+{
+  "requestsPage": {
+    "details_title": "Quotation & RFQ Details",
+    "sections": {
+      "client_info": "Client & Request Info"
+    },
+    "table": {
+      "loadingText": "Loading request details..."
+    }
+  },
+  "sections": {
+    "files": "Files & Attachments",
+    "timestamps": "Review Log"
+  },
+  "fields": {
+    "phone": "Phone Number",
+    "address": "Address",
+    "description": "Request Description",
+    "download": "Download File",
+    "no_files": "No files attached to this request.",
+    "current_status": "Current Status",
+    "created_at": "Request Date",
+    "reviewed_at": "Review Date",
+    "admin_notes": "Admin Notes",
+    "no_notes": "No administrative notes yet."
+  },
+  "columns": {
+    "name": "Client Name",
+    "email": "Email Address",
+    "status": "Request Status"
+  },
+  "global_error": "Sorry, you are not authorized to access this page.",
+  "general_error": "An error occurred while loading data, please try again later.",
+  "not_found": "Sorry, the request you are looking for was not found.",
+  "not_available": "N/A"
+}

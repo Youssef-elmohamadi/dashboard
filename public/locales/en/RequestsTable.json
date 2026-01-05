@@ -1,0 +1,24 @@
+{
+  "requestsPage": {
+    "title": "Requests for Quotation",
+    "status": {
+      "pending": "Pending",
+      "reviewed": "Reviewed",
+      "responded": "Responded",
+      "closed": "Closed"
+    },
+    "changeStatus": {
+      "title": "Change Request Status",
+      "inputPlaceholder": "Select new status",
+      "errorSelect": "Please select a valid status",
+      "success": "Request status updated successfully",
+      "noChangeMessage": "No changes were made to the status",
+      "errorResponse": "An error occurred while updating the status, please try again",
+      "confirmButtonText": "Confirm Change",
+      "cancelButtonText": "Cancel"
+    },
+    "table": {
+      "loadingText": "Loading quotation requests..."
+    }
+  }
+}
